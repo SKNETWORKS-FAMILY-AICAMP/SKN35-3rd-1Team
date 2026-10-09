@@ -1,0 +1,115 @@
+erDiagram
+    users ||--o{ artwork_likes : "좋아요"
+    artworks ||--o{ artwork_likes : "좋아요 받음"
+    users ||--o{ artist_follows : "팔로우"
+    artists ||--o{ artist_follows : "팔로우 받음"
+    users ||--o{ artwork_views : "열람"
+    artworks ||--o{ artwork_views : "열람됨"
+    art_movements |o--o{ artists : "대표 사조"
+    art_movements |o--o{ artworks : "사조"
+    artists ||--o{ artworks : "제작"
+    artworks ||--o| artwork_embeddings : "대표 벡터"
+    artworks |o--o{ documents : "작품 해설"
+    documents ||--o{ document_artists : "관련 작가"
+    artists ||--o{ document_artists : "생애·비교 문서"
+    documents ||--o{ document_chunks : "청크"
+
+    users {
+        bigint id PK
+        varchar email UK
+        varchar password_hash
+        varchar nickname
+        datetime created_at
+        datetime updated_at
+    }
+    art_movements {
+        bigint id PK
+        varchar slug UK
+        varchar name
+        varchar name_en
+        text description
+        datetime created_at
+    }
+    artists {
+        bigint id PK
+        varchar slug UK
+        varchar name
+        varchar name_en
+        bigint movement_id FK
+        smallint birth_year
+        smallint death_year
+        varchar nationality
+        text summary
+        varchar portrait_url
+        datetime created_at
+        datetime updated_at
+    }
+    artworks {
+        bigint id PK
+        varchar slug UK
+        bigint artist_id FK
+        bigint movement_id FK
+        varchar title
+        varchar title_en
+        varchar year_label
+        smallint year_start
+        varchar medium
+        varchar dimensions
+        varchar collection
+        text description
+        varchar image_url
+        varchar image_source_url
+        varchar image_license
+        tinyint is_featured
+        datetime created_at
+        datetime updated_at
+    }
+    artwork_embeddings {
+        bigint artwork_id PK, FK
+        vector embedding "VECTOR(1536)"
+        varchar embedding_model
+        datetime updated_at
+    }
+    documents {
+        bigint id PK
+        varchar doc_type "artist_bio / artwork_commentary / artist_comparison"
+        bigint artwork_id FK "해설 문서만 값 있음"
+        varchar title
+        mediumtext content
+        varchar source_url
+        varchar source_name
+        varchar license
+        datetime created_at
+        datetime updated_at
+    }
+    document_artists {
+        bigint document_id PK, FK
+        bigint artist_id PK, FK
+    }
+    document_chunks {
+        bigint id PK
+        bigint document_id FK
+        int chunk_index "document_id 와 묶어 UNIQUE"
+        text content
+        vector embedding "VECTOR(1536)"
+        varchar embedding_model
+        datetime created_at
+    }
+    artwork_likes {
+        bigint user_id PK, FK
+        bigint artwork_id PK, FK
+        datetime created_at
+    }
+    artist_follows {
+        bigint user_id PK, FK
+        bigint artist_id PK, FK
+        datetime created_at
+    }
+    artwork_views {
+        bigint user_id PK, FK
+        date viewed_on PK
+        bigint artwork_id PK, FK
+        int view_count
+        datetime first_viewed_at
+        datetime last_viewed_at
+    }
