@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:skn35-art-tracker:source-manifest:0.2",
+  "title": "출처 장부",
+  "description": "작가별 또는 비교 문서별 sources.json 검증용 스키마. DB 직접 적재 대상은 아니다.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["collected_at", "sources"],
+  "properties": {
+    "artist_slug": { "$ref": "#/$defs/slug" },
+    "comparison": { "$ref": "#/$defs/slug" },
+    "collected_at": { "type": "string", "format": "date" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceEntry" }
+    },
+    "open_access_policy": { "type": "string", "format": "uri" }
+  },
+  "oneOf": [
+    {
+      "required": ["artist_slug", "open_access_policy"],
+      "not": { "required": ["comparison"] }
+    },
+    {
+      "required": ["comparison"],
+      "not": {
+        "anyOf": [
+          { "required": ["artist_slug"] },
+          { "required": ["open_access_policy"] }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "sourceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_name", "source_url", "usage", "rights"],
+      "properties": {
+        "record": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "source_url": { "type": "string", "format": "uri" },
+        "usage": { "type": "string", "minLength": 1 },
+        "rights": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
