@@ -1,0 +1,88 @@
+{
+  "bio.md": {
+    "doc_type": "artist_bio",
+    "title": "폴 세잔의 생애",
+    "artist_slugs": [
+      "paul-cezanne"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%8F%B4_%EC%84%B8%EC%9E%94",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false
+  },
+  "mont-sainte-victoire.md": {
+    "doc_type": "artwork_commentary",
+    "title": "생트빅투아르산 연작 해설",
+    "artist_slugs": null,
+    "artwork_slug": "mont-sainte-victoire",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%83%9D%ED%8A%B8%EB%B9%85%ED%88%AC%EC%95%84%EB%A5%B4%EC%82%B0_(%EC%84%B8%EC%9E%94)",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Paul_C%C3%A9zanne_-_Montagne_Saint-victoire_-_Google_Art_Project.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "the-card-players.md": {
+    "doc_type": "artwork_commentary",
+    "title": "카드놀이하는 사람들 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-card-players",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%B9%B4%EB%93%9C%EB%86%80%EC%9D%B4%ED%95%98%EB%8A%94_%EC%82%AC%EB%9E%8C%EB%93%A4",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Les_Joueurs_de_cartes%2C_par_Paul_C%C3%A9zanne.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "apples-oranges.md": {
+    "doc_type": "artwork_commentary",
+    "title": "사과와 오렌지 해설",
+    "artist_slugs": null,
+    "artwork_slug": "apples-oranges",
+    "source_url": "https://en.wikipedia.org/wiki/Still_Life_with_Apples_and_Oranges",
+    "source_name": "Wikipedia (en)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "en",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Nature_morte_aux_pommes_et_aux_oranges%2C_par_Paul_C%C3%A9zanne.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "the-large-bathers.md": {
+    "doc_type": "artwork_commentary",
+    "title": "대수욕도 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-large-bathers",
+    "source_url": "https://en.wikipedia.org/wiki/The_Bathers_(C%C3%A9zanne)",
+    "source_name": "Wikipedia (en)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "en",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "the-basket-of-apples.md": {
+    "doc_type": "artwork_commentary",
+    "title": "사과 바구니가 있는 정물 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-basket-of-apples",
+    "source_url": "https://en.wikipedia.org/wiki/The_Basket_of_Apples",
+    "source_name": "Wikipedia (en)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "en",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Paul_C%C3%A9zanne_-_The_Basket_of_Apples_-_1926.252_-_Art_Institute_of_Chicago.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  }
+}
