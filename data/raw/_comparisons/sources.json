@@ -1,0 +1,24 @@
+{
+  "comparison": "van-gogh-and-gauguin",
+  "collected_at": "2026-10-10",
+  "sources": [
+    {
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+      "usage": "아를 공동생활과 두 작가의 표현 방식 확인",
+      "rights": "원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    },
+    {
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436524",
+      "usage": "고갱이 소장한 고흐의 해바라기 작품과 교류 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/exhibitions/listings/2002/gauguin",
+      "usage": "고갱의 경력과 작품 세계 확인",
+      "rights": "웹페이지 원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    }
+  ]
+}
