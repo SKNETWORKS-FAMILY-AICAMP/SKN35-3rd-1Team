@@ -1,0 +1,56 @@
+{
+  "artist_slug": "paul-gauguin",
+  "collected_at": "2026-10-10",
+  "sources": [
+    {
+      "record": "artist_bio",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/sites/default/files/migrate_images/content/dam/ngaweb/education/learning-resources/teaching-packets/pdfs/picturing_france.pdf",
+      "usage": "사실 확인 및 생애 요약 작성, p.118",
+      "rights": "PDF 원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    },
+    {
+      "record": "ia-orana-maria",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/438821",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "tahitian-landscape",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436451",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "the-siesta",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436449",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "three-tahitian-women",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/438000",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "still-life-with-teapot-and-fruit",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/437999",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "two-tahitian-women",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436446",
+      "usage": "소장품 메타데이터, 작품 사실과 비판적 맥락 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    }
+  ],
+  "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
+}

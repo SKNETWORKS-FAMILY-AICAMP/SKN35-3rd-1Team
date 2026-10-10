@@ -1,0 +1,56 @@
+{
+  "artist_slug": "vincent-van-gogh",
+  "collected_at": "2026-10-10",
+  "sources": [
+    {
+      "record": "artist_bio",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+      "usage": "사실 확인 및 생애 요약 작성",
+      "rights": "웹페이지 원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    },
+    {
+      "record": "sunflowers-1887",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436524",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "self-portrait-with-a-straw-hat",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436532",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "oleanders",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436530",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "la-berceuse",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/437984",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "wheat-field-with-cypresses",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436535",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "irises-1890",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436528",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    }
+  ],
+  "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
+}
