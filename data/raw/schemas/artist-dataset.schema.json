@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:skn35-art-tracker:artist-dataset:0.2",
+  "title": "작가별 원천 데이터셋",
+  "description": "artists, artworks, documents, document_artists 적재 전 검증용 스키마",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_status",
+    "collected_at",
+    "scope_note",
+    "default_content_rights",
+    "artist",
+    "artworks",
+    "documents"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.2-draft" },
+    "record_status": { "type": "string", "minLength": 1 },
+    "collected_at": { "type": "string", "format": "date" },
+    "scope_note": { "type": "string", "minLength": 1 },
+    "default_content_rights": { "$ref": "#/$defs/contentRights" },
+    "artist": { "$ref": "#/$defs/artist" },
+    "artworks": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "$ref": "#/$defs/artwork" }
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/artistBioDocument" },
+          { "$ref": "#/$defs/artworkCommentaryDocument" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "nullableUri": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "contentRights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applies_to", "content_author", "copyright_notice", "license"],
+      "properties": {
+        "applies_to": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "content_author": { "type": "string", "minLength": 1 },
+        "copyright_notice": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "artist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name",
+        "name_en",
+        "birth_year",
+        "death_year",
+        "nationality",
+        "movement_slug",
+        "summary",
+        "portrait_url",
+        "portrait_source_url",
+        "portrait_license"
+      ],
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "name_en": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "birth_year": { "type": "integer", "minimum": 1, "maximum": 2100 },
+        "death_year": { "type": "integer", "minimum": 1, "maximum": 2100 },
+        "nationality": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "movement_slug": { "$ref": "#/$defs/slug" },
+        "summary": { "type": "string", "minLength": 1 },
+        "portrait_url": { "$ref": "#/$defs/nullableUri" },
+        "portrait_source_url": { "$ref": "#/$defs/nullableUri" },
+        "portrait_license": { "type": ["string", "null"] }
+      }
+    },
+    "artwork": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "artist_slug",
+        "movement_slug",
+        "title",
+        "title_en",
+        "year_label",
+        "year_start",
+        "medium",
+        "dimensions",
+        "collection",
+        "object_number",
+        "description",
+        "image_url",
+        "image_api_url",
+        "image_source_url",
+        "image_license",
+        "image_license_url",
+        "is_featured"
+      ],
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "artist_slug": { "$ref": "#/$defs/slug" },
+        "movement_slug": { "$ref": "#/$defs/slug" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "title_en": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "year_label": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "year_start": { "type": "integer", "minimum": 1, "maximum": 2100 },
+        "medium": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "dimensions": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "collection": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "object_number": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "image_url": { "$ref": "#/$defs/nullableUri" },
+        "image_api_url": { "$ref": "#/$defs/nullableUri" },
+        "image_source_url": { "$ref": "#/$defs/nullableUri" },
+        "image_license": { "type": ["string", "null"] },
+        "image_license_url": { "$ref": "#/$defs/nullableUri" },
+        "is_featured": { "type": "boolean" }
+      }
+    },
+    "artistBioDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_key",
+        "doc_type",
+        "title",
+        "year",
+        "artist_slugs",
+        "artwork_slug",
+        "content",
+        "source_url",
+        "source_name",
+        "license",
+        "content_author",
+        "copyright_notice",
+        "source_rights_note",
+        "review_status"
+      ],
+      "properties": {
+        "document_key": { "$ref": "#/$defs/slug" },
+        "doc_type": { "const": "artist_bio" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "year": { "type": "string", "minLength": 1 },
+        "artist_slugs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/slug" }
+        },
+        "artwork_slug": { "type": "null" },
+        "content": { "type": "string", "minLength": 500 },
+        "source_url": { "type": "string", "format": "uri" },
+        "source_name": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "license": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "content_author": { "type": "string", "minLength": 1 },
+        "copyright_notice": { "type": "string", "minLength": 1 },
+        "source_rights_note": { "type": "string", "minLength": 1 },
+        "review_status": { "type": "string", "minLength": 1 }
+      }
+    },
+    "artworkCommentaryDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_key",
+        "doc_type",
+        "title",
+        "year",
+        "artwork_slug",
+        "content",
+        "source_url",
+        "source_name",
+        "license",
+        "content_author",
+        "copyright_notice",
+        "source_rights_note",
+        "review_status"
+      ],
+      "properties": {
+        "document_key": { "$ref": "#/$defs/slug" },
+        "doc_type": { "const": "artwork_commentary" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "year": { "type": "string", "minLength": 1 },
+        "artwork_slug": { "$ref": "#/$defs/slug" },
+        "content": {
+          "type": "string",
+          "minLength": 500,
+          "allOf": [
+            { "pattern": "\\[기본 정보\\]" },
+            { "pattern": "\\[화면 관찰\\]" },
+            { "pattern": "\\[(구성과|세부 요소)" },
+            { "pattern": "\\[근거 있는 해석\\]" },
+            { "pattern": "\\[질문 대응 한계\\]" }
+          ]
+        },
+        "source_url": { "type": "string", "format": "uri" },
+        "source_name": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "license": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "content_author": { "type": "string", "minLength": 1 },
+        "copyright_notice": { "type": "string", "minLength": 1 },
+        "source_rights_note": { "type": "string", "minLength": 1 },
+        "review_status": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
