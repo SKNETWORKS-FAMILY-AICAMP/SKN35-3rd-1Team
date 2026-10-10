@@ -1,0 +1,88 @@
+{
+  "bio.md": {
+    "doc_type": "artist_bio",
+    "title": "클로드 모네의 생애",
+    "artist_slugs": [
+      "claude-monet"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%81%B4%EB%A1%9C%EB%93%9C_%EB%AA%A8%EB%84%A4",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false
+  },
+  "impression-sunrise.md": {
+    "doc_type": "artwork_commentary",
+    "title": "인상, 해돋이 해설",
+    "artist_slugs": null,
+    "artwork_slug": "impression-sunrise",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%83%81,_%ED%95%B4%EB%8F%8B%EC%9D%B4",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Monet_-_Impression%2C_Sunrise.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "water-lilies.md": {
+    "doc_type": "artwork_commentary",
+    "title": "수련 연작 해설",
+    "artist_slugs": null,
+    "artwork_slug": "water-lilies",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%88%98%EB%A0%A8_(%EB%AA%A8%EB%84%A4)",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "rouen-cathedral.md": {
+    "doc_type": "artwork_commentary",
+    "title": "루앙 대성당 연작 해설",
+    "artist_slugs": null,
+    "artwork_slug": "rouen-cathedral",
+    "source_url": "https://ko.wikipedia.org/wiki/%EB%A3%A8%EC%95%99_%EB%8C%80%EC%84%B1%EB%8B%B9_(%EB%AA%A8%EB%84%A4)",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/30/RouenCathedral_Monet_1894.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "haystacks.md": {
+    "doc_type": "artwork_commentary",
+    "title": "건초더미 연작 해설",
+    "artist_slugs": null,
+    "artwork_slug": "haystacks",
+    "source_url": "https://ko.wikipedia.org/wiki/%EA%B1%B4%EC%B4%88%EB%8D%94%EB%AF%B8_(%EB%AA%A8%EB%84%A4%EC%9D%98_%EC%97%B0%EC%9E%91)",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "ko",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Claude_Monet_-_Stacks_of_Wheat_%28End_of_Summer%29_-_1985.1103_-_Art_Institute_of_Chicago.jpg?utm_source=ko.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  },
+  "woman-with-parasol.md": {
+    "doc_type": "artwork_commentary",
+    "title": "양산을 쓴 여인 해설",
+    "artist_slugs": null,
+    "artwork_slug": "woman-with-parasol",
+    "source_url": "https://en.wikipedia.org/wiki/Woman_with_a_Parasol_%E2%80%93_Madame_Monet_and_Her_Son",
+    "source_name": "Wikipedia (en)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-10",
+    "lang": "en",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+    "image_license": "Public domain",
+    "needs_review": false
+  }
+}
