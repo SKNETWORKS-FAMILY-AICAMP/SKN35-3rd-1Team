@@ -1,6 +1,6 @@
 {
   "artist_slug": "paul-gauguin",
-  "collected_at": "2026-10-10",
+  "collected_at": "2026-10-11",
   "sources": [
     {
       "record": "artist_bio",
@@ -50,6 +50,90 @@
       "source_url": "https://www.metmuseum.org/art/collection/search/436446",
       "usage": "소장품 메타데이터, 작품 사실과 비판적 맥락 확인",
       "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "where-do-we-come-from",
+      "source_name": "Museum of Fine Arts, Boston",
+      "source_url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "usage": "작품 메타데이터, 작가가 설명한 읽기 방향과 해석 범위 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "vision-after-the-sermon",
+      "source_name": "National Galleries of Scotland",
+      "source_url": "https://www.nationalgalleries.org/art-and-artists/4940",
+      "usage": "작품 메타데이터와 현실·환상 구성, 종합주의 해설 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-yellow-christ",
+      "source_name": "Buffalo AKG Art Museum",
+      "source_url": "https://buffaloakg.org/artworks/19464-le-christ-jaune-yellow-christ",
+      "usage": "작품 메타데이터, 목조 십자가 출처와 색의 의미 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "spirit-of-the-dead-watching",
+      "source_name": "Buffalo AKG Art Museum",
+      "source_url": "https://buffaloakg.org/artworks/19651-mana%C3%B2-tupapa%C3%BA-spirit-dead-watching",
+      "usage": "작품 메타데이터, 고갱이 설명한 투파파우와 인광, 모델 및 식민주의적 권력관계 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "nevermore",
+      "source_name": "The Courtauld Gallery",
+      "source_url": "https://gallerycollections.courtauld.ac.uk/object-p-1932-sc-163",
+      "usage": "작품 메타데이터, 까마귀와 배경 인물이 만드는 불안 및 현대의 비판적 해설 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "when-will-you-marry",
+      "source_name": "The Phillips Collection / Art Institute of Chicago",
+      "source_url": "https://www.phillipscollection.org/event/2015-12-09-painting-tahitis-women-paris",
+      "usage": "작품의 제작·전시 맥락과 타히티 여성 재현의 식민주의적 맥락 확인; 메타데이터는 Art Institute of Chicago 학술 카탈로그로 교차 확인",
+      "rights": "작품 원본은 퍼블릭 도메인이며 현재 사유 컬렉션임; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "arearea",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/arearea-291",
+      "usage": "작품 메타데이터, 전경의 관찰 모티프와 배경의 가상 의례, 전시 이력 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-stockbroker-artist",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "usage": "증권 중개 경력, 금융 위기와 전업 과정 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-family-separation",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "usage": "결혼, 코펜하겐 이주와 가족 별거 과정 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-pont-aven-brittany",
+      "source_name": "National Galleries of Scotland",
+      "source_url": "https://www.nationalgalleries.org/art-and-artists/4940",
+      "usage": "퐁타벤 시기와 종합주의 발전 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-two-tahiti-stays",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/femmes-de-tahiti-290",
+      "usage": "첫 타히티 체류의 동기와 작품 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-marquesas-final-years",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
+      "usage": "두 번째 타히티 체류, 마르키즈 이주와 사망 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
     }
   ],
   "open_access_policy": "https://www.metmuseum.org/policies/image-resources"

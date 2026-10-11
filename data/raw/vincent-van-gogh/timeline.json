@@ -1,0 +1,140 @@
+{
+  "artist_slug": "vincent-van-gogh",
+  "purpose": "스토리텔링용 연표. 생애 사건과 작품을 연결하며 사건별 공식 출처를 직접 기록한다.",
+  "content_author": "SKN35-3rd-1Team 데이터팀",
+  "license": "CC BY 4.0",
+  "collected_at": "2026-10-11",
+  "needs_review": true,
+  "events": [
+    {
+      "year": "1853",
+      "title": "브라반트 목사의 아들로 태어나다",
+      "story": "빈센트는 1853년 3월 30일 네덜란드 준데르트에서 목사 테오도뤼스와 안나의 아들로 태어났다. 자연과 종교가 가까운 환경에서 자랐지만, 훗날 제도 종교와는 갈등을 겪었다.",
+      "people": [
+        "테오도뤼스 반 고흐",
+        "안나 코르넬리아 카르벤튀스"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/art/vincent-van-gogh",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1869–1876",
+      "title": "미술상 직원으로 시작한 사회생활",
+      "story": "열여섯 살에 헤이그의 구필 화랑에서 일하기 시작해 런던과 파리 지점도 경험했다. 작품을 파는 일에는 적응하지 못했고 1876년 해고된 뒤 교사와 서점 직원, 설교자의 길을 차례로 시도했다.",
+      "people": [
+        "테오 반 고흐"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-gogh-keeps-the-faith",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1880",
+      "title": "보리나주에서 화가의 길을 결심하다",
+      "story": "벨기에 광산 지역 보리나주에서 가난한 광부들과 지낸 뒤 종교 기관과 결별했다. 오랜 침묵 끝에 테오에게 편지를 보내 그림 공부를 계속하겠다고 결심했고, 이때부터 약 10년의 집중적인 화가 생활이 시작됐다.",
+      "people": [
+        "테오 반 고흐"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-gogh-keeps-the-faith",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1883–1885",
+      "title": "뉘넌의 농민 연구와 《감자 먹는 사람들》",
+      "story": "뉘넌에서 농민과 직조공의 얼굴·손·일상을 반복해서 그리며 복잡한 인물화를 준비했다. 1885년 《감자 먹는 사람들》에서 노동으로 거칠어진 손과 그 손으로 얻은 음식을 연결하려 했다.",
+      "people": [
+        "더 흐로트 가족"
+      ],
+      "related_artworks": [
+        "the-potato-eaters"
+      ],
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0005V1962",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1886–1888",
+      "title": "파리에서 색이 밝아지다",
+      "story": "파리에서 테오와 살며 인상주의와 신인상주의, 일본 판화를 접했다. 어두운 네덜란드 시기의 색조가 밝아지고 짧은 붓질과 보색 대비를 실험했으며 많은 자화상을 그렸다.",
+      "people": [
+        "테오 반 고흐",
+        "에밀 베르나르",
+        "폴 고갱"
+      ],
+      "related_artworks": [
+        "self-portrait-with-a-straw-hat",
+        "sunflowers-1887"
+      ],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/art/vincent-van-gogh",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1888",
+      "title": "아를의 노란 집과 해바라기",
+      "story": "남프랑스의 빛을 찾아 아를로 옮겨 예술가 공동체를 꿈꾸며 노란 집을 빌렸다. 고갱의 방을 장식하려고 해바라기 연작을 그렸고, 자연의 활력과 우정에 대한 기대를 노란색과 두꺼운 물감으로 표현했다.",
+      "people": [
+        "폴 고갱",
+        "테오 반 고흐"
+      ],
+      "related_artworks": [
+        "sunflowers-arles",
+        "oleanders"
+      ],
+      "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1888-12",
+      "title": "고갱과의 결별, 그리고 귀 사건",
+      "story": "두 달간 함께 작업한 고갱과의 갈등이 극심해진 12월 23일, 고흐는 혼란 속에서 자신의 왼쪽 귀 일부를 훼손했다. 정확한 질환과 행동의 원인을 하나로 확정할 수 없으며, 다음 날 병원에 입원했다.",
+      "people": [
+        "폴 고갱",
+        "테오 반 고흐"
+      ],
+      "related_artworks": [
+        "self-portrait-with-bandaged-ear"
+      ],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincent-van-gogh-faq/why-did-vincent-van-gogh-cut-off-his-ear",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1889–1890",
+      "title": "생레미 요양원에서 자연을 다시 그리다",
+      "story": "반복되는 발작을 염려해 생폴드모솔 요양원에 자발적으로 입원했다. 병실 창과 정원, 주변의 밀밭·올리브나무·사이프러스를 관찰하고 기억과 상상을 더해 많은 작품을 제작했다.",
+      "people": [
+        "테오필 페롱 박사"
+      ],
+      "related_artworks": [
+        "the-starry-night",
+        "wheat-field-with-cypresses",
+        "irises-1890"
+      ],
+      "source_url": "https://www.moma.org/collection/works/79802",
+      "source_name": "The Museum of Modern Art"
+    },
+    {
+      "year": "1890-05–07",
+      "title": "오베르에서 이어진 마지막 실험",
+      "story": "1890년 5월 오베르쉬르우아즈로 옮겨 가셰 박사의 돌봄 아래 교회·초가집·정원·들판을 빠르게 그렸다. 고통이 이어졌지만 동시에 새로운 캔버스 비율과 색, 붓질을 실험한 매우 생산적인 시기였다.",
+      "people": [
+        "폴 가셰",
+        "테오 반 고흐"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/en/visit/whats-on/exhibitions/overview-past-exhibitions/van-gogh-in-auvers-sur-oise",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1890-07-29",
+      "title": "테오가 지킨 마지막 순간",
+      "story": "7월 27일 총상을 입고 숙소로 돌아온 고흐는 이틀 뒤 테오가 곁을 지키는 가운데 숨졌다. 특정 작품을 확정적인 유서나 마지막 그림으로 단정하기보다, 마지막 달의 생산성과 절망이 함께 있었다고 설명해야 한다.",
+      "people": [
+        "테오 반 고흐"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/assets/ff9eb51c-e515-4e3c-bdaf-add0895b964a",
+      "source_name": "Van Gogh Museum"
+    }
+  ]
+}
