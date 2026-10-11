@@ -1,0 +1,265 @@
+{
+  "bio.md": {
+    "doc_type": "artist_bio",
+    "title": "카라바조의 생애",
+    "artist_slugs": [
+      "caravaggio"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%B9%B4%EB%9D%BC%EB%B0%94%EC%A1%B0",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "artist": {
+      "slug": "caravaggio",
+      "name": "카라바조",
+      "name_en": "Caravaggio",
+      "movement_slug": "baroque",
+      "birth_year": 1571,
+      "death_year": 1610,
+      "nationality": "이탈리아",
+      "wikidata": "https://www.wikidata.org/wiki/Q42207"
+    }
+  },
+  "the-calling-of-saint-matthew.md": {
+    "doc_type": "artwork_commentary",
+    "title": "성 마태오를 부르심 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-calling-of-saint-matthew",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%84%B1_%EB%A7%88%ED%83%9C%EC%98%A4%EB%A5%BC_%EB%B6%80%EB%A5%B4%EC%8B%AC",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-calling-of-saint-matthew",
+      "artist_slug": "caravaggio",
+      "movement_slug": "baroque",
+      "title": "성 마태오를 부르심",
+      "title_en": "The Calling of Saint Matthew",
+      "year_label": "1599–1600",
+      "year_start": 1599,
+      "medium": "캔버스에 유채",
+      "dimensions": "322 × 340 cm",
+      "collection": "산 루이지 데이 프란체시 성당 (로마)",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q969377",
+      "is_featured": true
+    }
+  },
+  "judith-beheading-holofernes.md": {
+    "doc_type": "artwork_commentary",
+    "title": "홀로페르네스의 목을 베는 유디트 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "judith-beheading-holofernes",
+    "source_url": "https://en.wikipedia.org/wiki/Judith_Beheading_Holofernes_%28Caravaggio%29",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Judith_Beheading_Holofernes_-_Caravaggio.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "judith-beheading-holofernes",
+      "artist_slug": "caravaggio",
+      "movement_slug": "baroque",
+      "title": "홀로페르네스의 목을 베는 유디트",
+      "title_en": "Judith Beheading Holofernes",
+      "year_label": "c. 1599–1602",
+      "year_start": 1599,
+      "medium": "캔버스에 유채",
+      "dimensions": "145 × 195 cm",
+      "collection": "국립고전미술관 바르베리니 궁 (로마)",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes_-_Caravaggio.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q2470123",
+      "is_featured": false
+    },
+    "translation": {
+      "file": "judith-beheading-holofernes.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "8e04bdbb39019f73d123a8d1322d455ad281ad58c356e3bdb7a8fbb3d98641e1"
+    }
+  },
+  "supper-at-emmaus.md": {
+    "doc_type": "artwork_commentary",
+    "title": "엠마오의 만찬 해설",
+    "artist_slugs": null,
+    "artwork_slug": "supper-at-emmaus",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%97%A0%EB%A7%88%EC%98%A4%EC%9D%98_%EB%A7%8C%EC%B0%AC_%28%EC%B9%B4%EB%9D%BC%EB%B0%94%EC%A1%B0%2C_%EB%9F%B0%EB%8D%98%29",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Supper_at_Emmaus_-_National_Gallery_London.jpeg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "supper-at-emmaus",
+      "artist_slug": "caravaggio",
+      "movement_slug": "baroque",
+      "title": "엠마오의 만찬",
+      "title_en": "Supper at Emmaus",
+      "year_label": "1601",
+      "year_start": 1601,
+      "medium": "캔버스에 유채",
+      "dimensions": "141 × 196.2 cm",
+      "collection": "내셔널 갤러리 (런던)",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Caravaggio_-_Supper_at_Emmaus_-_National_Gallery_London.jpeg",
+      "wikidata": "https://www.wikidata.org/wiki/Q318947",
+      "is_featured": true
+    }
+  },
+  "david-with-the-head-of-goliath.md": {
+    "doc_type": "artwork_commentary",
+    "title": "골리앗의 머리를 든 다윗 해설",
+    "artist_slugs": null,
+    "artwork_slug": "david-with-the-head-of-goliath",
+    "source_url": "https://ko.wikipedia.org/wiki/%EA%B3%A8%EB%A6%AC%EC%95%97%EC%9D%98_%EB%A8%B8%EB%A6%AC%EB%A5%BC_%EB%93%A0_%EB%8B%A4%EC%9C%97_%28%EC%B9%B4%EB%9D%BC%EB%B0%94%EC%A1%B0%2C_%EB%A1%9C%EB%A7%88%29",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David_with_the_Head_of_Goliath-Caravaggio_%281610%29.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "david-with-the-head-of-goliath",
+      "artist_slug": "caravaggio",
+      "movement_slug": "baroque",
+      "title": "골리앗의 머리를 든 다윗",
+      "title_en": "David with the Head of Goliath",
+      "year_label": "c. 1605–1610",
+      "year_start": 1605,
+      "medium": "캔버스에 유채",
+      "dimensions": "125 × 101 cm",
+      "collection": "보르게세 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:David_with_the_Head_of_Goliath-Caravaggio_%281610%29.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q2627056",
+      "is_featured": false
+    }
+  },
+  "the-incredulity-of-saint-thomas.md": {
+    "doc_type": "artwork_commentary",
+    "title": "의심하는 성 토마스 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "the-incredulity-of-saint-thomas",
+    "source_url": "https://en.wikipedia.org/wiki/The_Incredulity_of_Saint_Thomas_%28Caravaggio%29",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_incredulity.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-incredulity-of-saint-thomas",
+      "artist_slug": "caravaggio",
+      "movement_slug": "baroque",
+      "title": "의심하는 성 토마스",
+      "title_en": "The Incredulity of Saint Thomas",
+      "year_label": "c. 1601–1602",
+      "year_start": 1601,
+      "medium": "캔버스에 유채",
+      "dimensions": "107 × 146 cm",
+      "collection": "상수시 회화관 (포츠담)",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Caravaggio_incredulity.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q2419166",
+      "is_featured": false
+    },
+    "translation": {
+      "file": "the-incredulity-of-saint-thomas.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "5cf2d2eb5b7ff9e4692a98072179df5117ce48f1608c6a822acd6eeb5519b2ae"
+    }
+  },
+  "bio.en.md": {
+    "doc_type": "artist_bio",
+    "title": "카라바조의 생애 (영문)",
+    "artist_slugs": [
+      "caravaggio"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Caravaggio",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "생애 전체",
+    "translation": {
+      "file": "bio.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "d0201ca1015f242085b30abf4b726af2f01ab0dd89c596baf5d4c5cfa7175ca0"
+    }
+  },
+  "caravaggisti.md": {
+    "doc_type": "artist_bio",
+    "title": "카라바조 화파",
+    "artist_slugs": [
+      "caravaggio"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%B9%B4%EB%9D%BC%EB%B0%94%EC%A1%B0_%ED%99%94%ED%8C%8C",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "영향"
+  },
+  "caravaggisti.en.md": {
+    "doc_type": "artist_bio",
+    "title": "카라바조 화파 (영문)",
+    "artist_slugs": [
+      "caravaggio"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Caravaggisti",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "영향",
+    "translation": {
+      "file": "caravaggisti.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "a70c2cb8d2d9b240c61e1667b080853eed4313eb796b0c397e9f41e40a03f9be"
+    }
+  },
+  "timeline.json": {
+    "doc_type": "artist_bio",
+    "title": "카라바조의 생애 연표",
+    "artist_slugs": [
+      "caravaggio"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Caravaggio",
+    "source_name": "위키백과 원문을 바탕으로 팀이 정리",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "연표"
+  }
+}

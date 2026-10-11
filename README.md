@@ -14,7 +14,7 @@ museum-rag-react-fastapi-tidb/
 │   │   ├── api/routes/      엔드포인트 (요청 검증, 응답 반환)
 │   │   ├── services/        서비스 로직 (좋아요, 내 서재, 추천, 챗봇 흐름)
 │   │   ├── repositories/    TiDB 조회·저장, 벡터 거리 SQL
-│   │   ├── models/          SQLAlchemy 모델 (테이블 11개)
+│   │   ├── models/          SQLAlchemy 모델 (테이블 12개)
 │   │   ├── schemas/         Pydantic 요청·응답 스키마
 │   │   ├── rag/             청킹, 검색, 프롬프트, 답변 생성, 출처
 │   │   ├── clients/         임베딩·LLM API 호출

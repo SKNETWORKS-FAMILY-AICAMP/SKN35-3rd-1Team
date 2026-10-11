@@ -1,5 +1,26 @@
 # alembic
 
+TiDB 스키마 변경 이력을 관리합니다. 명령은 `backend/`에서 실행합니다.
+
+```bash
+uv run alembic upgrade head
+uv run alembic current
+uv run alembic check
+```
+
+최초 migration인 `versions/20261011_0001_create_mvp_schema.py`가 ERD의 11개
+테이블, 외래 키, 일반 인덱스와 `VECTOR(1536)` 컬럼을 생성합니다. 선택 사항인
+HNSW 인덱스는 데이터 규모가 커졌을 때 `docs/db/04_vector_index_tidb.sql`로
+별도 적용합니다.
+
+새 모델 변경은 아래처럼 migration 후보를 만든 뒤 생성 내용을 검토해서
+커밋합니다.
+
+```bash
+uv run alembic revision --autogenerate -m "describe change"
+uv run alembic upgrade head
+```
+
 DB 스키마 변경 이력을 관리합니다.
 
 ## 처음 한 번 초기화하기

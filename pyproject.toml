@@ -13,6 +13,7 @@ dependencies = [
     "pydantic-settings>=2.15.0",
     "pyjwt>=2.15.1",
     "pymysql>=1.2.3",
+    "python-dotenv>=1.2.4",
     "requests>=2.34.2",
     "sqlalchemy>=2.1.4",
     "tidb-vector>=0.0.15",

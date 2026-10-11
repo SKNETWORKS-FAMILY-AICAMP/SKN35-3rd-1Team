@@ -14,7 +14,7 @@ FK 때문에 부모 테이블부터 채워야 합니다. 아래 순서대로 실
 | 4 | `build_artwork_embeddings.py` | `artworks` | `artwork_embeddings` |
 | 5 | `seed_demo_users.py` | (없음) | `users`, `artwork_likes` 등 발표용 계정 |
 
-원본을 정제하는 전처리 스크립트(`preprocess_*.py`)도 여기 둡니다. `data/raw/`를 읽어 `data/processed/`에 씁니다.
+원본을 정제하는 전처리 스크립트(`preprocess.py`)도 여기 둡니다. `data/raw/`와 `data/mappings/catalog.json`을 읽어 `data/processed/`에 씁니다. 적재 스크립트(1번)보다 먼저 실행합니다. 기준은 [`docs/data-collection.md`](../../docs/data-collection.md)에 있습니다.
 
 ## 실행 방법
 

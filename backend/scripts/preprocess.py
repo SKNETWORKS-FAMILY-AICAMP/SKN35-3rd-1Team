@@ -1,0 +1,512 @@
+"""data/raw → data/processed 전처리.
+
+원본은 작가마다 형식이 달라서, 형식별로 읽는 함수를 두고 결과를 한 가지 형태로 모은다.
+    - dataset.json            (고흐, 고갱)     작가·작품·문서가 이미 구조화됨
+    - *.md + sources.json     (모네, 세잔, 렘브란트, 카라바조)  위키백과 원문
+    - timeline.json           연표. 사건 하나 = 문서 하나
+    - _comparisons/           비교 문서
+원본에 없는 값(모네·세잔 작품 정보, 사조)은 data/mappings/catalog.json 에서 채운다.
+
+실행 (backend/ 에서):  uv run python -m scripts.preprocess
+결과: data/processed/{movements,artists,artworks,documents}.jsonl + _SUCCESS.json
+
+검수 (data/mappings/reviews.json 에 기록):
+    uv run python -m scripts.preprocess review --list
+    uv run python -m scripts.preprocess review --approve "rembrandt/timeline-*" --reviewer 홍길동
+    검수할 때의 본문 해시를 함께 저장한다. 그 뒤 본문이 바뀌면 다시 검토 필요(needs_review=true)로 돌아간다.
+
+출력 규칙
+    - 4개 파일을 data/processed/.staging/ 에 모두 만든 뒤 한꺼번에 교체한다.
+    - 성공하면 _SUCCESS.json(파일별 sha256, 줄 수)을 마지막에 쓴다. 적재 스크립트는
+      load_processed() 로 읽는다. _SUCCESS.json 이 없거나 해시가 다르면 읽지 않는다.
+    - 실패하면 기존 결과와 _SUCCESS.json 은 그대로 두고 _FAILED.json 에 이유를 남긴다.
+"""
+
+import argparse
+import fnmatch
+import hashlib
+import json
+import os
+import re
+import shutil
+import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+RAW = ROOT / "data" / "raw"
+OUT = ROOT / "data" / "processed"
+STAGING = OUT / ".staging"
+SUCCESS = OUT / "_SUCCESS.json"
+FAILED = OUT / "_FAILED.json"
+MAPPING = ROOT / "data" / "mappings" / "catalog.json"
+REVIEWS = ROOT / "data" / "mappings" / "reviews.json"
+OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl")
+
+MIN_CONTENT = 200  # 이보다 짧은 문서는 경고
+MIN_ARTWORKS = 3  # 기획서 기준: 작가당 대표작 5점, 최소 3점
+SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+DOC_TYPES = {"artist_bio", "artwork_commentary", "artist_comparison"}
+# dataset.json 의 review_status 가 이 값일 때만 검수 완료로 본다. 그 밖의 값은 모두 needs_review=true
+REVIEWED = {"검수 완료", "reviewed", "approved"}
+
+# 위키백과 문서에서 통째로 버리는 섹션 (본문이 아닌 목록·링크)
+DROP_SECTIONS = {
+    "같이 보기", "각주", "내용주", "참고 문헌", "참고문헌", "외부 링크", "갤러리", "읽을거리", "출처",
+    "See also", "References", "Notes", "External links", "Further reading", "Gallery", "Sources",
+    "Bibliography", "Citations", "Footnotes", "In popular culture", "Works about Rembrandt",
+    "Literary works (e.g. poetry and fiction)", "Music", "Films", "Exhibitions", "Museum collections",
+    "Selected works", "Paintings", "Drawings and etchings", "Other major paintings",
+}
+HEADING = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
+
+ARTIST_FIELDS = ("slug", "name", "name_en", "movement_slug", "birth_year", "death_year", "nationality",
+                 "summary", "portrait_url")
+ARTWORK_FIELDS = ("slug", "artist_slug", "movement_slug", "title", "title_en", "year_label", "year_start", "medium",
+                  "dimensions", "collection", "description", "image_url", "image_source_url", "image_license",
+                  "is_featured")
+
+warnings: list[str] = []
+
+
+# ---------------------------------------------------------------- 정제
+def clean_wiki(text: str) -> str:
+    """위키 문법 제목을 마크다운 제목으로 바꾸고, 목록·링크 섹션과 빈 섹션을 지운다. 본문은 고치지 않는다."""
+    parts = HEADING.split(text)  # [앞부분, 등호, 제목, 본문, 등호, 제목, 본문, ...]
+    out = [parts[0].strip()]
+    skip_level = None
+    for i in range(1, len(parts), 3):
+        level, title, body = len(parts[i]), parts[i + 1], parts[i + 2].strip()
+        if skip_level is not None and level > skip_level:
+            continue  # 버린 섹션의 하위 섹션
+        skip_level = None
+        if title in DROP_SECTIONS:
+            skip_level = level
+            continue
+        if body:
+            out.append(f"{'#' * level} {title}\n{body}")
+    text = "\n\n".join(p for p in out if p)
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
+
+
+def first_sentences(text: str, n: int = 2) -> str | None:
+    """카드용 짧은 설명. 첫 문단의 앞 n문장."""
+    para = text.split("\n")[0].strip()
+    sents = re.findall(r".+?(?:다\.|다!|\.)(?=\s|$)", para)
+    return " ".join(s.strip() for s in sents[:n]) or None
+
+
+def strip_query(url: str | None) -> str | None:
+    return url.split("?")[0] if url else url
+
+
+def commons_page(image_url: str | None) -> str | None:
+    """위키미디어 원본 파일 주소에서 파일 설명 페이지(이용 조건이 적힌 곳) 주소를 만든다."""
+    m = re.match(r"https://upload\.wikimedia\.org/wikipedia/commons/(?:thumb/)?[0-9a-f]/[0-9a-f]{2}/([^/?]+)", image_url or "")
+    return f"https://commons.wikimedia.org/wiki/File:{m.group(1)}" if m else None
+
+
+def content_hash(content: str) -> str:
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def lang_of(text: str) -> str:
+    return "ko" if re.search("[가-힣]", text[:300]) else "en"
+
+
+def needs_review_of(record_status: str | None, review_status: str | None) -> bool:
+    """dataset.json 형식의 검수 상태. 초안(draft)이거나 검수 완료가 아니면 검토 필요."""
+    if record_status and record_status.startswith("draft"):
+        return True
+    return review_status is not None and review_status not in REVIEWED
+
+
+# ---------------------------------------------------------------- 형식별 읽기
+def read_dataset(folder: Path, cat: dict) -> None:
+    """고흐·고갱 형식. 필드가 processed와 거의 같으므로 이름만 맞춘다."""
+    d = json.loads((folder / "dataset.json").read_text(encoding="utf-8"))
+    a = d["artist"]
+    cat["artists"][a["slug"]] = {k: a.get(k) for k in ARTIST_FIELDS}
+    for w in d["artworks"]:
+        cat["artworks"][w["slug"]] = {k: w.get(k) for k in ARTWORK_FIELDS}
+    for x in d["documents"]:
+        cat["documents"].append({
+            "doc_key": f"{a['slug']}/{x['document_key']}",
+            "doc_type": x["doc_type"], "title": x["title"], "content": x["content"].strip(),
+            "artist_slugs": x.get("artist_slugs") or [], "artwork_slug": x.get("artwork_slug"),
+            "source_url": x["source_url"], "source_name": x.get("source_name"),
+            "license": (x.get("license") or "").split(" (")[0] or None,
+            "lang": "ko", "topic": None, "related_artwork_slugs": [],
+            "needs_review": needs_review_of(d.get("record_status"), x.get("review_status")),
+        })
+
+
+def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
+    """위키백과 원문 형식. sources.json 의 항목 하나가 md 파일 하나."""
+    slug = folder.name
+    sources = json.loads((folder / "sources.json").read_text(encoding="utf-8"))
+    artist = {"slug": slug, "summary": None, "portrait_url": None}
+    artist.update(mapping["artists"].get(slug, {}))
+    for fname, s in sources.items():
+        if not fname.endswith(".md"):
+            continue
+        raw = (folder / fname).read_text(encoding="utf-8")
+        content = clean_wiki(raw)
+        lang = s.get("lang") or lang_of(raw)
+        title, source_name, needs_review = s["title"], s.get("source_name"), bool(s.get("needs_review", False))
+        tr = s.get("translation")
+        if tr and (folder / tr["file"]).exists():
+            # 번역본(scripts/translate.py)이 있으면 영어 원문 대신 쓴다. doc_key 는 원문과 같게 둔다
+            if tr["source_sha256"] != content_hash(content):
+                warnings.append(f"{slug}/{fname}: 번역 후 원문이 바뀜. scripts.translate 를 다시 실행하세요")
+            content = clean_wiki((folder / tr["file"]).read_text(encoding="utf-8"))
+            lang = "ko"
+            title = title.replace(" (영문)", "") + " (영문 번역)"
+            source_name = f"{source_name} · 한국어 번역 ({tr['model']})"
+            needs_review = True  # 기계 번역은 사람이 고유명사 표기 등을 확인해야 함
+        if "artist" in s:  # 렘브란트·카라바조: 수집할 때 작가 정보를 같이 적어 둠
+            artist.update({k: v for k, v in s["artist"].items() if k in ARTIST_FIELDS})
+        if s["doc_type"] == "artist_bio" and fname == "bio.md" and lang == "ko":
+            artist["summary"] = first_sentences(content)
+        if s["doc_type"] == "artwork_commentary":
+            add_artwork(cat, slug, s, content, lang, mapping, translated=bool(tr))
+        cat["documents"].append({
+            "doc_key": f"{slug}/{fname.removesuffix('.md')}",
+            "doc_type": s["doc_type"], "title": title, "content": content,
+            "artist_slugs": s.get("artist_slugs") or [], "artwork_slug": s.get("artwork_slug"),
+            "source_url": s["source_url"], "source_name": source_name, "license": s.get("license"),
+            "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": [],
+            "needs_review": needs_review,
+        })
+    cat["artists"][slug] = {k: artist.get(k) for k in ARTIST_FIELDS}
+
+
+def add_artwork(
+    cat: dict, artist_slug: str, s: dict, content: str, lang: str, mapping: dict, translated: bool = False
+) -> None:
+    """작품 해설 문서에서 작품 카드를 만든다. 한 작품에 한국어·영어 문서가 둘 다 있으면 한국어 값을 쓴다."""
+    slug = s["artwork_slug"]
+    w = cat["artworks"].get(slug) or {k: None for k in ARTWORK_FIELDS}
+    w.update({"slug": slug, "artist_slug": artist_slug})
+    w.update({k: v for k, v in (s.get("artwork") or {}).items() if k in ARTWORK_FIELDS and v is not None})
+    manual = mapping["artworks"].get(slug, {})
+    w.update(manual)
+    w["image_url"] = w.get("image_url") or strip_query(s.get("image_url"))
+    w["image_license"] = w.get("image_license") or s.get("image_license")
+    # 카드 설명 우선순위: 사람이 쓴 설명 > 한국어 원문 > 번역본 (번역본은 비어 있을 때만)
+    if lang == "ko" and "description" not in manual and (not translated or not w.get("description")):
+        w["description"] = first_sentences(content)
+    w["is_featured"] = bool(w.get("is_featured"))
+    cat["artworks"][slug] = w
+
+
+def read_timeline(folder: Path, cat: dict) -> None:
+    """연표의 사건 하나를 문서 하나로 만든다. 청크 하나에 이야기 하나가 온전히 들어가게 하려는 것."""
+    path = folder / "timeline.json"
+    if not path.exists():
+        return
+    t = json.loads(path.read_text(encoding="utf-8"))
+    src_path = folder / "sources.json"
+    sources = json.loads(src_path.read_text(encoding="utf-8")) if src_path.exists() else {}
+    slug = t["artist_slug"]
+    name = cat["artists"][slug]["name"]
+    for i, e in enumerate(t["events"]):
+        titles = [cat["artworks"][a]["title"] for a in e["related_artworks"] if a in cat["artworks"]]
+        lines = [f"{e['year']} · {e['title']}", e["story"]]
+        if e["people"]:
+            lines.append("등장 인물: " + ", ".join(e["people"]))
+        if titles:
+            lines.append("관련 작품: " + ", ".join(f"『{x}』" for x in titles))
+        # 출처: 사건에 source_url 을 직접 적었으면 그것을, 아니면 sources.json 에서 source_file 로 찾는다
+        if e.get("source_url"):
+            src = {"source_url": e["source_url"], "source_name": e.get("source_name")}
+        else:
+            src = sources[e["source_file"]]
+        cat["documents"].append({
+            "doc_key": f"{slug}/timeline-{i:02d}",
+            "doc_type": "artist_bio", "title": f"{name} 연표: {e['year']} {e['title']}",
+            "content": "\n".join(lines), "artist_slugs": [slug], "artwork_slug": None,
+            "source_url": src["source_url"], "source_name": src["source_name"], "license": t["license"],
+            "lang": "ko", "topic": "연표", "related_artwork_slugs": e["related_artworks"],
+            "needs_review": bool(e.get("needs_review", t.get("needs_review", False))),
+        })
+
+
+def read_comparisons(folder: Path, cat: dict) -> None:
+    for path in sorted(folder.glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if "document" in data:  # 고흐·고갱 비교 문서 형식
+            x = data["document"]
+            cat["documents"].append({
+                "doc_key": f"_comparisons/{x['document_key']}",
+                "doc_type": x["doc_type"], "title": x["title"], "content": x["content"].strip(),
+                "artist_slugs": x["artist_slugs"], "artwork_slug": None,
+                "source_url": x["source_url"], "source_name": x.get("source_name"), "license": x.get("license"),
+                "lang": "ko", "topic": None, "related_artwork_slugs": [],
+                "needs_review": needs_review_of(data.get("record_status"), x.get("review_status")),
+            })
+        elif path.name.startswith("sources.") and path.name != "sources.json":  # md 비교 자료의 출처 목록
+            for fname, s in data.items():
+                raw = (folder / fname).read_text(encoding="utf-8")
+                cat["documents"].append({
+                    "doc_key": f"_comparisons/{fname.removesuffix('.md')}",
+                    "doc_type": s["doc_type"], "title": s["title"], "content": clean_wiki(raw),
+                    "artist_slugs": s["artist_slugs"], "artwork_slug": None,
+                    "source_url": s["source_url"], "source_name": s.get("source_name"), "license": s.get("license"),
+                    "lang": s.get("lang") or lang_of(raw), "topic": s.get("topic"), "related_artwork_slugs": [],
+                    "needs_review": bool(s.get("needs_review", False)),
+                })
+
+
+# ---------------------------------------------------------------- 검증
+def validate(cat: dict) -> list[str]:
+    errors = []
+    movements = {m["slug"] for m in cat["movements"]}
+    artists, artworks = cat["artists"], cat["artworks"]
+    for a in artists.values():
+        if a.get("movement_slug") not in movements:
+            errors.append(f"작가 {a['slug']}: 사조 '{a.get('movement_slug')}' 가 movements 에 없음")
+        if not a.get("name"):
+            errors.append(f"작가 {a['slug']}: name 없음 (data/mappings/catalog.json 에 추가)")
+    for w in artworks.values():
+        # 비어 있으면 작가의 사조로 채운 뒤, 채운 값까지 실제로 있는지 검사한다
+        w["movement_slug"] = w.get("movement_slug") or artists.get(w["artist_slug"], {}).get("movement_slug")
+        if w["movement_slug"] not in movements:
+            errors.append(f"작품 {w['slug']}: 사조 '{w['movement_slug']}' 가 movements 에 없음")
+        if not SLUG.match(w["slug"]) or len(w["slug"]) > 160:
+            errors.append(f"작품 slug 형식 오류: {w['slug']}")
+        if w["artist_slug"] not in artists:
+            errors.append(f"작품 {w['slug']}: 작가 '{w['artist_slug']}' 없음")
+        if not w.get("title"):
+            errors.append(f"작품 {w['slug']}: title 없음 (data/mappings/catalog.json 에 추가)")
+        if not w.get("description"):
+            warnings.append(f"작품 {w['slug']}: 카드 설명 없음 (한국어 해설 문서가 없음)")
+    keys = set()
+    for d in cat["documents"]:
+        k = d["doc_key"]
+        if k in keys:
+            errors.append(f"문서 키 중복: {k}")
+        keys.add(k)
+        if d["doc_type"] not in DOC_TYPES:
+            errors.append(f"문서 {k}: 허용되지 않는 doc_type '{d['doc_type']}' (허용: {', '.join(sorted(DOC_TYPES))})")
+            continue
+        if not d.get("source_url"):
+            errors.append(f"문서 {k}: source_url 없음")
+        if len(d["title"]) > 255:
+            errors.append(f"문서 {k}: 제목이 255자 초과")
+        if d["doc_type"] == "artwork_commentary" and d["artwork_slug"] not in artworks:
+            errors.append(f"문서 {k}: 작품 '{d['artwork_slug']}' 없음")
+        if d["doc_type"] == "artist_bio" and len(d["artist_slugs"]) != 1:
+            errors.append(f"문서 {k}: 생애 문서는 작가 1명이어야 함")
+        if d["doc_type"] == "artist_comparison" and len(d["artist_slugs"]) < 2:
+            errors.append(f"문서 {k}: 비교 문서는 작가 2명 이상이어야 함")
+        for s in d["artist_slugs"]:
+            if s not in artists:
+                errors.append(f"문서 {k}: 작가 '{s}' 없음")
+        for s in d["related_artwork_slugs"]:
+            if s not in artworks:
+                errors.append(f"문서 {k}: 관련 작품 '{s}' 없음")
+        if len(d["content"]) < MIN_CONTENT and d["topic"] != "연표":  # 연표 사건은 일부러 짧게 씀
+            warnings.append(f"문서 {k}: 본문 {len(d['content'])}자로 짧음")
+    for slug in artists:
+        n_works = sum(1 for w in artworks.values() if w["artist_slug"] == slug)
+        n_bio = sum(1 for d in cat["documents"] if d["doc_type"] == "artist_bio" and slug in d["artist_slugs"])
+        if n_bio == 0:
+            errors.append(f"작가 {slug}: 생애 문서 없음")
+        if n_works < MIN_ARTWORKS:
+            errors.append(f"작가 {slug}: 작품 {n_works}점 (최소 {MIN_ARTWORKS}점)")
+    return errors
+
+
+# ---------------------------------------------------------------- 출력
+def jsonl_bytes(rows: list[dict]) -> bytes:
+    return "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows).encode("utf-8")
+
+
+def write_atomic(path: Path, data: bytes) -> None:
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, path)
+
+
+def publish(outputs: dict[str, list[dict]]) -> dict:
+    """4개 파일을 .staging 에 모두 만든 뒤 교체하고, 마지막에 _SUCCESS.json 을 쓴다.
+
+    교체 도중에 멈추면 _SUCCESS.json 이 없는 상태로 남으므로, load_processed() 는 그 결과를 읽지 않는다.
+    """
+    shutil.rmtree(STAGING, ignore_errors=True)
+    STAGING.mkdir(parents=True)
+    manifest = {"files": {}}
+    for name in OUTPUT_FILES:
+        data = jsonl_bytes(outputs[name])
+        (STAGING / name).write_bytes(data)
+        manifest["files"][name] = {"sha256": hashlib.sha256(data).hexdigest(), "rows": len(outputs[name])}
+    manifest["needs_review_documents"] = sum(d["needs_review"] for d in outputs["documents.jsonl"])
+
+    SUCCESS.unlink(missing_ok=True)  # 여기부터 _SUCCESS.json 을 다시 쓸 때까지는 '불완전'으로 취급된다
+    for name in OUTPUT_FILES:
+        os.replace(STAGING / name, OUT / name)
+    write_atomic(SUCCESS, (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    FAILED.unlink(missing_ok=True)
+    STAGING.rmdir()
+    return manifest
+
+
+def mark_failed(errors: list[str]) -> None:
+    """기존 결과와 _SUCCESS.json 은 건드리지 않고, 이번 실행이 실패했다는 기록만 남긴다."""
+    shutil.rmtree(STAGING, ignore_errors=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+    record = {"failed_at": datetime.now(UTC).isoformat(timespec="seconds"), "errors": errors}
+    write_atomic(FAILED, (json.dumps(record, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+
+
+def load_processed(name: str) -> list[dict]:
+    """적재 스크립트용. 마지막으로 성공한 결과만 돌려준다.
+
+    _SUCCESS.json 이 없거나 파일 해시가 다르면(교체 도중 중단 등) 예외를 낸다.
+    """
+    if not SUCCESS.exists():
+        raise RuntimeError("data/processed/_SUCCESS.json 이 없습니다. 전처리를 다시 실행하세요.")
+    expected = json.loads(SUCCESS.read_text(encoding="utf-8"))["files"][name]["sha256"]
+    data = (OUT / name).read_bytes()
+    if hashlib.sha256(data).hexdigest() != expected:
+        raise RuntimeError(f"{name} 이 _SUCCESS.json 과 다릅니다. 전처리를 다시 실행하세요.")
+    return [json.loads(line) for line in data.decode("utf-8").splitlines()]
+
+
+# ---------------------------------------------------------------- 실행
+def build() -> dict:
+    mapping = json.loads(MAPPING.read_text(encoding="utf-8"))
+    cat = {"movements": mapping["movements"], "artists": {}, "artworks": {}, "documents": []}
+    folders = sorted(p for p in RAW.iterdir() if p.is_dir() and not p.name.startswith("_") and p.name != "schemas")
+    for folder in folders:
+        if (folder / "dataset.json").exists():
+            read_dataset(folder, cat)
+        elif (folder / "sources.json").exists():
+            read_markdown(folder, cat, mapping)
+        else:
+            warnings.append(f"{folder.name}: 읽을 수 있는 형식이 아님 (건너뜀)")
+            continue
+        read_timeline(folder, cat)
+    read_comparisons(RAW / "_comparisons", cat)
+    apply_overrides(cat, mapping)
+    apply_reviews(cat, read_reviews())
+    return cat
+
+
+def apply_overrides(cat: dict, mapping: dict) -> None:
+    """매핑 파일 값을 원본 형식과 관계없이 덮어쓴다 (dataset.json 형식 작가·작품 포함)."""
+    for slug, values in mapping["artists"].items():
+        if slug in cat["artists"]:
+            cat["artists"][slug].update({k: v for k, v in values.items() if k in ARTIST_FIELDS})
+    for slug, values in mapping["artworks"].items():
+        if slug in cat["artworks"]:
+            cat["artworks"][slug].update({k: v for k, v in values.items() if k in ARTWORK_FIELDS})
+    for w in cat["artworks"].values():
+        w["image_source_url"] = w.get("image_source_url") or commons_page(w.get("image_url"))
+
+
+def read_reviews() -> dict:
+    if not REVIEWS.exists():
+        return {}
+    return json.loads(REVIEWS.read_text(encoding="utf-8"))["reviews"]
+
+
+def apply_reviews(cat: dict, reviews: dict) -> None:
+    """검수 장부에 있고 본문 해시가 같으면 검토 완료로 본다. 본문이 바뀌었으면 다시 검토 필요."""
+    docs = {d["doc_key"]: d for d in cat["documents"]}
+    for key, r in reviews.items():
+        d = docs.get(key)
+        if d is None:
+            warnings.append(f"검수 장부의 문서 '{key}' 가 없음 (원본에서 지워졌거나 이름이 바뀜)")
+        elif r["content_sha256"] != content_hash(d["content"]):
+            d["needs_review"] = True
+            warnings.append(f"문서 {key}: {r['reviewed_on']} 검수 후 본문이 바뀌어 다시 검토가 필요함")
+        else:
+            d["needs_review"] = False
+
+
+def review(args: argparse.Namespace) -> int:
+    """검수 장부 보기·기록. 기록만 하고 data/processed 는 바꾸지 않는다 (다음 전처리 실행 때 반영)."""
+    warnings.clear()
+    cat = build()
+    pending = sorted(d["doc_key"] for d in cat["documents"] if d["needs_review"])
+    if not args.approve:
+        for key in pending:
+            print(key)
+        print(f"검토 필요 {len(pending)}건")
+        return 0
+    if not args.reviewer:
+        print("[오류] --reviewer 로 검수한 사람을 적어 주세요.")
+        return 1
+    docs = {d["doc_key"]: d for d in cat["documents"]}
+    keys = sorted({k for pattern in args.approve for k in docs if fnmatch.fnmatchcase(k, pattern)})
+    if not keys:
+        print("[오류] 맞는 문서가 없습니다:", ", ".join(args.approve))
+        return 1
+    reviews = read_reviews()
+    today = datetime.now(UTC).astimezone().date().isoformat()
+    for k in keys:
+        reviews[k] = {"reviewer": args.reviewer, "reviewed_on": today, "content_sha256": content_hash(docs[k]["content"])}
+    data = {"_comment": "검수를 마친 문서. 본문 해시가 달라지면 다시 검토 필요로 돌아간다. "
+                        "uv run python -m scripts.preprocess review --approve ... 로 기록한다.",
+            "reviews": dict(sorted(reviews.items()))}
+    write_atomic(REVIEWS, (json.dumps(data, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    for k in keys:
+        print("검수 기록:", k)
+    print(f"{len(keys)}건 기록. 전처리를 다시 실행하면 data/processed 에 반영됩니다.")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="data/raw → data/processed 전처리")
+    sub = parser.add_subparsers(dest="command")
+    r = sub.add_parser("review", help="검수 장부 보기·기록")
+    r.add_argument("--list", action="store_true", help="검토가 필요한 문서 목록 (기본)")
+    r.add_argument("--approve", nargs="+", metavar="DOC_KEY", help="검수 완료로 기록할 doc_key (* 패턴 가능)")
+    r.add_argument("--reviewer", help="검수한 사람")
+    args = parser.parse_args(argv if argv is not None else [])
+    if args.command == "review":
+        return review(args)
+    return run()
+
+
+def run() -> int:
+    warnings.clear()  # 같은 프로세스에서 다시 실행해도 이전 경고가 남지 않게
+    try:
+        cat = build()
+        errors = validate(cat)
+    except (OSError, KeyError, ValueError, TypeError) as exc:  # 원본 파일·형식 오류: 기존 결과는 그대로 두고 실패만 기록
+        mark_failed([f"{type(exc).__name__}: {exc}"])
+        print(f"[오류] {type(exc).__name__}: {exc}")
+        print("data/processed 는 바꾸지 않았습니다. 실패 기록: data/processed/_FAILED.json")
+        return 1
+    for w in warnings:
+        print("[경고]", w)
+    if errors:
+        mark_failed(errors)
+        for e in errors:
+            print("[오류]", e)
+        print(f"오류 {len(errors)}건. data/processed 는 바꾸지 않았습니다. 실패 기록: data/processed/_FAILED.json")
+        return 1
+
+    manifest = publish({
+        "movements.jsonl": sorted(cat["movements"], key=lambda r: r["slug"]),
+        "artists.jsonl": sorted(cat["artists"].values(), key=lambda r: r["slug"]),
+        "artworks.jsonl": sorted(cat["artworks"].values(), key=lambda r: r["slug"]),
+        "documents.jsonl": sorted(cat["documents"], key=lambda r: r["doc_key"]),
+    })
+
+    print(f"사조 {len(cat['movements'])} · 작가 {len(cat['artists'])} · 작품 {len(cat['artworks'])} · "
+          f"문서 {len(cat['documents'])} (검토 필요 {manifest['needs_review_documents']})")
+    for slug in sorted(cat["artists"]):
+        docs = [d for d in cat["documents"]
+                if slug in d["artist_slugs"] or cat["artworks"].get(d["artwork_slug"] or "", {}).get("artist_slug") == slug]
+        print(f"  {slug:<18} 작품 {sum(w['artist_slug'] == slug for w in cat['artworks'].values())}점 · "
+              f"문서 {len(docs)}건 · 본문 {sum(len(d['content']) for d in docs):,}자")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

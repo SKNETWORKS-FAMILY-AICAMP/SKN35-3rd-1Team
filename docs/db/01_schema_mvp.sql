@@ -14,10 +14,10 @@
 --   4) 생성 순서 = 부모 테이블 먼저. 아래 순서 그대로 실행하면 됨.
 -- =====================================================================
 
-CREATE DATABASE IF NOT EXISTS docent
+CREATE DATABASE IF NOT EXISTS 3rd_project
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_general_ci;
-USE docent;
+USE 3rd_project;
 
 -- ---------------------------------------------------------------------
 -- 1. users : 서비스 회원
@@ -149,6 +149,8 @@ CREATE TABLE artwork_embeddings (
 -- ---------------------------------------------------------------------
 CREATE TABLE documents (
   id          BIGINT        NOT NULL AUTO_INCREMENT,
+  -- data/processed 의 문서 키 ('<작가 slug>/<원본 파일>'). 재적재 때 지우고 다시 넣는 대신 이 키로 갱신
+  doc_key     VARCHAR(191)  NOT NULL,
   -- 'artist_bio' | 'artwork_commentary' | 'artist_comparison'
   -- ENUM 대신 VARCHAR 로 둔 이유: 종류가 늘 때 ALTER 없이 앱의 Enum 만 고치면 됨.
   doc_type    VARCHAR(30)   NOT NULL,
@@ -162,9 +164,15 @@ CREATE TABLE documents (
   source_url  VARCHAR(1024) NULL,
   source_name VARCHAR(255)  NULL,
   license     VARCHAR(100)  NULL,
+  -- 검색 메타데이터: 언어('ko'|'en'), 생애 문서의 성격(생애 전체, 주변 인물, 연표 ...)
+  lang        VARCHAR(8)    NOT NULL DEFAULT 'ko',
+  topic       VARCHAR(30)   NULL,
+  -- 사람 검토 전 문서. 검색에서 뺄지, 답변에 표시할지는 질의 시점에 정함
+  needs_review TINYINT(1)   NOT NULL DEFAULT 0,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_documents_doc_key (doc_key),
   -- 작품 상세 화면에서 '이 작품의 해설 문서' 를 찾는 인덱스 (FK 검사에도 사용됨)
   KEY idx_documents_artwork (artwork_id),
   -- 작품이 삭제되면 그 작품 해설 문서도 의미가 없으므로 함께 삭제
@@ -187,6 +195,24 @@ CREATE TABLE document_artists (
     REFERENCES documents (id) ON DELETE CASCADE,
   CONSTRAINT fk_document_artists_artist FOREIGN KEY (artist_id)
     REFERENCES artists (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
+-- 7-1. document_artworks : 문서가 언급하는 작품 (N:M)
+--    연표 사건처럼 해설이 아닌 문서가 여러 작품과 이어질 때 사용 (processed 의 related_artwork_slugs).
+--    작품 해설 문서의 '해설 대상 작품' 은 그대로 documents.artwork_id 하나로 둔다.
+--    '이 작품을 그릴 때 작가는 어땠나' 처럼 작품에서 생애 이야기를 찾을 때 artwork_id 쪽 인덱스를 씀.
+--    Alembic 마이그레이션 20261011_0002 에서 추가.
+-- ---------------------------------------------------------------------
+CREATE TABLE document_artworks (
+  document_id BIGINT NOT NULL,
+  artwork_id  BIGINT NOT NULL,
+  PRIMARY KEY (document_id, artwork_id),
+  KEY idx_document_artworks_artwork (artwork_id, document_id),
+  CONSTRAINT fk_document_artworks_document FOREIGN KEY (document_id)
+    REFERENCES documents (id) ON DELETE CASCADE,
+  CONSTRAINT fk_document_artworks_artwork FOREIGN KEY (artwork_id)
+    REFERENCES artworks (id) ON DELETE CASCADE
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- ---------------------------------------------------------------------

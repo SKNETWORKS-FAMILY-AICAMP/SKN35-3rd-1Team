@@ -1,0 +1,404 @@
+{
+  "bio.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트 판 레인의 생애",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "artist": {
+      "slug": "rembrandt",
+      "name": "렘브란트 판 레인",
+      "name_en": "Rembrandt van Rijn",
+      "movement_slug": "baroque",
+      "birth_year": 1606,
+      "death_year": 1669,
+      "nationality": "네덜란드",
+      "wikidata": "https://www.wikidata.org/wiki/Q5598"
+    }
+  },
+  "the-night-watch.md": {
+    "doc_type": "artwork_commentary",
+    "title": "야경 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-night-watch",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%95%BC%EA%B2%BD_%28%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8%29",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-night-watch",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "야경",
+      "title_en": "The Night Watch",
+      "year_label": "1642",
+      "year_start": 1642,
+      "medium": "캔버스에 유채",
+      "dimensions": "363 × 437 cm",
+      "collection": "암스테르담 국립미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q219831",
+      "is_featured": true
+    }
+  },
+  "the-night-watch.en.md": {
+    "doc_type": "artwork_commentary",
+    "title": "야경 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "the-night-watch",
+    "source_url": "https://en.wikipedia.org/wiki/The_Night_Watch",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-night-watch",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "야경",
+      "title_en": "The Night Watch",
+      "year_label": "1642",
+      "year_start": 1642,
+      "medium": "캔버스에 유채",
+      "dimensions": "363 × 437 cm",
+      "collection": "암스테르담 국립미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q219831",
+      "is_featured": true
+    },
+    "translation": {
+      "file": "the-night-watch.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "13d0d202e039b82dfdefd74a6aa8092c5942b3cbc2251767b10e33e8de515049"
+    }
+  },
+  "the-anatomy-lesson-of-dr-tulp.md": {
+    "doc_type": "artwork_commentary",
+    "title": "니콜라스 튈프 박사의 해부학 수업 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-anatomy-lesson-of-dr-tulp",
+    "source_url": "https://ko.wikipedia.org/wiki/%EB%8B%88%EC%BD%9C%EB%9D%BC%EC%8A%A4_%ED%8A%88%ED%94%84_%EB%B0%95%EC%82%AC%EC%9D%98_%ED%95%B4%EB%B6%80%ED%95%99_%EC%88%98%EC%97%85",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-anatomy-lesson-of-dr-tulp",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "니콜라스 튈프 박사의 해부학 수업",
+      "title_en": "The Anatomy Lesson of Dr. Nicolaes Tulp",
+      "year_label": "1632",
+      "year_start": 1632,
+      "medium": "캔버스에 유채",
+      "dimensions": "169.5 × 216.5 cm",
+      "collection": "마우리츠하위스 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q661378",
+      "is_featured": false
+    }
+  },
+  "the-jewish-bride.md": {
+    "doc_type": "artwork_commentary",
+    "title": "유대인 신부 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-jewish-bride",
+    "source_url": "https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8C%80%EC%9D%B8_%EC%8B%A0%EB%B6%80",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-jewish-bride",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "유대인 신부",
+      "title_en": "The Jewish Bride",
+      "year_label": "1665–1669",
+      "year_start": 1665,
+      "medium": "캔버스에 유채",
+      "dimensions": "121.5 × 166.5 cm",
+      "collection": "암스테르담 국립미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q766782",
+      "is_featured": false
+    }
+  },
+  "the-jewish-bride.en.md": {
+    "doc_type": "artwork_commentary",
+    "title": "유대인 신부 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "the-jewish-bride",
+    "source_url": "https://en.wikipedia.org/wiki/The_Jewish_Bride",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-jewish-bride",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "유대인 신부",
+      "title_en": "The Jewish Bride",
+      "year_label": "1665–1669",
+      "year_start": 1665,
+      "medium": "캔버스에 유채",
+      "dimensions": "121.5 × 166.5 cm",
+      "collection": "암스테르담 국립미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q766782",
+      "is_featured": false
+    },
+    "translation": {
+      "file": "the-jewish-bride.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "0792864b6ff7acdf49669cbb03a7119c0756aa5fd4ccbd04b9501bab5b556871"
+    }
+  },
+  "the-return-of-the-prodigal-son.md": {
+    "doc_type": "artwork_commentary",
+    "title": "돌아온 탕자 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-return-of-the-prodigal-son",
+    "source_url": "https://ko.wikipedia.org/wiki/%EB%8F%8C%EC%95%84%EC%98%A8_%ED%83%95%EC%9E%90_%28%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8%29",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "the-return-of-the-prodigal-son",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "돌아온 탕자",
+      "title_en": "The Return of the Prodigal Son",
+      "year_label": "c. 1668",
+      "year_start": 1668,
+      "medium": "캔버스에 유채",
+      "dimensions": "262 × 205 cm",
+      "collection": "에르미타주 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q512755",
+      "is_featured": false
+    }
+  },
+  "self-portrait-1659.md": {
+    "doc_type": "artwork_commentary",
+    "title": "베레모와 세운 옷깃의 자화상 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "self-portrait-1659",
+    "source_url": "https://en.wikipedia.org/wiki/Self-Portrait_with_Beret_and_Turned-Up_Collar",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": false,
+    "artwork": {
+      "slug": "self-portrait-1659",
+      "artist_slug": "rembrandt",
+      "movement_slug": "baroque",
+      "title": "베레모와 세운 옷깃의 자화상",
+      "title_en": "Self-Portrait with Beret and Turned-Up Collar",
+      "year_label": "1659",
+      "year_start": 1659,
+      "medium": "캔버스에 유채",
+      "dimensions": "84.5 × 66 cm",
+      "collection": "미국 국립미술관 (워싱턴 D.C.)",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q2872723",
+      "is_featured": true
+    },
+    "translation": {
+      "file": "self-portrait-1659.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "eba27b34a05583da6a751aa4a8dc1afb78ca8ab55947ba85617cb4b727137a18"
+    }
+  },
+  "bio.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트 판 레인의 생애 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Rembrandt",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "생애 전체",
+    "translation": {
+      "file": "bio.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "47d8e36b2c07578464b6fbf3b9e987435cd0fb45bda43e212a6af09c910ad8f1"
+    }
+  },
+  "people-saskia.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 아내 사스키아 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Saskia_van_Uylenburgh",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "주변 인물",
+    "translation": {
+      "file": "people-saskia.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "b3dec4f37e6045a5298900e186e30e2980591263bfe3573374078e698108017c"
+    }
+  },
+  "people-hendrickje.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 동반자 헨드리케 스토펠스 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Hendrickje_Stoffels",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "주변 인물",
+    "translation": {
+      "file": "people-hendrickje.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "01f5845b9cd4e95cca953be5bd01c571deb66d4679589124b2d93d3ddaba297a"
+    }
+  },
+  "people-titus.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 아들 티투스 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Titus_van_Rijn",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "주변 인물",
+    "translation": {
+      "file": "people-titus.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "151853f5c3e43e03629a6497001c246c68961ee249bbc77812e8c1d2d5c89a83"
+    }
+  },
+  "self-portraits.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 자화상들 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Self-portraits_by_Rembrandt",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "작품 세계",
+    "translation": {
+      "file": "self-portraits.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "517bcd063e39d821a6a31398a86c9263c227f16efcbd92d61e5df46afed4ab91"
+    }
+  },
+  "rembrandt-house.en.md": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 집 (영문)",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Rembrandt_House_Museum",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": false,
+    "topic": "장소",
+    "translation": {
+      "file": "rembrandt-house.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "8962a84d0084c4cf4119ed09a8aced63a7ffda1f9fdd600040b6baaa77abfba9"
+    }
+  },
+  "timeline.json": {
+    "doc_type": "artist_bio",
+    "title": "렘브란트의 생애 연표",
+    "artist_slugs": [
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Rembrandt",
+    "source_name": "위키백과 원문을 바탕으로 팀이 정리",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "연표"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "_comment": "원본에 없는 값을 사람이 채우는 곳. 전처리 스크립트가 모든 원본 형식에 덮어쓴다. data/processed/ 는 손으로 고치지 말고 여기를 고친다. 값은 원문 첫 문단, 위키데이터(CC0), 메트 오픈 액세스 API(퍼블릭 도메인 확인)에서 확인한 것만 넣었다. 작가 초상은 위키데이터 P18(위키미디어 공용 퍼블릭 도메인 파일), 고흐·고갱 이미지는 메트 primaryImageSmall.",
+  "movements": [
+    {
+      "slug": "baroque",
+      "name": "바로크",
+      "name_en": "Baroque",
+      "description": null
+    },
+    {
+      "slug": "impressionism",
+      "name": "인상주의",
+      "name_en": "Impressionism",
+      "description": null
+    },
+    {
+      "slug": "post-impressionism",
+      "name": "후기 인상주의",
+      "name_en": "Post-Impressionism",
+      "description": null
+    }
+  ],
+  "artists": {
+    "claude-monet": {
+      "name": "클로드 모네",
+      "name_en": "Claude Monet",
+      "movement_slug": "impressionism",
+      "birth_year": 1840,
+      "death_year": 1926,
+      "nationality": "프랑스",
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_1899_Nadar_crop.jpg"
+    },
+    "paul-cezanne": {
+      "name": "폴 세잔",
+      "name_en": "Paul Cézanne",
+      "movement_slug": "post-impressionism",
+      "birth_year": 1839,
+      "death_year": 1906,
+      "nationality": "프랑스",
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul-Cezanne.jpg"
+    },
+    "rembrandt": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg"
+    },
+    "caravaggio": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bild-Ottavio_Leoni%2C_Caravaggio.jpg"
+    },
+    "vincent-van-gogh": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Self-portrait_-_Vincent_van_Gogh.jpg"
+    },
+    "paul-gauguin": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Gauguin_1891.png"
+    }
+  },
+  "artworks": {
+    "impression-sunrise": {
+      "title": "인상, 해돋이",
+      "title_en": "Impression, Sunrise",
+      "year_label": "1872",
+      "year_start": 1872,
+      "collection": "마르모탕 모네 미술관 (파리)",
+      "is_featured": true,
+      "medium": "캔버스에 유채",
+      "dimensions": "48 × 63 cm"
+    },
+    "water-lilies": {
+      "title": "수련 연작",
+      "title_en": "Water Lilies",
+      "year_label": "1890년대–1920년대",
+      "year_start": null,
+      "collection": "오랑주리 미술관 외",
+      "is_featured": true
+    },
+    "rouen-cathedral": {
+      "title": "루앙 대성당 연작",
+      "title_en": "Rouen Cathedral",
+      "year_label": "1892–1894",
+      "year_start": 1892,
+      "collection": "오르세 미술관 외",
+      "is_featured": false
+    },
+    "haystacks": {
+      "title": "건초더미 연작",
+      "title_en": "Haystacks",
+      "year_label": "1890–1891",
+      "year_start": 1890,
+      "collection": "오르세 미술관, 시카고 미술관 외",
+      "is_featured": false
+    },
+    "woman-with-parasol": {
+      "title": "양산을 든 여인",
+      "title_en": "Woman with a Parasol – Madame Monet and Her Son",
+      "year_label": "1875",
+      "year_start": 1875,
+      "medium": "캔버스에 유채",
+      "collection": "미국 국립미술관 (워싱턴 D.C.)",
+      "is_featured": false,
+      "description": "모네가 1875년 아르장퇴유에서 아내 카미유와 아들 장이 바람 부는 여름날 산책하는 순간을 그린 그림이다.",
+      "dimensions": "100 × 82 cm"
+    },
+    "mont-sainte-victoire": {
+      "title": "생트빅투아르산 연작",
+      "title_en": "Mont Sainte-Victoire",
+      "year_label": "1880년대 중반–1906",
+      "year_start": null,
+      "collection": null,
+      "is_featured": true
+    },
+    "the-card-players": {
+      "title": "카드놀이하는 사람들 연작",
+      "title_en": "The Card Players",
+      "year_label": "1890년대 초",
+      "year_start": null,
+      "collection": null,
+      "is_featured": false
+    },
+    "apples-oranges": {
+      "title": "사과와 오렌지가 있는 정물",
+      "title_en": "Still Life with Apples and Oranges",
+      "year_label": "c. 1899",
+      "year_start": 1899,
+      "collection": "오르세 미술관 (파리)",
+      "is_featured": true,
+      "description": "세잔이 1899년 무렵 그린 정물화로, 몇 달 앞서 같은 물건들로 그린 정물에서 이어진 작품이다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "74 × 93 cm"
+    },
+    "the-basket-of-apples": {
+      "title": "사과 바구니",
+      "title_en": "The Basket of Apples",
+      "year_label": "c. 1893",
+      "year_start": 1893,
+      "collection": "시카고 미술관",
+      "is_featured": false,
+      "description": "세잔이 1893년 무렵 그린 정물화로, 사물을 사실대로 그리지 않고 여러 시점이 한 화면에 보이도록 비틀어 그렸다. 이 방식은 야수파와 입체파에 영향을 주었다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "65 × 80 cm"
+    },
+    "the-large-bathers": {
+      "title": "대수욕도",
+      "title_en": "The Bathers",
+      "year_label": "1906년 첫 전시",
+      "year_start": null,
+      "collection": "필라델피아 미술관",
+      "is_featured": false,
+      "description": "세잔의 목욕하는 사람들 연작 가운데 가장 큰 그림으로, 1906년에 처음 전시되었다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "210.5 × 250.8 cm"
+    },
+    "judith-beheading-holofernes": {
+      "description": "카라바조가 1599–1602년 무렵 그린 그림으로, 과부 유디트가 술에 취해 쓰러진 아시리아 장군 홀로페르네스의 목을 베는 성경 이야기를 그렸다."
+    },
+    "the-incredulity-of-saint-thomas": {
+      "description": "부활한 예수의 옆구리 상처에 손가락을 넣어 확인하는 성 토마스를 그린 그림으로, 1601–1602년 무렵 수집가 빈첸초 주스티니아니를 위해 그렸다."
+    },
+    "self-portrait-1659": {
+      "description": "렘브란트가 파산 직후인 1659년에 그린 자화상으로, 창작의 성공과 개인적·경제적 좌절이 겹친 삶의 긴장이 담긴 절제된 자기 묘사로 평가된다."
+    },
+    "sunflowers-1887": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-41223-001.jpg"
+    },
+    "self-portrait-with-a-straw-hat": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1502_cropped2.jpg"
+    },
+    "oleanders": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1494.jpg"
+    },
+    "la-berceuse": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-19279-001.jpg"
+    },
+    "wheat-field-with-cypresses": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-42549-001.jpg"
+    },
+    "irises-1890": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DP346474.jpg"
+    },
+    "ia-orana-maria": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1025.jpg"
+    },
+    "tahitian-landscape": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-14936-043.jpg"
+    },
+    "the-siesta": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1952.jpg"
+    },
+    "three-tahitian-women": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1954.jpg"
+    },
+    "still-life-with-teapot-and-fruit": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1027.jpg"
+    },
+    "two-tahitian-women": {
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/web-large/DT1342.jpg"
+    }
+  }
+}

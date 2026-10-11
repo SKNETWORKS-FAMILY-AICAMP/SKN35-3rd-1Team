@@ -1,6 +1,6 @@
 # ERD 읽는 법
 
-테이블 11개는 "화면에 보이는 것", "사용자가 한 일", "챗봇과 추천의 재료" 세 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다.
+테이블 12개는 "화면에 보이는 것", "사용자가 한 일", "챗봇과 추천의 재료" 세 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다.
 
 ![ERD](00_erd.png)
 
@@ -31,7 +31,7 @@
 | --- | --- | --- | --- |
 | 카탈로그 | `art_movements`, `artists`, `artworks` | 위쪽과 가운데 | 목록과 상세 화면에 보이는 정보 |
 | 사용자 활동 | `users`, `artwork_likes`, `artist_follows`, `artwork_views` | 왼쪽과 왼쪽 아래 | 누가 무엇을 좋아하고 팔로우하고 봤는지 |
-| 문서와 벡터 | `documents`, `document_artists`, `document_chunks`, `artwork_embeddings` | 아래쪽과 오른쪽 아래 | 챗봇 답변의 근거, 추천 계산의 재료 |
+| 문서와 벡터 | `documents`, `document_artists`, `document_artworks`, `document_chunks`, `artwork_embeddings` | 아래쪽과 오른쪽 아래 | 챗봇 답변의 근거, 추천 계산의 재료 |
 
 `artworks`가 가운데 있는 이유는 세 덩어리가 모두 작품을 거쳐 이어지기 때문입니다. 좋아요도, 열람도, 해설 문서도, 추천 벡터도 작품에 붙습니다.
 
@@ -62,6 +62,8 @@
 **`artworks` → `documents` (작품 해설)**: 작품 해설 문서는 `documents.artwork_id`로 작품을 가리킵니다. 문서 쪽에서 본 작품이 "0개 또는 1개"인 것은 생애 문서와 비교 문서에는 이 값이 비어 있기 때문입니다.
 
 **`documents` ↔ `artists` (`document_artists`를 거침)**: 생애 문서는 작가 1명, 비교 문서는 작가 2명 이상과 연결됩니다. 문서 하나가 작가 여러 명과 이어져야 해서 `documents`에 `artist_id` 컬럼을 두지 않고 연결 테이블로 뺐습니다.
+
+**`documents` ↔ `artworks` (`document_artworks`를 거침)**: 연표 사건처럼 해설이 아닌 문서가 여러 작품을 언급할 때 연결합니다. 작품을 고르면 그 작품이 나오는 생애 이야기를 찾을 수 있습니다. 해설 문서의 '해설 대상 작품'은 그대로 `documents.artwork_id` 하나로 둡니다.
 
 **`documents` → `document_chunks` (청크)**: 문서 1개를 여러 조각으로 자른 것입니다. 조각마다 본문과 벡터가 함께 들어 있고, 챗봇은 이 조각을 검색합니다.
 

@@ -12,6 +12,8 @@ erDiagram
     artworks |o--o{ documents : "작품 해설"
     documents ||--o{ document_artists : "관련 작가"
     artists ||--o{ document_artists : "생애·비교 문서"
+    documents ||--o{ document_artworks : "언급 작품"
+    artworks ||--o{ document_artworks : "연표 등에서 언급"
     documents ||--o{ document_chunks : "청크"
 
     users {
@@ -72,6 +74,7 @@ erDiagram
     }
     documents {
         bigint id PK
+        varchar doc_key UK "data/processed 문서 키"
         varchar doc_type "artist_bio / artwork_commentary / artist_comparison"
         bigint artwork_id FK "해설 문서만 값 있음"
         varchar title
@@ -79,12 +82,19 @@ erDiagram
         varchar source_url
         varchar source_name
         varchar license
+        varchar lang "ko / en"
+        varchar topic "생애 문서의 성격"
+        tinyint needs_review "검토 전이면 1"
         datetime created_at
         datetime updated_at
     }
     document_artists {
         bigint document_id PK, FK
         bigint artist_id PK, FK
+    }
+    document_artworks {
+        bigint document_id PK, FK
+        bigint artwork_id PK, FK
     }
     document_chunks {
         bigint id PK

@@ -4,7 +4,7 @@ Oct 9, 2026 · @고태민
 
 ## 1. 권장 구조
 
-TiDB Cloud Starter 클러스터 하나에 테이블 11개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·채팅 저장·추천 캐시는 MVP에서 뺍니다.
+TiDB Cloud Starter 클러스터 하나에 테이블 12개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·채팅 저장·추천 캐시는 MVP에서 뺍니다.
 
 ### 핵심 결정
 
@@ -31,6 +31,7 @@ TiDB Cloud Starter 클러스터 하나에 테이블 11개를 두고 사용자 �
 | `artwork_embeddings` | 작품 대표 벡터, 작품당 1행 | 5·6번 추천 |
 | `documents` | 생애·해설·비교 문서 원문과 출처 | 3·10번 |
 | `document_artists` | 문서와 작가 연결(N:M) | 3번 검색 범위 결정 |
+| `document_artworks` | 문서가 언급하는 작품(N:M). 연표 사건 → 작품 | 3번, 작품에서 생애 이야기 찾기 |
 | `document_chunks` | 문서 청크와 청크 벡터 | 3·10번 RAG 검색 |
 | `artwork_likes` | 작품 좋아요 | 4·5·6번 |
 | `artist_follows` | 작가 팔로우 | 7번, 작가 추천 제외 조건 |
@@ -79,6 +80,8 @@ erDiagram
     artworks |o--o{ documents : "작품 해설"
     documents ||--o{ document_artists : "관련 작가"
     artists ||--o{ document_artists : "생애·비교 문서"
+    documents ||--o{ document_artworks : "언급 작품"
+    artworks ||--o{ document_artworks : "연표 등에서 언급"
     documents ||--o{ document_chunks : "청크"
 
     users {
@@ -139,6 +142,7 @@ erDiagram
     }
     documents {
         bigint id PK
+        varchar doc_key UK "data/processed 문서 키"
         varchar doc_type "artist_bio / artwork_commentary / artist_comparison"
         bigint artwork_id FK "해설 문서만 값 있음"
         varchar title
@@ -146,12 +150,19 @@ erDiagram
         varchar source_url
         varchar source_name
         varchar license
+        varchar lang "ko / en"
+        varchar topic "생애 문서의 성격"
+        tinyint needs_review "검토 전이면 1"
         datetime created_at
         datetime updated_at
     }
     document_artists {
         bigint document_id PK, FK
         bigint artist_id PK, FK
+    }
+    document_artworks {
+        bigint document_id PK, FK
+        bigint artwork_id PK, FK
     }
     document_chunks {
         bigint id PK
@@ -489,15 +500,15 @@ INSERT INTO artwork_likes (user_id, artwork_id) VALUES (1, 999999999);
 | 추천·RAG 쿼리의 JOIN·GROUP BY 구조 | MariaDB에서 가짜 거리 함수를 만들어 실행 | 제외 조건과 묶음이 의도대로 동작 |
 | 벡터 거리 계산, 벡터 인덱스 사용 여부, Starter의 FK 동작 | 실행하지 못함 | Starter 클러스터에서 확인 필요 |
 
-### CREATE TABLE (MVP 11개)
+### CREATE TABLE (MVP 12개)
 
 `VECTOR(1536)`의 1536은 임베딩 모델의 차원 수입니다. text-embedding-3-small은 1536, bge-m3와 multilingual-e5-large는 1024이므로 모델에 맞게 두 군데를 함께 바꾸면 됩니다. 주석이 더 자세한 버전은 첨부 파일 `01_schema_mvp.sql`에 있습니다.
 
 ```sql
-CREATE DATABASE IF NOT EXISTS docent
+CREATE DATABASE IF NOT EXISTS 3rd_project
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_general_ci;
-USE docent;
+USE 3rd_project;
 
 -- 1. 회원
 CREATE TABLE users (
@@ -589,6 +600,7 @@ CREATE TABLE artwork_embeddings (
 -- 6. RAG 원문 문서 (생애 / 해설 / 비교)
 CREATE TABLE documents (
   id          BIGINT        NOT NULL AUTO_INCREMENT,
+  doc_key     VARCHAR(191)  NOT NULL,
   doc_type    VARCHAR(30)   NOT NULL,
   artwork_id  BIGINT        NULL,
   title       VARCHAR(255)  NOT NULL,
@@ -596,9 +608,13 @@ CREATE TABLE documents (
   source_url  VARCHAR(1024) NULL,
   source_name VARCHAR(255)  NULL,
   license     VARCHAR(100)  NULL,
+  lang        VARCHAR(8)    NOT NULL DEFAULT 'ko',
+  topic       VARCHAR(30)   NULL,
+  needs_review TINYINT(1)   NOT NULL DEFAULT 0,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_documents_doc_key (doc_key),
   KEY idx_documents_artwork (artwork_id),
   CONSTRAINT fk_documents_artwork FOREIGN KEY (artwork_id)
     REFERENCES artworks (id) ON DELETE CASCADE
@@ -614,6 +630,18 @@ CREATE TABLE document_artists (
     REFERENCES documents (id) ON DELETE CASCADE,
   CONSTRAINT fk_document_artists_artist FOREIGN KEY (artist_id)
     REFERENCES artists (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- 7-1. 문서가 언급하는 작품 (연표 사건 → 작품, 마이그레이션 20261011_0002)
+CREATE TABLE document_artworks (
+  document_id BIGINT NOT NULL,
+  artwork_id  BIGINT NOT NULL,
+  PRIMARY KEY (document_id, artwork_id),
+  KEY idx_document_artworks_artwork (artwork_id, document_id),
+  CONSTRAINT fk_document_artworks_document FOREIGN KEY (document_id)
+    REFERENCES documents (id) ON DELETE CASCADE,
+  CONSTRAINT fk_document_artworks_artwork FOREIGN KEY (artwork_id)
+    REFERENCES artworks (id) ON DELETE CASCADE
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- 8. 문서 청크 + 청크 벡터 (RAG 검색 전용)
@@ -933,7 +961,7 @@ Starter 무료 한도도 확인해 두세요. 조직당 행 저장소 5GiB, 컬�
 
 ### 발표용 프로젝트로서의 현실성
 
-구현 가능한 범위입니다. 테이블 11개 중 3개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
+구현 가능한 범위입니다. 테이블 12개 중 4개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
 
 - **데이터 수집과 저작권.** 해설 문서와 작품 이미지의 라이선스를 확인해야 합니다. `license`와 `image_license` 컬럼을 둔 이유입니다.
 - **청킹 품질.** 답변 품질은 인덱스보다 청크를 어떻게 자르느냐에 더 크게 좌우됩니다.
