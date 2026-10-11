@@ -37,11 +37,15 @@ def build_with(monkeypatch, change):
 def test_counts_and_uniqueness(out):
     assert pp.main() == 0
     manifest = json.loads((out / "_SUCCESS.json").read_text(encoding="utf-8"))
-    rows = {name: f["rows"] for name, f in manifest["files"].items()}
-    assert rows == {"movements.jsonl": 3, "artists.jsonl": 6, "artworks.jsonl": 32, "documents.jsonl": 83}
+    # 데이터가 늘어도 깨지지 않게 고정 건수 대신 '기록된 줄 수 = 실제 파일 줄 수'와 하한을 본다
+    for name, f in manifest["files"].items():
+        assert f["rows"] == len(pp.load_processed(name)), name
+    assert manifest["files"]["artists.jsonl"]["rows"] >= 6
+    assert manifest["files"]["artworks.jsonl"]["rows"] >= 6 * pp.MIN_ARTWORKS
     docs = pp.load_processed("documents.jsonl")
     assert len({d["doc_key"] for d in docs}) == len(docs)
-    assert len({w["slug"] for w in pp.load_processed("artworks.jsonl")}) == 32
+    works = pp.load_processed("artworks.jsonl")
+    assert len({w["slug"] for w in works}) == len(works)
     assert not (out / ".staging").exists()
 
 
