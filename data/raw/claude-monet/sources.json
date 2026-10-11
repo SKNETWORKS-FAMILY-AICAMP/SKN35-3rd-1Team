@@ -815,5 +815,57 @@
       "wikidata": "https://www.wikidata.org/wiki/Q1212084",
       "is_featured": false
     }
+  },
+  "people.md": {
+    "doc_type": "artist_bio",
+    "title": "클로드 모네의 주변 인물과 관계",
+    "artist_slugs": ["claude-monet"],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%81%B4%EB%A1%9C%EB%93%9C_%EB%AA%A8%EB%84%A4",
+    "source_name": "위키백과 (Met·NGA 자료와 대조)",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "주변 인물",
+    "needs_review": true
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "클로드 모네의 작품 세계와 기법",
+    "artist_slugs": ["claude-monet"],
+    "artwork_slug": null,
+    "source_url": "https://www.metmuseum.org/toah/hd/cmon/ho_56.135.1.htm",
+    "source_name": "The Metropolitan Museum of Art",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "기법",
+    "needs_review": true
+  },
+  "places.md": {
+    "doc_type": "artist_bio",
+    "title": "클로드 모네의 활동 장소",
+    "artist_slugs": ["claude-monet"],
+    "artwork_slug": null,
+    "source_url": "https://www.nga.gov/artists/1726-claude-monet",
+    "source_name": "National Gallery of Art",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "장소",
+    "needs_review": true
+  },
+  "influence.md": {
+    "doc_type": "artist_bio",
+    "title": "클로드 모네의 영향",
+    "artist_slugs": ["claude-monet"],
+    "artwork_slug": null,
+    "source_url": "https://www.metmuseum.org/essays/claude-monet-1840-1926",
+    "source_name": "The Metropolitan Museum of Art (오랑주리 미술관 자료와 대조)",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "영향",
+    "needs_review": true
   }
 }

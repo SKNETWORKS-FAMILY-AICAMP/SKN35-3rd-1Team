@@ -8,7 +8,7 @@
 원본에 없는 값(모네·세잔 작품 정보, 사조)은 data/mappings/catalog.json 에서 채운다.
 
 실행 (backend/ 에서):  uv run python -m scripts.preprocess
-결과: data/processed/{movements,artists,artworks,documents}.jsonl + _SUCCESS.json
+결과: data/processed/{movements,artists,artworks,documents,artist_aliases}.jsonl + _SUCCESS.json
 
 검수 (data/mappings/reviews.json 에 기록):
     uv run python -m scripts.preprocess review --list
@@ -16,7 +16,7 @@
     검수할 때의 본문 해시를 함께 저장한다. 그 뒤 본문이 바뀌면 다시 검토 필요(needs_review=true)로 돌아간다.
 
 출력 규칙
-    - 4개 파일을 data/processed/.staging/ 에 모두 만든 뒤 한꺼번에 교체한다.
+    - 5개 파일을 data/processed/.staging/ 에 모두 만든 뒤 한꺼번에 교체한다.
     - 성공하면 _SUCCESS.json(파일별 sha256, 줄 수)을 마지막에 쓴다. 적재 스크립트는
       load_processed() 로 읽는다. _SUCCESS.json 이 없거나 해시가 다르면 읽지 않는다.
     - 실패하면 기존 결과와 _SUCCESS.json 은 그대로 두고 _FAILED.json 에 이유를 남긴다.
@@ -61,7 +61,7 @@ DROP_SECTIONS = {
 }
 HEADING = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
 # 한국어·로마자 문서에 섞이면 안 되는 문자 (기계 번역이 단어 일부를 다른 언어로 내놓는 경우)
-FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿ฀-๿぀-ヿ]")
+FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿऀ-ॿ฀-๿぀-ヿ]")
 FOOTNOTE = re.compile(r"\[(?:\*|\d{1,3}|편집|출처 필요)\]")  # 위키 각주 표식
 # 화면용 짧은 글(카드 설명, 작가 소개)에서 지우는 것: 원어 병기 괄호, 발음 기호
 LANG_PAREN = re.compile(
@@ -391,7 +391,7 @@ def write_atomic(path: Path, data: bytes) -> None:
 
 
 def publish(outputs: dict[str, list[dict]]) -> dict:
-    """4개 파일을 .staging 에 모두 만든 뒤 교체하고, 마지막에 _SUCCESS.json 을 쓴다.
+    """5개 파일을 .staging 에 모두 만든 뒤 교체하고, 마지막에 _SUCCESS.json 을 쓴다.
 
     교체 도중에 멈추면 _SUCCESS.json 이 없는 상태로 남으므로, load_processed() 는 그 결과를 읽지 않는다.
     """

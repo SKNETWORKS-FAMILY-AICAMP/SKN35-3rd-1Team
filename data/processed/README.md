@@ -15,7 +15,7 @@ uv run python -m scripts.preprocess
 
 ### 성공한 결과만 읽기 (`_SUCCESS.json`)
 
-- 4개 파일을 `.staging/`에 모두 만든 뒤 한꺼번에 교체하고, 마지막에 `_SUCCESS.json`(파일별 sha256과 줄 수)을 씁니다.
+- 5개 파일을 `.staging/`에 모두 만든 뒤 한꺼번에 교체하고, 마지막에 `_SUCCESS.json`(파일별 sha256과 줄 수)을 씁니다.
 - 검증에 실패하거나 원본을 읽다 오류가 나면 **기존 파일과 `_SUCCESS.json`은 그대로 두고** `_FAILED.json`에 실패 시각과 이유를 남깁니다. 다음에 성공하면 `_FAILED.json`은 지워집니다.
 - 적재 스크립트는 파일을 직접 열지 말고 `load_processed()`로 읽습니다. `_SUCCESS.json`이 없거나 해시가 다르면(교체 도중 중단 등) 예외를 내서 불완전한 결과를 적재하지 않게 합니다.
 
@@ -35,19 +35,19 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | `artists.jsonl` | `slug`, `name`, `name_en`, `movement_slug`, `birth_year`, `death_year`, `nationality`, `summary`, `portrait_url` | `artists` |
 | `artworks.jsonl` | `slug`, `artist_slug`, `movement_slug`, `title`, `title_en`, `year_label`, `year_start`, `medium`, `dimensions`, `collection`, `description`, `image_url`, `image_source_url`, `image_license`, `is_featured` | `artworks` |
 | `artist_aliases.jsonl` | `slug`, `name`, `status` (`collected`/`planned`), `aliases`, `confusable` | (DB 적재 안 함. 챗봇 작가 인식용) |
-| `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `needs_review` | `documents`, `document_artists` |
+| `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `needs_review` | `documents`, `document_artists`, `document_artworks` |
 
-### documents.jsonl 에서 DB에 없는 필드
+### documents.jsonl의 검색 메타데이터 저장 위치
 
-DB 테이블에는 없지만 검색과 답변에 쓰라고 둔 값입니다. 적재할 때는 무시해도 되고, 청크 메타데이터로 넘기면 됩니다.
+검색과 답변에 필요한 값이므로 적재할 때 버리지 않습니다. Alembic `20261011_0002` 기준 저장 위치는 다음과 같습니다.
 
-| 필드 | 뜻 |
+| 필드 | 저장 위치와 뜻 |
 | --- | --- |
-| `doc_key` | 문서 고유 키 (`<작가 slug>/<원본 파일 이름>`). DB id 대신 문서를 가리킬 때 씁니다 |
-| `lang` | `ko` 또는 `en`. 영어 위키백과 원문은 `en`입니다 |
-| `topic` | 생애 문서의 성격: `생애 전체`, `주변 인물`, `작품 세계`, `장소`, `영향`, `기법`, `연표`. 없으면 `null` |
-| `related_artwork_slugs` | 연표 사건과 연결된 작품. "이 작품을 그릴 때 작가는 어땠나" 같은 질문에서 작품으로 생애 문서를 찾을 때 씁니다 |
-| `needs_review` | 사람 검토가 끝나지 않은 문서면 `true`. 원본의 `needs_review`, `review_status`(검수 완료가 아니면), `record_status`(`draft…`)에서 오고, `data/mappings/reviews.json`에 검수 기록이 있으면 `false`가 됩니다. DB `documents.needs_review`에 저장합니다 |
+| `doc_key` | `documents.doc_key`. 문서 고유 키이며 재적재할 때 갱신 기준으로 씁니다 |
+| `lang` | `documents.lang`. 현재 결과 249건은 모두 `ko`입니다 |
+| `topic` | `documents.topic`. 생애 문서의 성격이며 없으면 `null`입니다 |
+| `related_artwork_slugs` | `document_artworks`. 연표 사건과 관련 작품을 연결합니다 |
+| `needs_review` | `documents.needs_review`. 사람 검토 전이면 `true`이고, `data/mappings/reviews.json`의 본문 해시가 일치하는 검수 기록이 있으면 `false`가 됩니다 |
 
 ### 문서 종류
 
@@ -59,7 +59,7 @@ DB 테이블에는 없지만 검색과 답변에 쓰라고 둔 값입니다. 적
 
 - **연표**(`topic: "연표"`)는 사건 하나가 문서 하나입니다. 100~400자로 짧으니 청킹하지 않고 문서 하나를 청크 하나로 쓰는 것을 권장합니다.
 - **위키백과 원문**은 섹션 제목이 `## 제목` 형태로 남아 있습니다. 섹션 단위로 자르면 문맥이 덜 끊깁니다.
-- 한 작품에 한국어·영어 해설이 둘 다 있을 수 있습니다 (예: `rembrandt/the-night-watch`, `rembrandt/the-night-watch.en`).
+- 한 작품에 한국어 원문 해설과 영어 원문에서 만든 한국어 번역 해설이 함께 있을 수 있습니다. 결과 문서의 `lang`은 둘 다 `ko`입니다 (예: `rembrandt/the-night-watch`, `rembrandt/the-night-watch.en`).
 
 ### Retriever 메타데이터 예
 

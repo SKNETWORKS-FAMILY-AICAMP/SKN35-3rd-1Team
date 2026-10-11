@@ -58,7 +58,7 @@ def test_rerun_is_deterministic_and_warnings_reset(out):
     assert len(pp.warnings) == n_warnings
 
 
-def test_needs_review_is_preserved(out):
+def test_needs_review_is_preserved(out, reviews):
     assert pp.main() == 0
     docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}
     assert all(isinstance(d["needs_review"], bool) for d in docs.values())
@@ -166,7 +166,7 @@ def test_review_pattern_and_missing_reviewer(out, reviews):
     assert len(json.loads(reviews.read_text(encoding="utf-8"))["reviews"]) == 14
 
 
-def test_translation_replaces_english_original(out):
+def test_translation_replaces_english_original(out, reviews):
     """번역본이 있으면 영어 원문 대신 한국어 번역을 내보내고, doc_key 는 원문과 같다."""
     assert pp.main() == 0
     docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}

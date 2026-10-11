@@ -2,7 +2,7 @@
 
 수집한 원본(`data/raw/`)을 적재용 파일(`data/processed/`)로 바꾸는 기준입니다. 전처리는 A가 맡고, 이 문서는 그 결과를 받아 적재·검색을 하는 다음 담당자(B)를 위해 씁니다.
 
-한 줄 요약: **원본은 형식을 정하지 않고 모아 둔 그대로 받고, 바꾸는 일은 전부 전처리 스크립트([`backend/scripts/preprocess.py`](../backend/scripts/preprocess.py))에서 합니다.** 다음 담당자는 `data/raw/`를 직접 읽지 않고 `data/processed/`의 파일 4개만 믿고 작업하면 됩니다.
+한 줄 요약: **원본은 형식을 정하지 않고 모아 둔 그대로 받고, 바꾸는 일은 전부 전처리 스크립트([`backend/scripts/preprocess.py`](../backend/scripts/preprocess.py))에서 합니다.** 다음 담당자는 `data/raw/`를 직접 읽지 않고 `data/processed/`의 결과 파일 5개만 믿고 작업하면 됩니다. TiDB 적재는 모든 수집·전처리가 끝난 뒤 별도로 진행합니다.
 
 ## 1. 전체 흐름
 
@@ -16,18 +16,19 @@ data/mappings/catalog.json        원본에 없는 값을 사람이 채우는 �
         │    - 연표 사건 하나를 문서 하나로
         │    - 검증에 실패하면 결과를 쓰지 않음
         ▼
-data/processed/*.jsonl            적재용 파일 4개 (팀 약속, 형식이 바뀌면 공지)
+data/processed/*.jsonl            결과 파일 5개 (DB 적재 4개 + 작가 별칭 1개)
         │
-        │  backend/scripts/load_*.py, build_*.py  (B)
+        │  모든 수집·전처리 완료 후 적재 스크립트 실행 (아직 작성 전)
         ▼
-TiDB  art_movements → artists → artworks → documents → document_chunks
+TiDB  art_movements → artists → artworks → documents
+      └ document_artists, document_artworks (이후 B가 청킹·임베딩)
 ```
 
 | 단계 | 담당 | 입력 | 출력 |
 | --- | --- | --- | --- |
 | 수집 | 전원 | 웹 자료 | `data/raw/<작가 slug>/` |
 | 전처리 | A | `data/raw/`, `data/mappings/catalog.json` | `data/processed/*.jsonl` |
-| 적재 | B | `data/processed/*.jsonl` | TiDB 테이블 |
+| 적재 | A (전처리 전체 완료 후) | `data/processed/*.jsonl` | TiDB 테이블 |
 | 청킹·임베딩 | B | TiDB `documents` | TiDB `document_chunks`, `artwork_embeddings` |
 
 실행은 `backend/`에서 합니다.
@@ -47,7 +48,7 @@ uv run python -m scripts.preprocess
 
 | 원본 형식 | 작가 | 읽는 함수 | 전처리에서 하는 일 |
 | --- | --- | --- | --- |
-| `dataset.json` (+ `sources.json`) | 고흐, 고갱 | `read_dataset` | 작가·작품·문서가 이미 구조화되어 있어 필드 이름만 맞춤. `sources.json`은 감사용 장부라 읽지 않음 |
+| `dataset.json` (+ `sources.json`) | 고흐, 고갱 | `read_dataset` | 작가·작품·문서가 이미 구조화되어 있어 필드 이름만 맞춤. 문서의 선택 필드 `sources`와 `sources.json`은 여러 근거를 남기는 감사용 장부이며, processed에는 대표 `source_url` 하나만 내보냄 |
 | 문서별 `*.md` + `sources.json` | 모네, 세잔, 렘브란트, 카라바조 | `read_markdown` | `sources.json`의 항목 하나가 md 파일 하나. 위키 문법 정리, 작품 카드 만들기 |
 | `timeline.json` | 렘브란트, 카라바조 | `read_timeline` | 연표 사건 하나를 생애 문서 하나로 만듦 |
 | `_comparisons/*.json` | 고흐·고갱 | `read_comparisons` | 비교 문서 (`document` 키가 있는 형식) |
@@ -126,7 +127,7 @@ uv run python -m scripts.preprocess
 
 - `description`(카드용 짧은 설명)은 매핑 파일에 없으면 한국어 해설 문서의 첫 문단 앞 두 문장으로 만듭니다. 영어 문서만 있는 작품은 매핑 파일에 한국어로 직접 씁니다.
 - 카드 설명과 작가 소개(`summary`)는 화면에 짧게 보이는 글이라 원어 병기 괄호(`(프랑스어: …)`, `(Michelangelo Merisi …)`, `(夜間巡察)`), 발음 기호(`[karaˈvaddʒo]`), 위키 표식(`[*]`)을 지우고 문장 끝 `!`는 `.`로 바꿉니다 (`card_text`). 문서 본문에는 적용하지 않습니다.
-- 한 작품에 한국어·영어 해설이 둘 다 있으면 작품 카드는 1개, 해설 문서는 2개입니다 (예: `rembrandt/the-night-watch`, `rembrandt/the-night-watch.en`).
+- 한 작품에 한국어 원문과 영어 원문이 모두 있으면 작품 카드는 1개, 해설 문서는 2개입니다. 영어 원문 문서는 번역본으로 내보내므로 결과의 `lang`은 둘 다 `ko`입니다 (예: `rembrandt/the-night-watch`, `rembrandt/the-night-watch.en`).
 - `movement_slug`가 비어 있으면 작가의 사조를 따릅니다.
 - `image_url`은 쿼리 문자열(`?utm_source=...`)을 지운 주소로 저장합니다.
 - `image_source_url`(이용 조건을 확인할 원본 페이지)이 없고 이미지가 위키미디어 파일이면, 파일 설명 페이지 주소(`commons.wikimedia.org/wiki/File:...`)를 만들어 넣습니다.
@@ -191,7 +192,7 @@ related_artwork_slugs: ["the-night-watch"]
 | md 형식 `sources.json`, `timeline.json` | `needs_review` 값 그대로 (사건별 값이 있으면 그것을 우선) |
 | `dataset.json`, 비교 json | `record_status`가 `draft…`이거나 `review_status`가 검수 완료(`검수 완료`, `reviewed`, `approved`)가 아니면 `true` |
 
-현재 221건 중 150건이 `true`입니다 (연표 51, 기계 번역 59, 고흐·고갱 팀 작성 40). 적재·검색에서 이 값을 어떻게 쓸지는 6절에 있습니다.
+현재 249건은 모두 검토 승인을 마쳐 `needs_review: false`입니다. 승인된 178건의 본문 해시는 검수 장부에 있으며, 새 문서가 들어오거나 승인 뒤 본문이 바뀌면 해당 문서만 다시 `true`가 됩니다. 적재·검색에서 이 값을 어떻게 쓸지는 6절에 있습니다.
 
 **검수 기록 (`data/mappings/reviews.json`)**: 원본 파일을 고치지 않고 검수 결과를 따로 기록합니다. 검수할 때의 본문 해시를 함께 저장하므로, 검수 뒤 본문이 바뀌면 자동으로 다시 `needs_review: true`가 되고 경고가 나옵니다. `backend/`에서 실행합니다.
 
@@ -247,20 +248,21 @@ uv run python -m scripts.preprocess
 | `artist` (이름) | `artist_slugs` (작품은 `artist_slug`) | 표기 흔들림 제거, DB 연결 키 |
 | `doc_type` 한글 2종 | `artist_bio`, `artwork_commentary`, `artist_comparison` | DB 값과 일치, 비교 문서 추가 |
 | `year` 하나 | `year_label` + `year_start` | 화면 표기와 정렬을 분리 |
-| 문서 1종 파일 | 파일 4개 (사조·작가·작품·문서) | 작품 목록 화면과 FK 순서 때문 |
-| 없음 | `doc_key`, `lang`, `topic`, `related_artwork_slugs` | 검색 메타데이터 (DB 컬럼 아님) |
+| 문서 1종 파일 | DB 적재 4개(사조·작가·작품·문서) + 별칭 1개 | 작품 목록 화면과 FK 순서, 챗봇 작가 인식 때문 |
+| 없음 | `doc_key`, `lang`, `topic`, `related_artwork_slugs`, `needs_review` | 검색 메타데이터. `documents` 컬럼과 `document_artworks`에 저장 |
 
 **청킹 권장**
 
 - 연표(`topic: "연표"`)는 100~400자로 짧으니 자르지 않고 문서 하나를 청크 하나로 씁니다.
 - 위키백과 원문은 `## 제목` 섹션 단위로 먼저 나누고, 긴 섹션만 다시 자르면 문맥이 덜 끊깁니다.
 
-**적재 순서**: `movements` → `artists` → `artworks` → `documents`. 자세한 내용은 [`backend/scripts/README.md`](../backend/scripts/README.md)에 있습니다.
+**적재 시점과 순서**: 적재는 모든 수집·전처리가 끝난 뒤 진행합니다. 순서는 `movements` → `artists` → `artworks` → `documents`이며, 적재 스크립트는 아직 작성하지 않았습니다. 자세한 계획은 [`backend/scripts/README.md`](../backend/scripts/README.md)에 있습니다.
 
 **알아 둘 점**
 
-- **분량 차이**: 렘브란트·카라바조는 작가당 본문이 약 12만 자, 고흐·고갱은 약 5,000자입니다. 챗봇은 선택한 작품 범위 안에서 검색하므로 큰 문제는 아니지만, 고흐·고갱은 스토리텔링 재료가 부족합니다. 보강 요청은 [`docs/data-request-gogh-gauguin.md`](data-request-gogh-gauguin.md)에 있습니다.
-- **영어 문서**: 렘브란트·카라바조·모네·세잔에는 영어 원문(`lang: "en"`)이 섞여 있습니다. 다국어 임베딩이라 한국어 질문으로도 검색되지만, 답변 출처가 영어로 표시될 수 있습니다.
+- **분량 차이**: 렘브란트·카라바조는 작가당 본문이 약 13만~16만 자, 고흐·고갱은 약 1만 5천 자입니다. 고흐·고갱은 생애·관계·작품 세계 보강을 마쳤지만 작품별 해설은 상대적으로 짧습니다. 보강 내역은 [`docs/data-request-gogh-gauguin.md`](data-request-gogh-gauguin.md)에 있습니다.
+- **검토·승인**: 기존 검토 대상 150건은 명백한 오류와 출처 불일치를 AI로 1차 점검했고, 앞서 검토한 모네·세잔 28건을 합친 178건을 데이터 담당자가 최종 승인했습니다. 수정·승인 내역은 [`docs/data-review-2026-10-11.md`](data-review-2026-10-11.md)에 있습니다.
+- **번역 문서**: 영어 원문 59건은 모두 한국어로 번역되어 현재 `documents.jsonl` 249건은 전부 `lang: "ko"`입니다. 외국 문자 잔존과 명백한 의미 오류를 수정하고 최종 승인했으며, 영어 원문의 주소를 출처로 유지합니다.
 
 **검색 메타데이터와 검토 상태의 DB 저장**
 
@@ -275,30 +277,29 @@ processed의 `doc_key`, `lang`, `topic`, `related_artwork_slugs`, `needs_review`
 
 청크 메타데이터(JSON)에 넣는 방법도 있지만, 지금 설계는 챗봇 검색 범위를 `WHERE document_id IN (...)`처럼 SQL로 좁히는 방식이라 관계형으로 두는 편이 일관됩니다.
 
-**다시 받을 때**: 데이터가 보완되면 A가 processed 파일을 새로 만듭니다. 사조·작가·작품은 slug 기준으로 갱신(upsert)하면 되지만, 문서는 지우고 다시 넣으므로 청킹·임베딩도 다시 돌려야 합니다.
+**다시 받을 때**: 데이터가 보완되면 A가 processed 파일을 새로 만듭니다. 사조·작가·작품은 slug, 문서는 `doc_key` 기준으로 갱신(upsert)합니다. 문서 본문이 바뀐 경우에만 기존 청크를 지우고 다시 청킹·임베딩합니다.
 
 ## 7. 작가별 현황
 
-전처리 결과 기준입니다 (2026-10-11). 숫자는 문서 건수이고, 한국어·영어 문서를 모두 셉니다.
+전처리 결과 기준입니다 (2026-10-11). 모든 결과 문서는 한국어이며, `영어 원문 번역`은 영어 원문에서 만든 한국어 번역 문서 수입니다.
 
-| 작가 | 작품 | 생애 | 연표 사건 | 작품 해설 | 비교 | 영어 문서 | 비고 |
+| 작가 | 작품 | 생애 | 연표 사건 | 작품 해설 | 비교 | 영어 원문 번역 | 비고 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 렘브란트 | 5 | 7 | 15 | 7 | 4 | 9 | 주변 인물(사스키아, 헨드리케, 티투스) 포함 |
-| 카라바조 | 5 | 4 | 14 | 5 | 4 | 4 | 카라바조 화파 포함 |
-| 클로드 모네 | 5 | 1 | 0 | 5 | 0 | 1 | |
-| 폴 세잔 | 5 | 1 | 0 | 5 | 0 | 3 | |
-| 빈센트 반 고흐 | 6 | 1 | 0 | 6 | 1 | 0 | 대표작·생애 보강 요청함 |
-| 폴 고갱 | 6 | 1 | 0 | 6 | 1 | 0 | 대표작·생애 보강 요청함 |
+| 렘브란트 | 27 | 7 | 15 | 31 | 4 | 33 | 주변 인물(사스키아, 헨드리케, 티투스) 포함 |
+| 카라바조 | 27 | 4 | 14 | 27 | 4 | 24 | 카라바조 화파 포함 |
+| 클로드 모네 | 30 | 5 | 10 | 30 | 0 | 1 | 주제별 생애·연표 추가, 검토 필요 |
+| 폴 세잔 | 25 | 5 | 10 | 25 | 0 | 3 | 주제별 생애·연표 추가, 검토 필요 |
+| 빈센트 반 고흐 | 14 | 6 | 10 | 14 | 1 | 0 | 팀 작성 자료, 검토 필요 |
+| 폴 고갱 | 13 | 6 | 12 | 13 | 1 | 0 | 팀 작성 자료, 검토 필요 |
 | 구스타프 클림트 | | | | | | | 원본 없음 |
 | 에곤 실레 | | | | | | | 원본 없음 |
 | 김홍도 | | | | | | | 원본 없음 |
 | 정선 | | | | | | | 원본 없음 |
 
-비교 문서 4건(렘브란트·카라바조)은 명암 기법 문서(테네브리즘, 키아로스쿠로의 한국어·영어)입니다. 두 작가를 직접 비교하는 문서는 아직 없습니다.
+렘브란트·카라바조가 함께 연결된 비교 문서 4건은 명암 기법 문서입니다. 한국어 원문 2건과 영어 원문에서 만든 한국어 번역본 2건이며, 두 작가를 직접 비교하는 글은 아직 없습니다.
 
 ## 8. 아직 정하지 않은 것
 
 - 렘브란트·카라바조 비교 문서: 기법 문서와 연표로 대신할지, 고흐·고갱처럼 비교 글을 따로 쓸지
-- 연표를 다른 작가(모네, 세잔, 고흐, 고갱)에도 만들지
 - 조선 회화처럼 영어 제목이 없는 작품의 slug 짓기 (예: 로마자 `mudo` vs 번역 `dancing-boy`)
 - 작품 이미지를 외부 주소(위키미디어)로 쓸지, `data/images/`에 사본을 둘지

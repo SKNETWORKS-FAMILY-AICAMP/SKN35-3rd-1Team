@@ -682,5 +682,57 @@
       "wikidata": "https://www.wikidata.org/wiki/Q3821663",
       "is_featured": false
     }
+  },
+  "people.md": {
+    "doc_type": "artist_bio",
+    "title": "폴 세잔의 주변 인물과 관계",
+    "artist_slugs": ["paul-cezanne"],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%8F%B4_%EC%84%B8%EC%9E%94",
+    "source_name": "위키백과 (Met·NGA 자료와 대조)",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "주변 인물",
+    "needs_review": true
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "폴 세잔의 작품 세계와 기법",
+    "artist_slugs": ["paul-cezanne"],
+    "artwork_slug": null,
+    "source_url": "https://www.metmuseum.org/pt/essays/paul-cezanne-1839-1906",
+    "source_name": "The Metropolitan Museum of Art",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "기법",
+    "needs_review": true
+  },
+  "places.md": {
+    "doc_type": "artist_bio",
+    "title": "폴 세잔의 활동 장소",
+    "artist_slugs": ["paul-cezanne"],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%8F%B4_%EC%84%B8%EC%9E%94",
+    "source_name": "위키백과 (Met·NGA 자료와 대조)",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "장소",
+    "needs_review": true
+  },
+  "influence.md": {
+    "doc_type": "artist_bio",
+    "title": "폴 세잔의 영향",
+    "artist_slugs": ["paul-cezanne"],
+    "artwork_slug": null,
+    "source_url": "https://www.metmuseum.org/essays/paul-cezanne-1839-1906",
+    "source_name": "The Metropolitan Museum of Art (MoMA 자료와 대조)",
+    "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "topic": "영향",
+    "needs_review": true
   }
 }
