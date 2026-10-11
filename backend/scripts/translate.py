@@ -22,7 +22,14 @@ from datetime import UTC, datetime
 import requests
 from dotenv import dotenv_values
 
-from scripts.preprocess import RAW, ROOT, clean_wiki, content_hash, write_atomic
+from scripts.preprocess import (
+    FOREIGN_SCRIPT,
+    RAW,
+    ROOT,
+    clean_wiki,
+    content_hash,
+    write_atomic,
+)
 
 MODEL = "gpt-5.4-mini"
 MAX_CHARS = 4000  # 요청 하나에 넣을 원문 길이. 섹션 경계에서 자른다
@@ -106,48 +113,97 @@ def translate(session: requests.Session, text: str) -> str:
     raise RuntimeError("번역 요청이 계속 실패했습니다")
 
 
+def fix_korean(text: str) -> str:
+    """번역 결과에 남는 영어식 표기를 한국어 표기로 바꾼다. 예: 'c. 1893년' → '1893년경'."""
+    return re.sub(r"\bc\. ?(\d{3,4}(?:[–-]\d{2,4})?)(?:년)?", r"\1년경", text)
+
+
+def check_translation(original: str, translated: str) -> list[str]:
+    """빠진 문단이나 다른 언어 문자가 섞인 곳을 찾는다. 모델이 문단을 합치거나 빠뜨리는 일이 실제로 있었다."""
+    def headings(t: str) -> int:
+        return len(re.findall(r"^#{2,4} ", t, re.MULTILINE))
+
+    def paragraphs(t: str) -> int:
+        return len([x for x in t.split("\n") if x.strip() and not x.startswith("#")])
+
+    problems = []
+    if headings(original) != headings(translated):
+        problems.append(f"섹션 제목 수 다름 (원문 {headings(original)}, 번역 {headings(translated)})")
+    if paragraphs(original) != paragraphs(translated):
+        problems.append(f"문단 수 다름 (원문 {paragraphs(original)}, 번역 {paragraphs(translated)})")
+    if m := FOREIGN_SCRIPT.search(translated):
+        problems.append(f"다른 언어 문자 섞임 '…{translated[max(0, m.start() - 10):m.end() + 10]}…'")
+    return problems
+
+
+def manifests(folder) -> list:
+    """번역 대상 목록 파일. 작가 폴더는 sources.json, _comparisons 는 sources.<이름>.json (md 자료용)."""
+    if folder.name == "_comparisons":
+        return sorted(p for p in folder.glob("sources.*.json") if p.name != "sources.json")
+    return [folder / "sources.json"]
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="영어 원문을 한국어로 번역")
-    parser.add_argument("--artists", nargs="+", required=True, help="작가 slug (data/raw 폴더 이름)")
+    parser.add_argument("--artists", nargs="+", required=True,
+                        help="data/raw 폴더 이름 (작가 slug 또는 _comparisons)")
     parser.add_argument("--files", nargs="+", help="이 파일만 번역 (기본: lang=en 인 md 전부)")
     parser.add_argument("--force", action="store_true", help="원문이 그대로여도 다시 번역")
+    parser.add_argument("--fix-only", action="store_true",
+                        help="API 를 부르지 않고 기존 번역본에 표기 정리(fix_korean)만 적용")
     args = parser.parse_args(argv)
 
-    key = dotenv_values(ROOT / ".env").get("OPENAI_API_KEY")
-    if not key:
-        print("[오류] .env 에 OPENAI_API_KEY 가 없습니다.")
-        return 1
     session = requests.Session()
-    session.headers["Authorization"] = f"Bearer {key}"
+    if not args.fix_only:
+        key = dotenv_values(ROOT / ".env").get("OPENAI_API_KEY")
+        if not key:
+            print("[오류] .env 에 OPENAI_API_KEY 가 없습니다.")
+            return 1
+        session.headers["Authorization"] = f"Bearer {key}"
 
     for artist in args.artists:
         folder = RAW / artist
-        src_path = folder / "sources.json"
-        sources = json.loads(src_path.read_text(encoding="utf-8"))
-        for fname, s in sources.items():
-            if not fname.endswith(".md") or s.get("lang") != "en":
-                continue
-            if args.files and fname not in args.files:
-                continue
-            original = clean_wiki((folder / fname).read_text(encoding="utf-8"))
-            digest = content_hash(original)
-            done = s.get("translation")
-            out = folder / f"{fname.removesuffix('.md')}.ko.md"
-            if done and done["source_sha256"] == digest and out.exists() and not args.force:
-                print(f"건너뜀 (이미 번역됨): {artist}/{fname}")
-                continue
-            parts = split_sections(original)
-            print(f"번역: {artist}/{fname} ({len(original):,}자, {len(parts)}개 요청)", flush=True)
-            translated = "\n\n".join(translate(session, p) for p in parts)
-            out.write_text(translated + "\n", encoding="utf-8")
-            s["translation"] = {
-                "file": out.name, "model": MODEL, "translated_on": datetime.now(UTC).astimezone().date().isoformat(),
-                "source_sha256": digest,
-            }
-            # 문서 하나 끝날 때마다 기록해 두면 중간에 멈춰도 다음 실행 때 이어서 한다
-            write_atomic(src_path, (json.dumps(sources, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
-            print(f"  → {out.name} ({len(translated):,}자)", flush=True)
+        for src_path in manifests(folder):
+            translate_folder(session, folder, src_path, args)
     return 0
+
+
+def translate_folder(session: requests.Session, folder, src_path, args: argparse.Namespace) -> None:
+    artist = folder.name
+    sources = json.loads(src_path.read_text(encoding="utf-8"))
+    for fname, s in sources.items():
+        if not fname.endswith(".md") or s.get("lang") != "en":
+            continue
+        if args.files and fname not in args.files:
+            continue
+        out = folder / f"{fname.removesuffix('.md')}.ko.md"
+        if args.fix_only:
+            if out.exists():
+                before = out.read_text(encoding="utf-8")
+                after = fix_korean(before)
+                if after != before:
+                    out.write_text(after, encoding="utf-8")
+                    print(f"표기 정리: {artist}/{out.name}")
+            continue
+        original = clean_wiki((folder / fname).read_text(encoding="utf-8"))
+        digest = content_hash(original)
+        done = s.get("translation")
+        if done and done["source_sha256"] == digest and out.exists() and not args.force:
+            print(f"건너뜀 (이미 번역됨): {artist}/{fname}")
+            continue
+        parts = split_sections(original)
+        print(f"번역: {artist}/{fname} ({len(original):,}자, {len(parts)}개 요청)", flush=True)
+        translated = fix_korean("\n\n".join(translate(session, p) for p in parts))
+        out.write_text(translated + "\n", encoding="utf-8")
+        for problem in check_translation(original, clean_wiki(translated)):
+            print(f"  [경고] {problem} — {out.name} 를 직접 확인하세요", flush=True)
+        s["translation"] = {
+            "file": out.name, "model": MODEL, "translated_on": datetime.now(UTC).astimezone().date().isoformat(),
+            "source_sha256": digest,
+        }
+        # 문서 하나 끝날 때마다 기록해 두면 중간에 멈춰도 다음 실행 때 이어서 한다
+        write_atomic(src_path, (json.dumps(sources, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+        print(f"  → {out.name} ({len(translated):,}자)", flush=True)
 
 
 if __name__ == "__main__":

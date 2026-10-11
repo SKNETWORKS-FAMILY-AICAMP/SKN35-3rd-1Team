@@ -102,6 +102,15 @@ ORDER BY distance
 LIMIT 5;
 -- 주의: SELECT 목록에 c.embedding 을 넣지 말 것. 벡터가 통째로 네트워크를 타고 넘어옴.
 
+-- (3) 이 작품을 언급한 연표 사건 (document_artworks, 마이그레이션 20261011_0002)
+--     위 범위 (2)에 이미 들어 있지만, 거리 순위와 상관없이 항상 컨텍스트에 넣는다.
+--     '야경 그릴 때 렘브란트는 어땠어?' 같은 질문에서 생애 이야기를 놓치지 않기 위함.
+SELECT d.id AS document_id, d.doc_key, d.title, d.content, d.source_name, d.source_url
+FROM document_artworks AS dw
+JOIN documents AS d ON d.id = dw.document_id
+WHERE dw.artwork_id = @artwork_id
+ORDER BY d.doc_key;
+
 -- ---------------------------------------------------------------------
 -- D. '이 작품과 비슷한 작품 3개' (기능 5, 작품 상세 화면용 / 비로그인도 가능)
 --    안쪽 쿼리를 "ORDER BY 거리 LIMIT k" 만 있는 순수 KNN 형태로 유지함.

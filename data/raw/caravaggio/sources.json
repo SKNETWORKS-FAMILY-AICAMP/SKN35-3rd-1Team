@@ -202,7 +202,7 @@
       "file": "bio.en.ko.md",
       "model": "gpt-5.4-mini",
       "translated_on": "2026-10-11",
-      "source_sha256": "d0201ca1015f242085b30abf4b726af2f01ab0dd89c596baf5d4c5cfa7175ca0"
+      "source_sha256": "4e01ac9c1538d3323d5856ab1417facecb78bf5a7b6f9da24c3f204d0b451360"
     }
   },
   "caravaggisti.md": {
@@ -242,7 +242,7 @@
       "file": "caravaggisti.en.ko.md",
       "model": "gpt-5.4-mini",
       "translated_on": "2026-10-11",
-      "source_sha256": "a70c2cb8d2d9b240c61e1667b080853eed4313eb796b0c397e9f41e40a03f9be"
+      "source_sha256": "b088ca292d80b27044b4b51ea8d6e73d1a9f0d428e24a7a47a97343dd9b5dff7"
     }
   },
   "timeline.json": {

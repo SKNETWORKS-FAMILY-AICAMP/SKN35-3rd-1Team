@@ -33,7 +33,13 @@
     "image_url": null,
     "image_license": null,
     "needs_review": false,
-    "topic": "기법"
+    "topic": "기법",
+    "translation": {
+      "file": "tenebrism.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "25f3ac8aaa5e81d0484c85c528a234ed93bed584de2ca287266cda692e72775c"
+    }
   },
   "chiaroscuro.md": {
     "doc_type": "artist_comparison",
@@ -69,6 +75,12 @@
     "image_url": null,
     "image_license": null,
     "needs_review": false,
-    "topic": "기법"
+    "topic": "기법",
+    "translation": {
+      "file": "chiaroscuro.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "71d0d817ea48090634c1599158ecd162212f56ca413f5e35c269d7de27900feb"
+    }
   }
 }

@@ -86,7 +86,7 @@
       "file": "the-night-watch.en.ko.md",
       "model": "gpt-5.4-mini",
       "translated_on": "2026-10-11",
-      "source_sha256": "13d0d202e039b82dfdefd74a6aa8092c5942b3cbc2251767b10e33e8de515049"
+      "source_sha256": "8b73d6e6a3dee76a0e8bdbd31674494cec758a22d0deac1e0f5c6e9f59534f3a"
     }
   },
   "the-anatomy-lesson-of-dr-tulp.md": {
@@ -266,7 +266,7 @@
       "file": "bio.en.ko.md",
       "model": "gpt-5.4-mini",
       "translated_on": "2026-10-11",
-      "source_sha256": "47d8e36b2c07578464b6fbf3b9e987435cd0fb45bda43e212a6af09c910ad8f1"
+      "source_sha256": "83c6a7506a9eb8688efd3681f96f66faec9644f80e48771b7f3086dca888b110"
     }
   },
   "people-saskia.en.md": {
@@ -312,7 +312,7 @@
       "file": "people-hendrickje.en.ko.md",
       "model": "gpt-5.4-mini",
       "translated_on": "2026-10-11",
-      "source_sha256": "01f5845b9cd4e95cca953be5bd01c571deb66d4679589124b2d93d3ddaba297a"
+      "source_sha256": "92ac2ad0417dc902ade1456f059e4be32bf77d71a05b2bf677f3dae10bddde66"
     }
   },
   "people-titus.en.md": {

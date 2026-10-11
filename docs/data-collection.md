@@ -54,7 +54,7 @@ uv run python -m scripts.preprocess
 | `_comparisons/*.md` + `sources.<이름>.json` | 렘브란트·카라바조 | `read_comparisons` | 명암 기법 문서 (테네브리즘, 키아로스쿠로) |
 
 - 파일 이름에 `.en`이 붙은 md(`bio.en.md`)는 같은 주제의 영어 문서입니다. 한국어 문서가 없거나 짧을 때 함께 수집했습니다.
-- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 렘브란트·카라바조·모네·세잔의 영어 문서 17건을 번역했습니다 (명암 기법 영어판 2건은 한국어판이 있어 제외).
+- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 영어 문서 19건을 모두 번역했습니다 (렘브란트·카라바조·모네·세잔 17건, 명암 기법 2건). `_comparisons/`의 md 자료는 `sources.<이름>.json`에 같은 방식으로 기록됩니다.
 - `sources.json` 항목에 `artwork` 묶음(연도, 재료, 크기, 소장처 등)이나 `artist` 묶음(생몰년, 국적)이 있으면 작품 카드와 작가 정보에 그대로 씁니다. 렘브란트·카라바조는 수집할 때 위키데이터(CC0)에서 받아 본문과 대조해 넣었습니다.
 - `timeline.json`의 각 사건은 근거를 `source_file`(같은 폴더의 원문 파일)이나 `source_url`로 적습니다. 렘브란트 연표가 예시입니다.
 
@@ -123,6 +123,7 @@ uv run python -m scripts.preprocess
 2. `data/mappings/catalog.json`의 `artworks`
 
 - `description`(카드용 짧은 설명)은 매핑 파일에 없으면 한국어 해설 문서의 첫 문단 앞 두 문장으로 만듭니다. 영어 문서만 있는 작품은 매핑 파일에 한국어로 직접 씁니다.
+- 카드 설명과 작가 소개(`summary`)는 화면에 짧게 보이는 글이라 원어 병기 괄호(`(프랑스어: …)`, `(Michelangelo Merisi …)`, `(夜間巡察)`), 발음 기호(`[karaˈvaddʒo]`), 위키 표식(`[*]`)을 지우고 문장 끝 `!`는 `.`로 바꿉니다 (`card_text`). 문서 본문에는 적용하지 않습니다.
 - 한 작품에 한국어·영어 해설이 둘 다 있으면 작품 카드는 1개, 해설 문서는 2개입니다 (예: `rembrandt/the-night-watch`, `rembrandt/the-night-watch.en`).
 - `movement_slug`가 비어 있으면 작가의 사조를 따릅니다.
 - `image_url`은 쿼리 문자열(`?utm_source=...`)을 지운 주소로 저장합니다.
@@ -137,7 +138,8 @@ uv run python -m scripts.preprocess
 - 기계 번역이라 항상 `needs_review: true`로 시작합니다. 고유명사 표기는 스크립트의 용어집(연표·카드와 같은 표기)을 따르게 했습니다.
 - 원문이 바뀌면 원문 해시가 달라져 전처리가 경고합니다. `uv run python -m scripts.translate --artists <작가>`를 다시 실행하면 바뀐 문서만 새로 번역합니다.
 - 작품 카드 설명은 사람이 쓴 설명 > 한국어 원문 > 번역본 순서로 고릅니다.
-- 번역 품질 확인: 17건 모두 원문과 섹션 제목 수·문단 수가 같았습니다. 렘브란트·카라바조 13건은 용어집과 다른 표기가 0건이었습니다.
+- 번역 품질 확인: 원문과 섹션 제목 수·문단 수를 비교하고, 용어집과 다른 표기가 없는지 확인했습니다.
+- 번역 결과의 영어식 연도(`c. 1893`)는 `1893년경`으로 바꿉니다 (`fix_korean`). 기존 번역본에만 적용할 때는 `--fix-only`로 API 없이 실행합니다.
 
 ### 4-3. 연도
 
@@ -156,7 +158,8 @@ uv run python -m scripts.preprocess
 
 - **섹션 제목**: 위키 문법(`== 제목 ==`, `=== 제목 ===`)을 마크다운 제목(`## 제목`, `### 제목`)으로 바꿉니다. 지우지 않는 이유는 청킹할 때 섹션 경계로 쓰기 위해서입니다.
 - **통째로 지우는 섹션**: 같이 보기, 각주, 내용주, 참고 문헌, 외부 링크, 갤러리, See also, References, Notes, External links, Further reading, Bibliography, 작품 목록·전시 목록·대중문화 섹션. 하위 섹션도 함께 지웁니다. 전체 목록은 스크립트의 `DROP_SECTIONS`에 있습니다.
-- **빈 섹션**: 제목만 있고 본문이 없는 섹션은 지웁니다.
+- **빈 섹션**: 제목만 있고 본문이 없는 섹션은 지웁니다. 다만 본문이 있는 하위 섹션을 거느린 상위 제목(예: `### 망명과 죽음` 아래 `#### 몰타`)은 남깁니다. 청크 머리말을 만들 때 필요합니다.
+- **각주 표식**: 본문에 남은 `[*]`, `[2]`, `[편집]`, `[출처 필요]`를 지웁니다.
 - **공백**: 줄 끝 공백을 지우고, 세 줄 이상 이어지는 빈 줄은 한 줄로 줄입니다. 문단 구분은 유지합니다.
 - 고흐·고갱의 `dataset.json` 본문은 팀이 새로 쓴 글이라 앞뒤 공백만 정리합니다.
 

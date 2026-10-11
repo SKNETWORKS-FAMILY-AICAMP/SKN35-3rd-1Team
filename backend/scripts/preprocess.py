@@ -59,6 +59,16 @@ DROP_SECTIONS = {
     "Selected works", "Paintings", "Drawings and etchings", "Other major paintings",
 }
 HEADING = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
+# 한국어·로마자 문서에 섞이면 안 되는 문자 (기계 번역이 단어 일부를 다른 언어로 내놓는 경우)
+FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿ฀-๿぀-ヿ]")
+FOOTNOTE = re.compile(r"\[(?:\*|\d{1,3}|편집|출처 필요)\]")  # 위키 각주 표식
+# 화면용 짧은 글(카드 설명, 작가 소개)에서 지우는 것: 원어 병기 괄호, 발음 기호
+LANG_PAREN = re.compile(
+    r"\s*\((?:[^()]*?(?:어|문화어):[^()]*"  # (프랑스어: …), (문화어: …)
+    r"|[A-Za-z][^()가-힣]*(?:[^()]*)"        # (Michelangelo Merisi …) 처럼 로마자로 시작하는 원명
+    r"|[一-鿿,\s]+)\)"               # (夜間巡察) 한자 병기
+)
+IPA = re.compile(r"\s*\[[^\]]*[ˈˌːɛɔəɲʒʃθðŋ̃][^\]]*\]")
 
 ARTIST_FIELDS = ("slug", "name", "name_en", "movement_slug", "birth_year", "death_year", "nationality",
                  "summary", "portrait_url")
@@ -73,7 +83,7 @@ warnings: list[str] = []
 def clean_wiki(text: str) -> str:
     """위키 문법 제목을 마크다운 제목으로 바꾸고, 목록·링크 섹션과 빈 섹션을 지운다. 본문은 고치지 않는다."""
     parts = HEADING.split(text)  # [앞부분, 등호, 제목, 본문, 등호, 제목, 본문, ...]
-    out = [parts[0].strip()]
+    sections = []  # (level, title, body)
     skip_level = None
     for i in range(1, len(parts), 3):
         level, title, body = len(parts[i]), parts[i + 1], parts[i + 2].strip()
@@ -83,17 +93,44 @@ def clean_wiki(text: str) -> str:
         if title in DROP_SECTIONS:
             skip_level = level
             continue
+        sections.append((level, title, body))
+    # 본문이 없는 제목은 지우되, 본문이 있는 하위 섹션을 거느린 상위 제목은 남긴다 (청크 머리말에 필요)
+    keep = [False] * len(sections)
+    for i in range(len(sections) - 1, -1, -1):
+        level, _, body = sections[i]
         if body:
-            out.append(f"{'#' * level} {title}\n{body}")
+            keep[i] = True
+            continue
+        for j in range(i + 1, len(sections)):
+            if sections[j][0] <= level:
+                break
+            if keep[j]:
+                keep[i] = True
+                break
+    out = [parts[0].strip()]
+    out += [f"{'#' * lv} {t}\n{b}".rstrip() for (lv, t, b), k in zip(sections, keep, strict=True) if k]
     text = "\n\n".join(p for p in out if p)
+    text = FOOTNOTE.sub("", text)
     text = re.sub(r"[ \t]+\n", "\n", text)
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
+def card_text(text: str | None) -> str | None:
+    """카드 설명·작가 소개처럼 화면에 짧게 보이는 글에서 원어 병기, 발음 기호, 위키 표식을 지운다.
+
+    문서 본문(content)에는 쓰지 않는다. 본문은 답변 근거라 원문을 그대로 둔다.
+    """
+    if not text:
+        return text
+    text = FOOTNOTE.sub("", IPA.sub("", LANG_PAREN.sub("", text)))
+    text = re.sub(r"다!(?=\s|$)", "다.", text)
+    return re.sub(r"\s{2,}", " ", text).strip()
+
+
 def first_sentences(text: str, n: int = 2) -> str | None:
     """카드용 짧은 설명. 첫 문단의 앞 n문장."""
-    para = text.split("\n")[0].strip()
-    sents = re.findall(r".+?(?:다\.|다!|\.)(?=\s|$)", para)
+    para = card_text(text.split("\n")[0].strip())
+    sents = re.findall(r".+?(?:다\.|\.)(?=\s|$)", para)
     return " ".join(s.strip() for s in sents[:n]) or None
 
 
@@ -151,20 +188,7 @@ def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
     for fname, s in sources.items():
         if not fname.endswith(".md"):
             continue
-        raw = (folder / fname).read_text(encoding="utf-8")
-        content = clean_wiki(raw)
-        lang = s.get("lang") or lang_of(raw)
-        title, source_name, needs_review = s["title"], s.get("source_name"), bool(s.get("needs_review", False))
-        tr = s.get("translation")
-        if tr and (folder / tr["file"]).exists():
-            # 번역본(scripts/translate.py)이 있으면 영어 원문 대신 쓴다. doc_key 는 원문과 같게 둔다
-            if tr["source_sha256"] != content_hash(content):
-                warnings.append(f"{slug}/{fname}: 번역 후 원문이 바뀜. scripts.translate 를 다시 실행하세요")
-            content = clean_wiki((folder / tr["file"]).read_text(encoding="utf-8"))
-            lang = "ko"
-            title = title.replace(" (영문)", "") + " (영문 번역)"
-            source_name = f"{source_name} · 한국어 번역 ({tr['model']})"
-            needs_review = True  # 기계 번역은 사람이 고유명사 표기 등을 확인해야 함
+        content, lang, title, source_name, needs_review, tr = read_md_document(folder, fname, s)
         if "artist" in s:  # 렘브란트·카라바조: 수집할 때 작가 정보를 같이 적어 둠
             artist.update({k: v for k, v in s["artist"].items() if k in ARTIST_FIELDS})
         if s["doc_type"] == "artist_bio" and fname == "bio.md" and lang == "ko":
@@ -180,6 +204,27 @@ def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
             "needs_review": needs_review,
         })
     cat["artists"][slug] = {k: artist.get(k) for k in ARTIST_FIELDS}
+
+
+def read_md_document(folder: Path, fname: str, s: dict) -> tuple:
+    """md 문서 하나를 읽는다. 번역본(scripts/translate.py)이 있으면 영어 원문 대신 쓴다.
+
+    돌려주는 값: (content, lang, title, source_name, needs_review, translation 기록 또는 None).
+    doc_key 는 번역본이어도 원문과 같게 둔다 (검수 기록·재적재 키가 흔들리지 않게).
+    """
+    raw = (folder / fname).read_text(encoding="utf-8")
+    content = clean_wiki(raw)
+    lang = s.get("lang") or lang_of(raw)
+    title, source_name, needs_review = s["title"], s.get("source_name"), bool(s.get("needs_review", False))
+    tr = s.get("translation")
+    if not (tr and (folder / tr["file"]).exists()):
+        return content, lang, title, source_name, needs_review, None
+    if tr["source_sha256"] != content_hash(content):
+        warnings.append(f"{folder.name}/{fname}: 번역 후 원문이 바뀜. scripts.translate 를 다시 실행하세요")
+    content = clean_wiki((folder / tr["file"]).read_text(encoding="utf-8"))
+    title = title.replace(" (영문)", "") + " (영문 번역)"
+    source_name = f"{source_name} · 한국어 번역 ({tr['model']})"
+    return content, "ko", title, source_name, True, tr  # 기계 번역은 사람이 고유명사 표기 등을 확인해야 함
 
 
 def add_artwork(
@@ -248,14 +293,14 @@ def read_comparisons(folder: Path, cat: dict) -> None:
             })
         elif path.name.startswith("sources.") and path.name != "sources.json":  # md 비교 자료의 출처 목록
             for fname, s in data.items():
-                raw = (folder / fname).read_text(encoding="utf-8")
+                content, lang, title, source_name, needs_review, _ = read_md_document(folder, fname, s)
                 cat["documents"].append({
                     "doc_key": f"_comparisons/{fname.removesuffix('.md')}",
-                    "doc_type": s["doc_type"], "title": s["title"], "content": clean_wiki(raw),
+                    "doc_type": s["doc_type"], "title": title, "content": content,
                     "artist_slugs": s["artist_slugs"], "artwork_slug": None,
-                    "source_url": s["source_url"], "source_name": s.get("source_name"), "license": s.get("license"),
-                    "lang": s.get("lang") or lang_of(raw), "topic": s.get("topic"), "related_artwork_slugs": [],
-                    "needs_review": bool(s.get("needs_review", False)),
+                    "source_url": s["source_url"], "source_name": source_name, "license": s.get("license"),
+                    "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": [],
+                    "needs_review": needs_review,
                 })
 
 
@@ -307,6 +352,9 @@ def validate(cat: dict) -> list[str]:
         for s in d["related_artwork_slugs"]:
             if s not in artworks:
                 errors.append(f"문서 {k}: 관련 작품 '{s}' 없음")
+        if m := FOREIGN_SCRIPT.search(d["content"]):
+            around = d["content"][max(0, m.start() - 10):m.end() + 10].replace("\n", " ")
+            warnings.append(f"문서 {k}: 본문에 다른 언어 문자가 섞임 '…{around}…'")
         if len(d["content"]) < MIN_CONTENT and d["topic"] != "연표":  # 연표 사건은 일부러 짧게 씀
             warnings.append(f"문서 {k}: 본문 {len(d['content'])}자로 짧음")
     for slug in artists:
@@ -397,6 +445,10 @@ def build() -> dict:
 
 def apply_overrides(cat: dict, mapping: dict) -> None:
     """매핑 파일 값을 원본 형식과 관계없이 덮어쓴다 (dataset.json 형식 작가·작품 포함)."""
+    for a in cat["artists"].values():
+        a["summary"] = card_text(a.get("summary"))
+    for w in cat["artworks"].values():
+        w["description"] = card_text(w.get("description"))
     for slug, values in mapping["artists"].items():
         if slug in cat["artists"]:
             cat["artists"][slug].update({k: v for k, v in values.items() if k in ARTIST_FIELDS})

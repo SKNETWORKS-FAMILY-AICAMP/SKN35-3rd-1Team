@@ -174,3 +174,28 @@ def test_translation_replaces_english_original(out):
     # 한국어 원문이 있는 작품의 카드 설명은 번역본이 아니라 원문에서 온다
     works = {w["slug"]: w for w in pp.load_processed("artworks.jsonl")}
     assert works["the-jewish-bride"]["description"].startswith("《유대인 신부》")
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("카라바조(Michelangelo Merisi da Caravaggio [karaˈvadd͡ʒo][*], 1571년~1610년)는 화가다.", "카라바조는 화가다."),
+        ("《인상, 해돋이》(프랑스어: Impression, soleil levant)는 유화이다!", "《인상, 해돋이》는 유화이다."),
+        ("《야경》(夜警, 네덜란드어: De Nachtwacht) 또는 《야간순찰》(夜間巡察)은 작품이다.", "《야경》 또는 《야간순찰》은 작품이다."),
+        ("모네 (1840년~1926년)가 그린 연작이다.", "모네 (1840년~1926년)가 그린 연작이다."),  # 한국어 괄호는 남김
+    ],
+)
+def test_card_text_removes_original_language_notes(raw, expected):
+    assert pp.card_text(raw) == expected
+
+
+def test_clean_wiki_keeps_parent_heading_and_drops_footnotes():
+    text = "앞\n\n=== 망명 ===\n\n==== 몰타 ====\n본문[2] 끝[*]\n\n=== 빈 섹션 ===\n\n== 각주 ==\n목록"
+    assert pp.clean_wiki(text) == "앞\n\n### 망명\n\n#### 몰타\n본문 끝"
+
+
+def test_fix_korean_year_notation():
+    from scripts.translate import fix_korean
+
+    assert fix_korean("c. 1893년에 제작") == "1893년경에 제작"
+    assert fix_korean("(c. 1600–1601)은") == "(1600–1601년경)은"
