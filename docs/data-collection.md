@@ -54,7 +54,7 @@ uv run python -m scripts.preprocess
 | `_comparisons/*.md` + `sources.<이름>.json` | 렘브란트·카라바조 | `read_comparisons` | 명암 기법 문서 (테네브리즘, 키아로스쿠로) |
 
 - 파일 이름에 `.en`이 붙은 md(`bio.en.md`)는 같은 주제의 영어 문서입니다. 한국어 문서가 없거나 짧을 때 함께 수집했습니다.
-- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 렘브란트·카라바조의 영어 문서 13건을 번역했습니다.
+- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 렘브란트·카라바조·모네·세잔의 영어 문서 17건을 번역했습니다 (명암 기법 영어판 2건은 한국어판이 있어 제외).
 - `sources.json` 항목에 `artwork` 묶음(연도, 재료, 크기, 소장처 등)이나 `artist` 묶음(생몰년, 국적)이 있으면 작품 카드와 작가 정보에 그대로 씁니다. 렘브란트·카라바조는 수집할 때 위키데이터(CC0)에서 받아 본문과 대조해 넣었습니다.
 - `timeline.json`의 각 사건은 근거를 `source_file`(같은 폴더의 원문 파일)이나 `source_url`로 적습니다. 렘브란트 연표가 예시입니다.
 
@@ -137,7 +137,7 @@ uv run python -m scripts.preprocess
 - 기계 번역이라 항상 `needs_review: true`로 시작합니다. 고유명사 표기는 스크립트의 용어집(연표·카드와 같은 표기)을 따르게 했습니다.
 - 원문이 바뀌면 원문 해시가 달라져 전처리가 경고합니다. `uv run python -m scripts.translate --artists <작가>`를 다시 실행하면 바뀐 문서만 새로 번역합니다.
 - 작품 카드 설명은 사람이 쓴 설명 > 한국어 원문 > 번역본 순서로 고릅니다.
-- 번역 품질 확인: 13건 모두 원문과 섹션 제목 수·문단 수가 같고, 용어집과 다른 표기는 0건이었습니다.
+- 번역 품질 확인: 17건 모두 원문과 섹션 제목 수·문단 수가 같았습니다. 렘브란트·카라바조 13건은 용어집과 다른 표기가 0건이었습니다.
 
 ### 4-3. 연도
 

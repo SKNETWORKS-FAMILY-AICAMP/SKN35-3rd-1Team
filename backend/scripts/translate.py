@@ -50,6 +50,13 @@ The Calling of Saint Matthew = 성 마태오를 부르심 / Supper at Emmaus = �
 David with the Head of Goliath = 골리앗의 머리를 든 다윗 / Judith Beheading Holofernes = 홀로페르네스의 목을 베는 유디트
 The Incredulity of Saint Thomas = 의심하는 성 토마스 / Caravaggisti = 카라바조 화파
 chiaroscuro = 키아로스쿠로 / tenebrism = 테네브리즘 / Baroque = 바로크
+Claude Monet = 클로드 모네 / Camille Monet = 카미유 모네 / Jean Monet = 장 모네 / Argenteuil = 아르장퇴유
+Paul Cézanne = 폴 세잔 / Aix-en-Provence = 엑상프로방스 / Émile Zola = 에밀 졸라
+Woman with a Parasol = 양산을 든 여인 / Still Life with Apples and Oranges = 사과와 오렌지가 있는 정물
+The Basket of Apples = 사과 바구니 / The Bathers (Les Grandes Baigneuses) = 대수욕도
+Musée d'Orsay = 오르세 미술관 / Art Institute of Chicago = 시카고 미술관 / Philadelphia Museum of Art = 필라델피아 미술관
+National Gallery of Art = 미국 국립미술관 / Impressionism = 인상주의 / Post-Impressionism = 후기 인상주의
+Fauvism = 야수파 / Cubism = 입체파
 """
 
 SYSTEM = f"""너는 미술사 문서를 한국어로 옮기는 번역가다. 위키백과 영어 원문을 한국어로 번역한다.

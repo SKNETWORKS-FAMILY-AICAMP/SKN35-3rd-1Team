@@ -55,7 +55,13 @@
     "lang": "en",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Nature_morte_aux_pommes_et_aux_oranges%2C_par_Paul_C%C3%A9zanne.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
     "image_license": "Public domain",
-    "needs_review": false
+    "needs_review": false,
+    "translation": {
+      "file": "apples-oranges.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "bbdd87b725a4cbe2d565c7b3beda53fa5d811ede0594fd22b3d6695dbea68099"
+    }
   },
   "the-large-bathers.md": {
     "doc_type": "artwork_commentary",
@@ -69,7 +75,13 @@
     "lang": "en",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
     "image_license": "Public domain",
-    "needs_review": false
+    "needs_review": false,
+    "translation": {
+      "file": "the-large-bathers.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "ec16198d2ec4af99b28a7ec28795031231466917f3aa0bb604af86c64567f15c"
+    }
   },
   "the-basket-of-apples.md": {
     "doc_type": "artwork_commentary",
@@ -83,6 +95,12 @@
     "lang": "en",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Paul_C%C3%A9zanne_-_The_Basket_of_Apples_-_1926.252_-_Art_Institute_of_Chicago.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
     "image_license": "Public domain",
-    "needs_review": false
+    "needs_review": false,
+    "translation": {
+      "file": "the-basket-of-apples.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "f3a5de440d2bb3ef1a1944ed29b56b59abe928d95fb5cdf53928bea8e3bc095a"
+    }
   }
 }

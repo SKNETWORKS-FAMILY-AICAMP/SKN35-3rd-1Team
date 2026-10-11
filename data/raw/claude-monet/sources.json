@@ -83,6 +83,12 @@
     "lang": "en",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
     "image_license": "Public domain",
-    "needs_review": false
+    "needs_review": false,
+    "translation": {
+      "file": "woman-with-parasol.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "e72ac80aa71e61ed0ab3ad3cd054e07bed165e7f3241cc99aaa65f311fcc9e99"
+    }
   }
 }
