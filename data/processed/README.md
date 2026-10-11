@@ -10,7 +10,7 @@
 uv run python -m scripts.preprocess
 ```
 
-- 원본: `data/raw/`, 사람이 채우는 값: `data/mappings/catalog.json`
+- 원본: `data/raw/`, 사람이 채우는 값: `data/mappings/catalog.json`, 작가 별칭: `data/mappings/artist_aliases.json`
 - 같은 입력이면 같은 파일이 나옵니다. 줄 순서는 slug(문서는 `doc_key`) 순입니다.
 
 ### 성공한 결과만 읽기 (`_SUCCESS.json`)
@@ -34,6 +34,7 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | `movements.jsonl` | `slug`, `name`, `name_en`, `description` | `art_movements` |
 | `artists.jsonl` | `slug`, `name`, `name_en`, `movement_slug`, `birth_year`, `death_year`, `nationality`, `summary`, `portrait_url` | `artists` |
 | `artworks.jsonl` | `slug`, `artist_slug`, `movement_slug`, `title`, `title_en`, `year_label`, `year_start`, `medium`, `dimensions`, `collection`, `description`, `image_url`, `image_source_url`, `image_license`, `is_featured` | `artworks` |
+| `artist_aliases.jsonl` | `slug`, `name`, `status` (`collected`/`planned`), `aliases`, `confusable` | (DB 적재 안 함. 챗봇 작가 인식용) |
 | `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `needs_review` | `documents`, `document_artists` |
 
 ### documents.jsonl 에서 DB에 없는 필드

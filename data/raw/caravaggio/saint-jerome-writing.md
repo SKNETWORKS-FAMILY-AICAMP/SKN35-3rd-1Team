@@ -1,0 +1,42 @@
+Saint Jerome Writing is a painting by the Italian master Michelangelo Merisi da Caravaggio in 1607 or 1608, housed in the Oratory of St John's Co-Cathedral, Valletta, Malta. It can be compared with Caravaggio's earlier version of the same subject in the Borghese Gallery in Rome.
+
+
+== History ==
+Caravaggio arrived in Malta on July 12, 1607. He had spent the previous months in Naples, where he had sought refuge with his powerful protectors the Colonna family after killing a man in a brawl in Rome the previous year. In Naples he had been an instant success, achieving ten commissions, including a number of large and very prestigious altarpieces, in less than a year, and inspiring a following of Caravaggisti among the city's artists. In short, in Naples he had found professional success, the esteem of fellow-artists, and the support of important patrons. Why then leave all this for a speck of rock inhabited by warrior-monks noted more for their fighting (Peter Robb compares them to the French Foreign Legion) than for their support of the arts? The following summarises the speculation of recent biographers such as Robb and Helen Langdon: In 1607 Caravaggio was still an outlaw, at risk of being tracked down by his enemies – the family of the man he had killed – and Naples, close to Rome, may have seemed comparatively exposed. His patrons and protectors – the Colonna, the Giustiniani, the banker Ottavio Costa – had strong links with Malta and the Knights, and it may have been felt that joining the Order would give Caravaggio immediate protection and aid in procuring a Papal pardon for his eventual return to Rome. The Grand Master of the Knights, Alof de Wignacourt, was keen to enhance the prestige of his Order and his capital, and the prospect of having one of the leading artists in Rome and Naples as de facto court painter must have been an appealing one. And so Caravaggio went to Malta.
+The coat of arms in the bottom right corner of the painting is that of Ippolito Malaspina, Prior of the Order of the Knights of Saint John (the Knights of Malta) in Naples. Malaspina was a relative by marriage of Caravaggio's patron Ottavio Costa, a friend of his other patrons the Giustiniani brothers, and a cousin of Giovanni Andrea Doria, who two years before had sheltered the artist after an earlier flight from Rome. It's possible that he may have had himself represented as the saint. Saint Jerome was thus a very important painting for the artist.
+The subject seems oddly unmartial for a commission by a man whose raison d'être was to fight the Turks – St Jerome was venerated as the translator of the Bible, which he is seen doing here. But Malaspina was not only a famous warrior, he was also a commissioner for the poor, orphans, and widows, and the painting may have been intended to emphasise both this aspect of his work and also the asceticism of the Order.
+Ippolito Malaspina arrived in Malta at the end of the Great Siege of 1565. He landed with the 'Grande Soccorso' and was present in the final onslaught on the invading Ottoman forces. Therefore, this knight indeed witnessed the final stages of the Great Siege. He was also a relative, if not the brother or cousin, of Vespasianus Malaspina who died a martyr's death whilst courageously fighting the Ottoman soldiery in Fort Saint Elmo. A depiction of Vespasianus Malaspina is found within the Co-Cathedral of Saint John on the right hand side of a window just above the chapel dedicated to the Langue of Italy. Therefore, Ippolito must have reached the Island to aid his brethren; however his relative, amongst others, died a Catholic martyrs death. Previously to his Maltese residence, Ippolito Malaspina was Admiral of the Papal Fleet. The Catholic martyrs are unfortunately not much remembered by the Maltese, however a collective remembrance day referred to as Victory Day is celebrated on September 8, Feast dedicated to the Nativity of Our Lady, also known as Our Lady of Victory on the Islands.
+
+
+=== Theft ===
+In December 1984, the painting was stolen from the St. John's Co-Cathedral. The canvas was cut out of the frame. Two years later, following numerous telephone negotiations between the thieves and the then Director of Museums in Malta and Gozo, Fr. Marius J. Zerafa, the painting was recovered. The masterpiece was damaged and needed restoration before it was put on display again.
+The theft and recovery were covered in The Caravaggio Heist, a 2021 episode of the PBS series Secrets of the Dead. A full written account of the theft and successful recovery has been recorded by Fr. Marius J. Zerafa in his book Caravaggio Diaries.
+
+
+=== 3 Euro Coin ===
+In 2022 the Central Bank of Malta issued two 3 euro coins depicting a section of the painting. One coin has a relief, the other a colour print.
+The relief coin has a mintage of 4,999; and the print coin has a mintage of 5,000.
+
+
+== See also ==
+List of paintings by Caravaggio
+List of stolen paintings
+
+
+== References ==
+
+
+== Bibliography ==
+Gash, John (2003). Caravaggio. Chaucer. ISBN 1-904449-22-0.
+Langdon, Helen (1998). Caravaggio: A Life. Farrar, Straus and Giroux. ISBN 0-374-11894-9.
+Robb, Peter (1998). M. Macmillan. ISBN 0-312-27474-2.
+Maurizio Marini, ed. (1973). Io Michelangelo da Caravaggio. Rome: Studio B.
+Rossella Vodret, ed. (2009) [2009]. Caravaggio. L'opera completa (in Italian). Silvana Editoriale. p. 272. ISBN 9788836615506. {{cite book}}: |work= ignored (help)
+Giovanni Pietro Bellori (2000). Le vite de' pittori scultori et architetti moderni (in Italian). Sala Bolognese: A. Forni. Reproducedas a facsimile edion in Rome, Mascardi, 1672
+Vincenzo Bonello; John A. Cauchi, eds. (1960). L'arte sacra a Malta: Mostra d'arte antica e moderna promossa dal Comitato Nazionale per le feste centenarie paoline (in Italian). Malta: Floriana-Palazzo dell'Istituto Cattolico.
+
+
+== External links ==
+ Media related to Saint Jerome in his study by Caravaggio (Valletta) at Wikimedia Commons
+"The Maltese priest and the kidnapped Caravaggio: The amazing true story of the scrappy octogenarian who busted an audacious art heist". salon.com. December 4, 2016.
+"Saint Jérôme écrivant – Chef-d'œuvre du Caravage". stjohnscocathedral.com (in French). Co-cathédrale et musée St Jean, La Vallette. 2016. Archived from the original on February 15, 2018. Retrieved April 14, 2018.

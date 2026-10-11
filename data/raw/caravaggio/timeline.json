@@ -21,7 +21,11 @@
       "title": "빈털터리로 도착한 로마",
       "story": "1592년 카라바조는 '몇 차례의 다툼'과 경찰관을 다치게 한 일로 밀라노를 떠나 로마로 향했다. 초기 전기 작가는 그가 '헐벗고 몹시 궁핍한 채, 머물 곳도 돈도 없이' 로마에 도착했다고 적었다.",
       "people": [],
-      "related_artworks": [],
+      "related_artworks": [
+        "boy-with-a-basket-of-fruit",
+        "young-sick-bacchus",
+        "boy-bitten-by-a-lizard"
+      ],
       "source_file": "bio.en.md"
     },
     {
@@ -35,7 +39,9 @@
         "the-fortune-teller",
         "the-cardsharps",
         "bacchus",
-        "medusa"
+        "medusa",
+        "the-musicians",
+        "the-lute-player"
       ],
       "source_file": "bio.en.md"
     },
@@ -73,7 +79,11 @@
         "supper-at-emmaus",
         "the-incredulity-of-saint-thomas",
         "the-conversion-of-saint-paul",
-        "death-of-the-virgin"
+        "death-of-the-virgin",
+        "crucifixion-of-saint-peter",
+        "amor-vincit-omnia",
+        "the-taking-of-christ",
+        "the-entombment-of-christ"
       ],
       "source_file": "bio.en.md"
     },
@@ -115,7 +125,8 @@
       "story": "카라바조는 몰타로 건너가 몰타 기사단의 기사가 되었고, 그곳에서 자신의 가장 큰 그림이자 유일하게 서명한 그림인 『세례 요한의 참수』를 그렸다. 그러나 1608년 8월 다시 귀족 기사와 싸워 그를 크게 다치게 했고, 발레타의 감옥에 갇혔다가 탈출했다. 그해 12월 기사단에서 '썩은 손발'로 불리며 쫓겨났다.",
       "people": [],
       "related_artworks": [
-        "the-beheading-of-saint-john-the-baptist"
+        "the-beheading-of-saint-john-the-baptist",
+        "saint-jerome-writing"
       ],
       "source_file": "bio.en.md"
     },
@@ -146,7 +157,10 @@
       "title": "사면을 받으러 가는 길에서 맞은 죽음",
       "story": "사면이 곧 내려진다는 소식을 듣고, 카라바조는 1610년 여름 보르게세 추기경에게 줄 그림 세 점을 싣고 배로 로마를 향했다. 그는 그해 7월 18일 열병으로 숨졌다고 전해지며, 포르토 에르콜레에 묻혔다. 당시에도 토마소니 가문이나 몰타 기사단이 복수했다는 소문이 돌았고, 사인은 지금도 논쟁거리다. 서른여덟 살이었다.",
       "people": [],
-      "related_artworks": [],
+      "related_artworks": [
+        "the-martyrdom-of-saint-ursula",
+        "the-denial-of-saint-peter"
+      ],
       "source_file": "bio.en.md"
     },
     {

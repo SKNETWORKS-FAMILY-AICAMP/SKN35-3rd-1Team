@@ -25,7 +25,11 @@
         "얀 리번스 (동료)",
         "콘스탄테인 하위헌스 (후원자)"
       ],
-      "related_artworks": [],
+      "related_artworks": [
+        "judas-repentant",
+        "the-artist-in-his-studio",
+        "the-raising-of-lazarus"
+      ],
       "source_file": "bio.en.md"
     },
     {
@@ -36,7 +40,10 @@
         "니콜라스 튈프 (외과의사)"
       ],
       "related_artworks": [
-        "the-anatomy-lesson-of-dr-tulp"
+        "the-anatomy-lesson-of-dr-tulp",
+        "portrait-of-nicolaes-ruts",
+        "philosopher-in-meditation",
+        "the-shipbuilder-and-his-wife"
       ],
       "source_file": "the-anatomy-lesson-of-dr-tulp.md"
     },
@@ -97,7 +104,8 @@
         "코르넬리아 (딸)"
       ],
       "related_artworks": [
-        "bathsheba-at-her-bath"
+        "bathsheba-at-her-bath",
+        "a-woman-bathing-in-a-stream"
       ],
       "source_file": "people-hendrickje.en.md"
     },
@@ -150,7 +158,9 @@
       "story": "빚과 소송이 이어지던 말년에도 렘브란트는 『유대인 신부』와 마지막 자화상들을 그렸다. 『유대인 신부』는 서로를 부드럽게 감싸는 남녀를 그린 그림으로, 사랑과 삶, 신 앞에 선 사람들을 그린 말년 작품 가운데 하나로 꼽힌다. 현재 제목은 19세기에 붙은 것이다.",
       "people": [],
       "related_artworks": [
-        "the-jewish-bride"
+        "the-jewish-bride",
+        "lucretia",
+        "self-portrait-with-two-circles"
       ],
       "source_file": "bio.en.md"
     },

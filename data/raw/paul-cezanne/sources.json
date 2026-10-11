@@ -3,7 +3,7 @@
     "doc_type": "artist_bio",
     "title": "폴 세잔의 생애",
     "artist_slugs": [
-      "paul-cezanne", "cezanne", "폴세잔", "세잔"
+      "paul-cezanne"
     ],
     "artwork_slug": null,
     "source_url": "https://ko.wikipedia.org/wiki/%ED%8F%B4_%EC%84%B8%EC%9E%94",
@@ -11,8 +11,8 @@
     "license": "CC BY-SA 4.0",
     "collected_at": "2026-10-10",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul-Cezanne.jpg",
+    "image_license": "Public domain",
     "needs_review": false
   },
   "mont-sainte-victoire.md": {

@@ -54,7 +54,7 @@ uv run python -m scripts.preprocess
 | `_comparisons/*.md` + `sources.<이름>.json` | 렘브란트·카라바조 | `read_comparisons` | 명암 기법 문서 (테네브리즘, 키아로스쿠로) |
 
 - 파일 이름에 `.en`이 붙은 md(`bio.en.md`)는 같은 주제의 영어 문서입니다. 한국어 문서가 없거나 짧을 때 함께 수집했습니다.
-- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 영어 문서 35건을 모두 번역했습니다 (렘브란트·카라바조·모네·세잔 33건, 명암 기법 2건). `_comparisons/`의 md 자료는 `sources.<이름>.json`에 같은 방식으로 기록됩니다.
+- `*.ko.md`는 영어 원문의 한국어 번역본입니다 ([`backend/scripts/translate.py`](../backend/scripts/translate.py), `gpt-5.4-mini`). `sources.json` 항목의 `translation`에 번역 파일, 모델, 날짜, 원문 해시가 기록됩니다. 영어 문서 59건을 모두 번역했습니다 (명암 기법 2건 포함). `_comparisons/`의 md 자료는 `sources.<이름>.json`에 같은 방식으로 기록됩니다.
 - `sources.json` 항목에 `artwork` 묶음(연도, 재료, 크기, 소장처 등)이나 `artist` 묶음(생몰년, 국적)이 있으면 작품 카드와 작가 정보에 그대로 씁니다. 렘브란트·카라바조는 수집할 때 위키데이터(CC0)에서 받아 본문과 대조해 넣었습니다.
 - `timeline.json`의 각 사건은 근거를 `source_file`(같은 폴더의 원문 파일)이나 `source_url`로 적습니다. 렘브란트 연표가 예시입니다.
 
@@ -96,6 +96,8 @@ uv run python -m scripts.preprocess
 | `movements` | 사조 목록 | 3개 |
 | `artists` | 원본에 작가 정보가 없거나 고칠 값 | 모네·세잔의 생몰년·국적·사조, 작가 6명의 초상 이미지(`portrait_url`) |
 | `artworks` | 원본에 작품 정보가 없거나 고칠 값 | 모네·세잔 작품 10점의 카드 정보(단일 작품 5점은 재료·크기 포함), 고흐·고갱 12점의 이미지 주소, 영어 문서만 있는 작품 7점의 한국어 카드 설명 |
+
+작가 별칭은 `data/mappings/artist_aliases.json`에 기획된 10명 전부를 둡니다. 전처리는 이를 `data/processed/artist_aliases.jsonl`로 내보내며, 수집 여부(`status`)는 결과에 작가 데이터가 있는지로 자동 계산합니다. 수집된 작가의 별칭이 없거나 같은 별칭이 두 작가에 겹치면 오류입니다. `sources.json`의 `artist_slugs`에는 별칭을 넣지 않습니다 (문서와 연결할 작가 slug만).
 
 값은 원문 첫 문단, 위키데이터(CC0), 메트 오픈 액세스 API에서 확인한 것만 넣습니다. 확인할 수 없으면 `null`로 둡니다. 이 값은 원본 형식과 관계없이 마지막에 덮어씁니다 (`dataset.json` 형식인 고흐·고갱도 포함).
 
@@ -189,7 +191,7 @@ related_artwork_slugs: ["the-night-watch"]
 | md 형식 `sources.json`, `timeline.json` | `needs_review` 값 그대로 (사건별 값이 있으면 그것을 우선) |
 | `dataset.json`, 비교 json | `record_status`가 `draft…`이거나 `review_status`가 검수 완료(`검수 완료`, `reviewed`, `approved`)가 아니면 `true` |
 
-현재 150건 중 126건이 `true`입니다 (연표 51, 기계 번역 35, 고흐·고갱 팀 작성 40). 적재·검색에서 이 값을 어떻게 쓸지는 6절에 있습니다.
+현재 221건 중 150건이 `true`입니다 (연표 51, 기계 번역 59, 고흐·고갱 팀 작성 40). 적재·검색에서 이 값을 어떻게 쓸지는 6절에 있습니다.
 
 **검수 기록 (`data/mappings/reviews.json`)**: 원본 파일을 고치지 않고 검수 결과를 따로 기록합니다. 검수할 때의 본문 해시를 함께 저장하므로, 검수 뒤 본문이 바뀌면 자동으로 다시 `needs_review: true`가 되고 경고가 나옵니다. `backend/`에서 실행합니다.
 

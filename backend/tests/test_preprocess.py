@@ -203,3 +203,51 @@ def test_fix_korean_year_notation():
 
     assert fix_korean("c. 1893년에 제작") == "1893년경에 제작"
     assert fix_korean("(c. 1600–1601)은") == "(1600–1601년경)은"
+
+
+def test_artist_aliases_cover_collected_artists(out):
+    assert pp.main() == 0
+    rows = {r["slug"]: r for r in pp.load_processed("artist_aliases.jsonl")}
+    collected = {a["slug"] for a in pp.load_processed("artists.jsonl")}
+    assert {s for s, r in rows.items() if r["status"] == "collected"} == collected
+    assert all(r["aliases"] for r in rows.values())
+
+
+def test_duplicate_alias_is_an_error(out, monkeypatch):
+    def dup(cat):
+        cat["aliases"]["paul-gauguin"]["aliases"].append("모네")
+
+    assert pp.main() == 0
+    before = snapshot(out)
+    build_with(monkeypatch, dup)
+    assert pp.main() == 1
+    after = snapshot(out)
+    failed = json.loads(after.pop("_FAILED.json"))
+    assert after == before
+    assert any("겹침" in e for e in failed["errors"])
+
+
+def test_aliases_in_artist_slugs_are_fixed(out, monkeypatch):
+    """수집 담당이 artist_slugs 에 별칭을 넣어도 멈추지 않고 작가 slug 로 고친다."""
+    real_build = pp.build
+
+    def build_with_alias():
+        cat = real_build()
+        bio = next(d for d in cat["documents"] if d["doc_key"] == "claude-monet/bio")
+        bio["artist_slugs"] = ["claude-monet", "monet", "모네"]
+        pp.normalize_artist_slugs(cat)
+        return cat
+
+    monkeypatch.setattr(pp, "build", build_with_alias)
+    assert pp.main() == 0
+    docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}
+    assert docs["claude-monet/bio"]["artist_slugs"] == ["claude-monet"]
+    assert any("고침" in w for w in pp.warnings)
+
+
+def test_crlf_checkout_is_still_accepted(out):
+    """Windows 에서 git 이 줄바꿈을 CRLF 로 바꿔 받아도 load_processed() 가 거부하지 않는다."""
+    assert pp.main() == 0
+    path = out / "artists.jsonl"
+    path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+    assert len(pp.load_processed("artists.jsonl")) >= 6
