@@ -1,0 +1,152 @@
+{
+  "artist_slug": "paul-gauguin",
+  "purpose": "스토리텔링용 연표. 생애 사건과 작품을 연결하며 사건별 공식 출처를 직접 기록한다.",
+  "content_author": "SKN35-3rd-1Team 데이터팀",
+  "license": "CC BY 4.0",
+  "collected_at": "2026-10-11",
+  "needs_review": true,
+  "events": [
+    {
+      "year": "1848–1855",
+      "title": "파리에서 태어나 페루에서 보낸 어린 시절",
+      "story": "1848년 파리에서 태어났고 가족이 정치적 상황을 피해 페루로 가던 중 아버지가 사망했다. 리마에서 보낸 어린 시절은 훗날 고갱이 자신을 유럽 바깥 문화와 연결해 표현하는 데 반복해서 사용됐다.",
+      "people": [
+        "클로비스 고갱",
+        "알린 마리 샤잘"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1865–1871",
+      "title": "선원으로 세계를 오가다",
+      "story": "열일곱 살에 상선 견습 선원이 되어 여러 지역을 항해했고 뒤에는 해군에서도 복무했다. 이 경험을 곧바로 훗날 그림의 원인으로 단정할 수는 없지만 이동과 먼 지역에 대한 관심이 일찍 형성됐다.",
+      "people": [],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1871–1882",
+      "title": "증권 중개인과 일요 화가의 이중생활",
+      "story": "파리에서 증권 중개인으로 일하며 안정적인 수입을 얻는 한편 미술품을 수집하고 휴일에 그림을 그렸다. 피사로와 교류하고 인상주의 전시에 참가하면서 아마추어 활동이 점차 진지한 경력으로 바뀌었다.",
+      "people": [
+        "카미유 피사로",
+        "귀스타브 아로자"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1873–1885",
+      "title": "결혼, 금융 위기, 가족과의 별거",
+      "story": "1873년 메테소피 가드와 결혼해 다섯 자녀를 두었다. 1882년 금융시장 붕괴 뒤 직업을 잃고 전업 화가를 택했지만 생계가 어려워졌고, 코펜하겐 이주도 실패한 뒤 1885년 파리로 돌아오며 가족과 장기간 떨어져 살게 됐다.",
+      "people": [
+        "메테소피 가드",
+        "클로비스 고갱"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1886–1889",
+      "title": "퐁타벤에서 종합주의를 발전시키다",
+      "story": "브르타뉴의 퐁타벤에서 베르나르 등과 교류하며 굵은 윤곽과 넓은 색면, 기억과 생각을 중시하는 종합주의를 발전시켰다. 지역 문화는 중요한 소재였지만 고갱이 자신의 이상에 맞게 선택하고 재구성한 이미지이기도 하다.",
+      "people": [
+        "에밀 베르나르",
+        "폴 세뤼지에"
+      ],
+      "related_artworks": [
+        "vision-after-the-sermon",
+        "the-yellow-christ"
+      ],
+      "source_url": "https://www.nationalgalleries.org/art-and-artists/4940",
+      "source_name": "National Galleries of Scotland"
+    },
+    {
+      "year": "1888-10–12",
+      "title": "아를에서 고흐와 보낸 두 달",
+      "story": "고흐의 초대로 아를의 노란 집에서 함께 생활하고 작업했다. 기억과 상상을 중시한 고갱과 눈앞의 관찰을 중시한 고흐는 서로 영향을 주었지만 갈등도 커졌고, 귀 사건 직후 고갱은 파리로 떠났다.",
+      "people": [
+        "빈센트 반 고흐",
+        "테오 반 고흐"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "source_name": "Van Gogh Museum"
+    },
+    {
+      "year": "1891–1893",
+      "title": "첫 번째 타히티 체류",
+      "story": "유럽의 경쟁과 비용에서 벗어나겠다며 프랑스 식민지 타히티로 떠났다. 실제 타히티는 이미 식민 통치와 선교의 영향을 크게 받았으며, 고갱은 관찰한 생활과 여러 문화권 이미지를 결합해 자신이 기대한 세계를 다시 만들었다.",
+      "people": [],
+      "related_artworks": [
+        "ia-orana-maria",
+        "tahitian-landscape",
+        "the-siesta"
+      ],
+      "source_url": "https://www.musee-orsay.fr/en/artworks/femmes-de-tahiti-290",
+      "source_name": "Musée d'Orsay"
+    },
+    {
+      "year": "1893–1895",
+      "title": "프랑스 귀환과 다시 떠날 준비",
+      "story": "건강과 돈 문제로 프랑스로 돌아와 타히티 작품을 전시하고 글과 판화로 자신의 이미지를 알리려 했다. 기대한 성공을 얻지 못한 뒤 브르타뉴를 다시 거쳐 1895년 타히티로 떠났고 이후 유럽에 돌아오지 않았다.",
+      "people": [
+        "에드가 드가",
+        "다니엘 드 몽프레"
+      ],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
+      "source_name": "The National Gallery, London"
+    },
+    {
+      "year": "1895–1897",
+      "title": "두 번째 타히티 체류의 고립과 작업",
+      "story": "두 번째 체류에서는 경제난과 질병, 식민 당국과의 갈등이 심해졌다. 그는 현지 인물과 사물을 반복해 그렸지만 작품은 사실 기록이 아니라 유럽·폴리네시아·아시아 이미지를 결합한 회화적 구성이다.",
+      "people": [],
+      "related_artworks": [
+        "three-tahitian-women",
+        "still-life-with-teapot-and-fruit"
+      ],
+      "source_url": "https://archive.artic.edu/gauguin/",
+      "source_name": "Art Institute of Chicago"
+    },
+    {
+      "year": "1897–1898",
+      "title": "삶의 세 질문을 대작에 담다",
+      "story": "개인적 위기 속에서 가장 큰 회화 《우리는 어디서 왔는가?》를 제작했다. 오른쪽의 아기에서 왼쪽의 노인으로 이어지는 구성을 설명했지만, 작품은 하나의 정답보다 기원·정체성·운명에 관한 질문을 남긴다.",
+      "people": [
+        "알린 고갱"
+      ],
+      "related_artworks": [
+        "where-do-we-come-from"
+      ],
+      "source_url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "source_name": "Museum of Fine Arts, Boston"
+    },
+    {
+      "year": "1899",
+      "title": "반복되는 인물 모티프와 식민지의 시선",
+      "story": "타히티 여성과 과일을 배치한 여러 작품에서 평평한 색면과 반복 모티프를 발전시켰다. 이 그림들은 중요한 미술사적 실험인 동시에 폴리네시아 여성을 유럽 관객의 시선으로 대상화했다는 비판적 맥락에서 읽어야 한다.",
+      "people": [],
+      "related_artworks": [
+        "two-tahitian-women"
+      ],
+      "source_url": "https://www.metmuseum.org/art/collection/search/436446",
+      "source_name": "The Metropolitan Museum of Art"
+    },
+    {
+      "year": "1901–1903",
+      "title": "마르키즈의 마지막 작업",
+      "story": "1901년 히바오아섬 아투오나로 옮겨 쇠약한 건강 속에서도 그림과 조각, 글쓰기를 계속했다. 식민 당국과 선교사를 비판했지만 그 자신도 식민 권력 안의 유럽인이었으며, 1903년 5월 8일 아투오나에서 숨졌다.",
+      "people": [],
+      "related_artworks": [],
+      "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
+      "source_name": "The National Gallery, London"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "artist_slug": "vincent-van-gogh",
-  "collected_at": "2026-10-10",
+  "collected_at": "2026-10-11",
   "sources": [
     {
       "record": "artist_bio",
@@ -50,6 +50,97 @@
       "source_url": "https://www.metmuseum.org/art/collection/search/436528",
       "usage": "소장품 메타데이터 및 작품 사실 확인",
       "rights": "OA 표시 이미지와 소장품 기본 데이터 CC0; 웹페이지 설명문은 복제하지 않음"
+    },
+    {
+      "record": "self-portrait-with-bandaged-ear",
+      "source_name": "The Courtauld Gallery",
+      "source_url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-175",
+      "usage": "작품 메타데이터, 귀 사건 뒤 제작 맥락과 화면 요소 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-starry-night",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/collection/works/79802",
+      "usage": "작품 메타데이터와 관찰·상상 요소 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "sunflowers-arles",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+      "usage": "작품 메타데이터, 연작의 제작 목적과 화면 해설 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-potato-eaters",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0005V1962",
+      "usage": "작품 메타데이터와 네덜란드 시기 제작 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-bedroom",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+      "usage": "작품 메타데이터, 아를 침실의 구성, 색채와 휴식이라는 제작 의도 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "cafe-terrace-at-night",
+      "source_name": "Kröller-Müller Museum",
+      "source_url": "https://www.krollermuller.nl/en/collection/vincent-van-gogh-terrace-of-a-caf-at-night-place-du-forum-km-108-565",
+      "usage": "작품 메타데이터, 야간 현장 제작, 가스등과 밤하늘의 색 대비 및 별자리 연구 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "almond-blossom",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962",
+      "usage": "작품 메타데이터, 조카의 탄생을 위한 제작 목적과 일본 판화 영향 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "wheatfield-with-crows",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962",
+      "usage": "작품 메타데이터, 오베르 밀밭 연작과 마지막 작품 통설의 한계 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 작품 이미지는 Wikimedia Commons 파일 페이지의 Public Domain Mark 1.0 표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-theo-letters",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-goghs-letters",
+      "usage": "테오와의 편지·경제 지원·작품 전달 관계 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-arles-ear",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "usage": "노란 집, 고갱과의 공동생활, 귀 사건 및 병원 기록 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-saint-remy",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "usage": "생레미 입원과 작업 지속 사실 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-auvers-death",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/visit/whats-on/exhibitions/overview-past-exhibitions/van-gogh-in-auvers-sur-oise",
+      "usage": "오베르 체류 기간, 제작 활동과 죽음의 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-early-netherlands",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-gogh-keeps-the-faith",
+      "usage": "화가의 길을 택한 과정과 초기 네덜란드 시기 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
     }
   ],
   "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
