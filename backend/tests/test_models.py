@@ -18,6 +18,8 @@ EXPECTED_TABLES = {
     "artwork_likes",
     "artist_follows",
     "artwork_views",
+    "chat_sessions",
+    "chat_messages",
 }
 
 
@@ -49,6 +51,21 @@ def test_activity_primary_keys_match_the_erd() -> None:
         "viewed_on",
         "artwork_id",
     ]
+
+
+def test_one_chat_session_per_user_and_artwork() -> None:
+    unique_columns = {
+        tuple(column.name for column in constraint.columns)
+        for constraint in Base.metadata.tables["chat_sessions"].constraints
+        if constraint.__class__.__name__ == "UniqueConstraint"
+    }
+    assert ("user_id", "artwork_id") in unique_columns
+
+
+def test_users_are_keyed_by_firebase_uid() -> None:
+    users = Base.metadata.tables["users"]
+    assert users.c.firebase_uid.unique
+    assert "password_hash" not in users.c
 
 
 def test_every_foreign_key_has_an_on_delete_policy() -> None:

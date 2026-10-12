@@ -4,7 +4,7 @@ Oct 9, 2026 · @고태민
 
 ## 1. 권장 구조
 
-TiDB Cloud Starter 클러스터 하나에 테이블 13개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·채팅 저장·추천 캐시는 MVP에서 뺍니다.
+TiDB Cloud Starter 클러스터 하나에 테이블 15개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·추천 캐시는 MVP에서 뺍니다. 채팅 기록(`chat_sessions`, `chat_messages`)은 2026-10-12에 추가했습니다.
 
 ### 핵심 결정
 
@@ -24,7 +24,7 @@ TiDB Cloud Starter 클러스터 하나에 테이블 13개를 두고 사용자 �
 
 | 테이블 | 역할 | 쓰이는 기능 |
 | --- | --- | --- |
-| `users` | 회원 계정 | 로그인, 4·7·8·9번 |
+| `users` | 회원 계정. 로그인은 Firebase Auth, 서버는 `firebase_uid`로 사용자를 찾음 | 로그인, 4·7·8·9번 |
 | `art_movements` | 사조 목록 | 1번 사조별 조회 |
 | `artists` | 작가 정보 | 1·6·7번 |
 | `artworks` | 작품 정보와 이미지 URL | 1·2번 |
@@ -37,6 +37,8 @@ TiDB Cloud Starter 클러스터 하나에 테이블 13개를 두고 사용자 �
 | `artwork_likes` | 작품 좋아요 | 4·5·6번 |
 | `artist_follows` | 작가 팔로우 | 7번, 작가 추천 제외 조건 |
 | `artwork_views` | 날짜별 열람 기록 | 8·9번 |
+| `chat_sessions` | 사용자 × 작품당 도슨트 대화 1개 | 3번 대화 이어 보기, 내 대화 목록 |
+| `chat_messages` | 대화의 질문·답변과 답변 출처(JSON) | 3·10번 기록 복원, 추천 신호(질문) |
 
 ### 벡터 테이블을 분리해야 하는가
 
@@ -59,7 +61,7 @@ TiDB Cloud Starter 클러스터 하나에 테이블 13개를 두고 사용자 �
 | `user_taste_vectors` | 제거 | 좋아요 벡터를 직접 시드로 사용 (5장 참고) |
 | `user_recommendations` (추천 캐시) | 제거 | 실시간 계산 |
 | `artworks.like_count` 컬럼 | 제거 | `COUNT(*)` 집계. 카운터 컬럼은 좋아요 테이블과 어긋나기 쉽습니다 |
-| `chat_sessions`, `chat_messages`, 인용 테이블 | 보류 | 대화 이력은 React 상태로 유지, 출처는 API 응답에 포함 |
+| `chat_message_citations` (인용 테이블) | 제거 | `chat_messages.sources` JSON. 청크는 다시 청킹하면 id가 바뀌므로 FK로 묶으면 지난 대화의 출처가 깨집니다 |
 | `artwork_similarities` (유사도 사전 계산) | 보류 | 추천이 느려졌을 때만 추가 |
 
 ## 2. ERD
@@ -86,11 +88,14 @@ erDiagram
     documents ||--o{ document_basis_documents : "편집 보강"
     documents ||--o{ document_basis_documents : "근거 문서"
     documents ||--o{ document_chunks : "청크"
+    users ||--o{ chat_sessions : "대화"
+    artworks ||--o{ chat_sessions : "대화 대상"
+    chat_sessions ||--o{ chat_messages : "메시지"
 
     users {
         bigint id PK
+        varchar firebase_uid UK "Firebase Auth uid"
         varchar email UK
-        varchar password_hash
         varchar nickname
         datetime created_at
         datetime updated_at
@@ -199,6 +204,22 @@ erDiagram
         datetime first_viewed_at
         datetime last_viewed_at
     }
+    chat_sessions {
+        bigint id PK
+        bigint user_id FK "artwork_id 와 묶어 UNIQUE"
+        bigint artwork_id FK
+        datetime created_at
+        datetime updated_at "마지막 메시지 시각"
+    }
+    chat_messages {
+        bigint id PK
+        bigint session_id FK
+        varchar role "user / assistant"
+        text content
+        tinyint refused "거절 답변이면 1"
+        json sources "답변 출처, 질문이면 NULL"
+        datetime created_at
+    }
 ```
 
 ### 사용자·작가·작품·좋아요·팔로우·열람 기록의 관계
@@ -214,6 +235,8 @@ erDiagram
 | 작품 → 해설 문서 | 1:N | `documents.artwork_id` | CASCADE |
 | 문서 ↔ 작가 | N:M | `document_artists` | CASCADE |
 | 문서 → 청크 | 1:N | `document_chunks.document_id` | CASCADE |
+| 사용자 ↔ 작품 (대화) | N:M | `chat_sessions`, UNIQUE `(user_id, artwork_id)` | CASCADE |
+| 대화 → 메시지 | 1:N | `chat_messages.session_id` | CASCADE |
 
 좋아요와 열람은 둘 다 사용자↔작품 관계지만 의미가 다르므로 테이블을 합치지 않습니다. 좋아요는 명시적 선택이고 취소하면 행이 사라지며, 열람은 누적되는 기록입니다.
 
@@ -226,8 +249,8 @@ erDiagram
 | 컬럼 | 타입 | 키 | NULL | 설명 |
 | --- | --- | --- | --- | --- |
 | id | BIGINT AUTO\_INCREMENT | PK | NO |  |
+| firebase\_uid | VARCHAR(128) | UNIQUE | NO | Firebase Auth 사용자 id. 서버가 검증한 ID 토큰에서만 가져옴 |
 | email | VARCHAR(255) | UNIQUE | NO | 앱에서 소문자로 정규화해 저장 |
-| password\_hash | VARCHAR(255) |  | NO | bcrypt/argon2 해시 |
 | nickname | VARCHAR(50) |  | NO |  |
 | created\_at | DATETIME |  | NO | 기본값 CURRENT\_TIMESTAMP |
 | updated\_at | DATETIME |  | NO | 수정 시 자동 갱신 |
@@ -353,6 +376,28 @@ erDiagram
 | first\_viewed\_at | DATETIME |  | NO |  |
 | last\_viewed\_at | DATETIME |  | NO |  |
 
+### chat\_sessions
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| id | BIGINT | PK | NO | AUTO\_INCREMENT |
+| user\_id | BIGINT | FK → users.id, UNIQUE(user\_id, artwork\_id) | NO | 로그인 사용자만 기록 |
+| artwork\_id | BIGINT | FK → artworks.id | NO | 대화한 작품. 작품을 다시 열면 같은 대화를 이어 감 |
+| created\_at | DATETIME |  | NO |  |
+| updated\_at | DATETIME |  | NO | 마지막 메시지 시각. 내 대화 목록 정렬에 씀, INDEX(user\_id, updated\_at) |
+
+### chat\_messages
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| id | BIGINT | PK | NO | AUTO\_INCREMENT. 같은 대화 안에서 순서로 씀, INDEX(session\_id, id) |
+| session\_id | BIGINT | FK → chat\_sessions.id | NO | 대화 삭제 시 CASCADE |
+| role | VARCHAR(20) |  | NO | `user` 또는 `assistant` |
+| content | TEXT |  | NO | 질문 또는 답변 본문 |
+| refused | TINYINT(1) |  | NO | 기본값 0. 범위 밖이라 거절한 답변이면 1 |
+| sources | JSON |  | YES | 답변의 출처 목록 `[{document_id, title, doc_type, source_name, source_url}]`. 질문이면 NULL |
+| created\_at | DATETIME |  | NO |  |
+
 ### 생애·해설·비교 문서를 저장하는 규칙
 
 세 종류를 `documents` 한 테이블에 넣고, 무엇에 관한 문서인지는 두 가지 경로로만 표현합니다.
@@ -463,7 +508,9 @@ INSERT INTO artwork_likes (user_id, artwork_id) VALUES (1, 999999999);
 | 제외 조건: 현재 작품, 좋아요한 작품 | 작가당 1개 제한 추가 | 같은 작가의 작품은 벡터가 가까워 상위 3개를 한 작가가 차지하기 쉽습니다 |
 | 작가 추천에 제외 조건 없음 | 팔로우한 작가 제외 | 이미 팔로우한 작가를 다시 추천하게 됩니다 |
 
-좋아요한 작품의 작가까지 작가 추천에서 뺄지는 기획에서 정해야 합니다. 빼면 새로운 작가만 나오고, 두면 "좋아요는 눌렀지만 팔로우는 안 한 작가"가 자주 나옵니다.
+좋아요한 작품의 작가는 작가 추천에서 빼지 않습니다(2026-10-12 결정). 순위 상위 3명을 그대로 보여 주므로 "좋아요는 눌렀지만 팔로우는 안 한 작가"가 자주 나오며, 팔로우를 유도하는 효과가 있습니다.
+
+신규 사용자의 마지막 대체 경로는 큐레이션 작품을 무작위로 고릅니다(2026-10-12 결정). 사용자·날짜로 시드를 고정해 새로고침마다 바뀌지 않고 하루 단위로 바뀝니다. 이미지가 없는 작품은 모든 추천에서 제외합니다.
 
 ### 요청하신 검토 항목
 
@@ -521,12 +568,13 @@ USE 3rd_project;
 -- 1. 회원
 CREATE TABLE users (
   id            BIGINT       NOT NULL AUTO_INCREMENT,
+  firebase_uid  VARCHAR(128) NOT NULL,
   email         VARCHAR(255) NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
   nickname      VARCHAR(50)  NOT NULL,
   created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_users_firebase_uid (firebase_uid),
   UNIQUE KEY uq_users_email (email)
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
@@ -923,12 +971,12 @@ def similar_artworks_stmt(seed_vector: list[float], k: int = 4):
 | 2. RAG | `documents`, `document_artists`, `document_chunks` | 3번 챗봇, 10번 출처 표시 |
 | 3. 활동 | `artwork_likes`, `artist_follows`, `artwork_views` | 4번 좋아요, 7번 팔로우, 8번 열람, 9번 캘린더 |
 | 4. 추천 | `artwork_embeddings` | 5번 작품 추천, 6번 작가 추천 |
+| 5. 채팅 기록 | `chat_sessions`, `chat_messages` | 대화 복원, 내 대화 목록, 질문 기반 추천 신호 |
 
 ### 나중에 추가할 테이블
 
 | 테이블 | 추가하는 시점 |
 | --- | --- |
-| `chat_sessions`, `chat_messages`, `chat_message_citations` | 지난 대화를 다시 열어 보는 기능이 필요해질 때 |
 | `artwork_similarities` | 추천 응답이 느려졌을 때 |
 | `artwork_embeddings`의 벡터 인덱스 | 작품 수가 크게 늘어 전수 계산이 느려졌을 때 |
 
@@ -998,7 +1046,6 @@ Starter 무료 한도도 확인해 두세요. 조직당 행 저장소 5GiB, 컬�
 | Auto Embedding | `EMBED_TEXT()` 생성 컬럼으로 DB가 임베딩을 만듦 | AWS의 Starter에서만 제공 |
 | 이미지 임베딩 | 작품 벡터를 이미지 기반으로 교체해 시각적으로 비슷한 작품 추천 | `artwork_embeddings`만 다시 채우면 됨 |
 | 열람 기록 반영 | 좋아요보다 낮은 가중치로 추천 시드에 추가 | 좋아요 데이터가 쌓인 뒤 |
-| 대화 이력 저장 | 채팅 테이블 3개 추가 | 7장 참고 |
 
 운영할 때 놀라기 쉬운 점도 두 가지 있습니다. TiDB의 `AUTO_INCREMENT` 값은 고유하지만 연속적이지 않으므로 id의 순서나 간격에 의존하면 안 됩니다. 외부 이미지 URL은 링크가 끊길 수 있으니 발표에 쓸 작품 이미지는 자체 저장소에 복사해 두는 편이 안전합니다.
 

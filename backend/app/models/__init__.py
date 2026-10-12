@@ -3,6 +3,7 @@
 from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
 from app.models.base import EMBEDDING_DIMENSION, Base
 from app.models.catalog import Artist, ArtMovement, Artwork
+from app.models.chat import ChatMessage, ChatRole, ChatSession
 from app.models.document import (
     Document,
     DocumentArtist,
@@ -24,6 +25,9 @@ __all__ = [
     "ArtworkLike",
     "ArtworkView",
     "Base",
+    "ChatMessage",
+    "ChatRole",
+    "ChatSession",
     "Document",
     "DocumentArtist",
     "DocumentArtwork",

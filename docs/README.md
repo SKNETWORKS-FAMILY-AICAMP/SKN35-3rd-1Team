@@ -8,7 +8,7 @@
 | --- | --- |
 | `db/` | DB 설계 문서, ERD, 테이블 생성 SQL, 쿼리 예시 (작성되어 있음) |
 | `architecture.md` | 시스템 구성도와 요청 흐름 |
-| `api.md` | 확정한 API 명세. 초안은 `backend/app/api/routes/README.md` |
+| `api.md` | 확정한 API 명세 (작성되어 있음). 프론트·백엔드 공식 계약 |
 | `prompts.md` | 프롬프트 버전과 바꾼 이유 |
 | `test-plan.md`, `test-result.md` | RAG·사용자 활동 테스트 기준, 실행 결과, 범위 밖 질문 거절 비율 |
 | `data-collection.md` | 작가별 수집 현황과 전처리 기준 |

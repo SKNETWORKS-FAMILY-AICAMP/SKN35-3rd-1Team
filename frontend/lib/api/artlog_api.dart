@@ -11,7 +11,7 @@ class ApiException implements Exception {
   String toString() => message;
 }
 
-// Paths are from backend/app/api/routes/README.md. No /api/v1 or guessed search endpoint.
+// Paths and response shapes follow docs/api.md.
 class ArtlogApi {
   ArtlogApi({required String baseUrl, http.Client? client})
     : _base = Uri.parse(baseUrl.isEmpty ? Uri.base.origin : baseUrl),
@@ -20,6 +20,7 @@ class ArtlogApi {
   final http.Client _client;
   String? token;
   void Function()? onUnauthorized;
+  Future<String?> Function(bool forceRefresh)? tokenProvider;
 
   Uri uri(String path, [Map<String, String>? query]) {
     var prefix = _base.path.replaceAll(RegExp(r'/+$'), '');
@@ -37,13 +38,19 @@ class ArtlogApi {
     Json? body,
     Map<String, String>? query,
     bool authenticated = false,
+    bool retryAuthentication = true,
   }) async {
-    if (authenticated && token == null) {
+    final accessToken = tokenProvider == null
+        ? token
+        : await tokenProvider!(false);
+    if (authenticated && accessToken == null) {
       throw const ApiException('로그인 후 이용할 수 있어요.', status: 401);
     }
     final request = http.Request(method, uri(path, query));
     request.headers['Accept'] = 'application/json';
-    if (token != null) request.headers['Authorization'] = 'Bearer $token';
+    if (accessToken != null) {
+      request.headers['Authorization'] = 'Bearer $accessToken';
+    }
     if (body != null) {
       request.headers['Content-Type'] = 'application/json';
       request.body = jsonEncode(body);
@@ -55,6 +62,19 @@ class ArtlogApi {
           .timeout(const Duration(seconds: 45));
       if (response.statusCode < 200 || response.statusCode >= 300) {
         if (response.statusCode == 401) {
+          if (tokenProvider != null &&
+              accessToken != null &&
+              retryAuthentication) {
+            await tokenProvider!(true);
+            return await _request(
+              method,
+              path,
+              body: body,
+              query: query,
+              authenticated: authenticated,
+              retryAuthentication: false,
+            );
+          }
           token = null;
           onUnauthorized?.call();
         }
@@ -63,6 +83,7 @@ class ArtlogApi {
           403 => '이 기능을 이용할 권한이 없어요.',
           404 => '요청한 자료를 찾을 수 없어요.',
           429 => '요청이 잠시 많아요. 조금 뒤 다시 시도해 주세요.',
+          501 => '이 기능은 준비 중이에요. 조금 뒤 다시 이용해 주세요.',
           _ => '자료를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.',
         }, status: response.statusCode);
       }
@@ -167,7 +188,7 @@ class ArtlogApi {
   Future<List<Artist>> recommendedArtists() async => items(
     await _request('GET', 'me/recommendations/artists', authenticated: true),
   ).map((j) => Artist.fromJson(object(j))).toList();
-  // Calendar shape is a provisional frontend adapter; no schema exists in the backend yet.
+  // CalendarDay: [{date: YYYY-MM-DD, artwork_count: number}].
   Future<Map<String, int>> calendar(String month) async {
     final response = await _request(
       'GET',

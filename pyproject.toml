@@ -7,6 +7,7 @@ dependencies = [
     "chromadb>=1.5.9",
     "email-validator>=2.3.0",
     "fastapi>=0.143.0",
+    "firebase-admin>=7.7.0",
     "langchain>=1.4.4",
     "langchain-chroma>=1.1.0",
     "langchain-openai>=1.7.0",
@@ -19,6 +20,7 @@ dependencies = [
     "requests>=2.34.2",
     "sqlalchemy>=2.1.4",
     "tidb-vector>=0.0.15",
+    "tzdata>=2026.5",
     "uvicorn[standard]>=0.54.0",
 ]
 

@@ -54,21 +54,25 @@ class Settings(BaseSettings):
     tidb_ssl_verify_cert: bool = True
     tidb_ssl_verify_identity: bool = True
 
-    # 임베딩: 차원 수는 DB 컬럼(app.models.base.EMBEDDING_DIMENSION)이 기준이다.
-    # 모델을 바꾸면 차원도 맞춰 Alembic 으로 컬럼을 바꾸고 청크를 전부 다시 만들어야 한다.
-    openai_api_key: SecretStr | None = Field(default=None, validation_alias="OPENAI_API_KEY")
-    embedding_model: str = Field(default="text-embedding-3-small", validation_alias="EMBEDDING_MODEL")
-    embedding_batch_size: int = Field(default=100, validation_alias="EMBEDDING_BATCH_SIZE")
+    # Comma-separated web origins allowed to call the API (e.g. the Vercel domain).
+    # Local Flutter dev servers on localhost/127.0.0.1 are always allowed.
+    cors_origins: str = ""
+    # "dev": every request acts as one fixed development user (no login yet).
+    # "firebase": verify the Firebase ID token and resolve its UID in TiDB.
+    auth_mode: str = "dev"
+    dev_user_uid: str = "dev-user"
+    firebase_project_id: str = "skn35-3rd-1team"
+    # Railway can inject the JSON directly. Otherwise the Admin SDK uses ADC
+    # (for example GOOGLE_APPLICATION_CREDENTIALS pointing to a mounted file).
+    firebase_service_account_json: SecretStr | None = None
+    google_application_credentials: str | None = None
+    app_timezone: str = "Asia/Seoul"
 
-    # Chroma: 검색용 사본 (원본은 TiDB). CHROMA_HOST 가 있으면 서버(HttpClient), 없으면 CHROMA_PATH 폴더(PersistentClient).
-    # Railway 공개 도메인은 CHROMA_PORT=443, CHROMA_SSL=true. 같은 프로젝트 내부망은 <서비스>.railway.internal:8000.
-    chroma_host: str | None = Field(default=None, validation_alias="CHROMA_HOST")
-    chroma_port: int = Field(default=8000, validation_alias="CHROMA_PORT")
-    chroma_ssl: bool = Field(default=False, validation_alias="CHROMA_SSL")
-    chroma_path: str | None = Field(default=None, validation_alias="CHROMA_PATH")
-    # 개발용·발표용 컬렉션 이름을 나눈다 (예: chunks_dev / chunks)
-    chroma_chunks_collection: str = Field(default="chunks", validation_alias="CHROMA_CHUNKS_COLLECTION")
-    chroma_artworks_collection: str = Field(default="artworks", validation_alias="CHROMA_ARTWORKS_COLLECTION")
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [
+            origin.strip() for origin in self.cors_origins.split(",") if origin.strip()
+        ]
 
     @property
     def sqlalchemy_url(self) -> URL:

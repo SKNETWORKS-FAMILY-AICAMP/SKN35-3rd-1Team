@@ -14,12 +14,17 @@ erDiagram
     artists ||--o{ document_artists : "생애·비교 문서"
     documents ||--o{ document_artworks : "언급 작품"
     artworks ||--o{ document_artworks : "연표 등에서 언급"
+    documents ||--o{ document_basis_documents : "편집 보강"
+    documents ||--o{ document_basis_documents : "근거 문서"
     documents ||--o{ document_chunks : "청크"
+    users ||--o{ chat_sessions : "대화"
+    artworks ||--o{ chat_sessions : "대화 대상"
+    chat_sessions ||--o{ chat_messages : "메시지"
 
     users {
         bigint id PK
+        varchar firebase_uid UK "Firebase Auth uid"
         varchar email UK
-        varchar password_hash
         varchar nickname
         datetime created_at
         datetime updated_at
@@ -85,6 +90,7 @@ erDiagram
         varchar lang "ko / en"
         varchar topic "생애 문서의 성격"
         tinyint needs_review "검토 전이면 1"
+        json basis_external_sources "외부 공식 보정 근거"
         datetime created_at
         datetime updated_at
     }
@@ -95,6 +101,10 @@ erDiagram
     document_artworks {
         bigint document_id PK, FK
         bigint artwork_id PK, FK
+    }
+    document_basis_documents {
+        bigint document_id PK, FK
+        bigint basis_document_id PK, FK
     }
     document_chunks {
         bigint id PK
@@ -122,4 +132,20 @@ erDiagram
         int view_count
         datetime first_viewed_at
         datetime last_viewed_at
+    }
+    chat_sessions {
+        bigint id PK
+        bigint user_id FK "artwork_id 와 묶어 UNIQUE"
+        bigint artwork_id FK
+        datetime created_at
+        datetime updated_at "마지막 메시지 시각"
+    }
+    chat_messages {
+        bigint id PK
+        bigint session_id FK
+        varchar role "user / assistant"
+        text content
+        tinyint refused "거절 답변이면 1"
+        json sources "답변 출처, 질문이면 NULL"
+        datetime created_at
     }

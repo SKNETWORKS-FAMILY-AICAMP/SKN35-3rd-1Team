@@ -1,0 +1,64 @@
+"""Docent chat request/response and saved chat history.
+
+Context for the answer always comes from the request ``history`` (the client
+keeps the conversation, anonymous or not). For a logged-in user the server
+also stores each question and answer so the conversation can be restored.
+"""
+
+from datetime import datetime
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.schemas.catalog import ArtworkCard
+
+ChatRoleName = Literal["user", "assistant"]
+DocType = Literal["artist_bio", "artwork_commentary", "artist_comparison"]
+
+
+class ChatTurn(BaseModel):
+    role: ChatRoleName
+    content: str = Field(min_length=1, max_length=4000)
+
+
+class ChatRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=500)
+    # The client sends at most the last 12 messages.
+    history: list[ChatTurn] = Field(default_factory=list, max_length=12)
+
+
+class Source(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    document_id: int
+    title: str
+    doc_type: DocType
+    source_name: str | None
+    source_url: str | None
+    license: str | None
+
+
+class ChatResponse(BaseModel):
+    answer: str
+    # True when the question is outside the documents for this artwork.
+    refused: bool
+    sources: list[Source]
+
+
+class ChatMessageOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    role: ChatRoleName
+    content: str
+    refused: bool
+    # Empty for questions.
+    sources: list[Source]
+    created_at: datetime
+
+
+class ChatSummary(BaseModel):
+    artwork: ArtworkCard
+    # Preview of the latest message.
+    last_message: str
+    updated_at: datetime
