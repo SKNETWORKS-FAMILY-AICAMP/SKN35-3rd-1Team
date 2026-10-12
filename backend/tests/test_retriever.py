@@ -83,3 +83,32 @@ def test_unknown_artwork_returns_empty_without_embedding(collection, fake_repo):
         raise AssertionError("범위가 비면 임베딩 API 를 부르지 않아야 함")
 
     assert retriever.retrieve(None, 999, "질문", collection=collection, embed=fail) == []
+
+
+def add(collection, chunk_id, doc_id, vec, *, artwork_id=0, doc_type="artist_bio", text="본문"):
+    collection.add(
+        ids=[str(chunk_id)], documents=[f"추가 문서\n\n{text}"], embeddings=[vec],
+        metadatas=[{"document_id": doc_id, "doc_key": f"k/{doc_id}", "doc_type": doc_type,
+                    "artwork_id": artwork_id, "chunk_index": 0}],
+    )
+
+
+def test_own_artwork_commentary_gets_a_seat_even_if_far(collection, fake_repo, monkeypatch):
+    """생애 문서가 상위를 다 차지해도 고른 작품 자신의 해설은 들어온다."""
+    monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [10, 20, 30, 50])
+    add(collection, 6, 50, [0.0, 0.2, 1.0], artwork_id=7)  # 질문과 멀지만 작품 7 의 해설
+    ids = [d.metadata["chunk_id"] for d in search(collection, k=1)]
+    assert 6 in ids and ids[0] == 1
+
+
+def test_comparison_seat_only_for_comparison_questions(collection, fake_repo, monkeypatch):
+    monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [10, 20, 30, 60])
+    monkeypatch.setattr(repo, "pinned_chunk_ids", lambda s, a, ids: [])
+    add(collection, 7, 60, [0.0, 0.3, 1.0], doc_type="artist_comparison")  # 질문과 먼 비교 문서
+
+    def ask(question):
+        docs = retriever.retrieve(None, 7, question, 1, collection=collection, embed=lambda q: [1.0, 0.0, 0.0])
+        return [d.metadata["chunk_id"] for d in docs]
+
+    assert 7 not in ask("이 그림은 언제 그렸어?")
+    assert 7 in ask("렘브란트와 카라바조의 명암 차이는?")

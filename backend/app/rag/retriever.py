@@ -1,7 +1,10 @@
 """고른 작품 범위 안에서 질문과 가까운 청크를 찾는다 (docs/rag-handoff.md 5절).
 
 1. TiDB 에서 범위 문서 id 를 구한다 (그 작품의 해설 + 작가의 생애·연표·비교 문서).
-2. Chroma 에서 그 문서들의 청크 안에서만 질문과 가까운 k 개를 찾는다.
+2. Chroma 에서 그 문서들의 청크 안에서만 질문과 가까운 k 개를 찾는다. 여기에 자리 두 가지를 보장한다.
+   - 고른 작품 자신의 해설에서 가까운 OWN_K 개. 작가 생애 문서는 청크가 많아 상위를 다 차지하기 쉽다
+     (평가: 『야경』 "인물 배치" 질문에서 야경 해설이 80위 밖).
+   - 비교를 묻는 질문이면 범위 안 비교 문서에서 가까운 COMPARISON_K 개 (예: 명암 기법 문서가 17위).
 3. 거리와 상관없이 항상 넣을 청크를 붙인다: 그 작품을 언급한 연표 사건, 범위 안의 `답변 시 주의` 보정문.
 4. 제목·출처·라이선스·편집 근거를 TiDB 에서 붙여 LangChain Document 로 돌려준다.
 
@@ -14,7 +17,7 @@
         annotation,      # None | "감상 포인트" | "답변 시 주의" (프롬프트 규칙 7·8, 출처 표시)
         basis_sources,   # annotation 이 있을 때만 편집 근거 [{"source_name", "source_url"}], 없으면 []
     }
-순서: 거리 순위 k 개 (오름차순) → 항상 넣는 청크 (오름차순). 범위가 비면 빈 리스트 (C 가 거절).
+순서: 거리로 고른 청크 (2번, 오름차순) → 항상 넣는 청크 (3번, 오름차순). 범위가 비면 빈 리스트 (C 가 거절).
 """
 
 from collections.abc import Callable
@@ -28,6 +31,10 @@ from app.rag.chunking import annotation_section
 from app.repositories import document_repository as repo
 
 TOP_K = 5
+OWN_K = 3  # 고른 작품 자신의 해설에 보장하는 자리
+COMPARISON_K = 1  # 비교 질문일 때 비교 문서에 보장하는 자리
+COMPARISON_HINTS = ("비교", "차이", "달라", "다른 점", "다르게", "공통", "관계")
+INCLUDE = ["documents", "metadatas", "distances"]
 
 
 def retrieve(
@@ -45,20 +52,29 @@ def retrieve(
     vector = (embed or embedding_client.embed_query)(question)
     collection = collection or chroma_client.chunks_collection()
 
-    ranked = _hits(collection.query(
-        query_embeddings=[vector], n_results=k, where={"document_id": {"$in": scope}},
-        include=["documents", "metadatas", "distances"],
-    ))
+    def search(where: dict, n: int) -> list[dict]:
+        return _hits(collection.query(query_embeddings=[vector], n_results=n, where=where, include=INCLUDE))
+
+    in_scope = {"document_id": {"$in": scope}}
+    found = search(in_scope, k) + search({"artwork_id": artwork_id}, OWN_K)
+    if is_comparison(question):
+        found += search({"$and": [in_scope, {"doc_type": "artist_comparison"}]}, COMPARISON_K)
+    ranked = sorted({h["id"]: h for h in found}.values(), key=lambda h: h["distance"])
+
     have = {h["id"] for h in ranked}
     extra = [str(i) for i in repo.pinned_chunk_ids(session, artwork_id, scope) if str(i) not in have]
     pinned = _hits(collection.query(
-        query_embeddings=[vector], ids=extra, n_results=len(extra),
-        include=["documents", "metadatas", "distances"],
+        query_embeddings=[vector], ids=extra, n_results=len(extra), include=INCLUDE,
     )) if extra else []
 
     hits = [(h, False) for h in ranked] + [(h, True) for h in pinned]
     sources = repo.document_sources(session, {h["metadata"]["document_id"] for h, _ in hits})
     return [_document(h, sources[h["metadata"]["document_id"]], is_pinned) for h, is_pinned in hits]
+
+
+def is_comparison(question: str) -> bool:
+    """비교 문서 자리를 줄지 정하는 단순 규칙. 놓쳐도 일반 순위로는 검색되므로 넓게 잡지 않는다."""
+    return any(hint in question for hint in COMPARISON_HINTS)
 
 
 def _hits(result: dict) -> list[dict]:
