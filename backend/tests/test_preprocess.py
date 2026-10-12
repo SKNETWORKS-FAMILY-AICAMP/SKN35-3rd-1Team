@@ -44,6 +44,9 @@ def test_counts_and_uniqueness(out):
     assert manifest["files"]["artworks.jsonl"]["rows"] >= 6 * pp.MIN_ARTWORKS
     docs = pp.load_processed("documents.jsonl")
     assert len({d["doc_key"] for d in docs}) == len(docs)
+    keys = {d["doc_key"] for d in docs}
+    assert all(set(d["basis_doc_keys"]) <= keys for d in docs)
+    assert all(isinstance(d["basis_external_sources"], list) for d in docs)
     works = pp.load_processed("artworks.jsonl")
     assert len({w["slug"] for w in works}) == len(works)
     assert not (out / ".staging").exists()
@@ -196,6 +199,61 @@ def test_card_text_removes_original_language_notes(raw, expected):
 def test_clean_wiki_keeps_parent_heading_and_drops_footnotes():
     text = "앞\n\n=== 망명 ===\n\n==== 몰타 ====\n본문[2] 끝[*]\n\n=== 빈 섹션 ===\n\n== 각주 ==\n목록"
     assert pp.clean_wiki(text) == "앞\n\n### 망명\n\n#### 몰타\n본문 끝"
+
+
+def test_clean_markdown_drops_notes_references_and_repeated_definition():
+    """백과사전 원문: 머리말과 같은 '정의', 참고문헌·주석 섹션, 본문의 주석 번호를 지우고 깨진 한자를 복원한다.
+    번역본의 '출처'는 남긴다."""
+    text = ("진경산수화.\n\n## 정의\n\n진경산수화.\n\n## 내용\n\n방고(倣古)주1 행위와 이백주2의 시. 학창의(鶴?衣)\n\n"
+            "## 출처\n\n소장 이력\n\n## 참고문헌\n\n- 책\n\n## 주석\n\n주1\n\n: 풀이")
+    assert pp.clean_wiki(text) == ("진경산수화.\n\n## 내용\n\n방고(倣古) 행위와 이백의 시. 학창의(鶴氅衣)\n\n"
+                                   "## 출처\n\n소장 이력")
+
+
+def test_apply_document_supplements_appends_section_and_warns_for_stale_key():
+    cat = {"documents": [{"doc_key": "artist/work", "content": "기관 원문"}]}
+    pp.warnings.clear()
+    pp.apply_document_supplements(cat, {
+        "artist/work": {"basis_doc_keys": ["artist/work"], "content": "보충 해설"},
+        "artist/missing": {"content": "사라진 문서"},
+    })
+    assert cat["documents"][0]["content"] == "기관 원문\n\n## 감상 포인트\n보충 해설"
+    assert cat["documents"][0]["basis_doc_keys"] == ["artist/work"]
+    assert cat["documents"][0]["basis_external_sources"] == []
+    assert pp.warnings == ["보충문 대상 문서 'artist/missing' 가 없음"]
+
+
+def test_apply_document_corrections_preserves_source_and_adds_provenance():
+    cat = {"documents": [
+        {"doc_key": "artist/work", "content": "수집 원문"},
+        {"doc_key": "artist/basis", "content": "근거 원문"},
+    ]}
+    pp.initialize_editorial_metadata(cat)
+    pp.warnings.clear()
+    pp.apply_document_corrections(cat, {
+        "artist/work": {
+            "basis_doc_keys": ["artist/basis"],
+            "basis_external_sources": [{"source_name": "공식 자료", "source_url": "https://example.org/source"}],
+            "content": "최신 정보로 답한다.",
+        },
+    })
+    doc = cat["documents"][0]
+    assert doc["content"] == "수집 원문\n\n## 답변 시 주의\n최신 정보로 답한다."
+    assert doc["basis_doc_keys"] == ["artist/basis"]
+    assert doc["basis_external_sources"] == [
+        {"source_name": "공식 자료", "source_url": "https://example.org/source"}
+    ]
+
+
+def test_joseon_corrections_are_visible_to_rag():
+    cat = pp.build()
+    docs = {d["doc_key"]: d for d in cat["documents"]}
+    assert "현재 국립중앙박물관" in docs["jeong-seon/bio"]["content"]
+    assert "1725년은 영조 1년" in docs["jeong-seon/yuksangmyodo"]["content"]
+    assert "추정해 완성하지 말고" in docs["kim-hong-do/chuseongbudo-inscription"]["content"]
+    assert docs["jeong-seon/yuksangmyodo"]["basis_external_sources"][0]["source_name"] == (
+        "국사편찬위원회 우리역사넷"
+    )
 
 
 def test_fix_korean_year_notation():

@@ -61,7 +61,13 @@
       "원문은 변경하지 않음. 사망 연도가 위키백과와 국립중앙박물관 페이지에서 1806년경·1806년 이후·1816년 이후로 다름. death_year는 null. 원문 사실관계 최종 검토 필요."
     ],
     "content_sha256": "d6b9c38ba0aaa4700b6525bc81b2e55f60b14a415dbb99a98fed1606a35832e6",
-    "character_count": 3701
+    "character_count": 3701,
+    "translation": {
+      "file": "bio.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-12",
+      "source_sha256": "2304a55199626fe696c6f4f57c830f1bab14f2a44ebf8769d3a8de162060c447"
+    }
   },
   "artwork-world.md": {
     "doc_type": "artist_bio",
@@ -82,6 +88,31 @@
     "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
     "license_evidence": "공공누리 1유형 - 출처표시-공공누리 공공저작물 자유이용허락",
     "collection_method": "소장품 검색 .view-info-cont2의 본문 p. 화첩 전체를 설명하는 내용이므로 artist_bio로 분류.",
+    "related_artwork_slugs": [
+      "nongari",
+      "hwalssogi",
+      "giwaigi",
+      "daejanggan",
+      "nadeuri",
+      "siju",
+      "narutbae",
+      "jumak",
+      "gonunori",
+      "ppallaeteo",
+      "umulga",
+      "dambaesseolgi",
+      "jarijjagi",
+      "byeotajak",
+      "geurimgamsang",
+      "gilssam",
+      "pyeonjabakgi",
+      "gogijabi",
+      "sinhaenggil",
+      "jeomsim",
+      "jangteogil",
+      "ssireum",
+      "seodang"
+    ],
     "content_sha256": "aa8e48ddbd7f87f9b66e85568921e8e9216240792fcf973b0e69b414190e0419",
     "character_count": 614
   },

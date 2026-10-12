@@ -13,6 +13,7 @@ EXPECTED_TABLES = {
     "documents",
     "document_artists",
     "document_artworks",
+    "document_basis_documents",
     "document_chunks",
     "artwork_likes",
     "artist_follows",

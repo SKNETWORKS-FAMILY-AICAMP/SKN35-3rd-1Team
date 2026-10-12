@@ -7,7 +7,7 @@
 | `raw/` | 수집한 원본. 수정하지 않음 | 수집 담당 전원 |
 | `processed/` | 스키마에 맞춰 정제한 결과 | 전처리 스크립트가 만들고 적재 스크립트가 읽음 |
 | `images/` | 개발·시연용 작품 이미지와 출처 정보 | 데이터 담당 |
-| `mappings/` | 원본에 없는 값을 사람이 채우는 `catalog.json` (사조, 작가·작품 정보, 카드 설명) | 전처리 스크립트가 읽음 |
+| `mappings/` | 원본에 없는 값을 사람이 채우는 `catalog.json`(사조, 작가·작품 정보, 카드 설명), `document_supplements.json`(출처 기반 보충 해설), `document_corrections.json`(최신 사실·불확실성·절단 주의), 검수 장부 | 전처리 스크립트가 읽음 |
 
 ## 문서 스키마 (팀 약속)
 
@@ -23,6 +23,8 @@
 | `source_url` | 필수 | 원문 주소. 여러 자료를 참고한 비교 문서는 가장 많이 참고한 자료의 주소 |
 | `source_name` | 권장 | 출처 이름 (예: 국립현대미술관) |
 | `license` | 권장 | 이용 조건 |
+| `basis_doc_keys` | 편집 보강 문서 | 보충·보정문을 작성할 때 근거로 삼은 수집 문서 키. DB `document_basis_documents`로 연결 |
+| `basis_external_sources` | 편집 보강 문서 | 데이터셋 밖의 공식 보정 근거. `source_name`, `source_url` 목록 |
 
 작가와 작품을 가리킬 때는 숫자 id가 아니라 `slug`를 씁니다. DB의 자동 증가 id는 적재할 때마다 달라질 수 있기 때문입니다. slug는 영문 소문자와 하이픈으로 짓습니다 (예: `vincent-van-gogh`, `the-starry-night`).
 

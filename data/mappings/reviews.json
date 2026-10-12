@@ -271,6 +271,451 @@
       "reviewed_on": "2026-10-11",
       "content_sha256": "3a577d7bc1e46c2863b0e671cfa0f928e502a9a2cc5d823ac7cb41e4571633e9"
     },
+    "jeong-seon/artwork-world": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "df8f24128d6220c381482b9ceaf25b80c20234273bad4d1e091c33c64a957d20"
+    },
+    "jeong-seon/artwork-world-curator": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "40ec64f0af138a745684eadcfc2e1d185ce4616c2a7671a52bbfaa53ea98bd3f"
+    },
+    "jeong-seon/baekcheongyo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e190524c86589b5ca1fa74787276f8c601324a70226fc97b2b6c6351faa2470a"
+    },
+    "jeong-seon/bio": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 보정 레이어 적용·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "fdb9f73b5b5afb3489a35963052734718ad89affbfdd2fc6849e61868d61f4e4"
+    },
+    "jeong-seon/bio.en": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "15e4f943566c466cc7e70f8623bbb6995ab5fc822cdf6b79be89fc5af94a882e"
+    },
+    "jeong-seon/bodeokgul": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "b4def1c8e66ffe0e7790b879e5a35a1631ce79261af502d45630dd8542fff8e9"
+    },
+    "jeong-seon/buljeongdae": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "502254a9e9d276b85e0a4df0b96320c25a64c071d8063d305abc3d44491babc2"
+    },
+    "jeong-seon/cheongpunggye-gansong": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "cd57209bb31d1e92107c055594612c93142fd8e1cbb9a79b3b5670527775d1b6"
+    },
+    "jeong-seon/cheongpunggye-jigak": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "deb59713c7ec68d6e63c91fcc5a0ff2f219e5c3ffbcfd80426257a1dfbcb21d0"
+    },
+    "jeong-seon/chongseokjeong": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "537eb05a2a9e6837e3d09026fe4591d9006273a79f14305292f8f46c6dd3fb38"
+    },
+    "jeong-seon/danballyeong-manggeumgangsan": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "245014f70c00d93929a00ccd97783410d4bfaa60f5195abf0eb2204ee4588fc0"
+    },
+    "jeong-seon/geumgang-jeondo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "6254404b9e7e8d6368b72d2118b5e44a97f799401e2ce4834ba576fb68a70eda"
+    },
+    "jeong-seon/geumgang-jeondo-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e524409a40849861780a257d8a992993ed00d4af5783bb41005c61f045694c1a"
+    },
+    "jeong-seon/geumgang-naesan-chongdo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "1530e03a2608661114ad18c6228e57cb030559b2abb6ff73b1b03f095de5fb18"
+    },
+    "jeong-seon/gyeonggyo-myeongseung-album": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "89e2f6ab14c087dc6efd535ad31d6f4c165afdf5dd23eb4975613218663fe37c"
+    },
+    "jeong-seon/haeak-eight-views-album": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2a6009e7fcaefe6db6ad60619b26a60195bab0810bc356867272600c348b99d5"
+    },
+    "jeong-seon/haeak-jeonsin-album": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "98e54beae88da609d16d01219f11d0a594fe2ab0b2154999c3a81dc612a38d82"
+    },
+    "jeong-seon/haeinsa": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 원문 근거 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "c8b24943cec1195dd879cde84950085f5878e68fb95fdc660f089e1e60a9e3e3"
+    },
+    "jeong-seon/haesanjeong": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "4231254a0c731aec7a3d9b1c18371929d2afb56cd201b391c703e85ca6c08ac6"
+    },
+    "jeong-seon/inwangjesaekdo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 보정 레이어 적용·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e9206cb0548083d4d1537b875dae44e81f57329afdce3f3834359bb556e3959d"
+    },
+    "jeong-seon/inwangjesaekdo-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "97494deaf635967f6e54ad40b260425973cd7d2444c7a601669de4b38b5da8ce"
+    },
+    "jeong-seon/jangansa": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "cf2ad4311745cd7e68352a6f94308c248439170ddf6dee8de1b45fb769098c68"
+    },
+    "jeong-seon/jeongmunipseoldo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "8d60a59ace61b523e89716bb1ab2558cd472a7f62fbec47d61ce8b33e84955d5"
+    },
+    "jeong-seon/jeongyangsa-deoksu-1191": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 원문 근거 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "57e90e4d0a05a1b0475436a1d497007990e9a36db8403e0e2cc6cba3996cc7c4"
+    },
+    "jeong-seon/jeongyangsa-deoksu-2292": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "9771977452355d5e053ebeec054fb569791cd5eba4c29c038a231b115cca7968"
+    },
+    "jeong-seon/jeongyangsa-deoksu-2292-curator": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "c7d302e336b6af5383933a0583b08fe1c227b3a0c2d3df8d01e7acd1f9c8fd83"
+    },
+    "jeong-seon/munamgwan-ilchul": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "b808faed3c117efa6baebe65e50cb0042ddd5dd17b86f5c18ee1f0cf3820eb8f"
+    },
+    "jeong-seon/naeyeonsan-samyongchu": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "b6454bd6582f5fdd91a9451ebed0dfefa30f8840b9a11f17546f92bd86d9f583"
+    },
+    "jeong-seon/naksansa": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 원문 근거 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "0ed2582408c16bc9f3610d16118d422fa18baddb25d898943c27effa1e9fc36d"
+    },
+    "jeong-seon/ongcheon": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a869867f30f22cdc5a28fbd96328f45154eb51e23babdb0623e26b461dadd064"
+    },
+    "jeong-seon/pagyoseolhudo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "448be1c064ec48c4d668feb08dcf1d6ccc7cac7c53fc4d2025beae33b8ed082d"
+    },
+    "jeong-seon/people-kim-chang-heup": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "ac63ffc3a3bf389924ba095cd39c598d78de1c94874c6e095816d6d1369c4a2a"
+    },
+    "jeong-seon/people-yi-byeong-yeon": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "dd06ef9279714b949a93ec10a1a9adeb61066d95179c7e9a0ebfc069d9c11eb9"
+    },
+    "jeong-seon/pigeumjeong": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "7493947eec84da102715c4c38c93f2b184d029fc6cf7d7b5a278e5903cf138f2"
+    },
+    "jeong-seon/places-geumgangsan": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2f3162811b1e225de58456d5ce34ad76defc173de4b7c8fbade22b391d998797"
+    },
+    "jeong-seon/pungak-naesan-chongramdo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "84b3c5d5882113dabea7da3780af6609f9aa771e0e33b1ffe2e30a536fb94822"
+    },
+    "jeong-seon/saseonjeong": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2bd2b87aa1433fbcd03c98099112091d1e0bcf468f99bd2dbd0fa491df8c00b2"
+    },
+    "jeong-seon/segeomjeongdo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d573cdfe906afe8aa0614deba742f3714c7f93caaf3e34cccfd181656372a27d"
+    },
+    "jeong-seon/seojeongbowoldo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "681082465783aaa4276b3be9948b52ac38d237462f24841772a9246a981f1dba"
+    },
+    "jeong-seon/sijungdae": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "28f0ef41d455d479354d3d49c22df11cb0a5621d90bc44a683a39f23123052d9"
+    },
+    "jeong-seon/suseonggujido": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "3b950b4ab7dbfce6ff9088ee9c0b2bca727d9381169883a9ee9cfe1cacb9b2de"
+    },
+    "jeong-seon/technique": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2b158ef4406fd04ff941f989224cf78815f967dfa501eb68405aedad291fd725"
+    },
+    "jeong-seon/yeosan-chodangdo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "f4e66db88bda551a768378ca3756f2e28d671f8521f195fb104ea0695890f248"
+    },
+    "jeong-seon/yuksangmyodo": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 보정 레이어 적용·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "202babc8e86e4a66bc53d970a44b9b6ea74b4bdba7ab93d8444eb22afd169ffc"
+    },
+    "kim-hong-do/artwork-world": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "aa8e48ddbd7f87f9b66e85568921e8e9216240792fcf973b0e69b414190e0419"
+    },
+    "kim-hong-do/artwork-world-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 보정 레이어 적용·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "9c31e5b47951a4483ecd20f17bd4af2ec7e8225109cfef273d5338149717c09a"
+    },
+    "kim-hong-do/artwork-world-curator": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "91b6905ad24758a29b63a6a054d40f5164d131cb912852d19dde921a7a72380b"
+    },
+    "kim-hong-do/bio": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a4fb2c77cf48a986736f933423dc5091c9fbf539977ba7aa6bd64d9af133ce4a"
+    },
+    "kim-hong-do/bio-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "4f3a75c68f6b1387c02cb74407828d759ba5cebe5c79048a95b67f07f209d427"
+    },
+    "kim-hong-do/bio.en": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "812f41a46e26e6984eb5e066fd5e8f03f86ec276147d8a672245c94c80314b01"
+    },
+    "kim-hong-do/byeongjin-year-album": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "3838ed6d688135c94f43624051f617d7c928d9b640a9fcbe09ee5eabfa27560e"
+    },
+    "kim-hong-do/byeotajak": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "4f6392db43ef01887705f1253327cdd13e7ab1cb1a42a52260c3262f07c2f008"
+    },
+    "kim-hong-do/chuseongbudo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "34858a557da30d4f796e1a508ff81753996c6ec75b9f366ea983055261752c36"
+    },
+    "kim-hong-do/chuseongbudo-inscription": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 보정 레이어 적용·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a6903df16118330969b3f14884bbcef6a89fa76e0ecc0c2bacd94e5c4135bce5"
+    },
+    "kim-hong-do/daejanggan": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "451dfafe64b62279628752dc59c72221684f70516545a079279a704b3624c0c8"
+    },
+    "kim-hong-do/dambaesseolgi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "ab2bed924dbf2fc1aca4eb250f46a318bcc86d16df9127ea3b306bd849b5f0c9"
+    },
+    "kim-hong-do/genre-painting-history": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e9cec8cdcfd1e2f5302f200b56bc10b8c028f82e5c8459a149b330f79688d357"
+    },
+    "kim-hong-do/geurimgamsang": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "f6a49465f6b092830b21a177ba1f5ac1557e16253e2566dc5e59446ee1fc60e5"
+    },
+    "kim-hong-do/gilssam": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "b5230c680eed8e282a5ce6f45a59f913f1c2075bded36a875d36c1710a27d0fb"
+    },
+    "kim-hong-do/giwaigi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d88f68173ad9b96bc08e3f10a34e4db7c93d139b268a32c23034d36e74cdc669"
+    },
+    "kim-hong-do/gogijabi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "862cfa7f78bdbfe534caeedd27ce9c5d1cb65b35313fd67316079f7735ac2352"
+    },
+    "kim-hong-do/gonunori": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d3bd44d479ec61f105df5efd1a41bf672d77d7ebd6c8720e2554943cb554dcf3"
+    },
+    "kim-hong-do/gunseondo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "ac7f23d91eeaacb00b049587be9ff07b801786dd87a2ffe4238824868242f190"
+    },
+    "kim-hong-do/gyujanggakdo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "72df9c41ed5da710f77350560e6c0ddc91cfedd9e5fc5b873becf2d733eb3d15"
+    },
+    "kim-hong-do/gyujanggakdo-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "b5c6808ecfbcc369cac02276f6c567b1866239cb61d29b8787e827eeee8377db"
+    },
+    "kim-hong-do/hwalssogi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "46394ca5ec671560d61a2d98c9ca5f0f8976574b2b6c3b0e53400e9e2e140d12"
+    },
+    "kim-hong-do/jangteogil": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "062923ae79b58103d5067e645bac6273a62b2fb579ce56743002f1ead9cd41eb"
+    },
+    "kim-hong-do/jarijjagi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "11356b00f0407e7ae2851ea940147dd30dba2f2dd24469f792fa68daa8130f6d"
+    },
+    "kim-hong-do/jeomsim": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "84db319585710b64bc8fef0ff7f000a0a992edb67e9d6f8d4f76777087324306"
+    },
+    "kim-hong-do/jumak": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "9466ba2c36da465dad4090129124b48e7670eaeb521d383f2a110ba36b5a40ce"
+    },
+    "kim-hong-do/maehaepahaengdo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "530d9d55da5c7f8dfe63f45340dbc17a043d072cbaf01854db2085f9c9a6158d"
+    },
+    "kim-hong-do/nadeuri": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "dcf6b52ae92abc21d7e7cac85d4849dfc38c6334f7c5dfe0126527f0337b407c"
+    },
+    "kim-hong-do/narutbae": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "63c15afe7b88f3890148a4cd6db8e300a63219591d39d2464a91b0e8aefd0bb9"
+    },
+    "kim-hong-do/nongari": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "fea031b41c85da19ea9a46f4686de6207d020d43f2c71dfd78ce0d6f6963b221"
+    },
+    "kim-hong-do/people": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "39898dddd716907745939b3e0bc39754dcbb68b6d9afb1048614bc94cf899f9d"
+    },
+    "kim-hong-do/ppallaeteo": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "f75021ff43131ee7b8d05899c1799a9e72e478c4d5256bc3dfa6c9c9af2ada01"
+    },
+    "kim-hong-do/pyeonjabakgi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "cdbaeaf4eb5943be90f44f5991ce96bb3933f34edb9893472c7cf6a64fc6f2b5"
+    },
+    "kim-hong-do/samgongbulhwando": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "6adf5238a69f2300dcefdeab9c4dbe652ff0210d60197d4c8ca33752e3b0b9ec"
+    },
+    "kim-hong-do/seo-jik-su-portrait": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "5efaec56f42ba33c86600e808b16f44c5e52e614af2af00cccac3a9e70825508"
+    },
+    "kim-hong-do/seo-jik-su-portrait-curator": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "01058ef129fc04e66581e02071b11d7e9f50b6e1b92ae8ceccc93d4c00921b79"
+    },
+    "kim-hong-do/seodang": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d34a2a408ac4ee669685485f43006396507531d57698a487a4e638a71224114d"
+    },
+    "kim-hong-do/seodang-context": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "df57658db36be4e2951f2a7c5d61cf4db03e4566e4b33e36a5437eceea66f6d2"
+    },
+    "kim-hong-do/seoninyajeok": {
+      "reviewer": "A(PM·전처리) 요청 / Codex AI 심화 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "906b2b5e4367af6db4a4b3d9c293ad7a0168278b43bb7cfb56f363b1172b2af0"
+    },
+    "kim-hong-do/siju": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "280430bf36dc63b90b31d49fdff76b45c88786fc647c984678375b4bc85867bb"
+    },
+    "kim-hong-do/sinhaenggil": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "fe3ed25eb116c9af951c3d81015348da4202129ade3da4ccef7c8c7f90e65c51"
+    },
+    "kim-hong-do/ssireum": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "6ed884df54e468a26d83277c58c48b449594028f6b742c151e080abd25bda982"
+    },
+    "kim-hong-do/ssireum-aks": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "59a103c64c6a9cd6494cc7ad2fd3ec22d2c363411c71b2ac880f6229a2cb74d1"
+    },
+    "kim-hong-do/ssireum-context": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "62409f6fe071ff1c21dafb2bcd7d1dd8506652382f888a5ca3bf0237518ff5c8"
+    },
+    "kim-hong-do/umulga": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e616a4033d0735255fd95260522ed69bf90289e9fab9fff4941b62eec6fbbc3b"
+    },
     "paul-cezanne/apples-oranges": {
       "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
       "reviewed_on": "2026-10-11",

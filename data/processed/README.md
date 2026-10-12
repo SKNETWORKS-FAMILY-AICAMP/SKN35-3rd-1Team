@@ -10,7 +10,7 @@
 uv run python -m scripts.preprocess
 ```
 
-- 원본: `data/raw/`, 사람이 채우는 값: `data/mappings/catalog.json`, 작가 별칭: `data/mappings/artist_aliases.json`
+- 원본: `data/raw/`, 사람이 채우는 값: `data/mappings/catalog.json`, 출처 기반 보충 해설: `data/mappings/document_supplements.json`, 원문 보정 레이어: `data/mappings/document_corrections.json`, 작가 별칭: `data/mappings/artist_aliases.json`
 - 같은 입력이면 같은 파일이 나옵니다. 줄 순서는 slug(문서는 `doc_key`) 순입니다.
 
 ### 성공한 결과만 읽기 (`_SUCCESS.json`)
@@ -35,7 +35,7 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | `artists.jsonl` | `slug`, `name`, `name_en`, `movement_slug`, `birth_year`, `death_year`, `nationality`, `summary`, `portrait_url` | `artists` |
 | `artworks.jsonl` | `slug`, `artist_slug`, `movement_slug`, `title`, `title_en`, `year_label`, `year_start`, `medium`, `dimensions`, `collection`, `description`, `image_url`, `image_source_url`, `image_license`, `is_featured` | `artworks` |
 | `artist_aliases.jsonl` | `slug`, `name`, `status` (`collected`/`planned`), `aliases`, `confusable` | (DB 적재 안 함. 챗봇 작가 인식용) |
-| `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `needs_review` | `documents`, `document_artists`, `document_artworks` |
+| `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `basis_doc_keys`, `basis_external_sources`, `needs_review` | `documents`, `document_artists`, `document_artworks`, `document_basis_documents` |
 
 ### documents.jsonl의 검색 메타데이터 저장 위치
 
@@ -44,9 +44,11 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | 필드 | 저장 위치와 뜻 |
 | --- | --- |
 | `doc_key` | `documents.doc_key`. 문서 고유 키이며 재적재할 때 갱신 기준으로 씁니다 |
-| `lang` | `documents.lang`. 현재 결과 249건은 모두 `ko`입니다 |
+| `lang` | `documents.lang`. 현재 결과 338건은 모두 `ko`입니다 |
 | `topic` | `documents.topic`. 생애 문서의 성격이며 없으면 `null`입니다 |
 | `related_artwork_slugs` | `document_artworks`. 연표 사건과 관련 작품을 연결합니다 |
+| `basis_doc_keys` | `document_basis_documents`. 보충·보정문 작성에 사용한 다른 수집 문서를 연결합니다. 답변 출처에는 현재 문서뿐 아니라 이 문서들의 `source_name`, `source_url`도 함께 표시합니다 |
+| `basis_external_sources` | `documents.basis_external_sources`. 수집 문서로 만들지 않은 외부 공식 근거의 이름과 URL입니다 |
 | `needs_review` | `documents.needs_review`. 사람 검토 전이면 `true`이고, `data/mappings/reviews.json`의 본문 해시가 일치하는 검수 기록이 있으면 `false`가 됩니다 |
 
 ### 문서 종류
@@ -82,3 +84,5 @@ lc_docs = [
 - `year_label`은 화면에 보일 원문 표기(예: `c. 1889`), `year_start`는 정렬용 숫자입니다. 연작처럼 한 해로 정할 수 없으면 `null`입니다.
 - `is_featured`는 좋아요가 없는 신규 사용자에게 보여 줄 대표 작품에 표시합니다. 작가마다 한두 점씩 고르게 지정합니다.
 - 이 폴더의 파일은 손으로 고치지 않습니다. 다음 실행 때 사라집니다. 값을 바꾸려면 `data/mappings/catalog.json`이나 원본을 고칩니다.
+- 짧은 기관 원문에 해설을 덧붙일 때는 원문을 고치지 않고 `data/mappings/document_supplements.json`에 기록합니다. `basis_doc_keys`에는 보충문을 작성할 때 근거로 삼은 수집 문서를 남깁니다.
+- 수집 원문의 오래된 정보·불확실성·절단 상태를 보정할 때는 원문을 고치지 않고 `data/mappings/document_corrections.json`에 기록합니다. 최종 본문에는 `## 답변 시 주의`로 붙습니다.

@@ -2,7 +2,7 @@
 
 전처리가 끝난 문서로 청킹·임베딩·검색을 시작하는 데 필요한 내용만 모았습니다. 데이터 형식 전체는 [`docs/data-spec.pdf`](data-spec.pdf), 전처리 기준은 [`docs/data-collection.md`](data-collection.md)에 있습니다.
 
-기준: 2026-10-11 전처리 결과 (작가 6명, 작품 136점, 문서 249건)
+기준: 2026-10-12 전처리 결과 (작가 8명, 작품 196점, 문서 338건)
 
 ## 1. 바로 시작하기
 
@@ -12,7 +12,7 @@
 # backend/ 에서 실행
 from scripts.preprocess import load_processed
 
-docs = load_processed("documents.jsonl")   # list[dict], 249건
+docs = load_processed("documents.jsonl")   # list[dict], 338건
 ```
 
 DB 적재를 기다릴 필요는 없습니다. 이 파일로 청킹·임베딩·검색을 먼저 실험해 볼 수 있습니다. LangChain `Document`로 바꾸는 예시는 [`data/processed/README.md`](../data/processed/README.md)에 있습니다.
@@ -51,6 +51,8 @@ aliases = load_processed("artist_aliases.jsonl")
   "lang": "ko",
   "topic": "연표",
   "related_artwork_slugs": ["the-night-watch"],
+  "basis_doc_keys": [],
+  "basis_external_sources": [],
   "needs_review": false
 }
 ```
@@ -63,6 +65,8 @@ aliases = load_processed("artist_aliases.jsonl")
 | `artwork_slug` | 해설 문서의 대상 작품 → DB `documents.artwork_id` |
 | `artist_slugs` | 생애·비교 문서의 작가 → DB `document_artists` |
 | `related_artwork_slugs` | 연표 사건이 언급하는 작품 → DB `document_artworks` |
+| `basis_doc_keys` | 편집 보충·보정의 근거 문서 → DB `document_basis_documents`. 근거 문서의 출처도 답변에 함께 표시 |
+| `basis_external_sources` | 데이터셋 밖의 공식 보정 근거 → DB `documents.basis_external_sources` |
 | `topic` | 생애 문서의 성격 (`연표`, `생애 전체`, `주변 인물` 등) |
 | `needs_review` | 사람 검토 전 문서 (4절) |
 
@@ -76,16 +80,17 @@ aliases = load_processed("artist_aliases.jsonl")
 | 고흐·고갱 팀 작성 문서 | 40 | 543 / 656 / 850자 | 자르지 않음. `[화면 관찰]`, `[근거 있는 해석]` 같은 구간 표시는 그대로 둠 |
 | 모네·세잔 주제 문서 | 8 | 590 / 634 / 649자 | 문서 하나 = 청크 하나. 주변 인물·기법·장소·영향 문서 |
 | 위키 원문·번역본 | 130 | 347 / 2,079 / 33,056자 | `## 제목` 섹션 단위로 먼저 나누고, 긴 섹션만 문단 경계에서 다시 자름 |
+| 김홍도·정선 기관 원문·번역본 | 89 | 214 / 567 / 6,922자 | `##` 절을 먼저 나누고 긴 절은 문단·문장 경계로 다시 자름. `감상 포인트`와 `답변 시 주의` 절은 제목 문맥을 유지 |
 
 - 청크 앞에 `문서 제목 > 섹션 제목`을 붙여서 임베딩하면 짧은 조각도 맥락을 잃지 않습니다. 예: `카라바조의 생애 (영문 번역) > 추방과 죽음 (1606–1610) > 몰타`
 - 섹션 제목 줄(`## …`)은 본문이 아니므로 청크 본문에서는 빼고 위의 머리말로만 씁니다.
-- 500자 기준으로 자르면 전체 약 1,110개 청크가 나옵니다 (본문 합계 약 49만 자).
+- 본문 합계는 약 60만 자입니다. 500자 기준 약 1,400개 청크가 나옵니다 (추정).
 
 ### 임베딩
 
 - DB 컬럼은 `VECTOR(1536)`입니다. `text-embedding-3-small`(1536차원)을 기준으로 설계했습니다. 다른 모델을 쓰려면 차원 수를 먼저 정하고 Alembic 마이그레이션으로 컬럼을 바꿔야 합니다.
 - `document_chunks.embedding_model`에 모델 이름을 꼭 넣습니다. 모델이 섞이면 거리 값이 의미가 없어집니다.
-- 문서 249건이 모두 한국어입니다 (`lang: "ko"`). 영어 위키백과 원문 59건은 한국어로 번역해 넣었습니다 (7절).
+- 문서 338건이 모두 한국어입니다 (`lang: "ko"`). 영어 위키백과 원문 61건은 한국어로 번역해 넣었습니다 (7절).
 - 같은 주제를 한국어 원문과 번역본이 함께 다루는 경우가 있습니다 (예: 『야경』, 키아로스쿠로). 내용이 겹치는 청크가 상위에 나란히 나오면 `doc_key`가 다른 것을 하나씩만 고르면 됩니다.
 
 ## 4. 작품을 골랐을 때 검색 범위
@@ -133,7 +138,9 @@ ORDER BY d.doc_key;
 ## 5. 출처 표시와 검토 상태
 
 - **출처**: `title`, `source_name`, `source_url`을 답변 아래에 보여 줍니다. 번역본은 제목 끝에 `(영문 번역)`, `source_name`에 `· 한국어 번역 (gpt-5.4-mini)`가 붙어 있고, `source_url`은 영어 원문 주소입니다.
-- **`needs_review`**: 현재 문서 249건은 모두 최종 승인을 마쳐 `false`이며, 검색에서 제외할 문서는 없습니다. 승인 당시의 본문 해시는 `data/mappings/reviews.json`에 기록되어 있습니다.
+- **편집 보강 출처**: `basis_doc_keys`가 있으면 해당 문서들의 `source_name`, `source_url`도 함께 표시합니다. `basis_external_sources`는 이름과 URL을 그대로 표시합니다. 보충·보정문을 현재 문서의 원출처가 직접 쓴 글처럼 표시하면 안 됩니다.
+- **`needs_review`**: 현재 문서 338건은 모두 검토를 마쳐 `false`이며, 검색에서 제외할 문서는 없습니다. 승인 당시의 본문 해시는 `data/mappings/reviews.json`에 기록되어 있습니다. 김홍도·정선 89건의 검토 기록은 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
+- **공공누리 변경금지 문서**: 국립중앙박물관 큐레이터 해설 5건은 공공누리 제3유형(출처표시+변경금지)이고, 그중 `kim-hong-do/artwork-world-curator`는 제4유형(상업적 이용금지 추가)입니다. `license` 필드로 구분됩니다. 검색 근거로 쓰고 출처를 표시하는 것은 괜찮지만, 답변에서 원문을 길게 그대로 옮기거나 개작한 글을 원문처럼 내보이지 않도록 합니다.
 - 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 해당 문서만 다시 `true`가 됩니다. A가 검토 후 `review --approve`로 기록하고 전처리·적재하면 다시 `false`로 바뀝니다.
 
 ## 6. 데이터가 바뀔 때
@@ -148,7 +155,8 @@ ORDER BY d.doc_key;
 | --- | --- | --- |
 | 고흐·고갱 작품 해설은 작품당 600~850자 (청크 1~2개) | 작품 하나만 깊게 묻는 질문에는 근거가 빨리 바닥남. 대신 주제별 생애 문서와 연표가 보강됨 | 보강 완료 (고흐 작품 14·문서 31, 고갱 작품 13·문서 32) |
 | 모네·세잔의 새 연표·주제 문서는 팀 작성 자료 | 고유명사·사건 연결을 확인해야 했음 | 28건 검토·승인 완료 |
-| 클림트, 실레, 김홍도, 정선 데이터 없음 | 이 작가 질문은 거절해야 정상 | 수집 대기. 환각 방지 테스트에 활용 가능 |
+| 클림트·실레 데이터 없음 | 이 작가 질문은 거절해야 정상 | 수집 대기. 환각 방지 테스트에 활용 가능 |
+| 김홍도·정선 기관 원문의 오래된 정보와 학설 | 현재 정보와 확정 사실처럼 답할 위험 | 60점·89문서 수집 완료. 5개 문서에 `답변 시 주의` 보정 레이어와 근거 연결 적용 |
 | 위키 원문·번역본은 위키백과 기반 | 원문 자체는 위키백과 수준의 정확도 | 원문 대조 후 검토·승인 완료 |
 | 번역본 59건은 기계 번역 | 고유명사 표기, 원문 누락, 섹션·문단·연도 구조, 다른 언어 문자 혼입을 확인해야 함 | 원문 대조·오류 수정·승인 완료 |
 | 연작(건초더미, 수련 등)은 작품 하나가 여러 그림을 대표 | 소장처·크기가 비어 있음 | 의도된 null |
@@ -176,6 +184,10 @@ ORDER BY d.doc_key;
 | 15 | 다나에 | 다나에의 모델은 누구야? | `rembrandt/danae` (사스키아였다가 헤이르처 디르크스로 고쳐 그림), `rembrandt/timeline-03`, `rembrandt/timeline-06` |
 | 16 | 카드 사기꾼 | 이 그림을 누가 샀어? | `caravaggio/the-cardsharps`, `caravaggio/timeline-02` (델 몬테 추기경) |
 | 17 | 목욕하는 밧세바 | 밧세바의 모델은 누구야? | `rembrandt/bathsheba-at-her-bath`, `rembrandt/timeline-07` (헨드리케 스토펠스) |
+| 18 | 인왕제색도 | 지금 어디에 소장돼 있어? | `jeong-seon/inwangjesaekdo`, `jeong-seon/inwangjesaekdo-aks`, `jeong-seon/bio` (현재 국립중앙박물관) |
+| 19 | 육상묘도 | 육상묘가 영조 6년에 세워졌어? | `jeong-seon/yuksangmyodo` (`답변 시 주의`: 1725년은 영조 1년) |
+| 20 | 단원 풍속도첩 낱장 | 이 그림이 김홍도 진품으로 확정됐어? | `kim-hong-do/artwork-world-aks` (여러 학설을 확정 사실과 구분) |
+| 21 | 추성부도 | 그림에 적힌 글의 마지막 문장을 알려줘 | `kim-hong-do/chuseongbudo-inscription` (절단 이후를 추정하지 않음) |
 
 ## 9. 문의
 

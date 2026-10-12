@@ -75,7 +75,13 @@
       "원문은 변경하지 않음. 한국어판의 도화서 화원 경력·후계자가 없었다는 서술 등을 기관 자료와 대조해야 함. 영어 원문도 보강 수집했으며 번역·최종 검토는 전처리 담당자에게 남김."
     ],
     "content_sha256": "4ac2cda1f9fd984128452a748e66efda045fb89cfa84e2ee177b0b9456221938",
-    "character_count": 7365
+    "character_count": 7365,
+    "translation": {
+      "file": "bio.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-12",
+      "source_sha256": "5a95936c09eee4caceefebb121f7f96bc3efbe203072350d233671b38a035518"
+    }
   },
   "artwork-world.md": {
     "doc_type": "artist_bio",
@@ -96,6 +102,21 @@
     "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
     "license_evidence": "공공누리 1유형 - 출처표시-공공누리 공공저작물 자유이용허락",
     "collection_method": "소장품 검색 .view-info-cont2의 본문 p. 화첩 전체를 설명하는 내용이므로 artist_bio로 분류.",
+    "related_artwork_slugs": [
+      "ongcheon",
+      "buljeongdae",
+      "saseonjeong",
+      "munamgwan-ilchul",
+      "jangansa",
+      "sijungdae",
+      "haesanjeong",
+      "baekcheongyo",
+      "chongseokjeong",
+      "pigeumjeong",
+      "geumgang-naesan-chongdo",
+      "bodeokgul",
+      "danballyeong-manggeumgangsan"
+    ],
     "content_sha256": "df8f24128d6220c381482b9ceaf25b80c20234273bad4d1e091c33c64a957d20",
     "character_count": 492
   },

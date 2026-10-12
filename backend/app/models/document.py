@@ -7,6 +7,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    JSON,
     BigInteger,
     Boolean,
     DateTime,
@@ -73,6 +74,13 @@ class Document(Base):
         default=False,
         server_default=text("0"),
     )
+    # External sources used only by appended editorial supplements/corrections.
+    # Local document provenance is normalized in document_basis_documents.
+    basis_external_sources: Mapped[list[dict[str, str]]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
@@ -96,6 +104,16 @@ class Document(Base):
     )
     related_artwork_links: Mapped[list[DocumentArtwork]] = relationship(
         back_populates="document",
+        passive_deletes=True,
+    )
+    basis_links: Mapped[list[DocumentBasis]] = relationship(
+        foreign_keys="DocumentBasis.document_id",
+        back_populates="document",
+        passive_deletes=True,
+    )
+    used_as_basis_links: Mapped[list[DocumentBasis]] = relationship(
+        foreign_keys="DocumentBasis.basis_document_id",
+        back_populates="basis_document",
         passive_deletes=True,
     )
 
@@ -164,6 +182,36 @@ class DocumentArtwork(Base):
 
     document: Mapped[Document] = relationship(back_populates="related_artwork_links")
     artwork: Mapped[Artwork] = relationship(back_populates="related_document_links")
+
+
+class DocumentBasis(Base):
+    """A collected document used to write an appended supplement or correction."""
+
+    __tablename__ = "document_basis_documents"
+    __table_args__ = (
+        Index("idx_document_basis_basis", "basis_document_id", "document_id"),
+        TABLE_OPTIONS,
+    )
+
+    document_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("documents.id", name="fk_document_basis_document", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    basis_document_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("documents.id", name="fk_document_basis_basis", ondelete="CASCADE"),
+        primary_key=True,
+    )
+
+    document: Mapped[Document] = relationship(
+        foreign_keys=[document_id],
+        back_populates="basis_links",
+    )
+    basis_document: Mapped[Document] = relationship(
+        foreign_keys=[basis_document_id],
+        back_populates="used_as_basis_links",
+    )
 
 
 class DocumentChunk(Base):

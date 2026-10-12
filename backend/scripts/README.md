@@ -17,7 +17,7 @@ FK 때문에 부모 테이블부터 채워야 합니다. 아래 순서대로 실
 | 순서 | 파일 | 읽는 것 | 쓰는 테이블 |
 | --- | --- | --- | --- |
 | 1 | `load_catalog.py` | `data/processed/`의 사조·작가·작품 | `art_movements`, `artists`, `artworks` |
-| 2 | `load_documents.py` | `data/processed/`의 문서 | `documents`, `document_artists`, `document_artworks` |
+| 2 | `load_documents.py` | `data/processed/`의 문서 | `documents`, `document_artists`, `document_artworks`, `document_basis_documents` |
 | 3 | `build_chunks.py` | `documents` | `document_chunks` (청킹 + 임베딩) |
 | 4 | `build_artwork_embeddings.py` | `artworks` | `artwork_embeddings` |
 | 5 | `seed_demo_users.py` | (없음) | `users`, `artwork_likes` 등 발표용 계정 |
@@ -38,6 +38,7 @@ uv run python -m scripts.preprocess
 
 - **여러 번 돌려도 안전하게**: 사조·작가·작품은 `slug`를 기준으로 있으면 갱신하고 없으면 추가합니다. 자동 증가 id는 실행할 때마다 달라질 수 있어 기준 키로 쓰지 않습니다.
 - **문서 갱신**: 문서는 `doc_key`를 기준으로 갱신합니다. 본문이 바뀐 문서만 기존 청크를 지우고 다시 청킹·임베딩합니다.
+- **편집 근거 보존**: `basis_doc_keys`는 모든 문서를 upsert한 뒤 `document_basis_documents`에 연결하고, `basis_external_sources`는 `documents`의 JSON 컬럼에 그대로 넣습니다.
 - **작품 벡터의 원문**: 제목, 사조, 재료·기법, 주제 설명을 한 덩어리로 만들어 임베딩합니다. 작가 이름을 넣으면 같은 작가 작품끼리 더 가까워지므로 넣을지 팀에서 정합니다.
 - **임베딩 모델 기록**: 벡터를 넣을 때 `embedding_model` 컬럼에 모델 이름을 함께 넣습니다.
 - **API 비용**: 임베딩은 여러 건을 묶어 호출하고, 이미 같은 모델로 만든 벡터는 건너뜁니다.

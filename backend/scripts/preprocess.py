@@ -41,6 +41,8 @@ SUCCESS = OUT / "_SUCCESS.json"
 FAILED = OUT / "_FAILED.json"
 MAPPING = ROOT / "data" / "mappings" / "catalog.json"
 REVIEWS = ROOT / "data" / "mappings" / "reviews.json"
+SUPPLEMENTS = ROOT / "data" / "mappings" / "document_supplements.json"
+CORRECTIONS = ROOT / "data" / "mappings" / "document_corrections.json"
 ALIASES = ROOT / "data" / "mappings" / "artist_aliases.json"
 OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl", "artist_aliases.jsonl")
 
@@ -53,13 +55,20 @@ REVIEWED = {"검수 완료", "reviewed", "approved"}
 
 # 위키백과 문서에서 통째로 버리는 섹션 (본문이 아닌 목록·링크)
 DROP_SECTIONS = {
-    "같이 보기", "각주", "내용주", "참고 문헌", "참고문헌", "외부 링크", "갤러리", "읽을거리", "출처",
+    "같이 보기", "각주", "내용주", "참고 문헌", "참고문헌", "참고 자료", "외부 링크", "갤러리", "읽을거리", "출처",
     "See also", "References", "Notes", "External links", "Further reading", "Gallery", "Sources",
     "Bibliography", "Citations", "Footnotes", "In popular culture", "Works about Rembrandt",
     "Literary works (e.g. poetry and fiction)", "Music", "Films", "Exhibitions", "Museum collections",
     "Selected works", "Paintings", "Drawings and etchings", "Other major paintings",
 }
 HEADING = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
+# 백과사전·박물관 원문(마크다운 제목)에서 버리는 섹션. 번역본의 '## 출처'(소장 이력)는 본문이므로 위 목록을 쓰지 않는다
+MD_DROP_SECTIONS = {"참고문헌", "참고 문헌", "참고 자료", "주석"}
+MD_HEADING = re.compile(r"^(#{2,4}) (.+)$", re.MULTILINE)
+NOTE_MARK = re.compile(r"(?<=[^\s\d])주\d{1,2}(?!\d)")  # 백과사전 본문의 주석 번호: 방고(倣古)주1 행위
+# 박물관 사이트가 EUC-KR 밖의 한자를 '?'로 내보낸 곳. 원문 파일은 수집 해시가 있어 고치지 않고 여기서 복원한다
+LOST_HANJA = {"준법(?法)": "준법(皴法)", "사천(?川)": "사천(槎川)", "수직준(垂直?)": "수직준(垂直皴)",
+              "화보식(?譜式)": "화보식(畫譜式)", "학창의(鶴?衣)": "학창의(鶴氅衣)"}
 # 한국어·로마자 문서에 섞이면 안 되는 문자 (기계 번역이 단어 일부를 다른 언어로 내놓는 경우)
 FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿऀ-ॿ฀-๿぀-ヿ]")
 FOOTNOTE = re.compile(r"\[(?:\*|\d{1,3}|편집|출처 필요)\]")  # 위키 각주 표식
@@ -81,8 +90,36 @@ warnings: list[str] = []
 
 
 # ---------------------------------------------------------------- 정제
+def clean_markdown(text: str) -> str:
+    """마크다운 제목 원문에서 참고문헌·주석 섹션과 본문의 주석 번호를 지우고, '?'로 깨진 한자를 복원한다.
+
+    머리말과 똑같은 문장만 담은 섹션(백과사전의 '정의')도 지운다. 같은 문장이 두 청크에 들어가지 않게 하려는 것.
+    """
+    text = NOTE_MARK.sub("", text)  # 주석 섹션을 빼고 수집한 원문에도 번호가 남아 있다
+    for lost, hanja in LOST_HANJA.items():
+        text = text.replace(lost, hanja)
+    parts = MD_HEADING.split(text)  # [앞부분, #, 제목, 본문, #, 제목, 본문, ...]
+    if len(parts) == 1:
+        return text
+    out, seen, skip_level = [parts[0]], {parts[0].strip()}, None
+    for i in range(1, len(parts), 3):
+        level, title, body = len(parts[i]), parts[i + 1].strip(), parts[i + 2]
+        if skip_level is not None and level > skip_level:
+            continue
+        skip_level = None
+        if title in MD_DROP_SECTIONS:
+            skip_level = level
+            continue
+        if body.strip() and body.strip() in seen:
+            continue
+        seen.add(body.strip())
+        out.append(f"{parts[i]} {parts[i + 1]}{body}")
+    return "".join(out)
+
+
 def clean_wiki(text: str) -> str:
     """위키 문법 제목을 마크다운 제목으로 바꾸고, 목록·링크 섹션과 빈 섹션을 지운다. 본문은 고치지 않는다."""
+    text = clean_markdown(text)
     parts = HEADING.split(text)  # [앞부분, 등호, 제목, 본문, 등호, 제목, 본문, ...]
     sections = []  # (level, title, body)
     skip_level = None
@@ -201,7 +238,7 @@ def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
             "doc_type": s["doc_type"], "title": title, "content": content,
             "artist_slugs": s.get("artist_slugs") or [], "artwork_slug": s.get("artwork_slug"),
             "source_url": s["source_url"], "source_name": source_name, "license": s.get("license"),
-            "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": [],
+            "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": s.get("related_artwork_slugs") or [],
             "needs_review": needs_review,
         })
     cat["artists"][slug] = {k: artist.get(k) for k in ARTIST_FIELDS}
@@ -329,6 +366,7 @@ def validate(cat: dict) -> list[str]:
         if not w.get("description"):
             warnings.append(f"작품 {w['slug']}: 카드 설명 없음 (한국어 해설 문서가 없음)")
     keys = set()
+    all_doc_keys = {d["doc_key"] for d in cat["documents"]}
     for d in cat["documents"]:
         k = d["doc_key"]
         if k in keys:
@@ -353,6 +391,12 @@ def validate(cat: dict) -> list[str]:
         for s in d["related_artwork_slugs"]:
             if s not in artworks:
                 errors.append(f"문서 {k}: 관련 작품 '{s}' 없음")
+        for basis in d.get("basis_doc_keys", []):
+            if basis not in all_doc_keys:
+                errors.append(f"문서 {k}: 편집 근거 문서 '{basis}' 없음")
+        for source in d.get("basis_external_sources", []):
+            if not source.get("source_name") or not source.get("source_url"):
+                errors.append(f"문서 {k}: 외부 편집 근거의 source_name/source_url 없음")
         if m := FOREIGN_SCRIPT.search(d["content"]):
             around = d["content"][max(0, m.start() - 10):m.end() + 10].replace("\n", " ")
             warnings.append(f"문서 {k}: 본문에 다른 언어 문자가 섞임 '…{around}…'")
@@ -451,7 +495,10 @@ def build() -> dict:
             continue
         read_timeline(folder, cat)
     read_comparisons(RAW / "_comparisons", cat)
+    initialize_editorial_metadata(cat)
     apply_overrides(cat, mapping)
+    apply_document_supplements(cat, read_document_supplements())
+    apply_document_corrections(cat, read_document_corrections())
     apply_reviews(cat, read_reviews())
     cat["aliases"] = json.loads(ALIASES.read_text(encoding="utf-8"))["artists"]
     normalize_artist_slugs(cat)
@@ -503,6 +550,77 @@ def read_reviews() -> dict:
     if not REVIEWS.exists():
         return {}
     return json.loads(REVIEWS.read_text(encoding="utf-8"))["reviews"]
+
+
+def read_document_supplements() -> dict:
+    """원문을 손대지 않고 짧은 문서에 덧붙일, 출처 기반의 편집 보충문을 읽는다."""
+    if not SUPPLEMENTS.exists():
+        return {}
+    return json.loads(SUPPLEMENTS.read_text(encoding="utf-8"))["documents"]
+
+
+def read_document_corrections() -> dict:
+    """원문을 보존하면서 RAG 답변에 반영할 최신 정보·해석상 주의사항을 읽는다."""
+    if not CORRECTIONS.exists():
+        return {}
+    return json.loads(CORRECTIONS.read_text(encoding="utf-8"))["documents"]
+
+
+def initialize_editorial_metadata(cat: dict) -> None:
+    """편집 보강이 없는 문서도 같은 출력 스키마를 갖게 한다."""
+    for d in cat["documents"]:
+        d["basis_doc_keys"] = []
+        d["basis_external_sources"] = []
+
+
+def merge_editorial_basis(d: dict, entry: dict) -> None:
+    """보충·보정 근거를 중복 없이 최종 문서 메타데이터에 합친다."""
+    d.setdefault("basis_doc_keys", [])
+    d.setdefault("basis_external_sources", [])
+    for key in entry.get("basis_doc_keys", []):
+        if key not in d["basis_doc_keys"]:
+            d["basis_doc_keys"].append(key)
+    for source in entry.get("basis_external_sources", []):
+        if source not in d["basis_external_sources"]:
+            d["basis_external_sources"].append(source)
+
+
+def apply_document_supplements(cat: dict, supplements: dict) -> None:
+    """작품별 보충문을 '감상 포인트' 절로 붙인다. 검수 해시는 합쳐진 최종 본문을 기준으로 계산한다."""
+    docs = {d["doc_key"]: d for d in cat["documents"]}
+    for key, supplement in supplements.items():
+        d = docs.get(key)
+        if d is None:
+            warnings.append(f"보충문 대상 문서 '{key}' 가 없음")
+            continue
+        missing_basis = [basis for basis in supplement.get("basis_doc_keys", []) if basis not in docs]
+        if missing_basis:
+            warnings.append(f"문서 {key}: 보충문 근거 문서가 없음 ({', '.join(missing_basis)})")
+        content = clean_wiki(supplement.get("content", ""))
+        if not content:
+            warnings.append(f"문서 {key}: 보충문 내용이 비어 있음")
+            continue
+        merge_editorial_basis(d, supplement)
+        d["content"] = f"{d['content'].rstrip()}\n\n## 감상 포인트\n{content}"
+
+
+def apply_document_corrections(cat: dict, corrections: dict) -> None:
+    """수집 원문을 고치지 않고 최신 사실·불확실성·절단 주의를 RAG 본문 뒤에 붙인다."""
+    docs = {d["doc_key"]: d for d in cat["documents"]}
+    for key, correction in corrections.items():
+        d = docs.get(key)
+        if d is None:
+            warnings.append(f"보정문 대상 문서 '{key}' 가 없음")
+            continue
+        missing_basis = [basis for basis in correction.get("basis_doc_keys", []) if basis not in docs]
+        if missing_basis:
+            warnings.append(f"문서 {key}: 보정문 근거 문서가 없음 ({', '.join(missing_basis)})")
+        content = clean_wiki(correction.get("content", ""))
+        if not content:
+            warnings.append(f"문서 {key}: 보정문 내용이 비어 있음")
+            continue
+        merge_editorial_basis(d, correction)
+        d["content"] = f"{d['content'].rstrip()}\n\n## 답변 시 주의\n{content}"
 
 
 def apply_reviews(cat: dict, reviews: dict) -> None:

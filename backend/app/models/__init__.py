@@ -7,6 +7,7 @@ from app.models.document import (
     Document,
     DocumentArtist,
     DocumentArtwork,
+    DocumentBasis,
     DocumentChunk,
     DocumentType,
 )
@@ -26,6 +27,7 @@ __all__ = [
     "Document",
     "DocumentArtist",
     "DocumentArtwork",
+    "DocumentBasis",
     "DocumentChunk",
     "DocumentType",
     "User",

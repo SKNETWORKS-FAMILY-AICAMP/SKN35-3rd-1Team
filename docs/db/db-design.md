@@ -4,7 +4,7 @@ Oct 9, 2026 · @고태민
 
 ## 1. 권장 구조
 
-TiDB Cloud Starter 클러스터 하나에 테이블 12개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·채팅 저장·추천 캐시는 MVP에서 뺍니다.
+TiDB Cloud Starter 클러스터 하나에 테이블 13개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·채팅 저장·추천 캐시는 MVP에서 뺍니다.
 
 ### 핵심 결정
 
@@ -32,6 +32,7 @@ TiDB Cloud Starter 클러스터 하나에 테이블 12개를 두고 사용자 �
 | `documents` | 생애·해설·비교 문서 원문과 출처 | 3·10번 |
 | `document_artists` | 문서와 작가 연결(N:M) | 3번 검색 범위 결정 |
 | `document_artworks` | 문서가 언급하는 작품(N:M). 연표 사건 → 작품 | 3번, 작품에서 생애 이야기 찾기 |
+| `document_basis_documents` | 편집 보충·보정문과 근거 수집 문서 연결(N:M) | 3번 답변 출처 확장 |
 | `document_chunks` | 문서 청크와 청크 벡터 | 3·10번 RAG 검색 |
 | `artwork_likes` | 작품 좋아요 | 4·5·6번 |
 | `artist_follows` | 작가 팔로우 | 7번, 작가 추천 제외 조건 |
@@ -82,6 +83,8 @@ erDiagram
     artists ||--o{ document_artists : "생애·비교 문서"
     documents ||--o{ document_artworks : "언급 작품"
     artworks ||--o{ document_artworks : "연표 등에서 언급"
+    documents ||--o{ document_basis_documents : "편집 보강"
+    documents ||--o{ document_basis_documents : "근거 문서"
     documents ||--o{ document_chunks : "청크"
 
     users {
@@ -153,6 +156,7 @@ erDiagram
         varchar lang "ko / en"
         varchar topic "생애 문서의 성격"
         tinyint needs_review "검토 전이면 1"
+        json basis_external_sources "외부 공식 보정 근거"
         datetime created_at
         datetime updated_at
     }
@@ -163,6 +167,10 @@ erDiagram
     document_artworks {
         bigint document_id PK, FK
         bigint artwork_id PK, FK
+    }
+    document_basis_documents {
+        bigint document_id PK, FK
+        bigint basis_document_id PK, FK
     }
     document_chunks {
         bigint id PK
@@ -611,6 +619,7 @@ CREATE TABLE documents (
   lang        VARCHAR(8)    NOT NULL DEFAULT 'ko',
   topic       VARCHAR(30)   NULL,
   needs_review TINYINT(1)   NOT NULL DEFAULT 0,
+  basis_external_sources JSON NOT NULL,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -618,6 +627,18 @@ CREATE TABLE documents (
   KEY idx_documents_artwork (artwork_id),
   CONSTRAINT fk_documents_artwork FOREIGN KEY (artwork_id)
     REFERENCES artworks (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- 7-2. 편집 보충·보정문이 근거로 삼은 수집 문서 (마이그레이션 20261012_0003)
+CREATE TABLE document_basis_documents (
+  document_id       BIGINT NOT NULL,
+  basis_document_id BIGINT NOT NULL,
+  PRIMARY KEY (document_id, basis_document_id),
+  KEY idx_document_basis_basis (basis_document_id, document_id),
+  CONSTRAINT fk_document_basis_document FOREIGN KEY (document_id)
+    REFERENCES documents (id) ON DELETE CASCADE,
+  CONSTRAINT fk_document_basis_basis FOREIGN KEY (basis_document_id)
+    REFERENCES documents (id) ON DELETE CASCADE
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- 7. 문서-작가 연결 (생애 1행, 비교 2행 이상)
