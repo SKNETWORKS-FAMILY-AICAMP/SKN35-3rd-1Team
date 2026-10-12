@@ -1,0 +1,53 @@
+name: artlog_web
+description: 작품을 발견하고 감상을 기록하는 아트로그 Flutter 웹.
+publish_to: none
+version: 1.0.0+1
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  go_router: ^16.3.0
+  http: ^1.5.0
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.2
+  cupertino_icons: ^1.0.8
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/catalog.json
+    - assets/fonts/licenses.json
+    - public/artworks/
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR-400.ttf
+        - asset: assets/fonts/NotoSansKR-500.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansKR-600.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansKR-700.ttf
+          weight: 700
+    - family: NotoSerifKR
+      fonts:
+        - asset: assets/fonts/NotoSerifKR-400.ttf
+        - asset: assets/fonts/NotoSerifKR-500.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSerifKR-600.ttf
+          weight: 600
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans-400.ttf
+        - asset: assets/fonts/DMSans-600.ttf
+          weight: 600
+    - family: Cormorant
+      fonts:
+        - asset: assets/fonts/CormorantGaramond-400.ttf
+        - asset: assets/fonts/CormorantGaramond-600.ttf
+          weight: 600
