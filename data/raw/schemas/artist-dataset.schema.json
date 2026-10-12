@@ -205,7 +205,7 @@
         "artwork_slug": { "$ref": "#/$defs/slug" },
         "content": {
           "type": "string",
-          "minLength": 500,
+          "minLength": 1000,
           "allOf": [
             { "pattern": "\\[기본 정보\\]" },
             { "pattern": "\\[화면 관찰\\]" },
