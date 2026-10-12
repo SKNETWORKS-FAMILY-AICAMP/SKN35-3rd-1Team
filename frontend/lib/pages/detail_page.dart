@@ -1,0 +1,367 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../models.dart';
+import '../state.dart';
+import '../ui/design.dart';
+import '../ui/docent_chat.dart';
+
+class DetailPage extends StatefulWidget {
+  const DetailPage({super.key, required this.id});
+  final String id;
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  Future<Artwork>? future;
+  Future<List<Artwork>>? related;
+  bool info = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    future ??= _load();
+  }
+
+  Future<Artwork> _load() async {
+    final s = ArtlogScope.of(context);
+    final art = await s.detail(widget.id);
+    related = s.similar(art);
+    unawaited(
+      s.recordView(art.id).catchError((Object e) {
+        if (mounted) showError(context, e);
+      }),
+    );
+    return art;
+  }
+
+  @override
+  Widget build(BuildContext context) => PageWidth(
+    vertical: 30,
+    child: FutureBuilder<Artwork>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return EmptyView(
+            ArtlogState.message(snapshot.error!),
+            action: ArtButton(
+              '다시 불러오기',
+              onTap: () => setState(() => future = _load()),
+            ),
+          );
+        }
+        if (!snapshot.hasData) {
+          return const SizedBox(
+            height: 500,
+            child: Center(child: CircularProgressIndicator(color: green)),
+          );
+        }
+        final art = snapshot.data!,
+            s = ArtlogScope.of(context),
+            artist = s.artistFor(art.artistId);
+        final left = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: compact(context) ? 340 : 440,
+              decoration: BoxDecoration(
+                color: const Color(0xffeeeee5),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(25),
+                    child: ArtImage(
+                      art.image,
+                      fit: BoxFit.contain,
+                      label: art.title,
+                    ),
+                  ),
+                  Positioned(
+                    right: 12,
+                    bottom: 12,
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(
+                        backgroundColor: paper.withValues(alpha: 0.9),
+                      ),
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (c) => Dialog.fullscreen(
+                          backgroundColor: const Color(0xff17241c),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: InteractiveViewer(
+                                  minScale: 0.8,
+                                  maxScale: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(40),
+                                    child: ArtImage(
+                                      art.image,
+                                      fit: BoxFit.contain,
+                                      label: art.title,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 15,
+                                right: 15,
+                                child: IconButton(
+                                  tooltip: '확대 화면 닫기',
+                                  onPressed: () => Navigator.pop(c),
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 15,
+                                left: 20,
+                                child: Text(
+                                  '${s.artistName(art)} · ${art.title}',
+                                  style: sans(12, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      icon: const Icon(Icons.open_in_full, size: 15),
+                      label: Text('크게 보기', style: sans(10)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 25),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Eyebrow('${s.movementName(art)} · ${art.year}'),
+                      const SizedBox(height: 9),
+                      Text(art.title, style: serif(29)),
+                      Text(art.titleEn, style: english(24, color: muted)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                OutlinedButton.icon(
+                  onPressed: s.pendingLikes.contains(art.id)
+                      ? null
+                      : () => likeArtwork(context, art),
+                  icon: Icon(
+                    s.likes.contains(art.id)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    size: 17,
+                  ),
+                  label: Text(
+                    s.likes.contains(art.id) ? '담았어요' : '좋아요',
+                    style: sans(11),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            if (artist != null)
+              Row(
+                children: [
+                  ClipOval(child: ArtImage(art.image, width: 42, height: 42)),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => context.go('/artist/${art.artistId}'),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.artistName(art),
+                            style: sans(12, weight: FontWeight.w600),
+                          ),
+                          Text(
+                            '${artist.english} · ${artist.years}',
+                            style: sans(10, color: muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: s.pendingFollows.contains(artist.id)
+                        ? null
+                        : () => followArtist(context, artist),
+                    icon: Icon(
+                      s.follows.contains(artist.id) ? Icons.check : Icons.add,
+                      size: 15,
+                    ),
+                    label: Text(
+                      s.follows.contains(artist.id) ? '팔로잉' : '작가 팔로우',
+                      style: sans(11),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                _tab('감상 노트', !info, () => setState(() => info = false)),
+                const SizedBox(width: 26),
+                _tab('작품 정보 · 출처', info, () => setState(() => info = true)),
+              ],
+            ),
+            const Divider(height: 1),
+            const SizedBox(height: 23),
+            if (!info) ...[
+              Text(
+                '잠시 멈추어, 그림을 바라보세요.',
+                style: sans(13, weight: FontWeight.w600),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                art.description.isEmpty
+                    ? '작품에서 느껴지는 첫인상을 도슨트와 나눠보세요.'
+                    : art.description,
+                style: sans(14, color: muted, height: 2),
+              ),
+              const SizedBox(height: 17),
+              Text('작품에서 느껴지는 첫인상을 도슨트와 나눠보세요.', style: sans(11, color: muted)),
+            ] else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final entry in [
+                    ('작가', s.artistName(art)),
+                    ('제작 시기', art.year),
+                    ('재료', art.medium),
+                    ('크기', art.dimensions),
+                    ('소장처', art.collection),
+                    ('이미지 이용', art.imageLicense),
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 80,
+                            child: Text(
+                              entry.$1,
+                              style: sans(11, color: muted),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              entry.$2.isEmpty ? '정보 확인 중' : entry.$2,
+                              style: sans(12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (art.sourceUrl.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: () => openSource(context, art.sourceUrl),
+                      icon: const Icon(Icons.open_in_new, size: 14),
+                      label: const Text('원본 작품 정보와 이용 조건'),
+                    ),
+                ],
+              ),
+          ],
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextButton.icon(
+              onPressed: () => context.go('/gallery'),
+              icon: const Icon(Icons.arrow_back, size: 15),
+              label: Text(
+                '작품 둘러보기  ›  ${s.artistName(art)}',
+                style: sans(11, color: muted),
+              ),
+            ),
+            const SizedBox(height: 20),
+            LayoutBuilder(
+              builder: (context, c) => c.maxWidth > 800
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: left),
+                        const SizedBox(width: 38),
+                        Expanded(child: DocentChat(art, key: ValueKey(art.id))),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        left,
+                        const SizedBox(height: 32),
+                        DocentChat(art, key: ValueKey(art.id)),
+                      ],
+                    ),
+            ),
+            const SizedBox(height: 55),
+            const Divider(),
+            const SizedBox(height: 25),
+            SectionTitle(
+              eyebrow: 'CONTINUE YOUR JOURNEY',
+              title: '다음 그림으로 이어지는 이야기',
+              subtitle: s.config.demo
+                  ? '작가와 사조를 따라 골라본 미리보기 작품이에요.'
+                  : '이 작품과 함께 살펴볼 만한 그림이에요.',
+            ),
+            const SizedBox(height: 25),
+            FutureBuilder<List<Artwork>>(
+              future: related,
+              builder: (context, r) {
+                if (r.hasError) {
+                  return EmptyView(
+                    '추천 작품을 불러오지 못했어요.',
+                    action: ArtButton(
+                      '추천 다시 보기',
+                      outline: true,
+                      onTap: () => setState(() => related = s.similar(art)),
+                    ),
+                  );
+                }
+                if (!r.hasData) {
+                  return const Padding(
+                    padding: EdgeInsets.all(30),
+                    child: Center(
+                      child: CircularProgressIndicator(color: green),
+                    ),
+                  );
+                }
+                if (r.data!.isEmpty) {
+                  return const EmptyView('다음 그림을 준비하고 있어요.');
+                }
+                return ArtworkGrid(r.data!, maxColumns: 3);
+              },
+            ),
+            const SizedBox(height: 25),
+          ],
+        );
+      },
+    ),
+  );
+  Widget _tab(String label, bool selected, VoidCallback onTap) => InkWell(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Text(
+        label,
+        style: sans(
+          12,
+          color: selected ? green : muted,
+          weight: selected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+    ),
+  );
+}
