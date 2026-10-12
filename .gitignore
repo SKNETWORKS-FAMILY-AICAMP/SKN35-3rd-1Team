@@ -3,6 +3,8 @@
 .env.*
 !.env.example
 *.pem
+.secrets/
+**/*firebase-adminsdk*.json
 
 # Python
 __pycache__/

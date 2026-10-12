@@ -4,7 +4,7 @@
 
 - Firebase: `skn35-3rd-1team`, 웹앱 `Artlog Web`.
 - Vercel: `artlog-skn35-1team`, `SEUNGHEE LEE’s projects` 계정.
-- 앱은 Flutter Web이며 이번 코드 변경은 `frontend/`에만 있습니다. 최신 dev 반영은 Git 병합으로 수행합니다.
+- 앱은 Flutter Web이며 서버는 FastAPI·TiDB입니다. 최신 dev를 lsh에 병합하고 Firebase 서버 토큰 검증도 구현했습니다.
 
 ## Firebase 설정
 
@@ -19,13 +19,13 @@ Firebase SDK는 LOCAL persistence로 로그인 상태를 복원합니다. 앱이
 | 변수 | 값 / 역할 |
 | --- | --- |
 | `AUTH_PROVIDER` | `firebase` |
-| `ARTLOG_DEMO` | 현재 `true`: 서버 API가 준비될 때까지 작품 미리보기 |
+| `ARTLOG_DEMO` | `false`: Railway 실제 API 사용 |
 | `FIREBASE_API_KEY` | Firebase 웹앱 apiKey |
 | `FIREBASE_APP_ID` | Firebase 웹 appId |
 | `FIREBASE_MESSAGING_SENDER_ID` | 웹앱 messagingSenderId |
 | `FIREBASE_PROJECT_ID` | `skn35-3rd-1team` |
 | `FIREBASE_AUTH_DOMAIN` | `skn35-3rd-1team.firebaseapp.com` |
-| `API_BASE_URL` | 실제 API 모드 전환 시 HTTPS 서버 주소 |
+| `API_BASE_URL` | `https://skn35-3rd-1team-production.up.railway.app/` |
 
 `firebase.config.example.json`을 참고합니다. 공개 웹앱 설정은 Vercel 환경변수에서 주입하며 생성된 `.dart-defines*.json` 파일은 Git·배포 소스에서 제외합니다. 빌드 스크립트는 위의 허용된 값만 읽으므로 배포 계정 토큰·서비스 계정 키를 번들에 넣지 않습니다. Firebase 모드 필수 값이 없거나 실제 API 모드의 HTTPS 서버 주소가 없으면 빌드를 중단합니다.
 
@@ -48,17 +48,46 @@ CLI로 `frontend/` 자체를 올릴 때 프로젝트 Root Directory는 `.`를 �
 
 ## API 전환
 
-백엔드가 Firebase ID 토큰을 검증하고 UID를 내부 사용자에 매핑해야 합니다. 이메일 로그인에 성공했다고 기존 FastAPI JWT와 호환되는 것은 아닙니다. 서버 담당자에게 [엔드포인트 점검표](endpoints.md)의 Firebase 인증 항목을 전달하세요. 서버 구현은 이번 작업 범위에 포함하지 않았습니다.
+서버는 `AUTH_MODE=firebase`일 때 Admin SDK로 ID 토큰을 검증하고 UID를 TiDB 사용자에 매핑합니다. JSON 비밀 환경변수 `FIREBASE_SERVICE_ACCOUNT_JSON` 또는 서버 파일 경로 `GOOGLE_APPLICATION_CREDENTIALS`, 프로젝트 ID `skn35-3rd-1team`이 필요합니다. 로컬 `.env`의 파일 경로도 지원합니다. 서버 키는 프론트엔드에 넣지 않습니다.
+
+Railway는 아직 `AUTH_MODE=dev`입니다. Railway 담당자가 dev 병합·배포와 서버 인증 정보 설정을 마친 뒤 `firebase`로 전환합니다. 그 전에는 로그인 사용자의 서버 기록이 개발 사용자 한 명에게 모입니다. 상세 경로와 기능별 준비 상태는 [엔드포인트 점검표](endpoints.md)를 참고하세요.
 
 ## 검증
 
 `flutter analyze`, `flutter test`, `node --test scripts/*.test.mjs`, Firebase 설정을 포함한 release 빌드로 확인합니다. 로그인 화면은 모바일 크기와 계정 분리·로그아웃·복원·토큰 갱신을 테스트합니다. 실제 운영 계정의 비밀번호 재설정은 테스트를 위해 실행하지 않습니다.
 
 
-## 현재 배포 결과
+## 이전 미리보기 배포 기록
 
 2026-10-12 운영 배포 `dpl_2ASeA6t6aXAcTfsYsY3xTLcLZz9E`가 READY 상태입니다. 주소는 https://artlog-skn35-1team.vercel.app 이며 프론트엔드 폴더만 CLI로 업로드했습니다. 최종 빌드는 약 3분 소요됐습니다. Git 자동 배포는 아직 연결하지 않았습니다. 현재 프로젝트 Root Directory는 `.`이며, Git 자동 배포를 설정할 경우에만 `frontend`로 바꾸어야 합니다.
 
 Firebase 이메일/비밀번호 활성화, 웹앱 등록, 운영 도메인 추가와 Vercel의 Production·Preview·Development 환경변수 교체를 완료했습니다. Firebase Auth REST API로 임시 계정 가입 → 비밀번호 로그인 → 계정 조회를 확인했으며, 같은 실행의 `finally` 단계에서 즉시 삭제했습니다. 테스트 비밀번호와 토큰은 파일에 저장하거나 출력하지 않았습니다. 브라우저의 로그인 복원·계정별 기록 분리는 자동 테스트의 가짜 세션으로 검증했으며 실제 계정의 브라우저 복원 성공과 구분합니다.
 
 운영 번들의 프로젝트 ID·웹앱 ID가 팀 설정과 일치하며, 운영 브라우저에서 존재하지 않는 계정의 로그인 요청 후 한국어 오류 안내가 표시되는 것을 확인했습니다. 해당 브라우저 검사에서 콘솔 오류·경고는 없었습니다. 실제 사용자 계정의 비밀번호나 재설정 메일은 검증에 사용하지 않았습니다.
+
+
+## 실제 API·Firebase 서버 검증 (2026-10-12)
+
+Vercel Production·Preview·Development의 `API_BASE_URL`을 Railway 주소로, `ARTLOG_DEMO`를 `false`로 변경했습니다. 실제 카탈로그는 사조 4개·작가 8명·작품 219점입니다. 도슨트·유사 작품·맞춤 추천은 아직 서버가 501을 반환합니다. 도슨트는 준비 중 안내를, 유사 작품은 조회 실패 안내를 표시합니다.
+
+승인받아 Firebase 서비스 계정 키를 발급하고 로컬의 Git 제외 `.secrets/firebase-admin.json`에 파일 권한 600으로 보관했습니다. `.env`도 Git 제외 및 권한 600이며 TiDB 설정과 로컬 서버 키 경로만 들어 있습니다. 관리자 키·TiDB 비밀번호·ID 토큰을 Git 또는 Vercel 번들에 넣지 않았습니다.
+
+실제 Firebase 임시 계정 두 개를 가입·비밀번호 로그인해 유효 시간 3600초의 ID 토큰을 발급했습니다. 로컬 FastAPI를 `AUTH_MODE=firebase`로 실행하고 실제 Admin SDK 및 실제 TiDB를 사용해 다음을 확인했습니다.
+
+- 각 토큰의 프로젝트와 UID 검증, 서로 다른 TiDB 사용자 두 행 생성, 반복 요청 시 기존 사용자 재사용.
+- A 계정의 좋아요·팔로우·열람·캘린더·날짜별 서재 저장 및 조회. B 계정에는 A 기록이 표시되지 않음.
+- 변조한 토큰과 토큰 없는 보호 경로 요청은 401.
+- 검증 실행의 `finally`에서 임시 Firebase 계정 및 해당 UID의 TiDB 사용자·활동 행을 모두 삭제 완료.
+
+비밀번호·토큰은 메모리에서만 사용하고 출력·파일 저장하지 않았습니다. 실제 운영 Railway의 인증 전환은 담당자가 dev 병합·배포 후 진행해야 하며 위 결과는 새 서버 코드를 로컬에서 실제 외부 서비스에 연결한 검증입니다.
+
+자동 검증: 백엔드 153개, Flutter 43개, 배포 스크립트 4개 통과. Flutter 분석과 변경한 Python 파일의 Ruff 검사도 통과했습니다.
+
+
+운영 Vercel 배포 `dpl_9w8mf8ZQtZo4Vhqnh3YyXWAKBBMP`가 READY이며 `https://artlog-skn35-1team.vercel.app`에 연결되었습니다. 빌드 로그에서 `catalog=API, auth=firebase`를 확인했습니다. 공개 작품 이미지의 중간 리디렉션에 CORS 헤더가 없어 CanvasKit 로딩이 실패하는 경우 Flutter의 HTML 이미지 표시 fallback을 사용합니다. Git 자동 배포는 아직 연결하지 않았습니다.
+
+### Railway 담당자 인계
+
+Railway는 팀의 별도 담당자가 운영합니다. 이번 작업에서 해당 콘솔 설정이나 `AUTH_MODE`를 변경하지 않았습니다. 담당자는 lsh의 서버 변경을 dev로 병합·배포한 뒤 `FIREBASE_PROJECT_ID=skn35-3rd-1team`, 서버용 서비스 계정 인증 정보, `AUTH_MODE=firebase`를 설정해야 합니다. 새 키는 로컬 `.secrets/firebase-admin.json`에만 있으며 담당자에게는 비밀값을 안전하게 전달하는 팀 방식으로 공유합니다. 키 원문을 GitHub·일반 채팅·Vercel에 붙이지 않습니다.
+
+운영 브라우저에서 실제 카탈로그 219점·숫자 ID의 작품 상세와 작품 이미지 표시를 확인했습니다. 도슨트 질문은 서버의 501 응답에 준비 중 안내를 표시합니다. 검증 화면은 [실제 API 작품 상세](../verification/api-artwork-production.jpg)에 있습니다.
