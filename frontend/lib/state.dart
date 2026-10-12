@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:async';
+import 'auth/auth_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,9 +9,120 @@ import 'config.dart';
 import 'models.dart';
 
 class ArtlogState extends ChangeNotifier {
-  ArtlogState(this.config, this.api, this.prefs) {
-    api.onUnauthorized = logout;
+  ArtlogState(
+    this.config,
+    this.api,
+    this.prefs, {
+    this.session,
+    this.authError,
+  }) {
+    api.onUnauthorized = () {
+      if (session != null) {
+        libraryError = '서버에서 로그인 정보를 확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
+        notifyListeners();
+      } else {
+        unawaited(logout());
+      }
+    };
+    if (session != null) {
+      api.tokenProvider = (refresh) => session!.idToken(forceRefresh: refresh);
+      _authSubscription = session!.changes.listen(
+        _authChanged,
+        onError: (Object e) {
+          authError = '로그인 상태를 확인하지 못했어요. 새로고침해 다시 시도해 주세요.';
+          notifyListeners();
+        },
+      );
+      _authChanged(session!.user);
+    }
   }
+  final AuthSession? session;
+  String? authError, libraryError;
+  StreamSubscription<AuthUser?>? _authSubscription;
+  String _uid = '';
+  int _identityRevision = 0;
+  bool _disposed = false;
+  bool get loginRequired => config.firebaseAuth || !config.demo;
+  bool get canAuthenticate => !config.firebaseAuth || session != null;
+  String get userKey => config.firebaseAuth ? _uid : email;
+  String _localKey(String name) =>
+      config.firebaseAuth ? 'flutter.demo.$_uid.$name' : 'flutter.demo.$name';
+
+  void _loadLocalActivity() {
+    if (!authenticated) {
+      likes = {};
+      follows = {};
+      views = {};
+      return;
+    }
+    likes = (prefs.getStringList(_localKey('likes')) ?? []).toSet();
+    follows = (prefs.getStringList(_localKey('follows')) ?? []).toSet();
+    try {
+      final saved = object(
+        jsonDecode(prefs.getString(_localKey('views')) ?? '{}'),
+      );
+      views = saved.map(
+        (k, v) => MapEntry(k, (v as List).map((id) => text(id)).toList()),
+      );
+    } catch (_) {
+      views = {};
+    }
+  }
+
+  void _clearPrivateState() {
+    ++_identityRevision;
+    likes = {};
+    follows = {};
+    views = {};
+    _recorded.clear();
+    _works.clear();
+    _artists.clear();
+    libraryError = null;
+  }
+
+  void _authChanged(AuthUser? user) {
+    final uid = user?.uid ?? '';
+    if (_uid == uid && email == (user?.email ?? '')) return;
+    _clearPrivateState();
+    _uid = uid;
+    email = user?.email ?? '';
+    if (config.demo) {
+      _loadLocalActivity();
+    } else if (user != null) {
+      unawaited(reloadLibrary());
+    }
+    notifyListeners();
+  }
+
+  Future<void> reloadLibrary() async {
+    if (!authenticated) return;
+    final revision = _identityRevision;
+    libraryError = null;
+    notifyListeners();
+    if (config.demo) {
+      _loadLocalActivity();
+      notifyListeners();
+      return;
+    }
+    try {
+      final result = await Future.wait([api.likes(), api.follows()]);
+      if (revision != _identityRevision || _disposed) return;
+      likes = (result[0] as List<Artwork>).map((a) => a.id).toSet();
+      follows = (result[1] as List<Artist>).map((a) => a.id).toSet();
+      for (final a in result[0] as List<Artwork>) {
+        _works[a.id] = a;
+      }
+      for (final a in result[1] as List<Artist>) {
+        _artists[a.id] = a;
+      }
+    } catch (e) {
+      if (revision == _identityRevision) {
+        libraryError = '서재를 불러오지 못했어요. ${message(e)}';
+      }
+    }
+    if (revision == _identityRevision) notifyListeners();
+  }
+
   final AppConfig config;
   final ArtlogApi api;
   final SharedPreferences prefs;
@@ -31,7 +144,9 @@ class ArtlogState extends ChangeNotifier {
       likes.map(workFor).whereType<Artwork>().toList();
   List<Artist> get followedArtists =>
       follows.map(artistFor).whereType<Artist>().toList();
-  bool get authenticated => config.demo || api.token != null;
+  bool get authenticated => config.firebaseAuth
+      ? session?.user != null
+      : config.demo || api.token != null;
   String artistMovement(Artist a) => a.movement.isNotEmpty
       ? a.movement
       : movements.where((m) => m.id == a.movementId).firstOrNull?.name ?? '미분류';
@@ -70,19 +185,7 @@ class ArtlogState extends ChangeNotifier {
         movements = items(
           j['movements'],
         ).map((r) => Movement.fromJson(object(r))).toList();
-        likes = (prefs.getStringList('flutter.demo.likes') ?? []).toSet();
-        follows = (prefs.getStringList('flutter.demo.follows') ?? []).toSet();
-        try {
-          final saved = object(
-            jsonDecode(prefs.getString('flutter.demo.views') ?? '{}'),
-          );
-          views = saved.map(
-            (key, value) =>
-                MapEntry(key, (value as List).map((id) => text(id)).toList()),
-          );
-        } catch (_) {
-          views = {};
-        }
+        _loadLocalActivity();
       } else {
         final result = await Future.wait([
           api.artworks(),
@@ -127,51 +230,57 @@ class ArtlogState extends ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    await api.login(email, password);
-    this.email = email;
-    likes = {};
-    follows = {};
-    views = {};
-    _recorded.clear();
-    notifyListeners();
-    try {
-      final result = await Future.wait([api.likes(), api.follows()]);
-      likes = (result[0] as List<Artwork>).map((a) => a.id).toSet();
-      follows = (result[1] as List<Artist>).map((a) => a.id).toSet();
-      for (final a in result[0] as List<Artwork>) {
-        _works[a.id] = a;
-      }
-      for (final a in result[1] as List<Artist>) {
-        _artists[a.id] = a;
-      }
-      notifyListeners();
-    } catch (e) {
-      throw ApiException('로그인했지만 서재를 불러오지 못했어요. ${message(e)}');
+    if (config.firebaseAuth) {
+      final auth = session;
+      if (auth == null) throw AuthFailure(authError ?? '로그인 서비스가 준비되지 않았어요.');
+      await auth.signIn(email, password);
+      _authChanged(auth.user);
+      return;
     }
+    await api.login(email, password);
+    _clearPrivateState();
+    this.email = email;
+    notifyListeners();
+    await reloadLibrary();
   }
 
-  void logout() {
+  Future<void> register(String email, String password) async {
+    final auth = session;
+    if (auth == null) throw const AuthFailure('회원가입 서비스가 준비되지 않았어요.');
+    await auth.register(email, password);
+    _authChanged(auth.user);
+  }
+
+  Future<void> resetPassword(String email) async {
+    final auth = session;
+    if (auth == null) throw const AuthFailure('비밀번호 재설정 서비스가 준비되지 않았어요.');
+    await auth.resetPassword(email);
+  }
+
+  Future<void> logout() async {
+    if (session != null) await session!.signOut();
     api.token = null;
+    _uid = '';
     email = '';
-    likes.clear();
-    follows.clear();
-    views.clear();
-    _recorded.clear();
-    _works.clear();
-    _artists.clear();
+    _clearPrivateState();
     notifyListeners();
   }
 
   Future<void> toggleLike(String id) async {
+    if (!authenticated) {
+      throw const ApiException('로그인 후 이용할 수 있어요.', status: 401);
+    }
+    final revision = _identityRevision;
     if (pendingLikes.contains(id)) return;
     pendingLikes.add(id);
     notifyListeners();
     try {
       final enable = !likes.contains(id);
       if (!config.demo) await api.like(id, enable);
+      if (revision != _identityRevision) return;
       enable ? likes.add(id) : likes.remove(id);
       if (config.demo) {
-        await prefs.setStringList('flutter.demo.likes', likes.toList());
+        await prefs.setStringList(_localKey('likes'), likes.toList());
       }
     } finally {
       pendingLikes.remove(id);
@@ -180,15 +289,20 @@ class ArtlogState extends ChangeNotifier {
   }
 
   Future<void> toggleFollow(String id) async {
+    if (!authenticated) {
+      throw const ApiException('로그인 후 이용할 수 있어요.', status: 401);
+    }
+    final revision = _identityRevision;
     if (pendingFollows.contains(id)) return;
     pendingFollows.add(id);
     notifyListeners();
     try {
       final enable = !follows.contains(id);
       if (!config.demo) await api.follow(id, enable);
+      if (revision != _identityRevision) return;
       enable ? follows.add(id) : follows.remove(id);
       if (config.demo) {
-        await prefs.setStringList('flutter.demo.follows', follows.toList());
+        await prefs.setStringList(_localKey('follows'), follows.toList());
       }
     } finally {
       pendingFollows.remove(id);
@@ -208,7 +322,7 @@ class ArtlogState extends ChangeNotifier {
       }
       final day = views.putIfAbsent(today, () => []);
       if (!day.contains(id)) day.add(id);
-      await prefs.setString('flutter.demo.views', jsonEncode(views));
+      await prefs.setString(_localKey('views'), jsonEncode(views));
       notifyListeners();
     } catch (_) {
       _recorded.remove(key);
@@ -260,7 +374,11 @@ class ArtlogState extends ChangeNotifier {
   }
 
   String _noteKey(String date) =>
-      'flutter.notes.${config.demo ? 'demo' : email}.$date';
+      'flutter.notes.${config.firebaseAuth
+          ? 'firebase:$_uid'
+          : config.demo
+          ? 'demo'
+          : email}.$date';
   String note(String date) => prefs.getString(_noteKey(date)) ?? '';
   Future<void> saveNote(String date, String value) async {
     if (!await prefs.setString(_noteKey(date), value)) {
@@ -268,10 +386,20 @@ class ArtlogState extends ChangeNotifier {
     }
   }
 
-  static String message(Object e) =>
-      e is ApiException ? e.message : '자료를 불러오지 못했어요. 다시 시도해 주세요.';
+  static String message(Object e) => e is ApiException
+      ? e.message
+      : e is AuthFailure
+      ? e.message
+      : '자료를 불러오지 못했어요. 다시 시도해 주세요.';
+  @override
+  void notifyListeners() {
+    if (!_disposed) super.notifyListeners();
+  }
+
   @override
   void dispose() {
+    _disposed = true;
+    unawaited(_authSubscription?.cancel());
     api.close();
     super.dispose();
   }

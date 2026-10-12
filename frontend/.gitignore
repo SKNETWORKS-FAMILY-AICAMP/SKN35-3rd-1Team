@@ -12,3 +12,8 @@ dist/
 build/
 coverage/
 *.iml
+.vercel
+.firebase-web-config.json
+.dart-defines*.json
+firebase-debug.log
+firebase-debug.*.log

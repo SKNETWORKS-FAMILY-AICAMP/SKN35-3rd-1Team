@@ -14,6 +14,8 @@
 | --- | --- | --- | --- |
 | ~~POST~~ | ~~`/api/auth/login`~~ | — | Firebase Auth로 대체, 서버에 만들지 않음 |
 | ~~POST~~ | ~~`/api/auth/signup`~~ | — | Firebase Auth로 대체, 서버에 만들지 않음 |
+| POST | `/api/auth/login` | 없음 | 기존 API 인증 모드에서만 사용 / JSON 형식 임시 |
+| POST | `/api/auth/signup` | 없음 | 문서에 존재 / 가입 규격 미확정으로 호출 안 함 |
 | GET | `/api/movements` | 없음 | 목록, 일치 |
 | GET | `/api/artists` | 없음 | 목록, `movement_id` 지원 |
 | GET | `/api/artists/{artist_id}` | 없음 | 작가 상세, 일치 |
@@ -30,6 +32,16 @@
 | GET | `/api/artworks/{artwork_id}/similar` | 없음 | 관련 작품, 일치 |
 | GET | `/api/me/recommendations/artworks` | 필요 | 클라이언트 메서드 준비, 현재 화면에서 호출 안 함 |
 | GET | `/api/me/recommendations/artists` | 필요 | 클라이언트 메서드 준비, 현재 화면에서 호출 안 함 |
+
+## Firebase 인증 모드
+
+`AUTH_PROVIDER=firebase`에서는 Firebase SDK의 이메일 로그인·회원가입·비밀번호 재설정을 사용합니다. 기존 `/api/auth/login`, `/api/auth/signup`으로 Firebase 비밀번호나 ID 토큰을 보내지 않습니다. 문서에 없는 토큰 교환 엔드포인트도 추가하지 않았습니다.
+
+API 모드에서 보호된 요청은 Firebase의 `getIdToken()`으로 얻은 토큰을 Bearer 헤더로 보냅니다. 401이면 강제로 토큰을 갱신해 한 번만 재시도하고, 계속 거절되면 오류를 표시합니다. 서버가 아직 Firebase ID 토큰을 검증하지 못하는 경우를 로그인 실패와 구분하기 위해 Firebase 계정을 강제로 로그아웃시키지 않습니다.
+
+**백엔드 담당자 필요 사항:** Firebase Admin SDK 또는 검증된 JWT 검증기로 ID 토큰을 검증하고 `uid`를 내부 사용자와 매핑해야 합니다. 프로젝트 ID는 `skn35-3rd-1team`입니다. 프론트엔드의 로그인 표시 자체는 서버 자원 접근 권한을 부여하지 않습니다. 이번 작업에서는 백엔드를 수정하지 않았습니다.
+
+현재 배포는 `ARTLOG_DEMO=true` + Firebase 인증입니다. 작품 12점·도슨트 예시·감상 기록은 미리보기이며, 로그인은 실제 Firebase로 처리합니다. 서버 API를 연결할 때는 `ARTLOG_DEMO=false`와 HTTPS `API_BASE_URL`을 설정해야 합니다.
 
 ## 도슨트
 

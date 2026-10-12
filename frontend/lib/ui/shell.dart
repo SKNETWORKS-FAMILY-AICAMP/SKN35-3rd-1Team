@@ -202,19 +202,19 @@ class _Header extends StatelessWidget {
                 ),
               if (!mobile)
                 IconButton(
-                  tooltip: state.config.demo
+                  tooltip: !state.loginRequired
                       ? '나의 감상 기록'
                       : state.authenticated
                       ? '계정'
                       : '로그인',
                   icon: Icon(
-                    state.config.demo
+                    !state.loginRequired
                         ? Icons.menu_book_outlined
                         : Icons.person_outline,
                     size: 21,
                   ),
                   onPressed: () async {
-                    if (state.config.demo) {
+                    if (!state.loginRequired) {
                       context.go('/library');
                       return;
                     }
@@ -230,9 +230,9 @@ class _Header extends StatelessWidget {
                         content: Text(state.email, style: sans(13)),
                         actions: [
                           TextButton(
-                            onPressed: () {
-                              state.logout();
-                              Navigator.pop(c);
+                            onPressed: () async {
+                              await logoutUser(context);
+                              if (c.mounted) Navigator.pop(c);
                             },
                             child: const Text('로그아웃'),
                           ),

@@ -33,7 +33,7 @@ class _LibraryPageState extends State<LibraryPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final s = ArtlogScope.of(context),
-        key = '${s.config.demo}/${s.email}/${s.authenticated}';
+        key = '${s.config.demo}/${s.userKey}/${s.authenticated}';
     if (identity != key) {
       identity = key;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -192,7 +192,7 @@ class _LibraryPageState extends State<LibraryPage> {
             ],
           ),
           const SizedBox(height: 30),
-          if (!s.config.demo && s.authenticated)
+          if (s.loginRequired && s.authenticated)
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: Wrap(
@@ -200,7 +200,10 @@ class _LibraryPageState extends State<LibraryPage> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(s.email, style: sans(11, color: muted)),
-                  TextButton(onPressed: s.logout, child: const Text('로그아웃')),
+                  TextButton(
+                    onPressed: () => logoutUser(context),
+                    child: const Text('로그아웃'),
+                  ),
                 ],
               ),
             ),
@@ -217,6 +220,20 @@ class _LibraryPageState extends State<LibraryPage> {
               ),
             )
           else ...[
+            if (s.libraryError != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(s.libraryError!, style: sans(12, color: Colors.brown)),
+                    TextButton(
+                      onPressed: s.reloadLibrary,
+                      child: const Text('서재 다시 불러오기'),
+                    ),
+                  ],
+                ),
+              ),
             Container(
               padding: EdgeInsets.all(compact(context) ? 18 : 26),
               decoration: BoxDecoration(
