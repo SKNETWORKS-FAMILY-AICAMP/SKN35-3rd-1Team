@@ -22,6 +22,7 @@ from app.models.base import TABLE_OPTIONS, Base
 
 if TYPE_CHECKING:
     from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
+    from app.models.chat import ChatSession
     from app.models.document import Document, DocumentArtist, DocumentArtwork
     from app.models.embedding import ArtworkEmbedding
 
@@ -173,6 +174,10 @@ class Artwork(Base):
         passive_deletes=True,
     )
     views: Mapped[list[ArtworkView]] = relationship(
+        back_populates="artwork",
+        passive_deletes=True,
+    )
+    chat_sessions: Mapped[list[ChatSession]] = relationship(
         back_populates="artwork",
         passive_deletes=True,
     )

@@ -12,6 +12,7 @@ from app.models.base import TABLE_OPTIONS, Base
 
 if TYPE_CHECKING:
     from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
+    from app.models.chat import ChatSession
 
 
 class User(Base):
@@ -19,8 +20,10 @@ class User(Base):
     __table_args__ = TABLE_OPTIONS
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    # Firebase Auth user id. The server takes it only from a verified ID token,
+    # never from a client-supplied field.
+    firebase_uid: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
-    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     nickname: Mapped[str] = mapped_column(String(50), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -42,6 +45,10 @@ class User(Base):
         passive_deletes=True,
     )
     artwork_views: Mapped[list[ArtworkView]] = relationship(
+        back_populates="user",
+        passive_deletes=True,
+    )
+    chat_sessions: Mapped[list[ChatSession]] = relationship(
         back_populates="user",
         passive_deletes=True,
     )

@@ -6,9 +6,10 @@ TiDB 스키마 설계와 실행용 SQL입니다.
 | --- | --- |
 | `db-design.md` | 설계 문서 전체 (권장 구조, 테이블 명세, 인덱스, 추천 흐름, 주의사항, 출처) |
 | `00_erd.mmd` | Mermaid ERD 원본 |
-| `01_schema_mvp.sql` | 먼저 만들 테이블 12개 |
+| `00_erd.png` | ERD 그림 (`00_erd.mmd`를 Mermaid 11.4.1로 렌더링, 15개 테이블) |
+| `01_schema_mvp.sql` | 먼저 만들 테이블 14개 (채팅 기록 2개 포함). 문서 근거 연결(`document_basis_documents`)은 Alembic `20261012_0003`에만 있음 |
 | `02_queries.sql` | 기능별 쿼리 예시 (좋아요, 열람, 캘린더, RAG 검색, 추천) |
-| `03_schema_later.sql` | 나중에 추가할 테이블 (채팅 저장, 유사도 사전 계산) |
+| `03_schema_later.sql` | 나중에 추가할 테이블 (유사도 사전 계산 등) |
 | `04_vector_index_tidb.sql` | 작품 수가 크게 늘었을 때 붙일 벡터 인덱스 |
 
 ## 사용 방법

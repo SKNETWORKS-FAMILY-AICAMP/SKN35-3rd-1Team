@@ -54,6 +54,21 @@ class Settings(BaseSettings):
     tidb_ssl_verify_cert: bool = True
     tidb_ssl_verify_identity: bool = True
 
+    # Comma-separated web origins allowed to call the API (e.g. the Vercel domain).
+    # Local Flutter dev servers on localhost/127.0.0.1 are always allowed.
+    cors_origins: str = ""
+    # "dev": every request acts as one fixed development user (no login yet).
+    # "firebase": verify the Firebase ID token (to be implemented in core/auth.py).
+    auth_mode: str = "dev"
+    dev_user_uid: str = "dev-user"
+    app_timezone: str = "Asia/Seoul"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [
+            origin.strip() for origin in self.cors_origins.split(",") if origin.strip()
+        ]
+
     @property
     def sqlalchemy_url(self) -> URL:
         """Return a safely encoded SQLAlchemy URL without exposing secrets."""

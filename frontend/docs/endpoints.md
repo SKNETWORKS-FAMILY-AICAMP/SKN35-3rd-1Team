@@ -6,12 +6,14 @@
 
 서버 경로 문서에 **초안**이라고 명시되어 있습니다. routes·schemas 디렉터리에 실행 가능한 라우터·응답 모델이 없고, 확정 명세로 안내된 `docs/api.md`도 없습니다. 따라서 아래의 “대조”는 문서와 클라이언트의 일치 여부이며 실제 서버의 존재·응답을 확인했다는 뜻이 아닙니다. 자동 테스트는 MockClient로 요청 경로·메서드·파라미터·응답 처리만 검증합니다.
 
-공통 접두사는 `/api`입니다. `/api/v1` 또는 문서에 없는 검색·감상 메모 저장 경로를 만들지 않았습니다. 실제 API 호출에는 DB의 숫자 `id`를 문자열로 변환해 사용합니다. `slug`는 별도 필드이며 미리보기 ID와 섞지 않습니다. 인증이 필요한 요청은 `Authorization: Bearer <access_token>`을 보냅니다.
+공통 접두사는 `/api`입니다. `/api/v1` 또는 문서에 없는 검색·감상 메모 저장 경로를 만들지 않았습니다. 실제 API 호출에는 DB의 숫자 `id`를 문자열로 변환해 사용합니다. `slug`는 별도 필드이며 미리보기 ID와 섞지 않습니다. 인증이 필요한 요청은 `Authorization: Bearer <Firebase ID 토큰>`을 보냅니다.
+
+> **2026-10-12 결정 · 로그인은 Firebase Auth**: 로그인과 회원가입은 Flutter에서 `firebase_auth`로 처리하고, 서버의 `/api/auth/login`·`/api/auth/signup`은 만들지 않습니다. 요청마다 `FirebaseAuth.instance.currentUser.getIdToken()`으로 받은 ID 토큰을 위 헤더에 넣습니다. **uid를 요청 본문이나 경로로 따로 보내지 않습니다.** 서버는 토큰을 `firebase-admin`으로 검증해 uid를 얻고, 처음 보는 uid면 `users`에 한 번만 행을 만듭니다. 토큰 만료(1시간) 시 `getIdToken()`이 자동으로 갱신하므로 직접 갱신 API는 필요 없습니다. 현재 `lib/api/artlog_api.dart`의 이메일·비밀번호 로그인 호출은 이 방식으로 교체해야 합니다(미반영).
 
 | 메서드 | 경로 | 인증 | 프론트 사용 / 대조 |
 | --- | --- | --- | --- |
-| POST | `/api/auth/login` | 없음 | 로그인, 경로 일치 / JSON 형식 임시 |
-| POST | `/api/auth/signup` | 없음 | 문서에 존재 / 가입 규격 미확정으로 호출 안 함 |
+| ~~POST~~ | ~~`/api/auth/login`~~ | — | Firebase Auth로 대체, 서버에 만들지 않음 |
+| ~~POST~~ | ~~`/api/auth/signup`~~ | — | Firebase Auth로 대체, 서버에 만들지 않음 |
 | GET | `/api/movements` | 없음 | 목록, 일치 |
 | GET | `/api/artists` | 없음 | 목록, `movement_id` 지원 |
 | GET | `/api/artists/{artist_id}` | 없음 | 작가 상세, 일치 |
@@ -31,7 +33,7 @@
 
 ## 도슨트
 
-문서에 명시된 요청 필드는 `question`, `history`입니다. 현재 질문은 `question`으로 한 번만 보내고 `history`에는 직전 12개 메시지만 포함합니다. history 개별 항목의 `{role, content}`와 12개 제한은 프론트의 임시 결정이며 서버 확인이 필요합니다. 대화는 서버 저장을 가정하지 않습니다.
+문서에 명시된 요청 필드는 `question`, `history`입니다. 현재 질문은 `question`으로 한 번만 보내고 `history`에는 직전 12개 메시지만 포함합니다. history 항목 `{role: user|assistant, content}`와 최대 12개 제한은 서버 `ChatRequest`로 확정했습니다(`backend/app/schemas/chat.py`). 질문은 1~500자입니다. 맥락은 항상 `history`로 보내고, 로그인 상태면 서버가 대화를 따로 저장합니다.
 
 ```json
 {"question":"이 작품은 언제 그렸나요?","history":[{"role":"user","content":"작품을 소개해 주세요."},{"role":"assistant","content":"이전 답변"}]}
@@ -47,7 +49,7 @@
 
 다음은 현재 어댑터의 가정이며 **확정된 서버 명세가 아닙니다.** 확정 시 `lib/api/artlog_api.dart`, `lib/models.dart`를 조정하면 됩니다.
 
-- 로그인: JSON `{email, password}` 요청, `{access_token: string}` 응답. OAuth2 form 방식인지, 로그인 식별자가 무엇인지, 토큰 갱신이 필요한지 확인해야 합니다. JWT는 브라우저 저장소에 저장하지 않습니다.
+- 로그인: Firebase Auth로 확정(위 결정 참고). 서버와 맞출 것은 최초 로그인 시 `users.nickname`을 무엇으로 채울지(`displayName`, 없으면 이메일 앞부분)와 401 응답 본문 형식뿐입니다.
 - 목록: JSON 배열 또는 `{items: [...]}` / `{data: [...]}`. 페이지 정보·커서·총 개수는 미확정입니다. 카드와 상세의 차이도 확인해야 합니다.
 - 작품: `id`, `slug`, `title`, `title_en`, `artist_id`, `movement_id`, `year_label`, `medium`, `dimensions`, `collection`, `description`, `image_url`, `image_source_url`, `image_license`. 필드 이름은 DB 모델과 대조했습니다. `artist_name` 또는 중첩 `artist`가 없으면 별도 작가 목록에서 이름을 찾습니다.
 - 작가: `id`, `slug`, `name`, `name_en`, `birth_year`, `death_year`, `movement_id`, `summary`, `portrait_url`. 사조 이름이 없으면 사조 목록에서 조합할 수 있습니다. 카드의 `is_liked`·`is_followed` 사용 여부는 아직 미정이라 `/me/likes`, `/me/follows`를 사용합니다.

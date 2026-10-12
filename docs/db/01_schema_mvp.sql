@@ -21,17 +21,22 @@ USE 3rd_project;
 
 -- ---------------------------------------------------------------------
 -- 1. users : 서비스 회원
+--    로그인은 Firebase Auth 가 프론트에서 처리하므로 비밀번호를 저장하지 않음.
+--    서버는 Authorization 헤더의 Firebase ID 토큰을 검증해 uid 를 얻고,
+--    처음 보는 uid 면 이 테이블에 한 번만 행을 만듦. 다른 테이블은 모두 users.id 로 연결.
+--    클라이언트가 보낸 uid 값을 그대로 믿으면 안 됨 (남의 기록을 조작할 수 있음).
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
   id            BIGINT       NOT NULL AUTO_INCREMENT,
+  -- Firebase Auth 사용자 id (검증된 ID 토큰에서만 가져옴)
+  firebase_uid  VARCHAR(128) NOT NULL,
   -- 이메일은 앱에서 소문자로 정규화해서 저장하는 것을 권장 (콜레이션에 기대지 않기 위함)
   email         VARCHAR(255) NOT NULL,
-  -- 평문 비밀번호 금지. bcrypt/argon2 해시 문자열만 저장
-  password_hash VARCHAR(255) NOT NULL,
   nickname      VARCHAR(50)  NOT NULL,
   created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_users_firebase_uid (firebase_uid),
   -- 같은 이메일로 두 번 가입하는 것을 DB 차원에서 차단
   UNIQUE KEY uq_users_email (email)
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
@@ -299,4 +304,48 @@ CREATE TABLE artwork_views (
     REFERENCES users (id) ON DELETE CASCADE,
   CONSTRAINT fk_artwork_views_artwork FOREIGN KEY (artwork_id)
     REFERENCES artworks (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
+-- 12. chat_sessions : 도슨트 대화 (로그인 사용자 x 작품 당 1개)
+--    작품을 다시 열면 같은 대화를 이어 가므로 (user_id, artwork_id) 에 UNIQUE.
+--    updated_at 은 마지막 메시지 시각. 메시지를 추가할 때 앱에서 함께 갱신함.
+--    비로그인 사용자의 대화는 저장하지 않음 (요청의 history 로만 맥락 유지).
+-- ---------------------------------------------------------------------
+CREATE TABLE chat_sessions (
+  id         BIGINT   NOT NULL AUTO_INCREMENT,
+  user_id    BIGINT   NOT NULL,
+  artwork_id BIGINT   NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_chat_sessions_user_artwork (user_id, artwork_id),
+  -- '내 대화 목록' 최신순 조회용
+  KEY idx_chat_sessions_user_updated (user_id, updated_at),
+  KEY idx_chat_sessions_artwork (artwork_id),
+  CONSTRAINT fk_chat_sessions_user FOREIGN KEY (user_id)
+    REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT fk_chat_sessions_artwork FOREIGN KEY (artwork_id)
+    REFERENCES artworks (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
+-- 13. chat_messages : 대화의 질문과 답변
+--    sources 는 API 응답의 출처 목록을 그대로 저장한 JSON (질문이면 NULL).
+--    document_chunks 에 FK 로 묶지 않음: 다시 청킹하면 청크 id 가 바뀌어 지난 대화의 출처가 깨지기 때문.
+-- ---------------------------------------------------------------------
+CREATE TABLE chat_messages (
+  id         BIGINT      NOT NULL AUTO_INCREMENT,
+  session_id BIGINT      NOT NULL,
+  -- 'user' | 'assistant'
+  role       VARCHAR(20) NOT NULL,
+  content    TEXT        NOT NULL,
+  -- 범위 밖이라 거절한 답변이면 1
+  refused    TINYINT(1)  NOT NULL DEFAULT 0,
+  sources    JSON        NULL,
+  created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_chat_messages_session (session_id, id),
+  CONSTRAINT fk_chat_messages_session FOREIGN KEY (session_id)
+    REFERENCES chat_sessions (id) ON DELETE CASCADE
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
