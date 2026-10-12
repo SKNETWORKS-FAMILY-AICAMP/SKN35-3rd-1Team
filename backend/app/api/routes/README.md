@@ -1,6 +1,6 @@
 # api/routes
 
-엔드포인트를 기능별 파일로 나눕니다. 카탈로그(`movements`·`artists`·`artworks`)와 사용자 활동(`likes`·`follows`·`library`)은 구현되어 있습니다. `chat.py`와 `recommendations.py`는 아직 `501`을 돌려줍니다(`app/api/stub.py`). 구현할 때 `not_implemented()`를 지우고 서비스를 호출하면 됩니다. 새 파일은 `app/api/router.py`에 등록합니다. 확정한 명세는 `docs/api.md`입니다.
+엔드포인트를 기능별 파일로 나눕니다. `POST /api/artworks/{artwork_id}/chat`(RAG 답변 생성)을 뺀 모든 경로가 구현되어 있습니다. 이 경로만 아직 `501`을 돌려줍니다(`app/api/stub.py`). 답변이 나오면 로그인 사용자는 `chat_service.save_exchange`로 저장합니다. 구현할 때 `not_implemented()`를 지우고 서비스를 호출하면 됩니다. 새 파일은 `app/api/router.py`에 등록합니다. 확정한 명세는 `docs/api.md`입니다.
 
 ## 파일과 엔드포인트
 

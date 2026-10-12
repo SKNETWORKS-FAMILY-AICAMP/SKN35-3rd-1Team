@@ -47,6 +47,21 @@ def get_artwork(db: Session, artwork_id: int) -> ArtworkRow | None:
     return tuple(row) if row else None
 
 
+def get_artworks(db: Session, artwork_ids: list[int]) -> dict[int, ArtworkRow]:
+    if not artwork_ids:
+        return {}
+    rows = db.execute(_artworks().where(Artwork.id.in_(artwork_ids)))
+    return {artwork.id: (artwork, name) for artwork, name in rows}
+
+
+def get_artists(db: Session, artist_ids: list[int]) -> dict[int, Artist]:
+    if not artist_ids:
+        return {}
+    return {
+        a.id: a for a in db.scalars(select(Artist).where(Artist.id.in_(artist_ids)))
+    }
+
+
 def artwork_exists(db: Session, artwork_id: int) -> bool:
     return db.scalar(select(Artwork.id).where(Artwork.id == artwork_id)) is not None
 

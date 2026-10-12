@@ -3,7 +3,7 @@
 These tests pin the contract: routing, auth requirements, request validation,
 error format and the generated OpenAPI. The DB session and the services are
 replaced with stubs, so nothing here reads or writes TiDB. Routes that are not
-built yet still answer ``501``.
+built yet (``POST /chat``, waiting on RAG) still answer ``501``.
 """
 
 from types import SimpleNamespace
@@ -18,9 +18,11 @@ from app.main import app
 from app.schemas.catalog import ArtistDetail, ArtworkDetail
 from app.services import (
     catalog_service,
+    chat_service,
     follow_service,
     library_service,
     like_service,
+    recommendation_service,
 )
 
 client = TestClient(app)
@@ -119,6 +121,12 @@ def stub_services(monkeypatch):
         (library_service, "record_view", nothing),
         (library_service, "calendar", empty),
         (library_service, "viewed_on_day", empty),
+        (chat_service, "list_messages", empty),
+        (chat_service, "reset", nothing),
+        (chat_service, "list_chats", empty),
+        (recommendation_service, "similar", empty),
+        (recommendation_service, "recommend_artworks", empty),
+        (recommendation_service, "recommend_artists", empty),
     ]:
         monkeypatch.setattr(module, name, fake)
     yield

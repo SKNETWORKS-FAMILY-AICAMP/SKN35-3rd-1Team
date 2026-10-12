@@ -20,7 +20,7 @@
 | `401` | 토큰이 없거나 검증 실패. `WWW-Authenticate: Bearer` 헤더 포함 |
 | `404` | 없는 작품·작가 id. 상세 조회, 좋아요·팔로우 `PUT`, 열람 `POST`에 적용. 취소 `DELETE`는 항상 `204` |
 | `422` | 요청 검증 실패 (질문 길이, `month` 형식, 날짜 형식 등). `detail`은 오류 항목 배열 |
-| `501` | 경로만 있고 아직 구현되지 않음 (개발 중에만). 2026-10-12 기준 채팅·`similar`·`/me/recommendations/*` |
+| `501` | 경로만 있고 아직 구현되지 않음 (개발 중에만). 2026-10-12 기준 `POST /chat`(RAG 답변 생성)만 해당 |
 
 ## 검색
 
@@ -42,10 +42,10 @@
 | GET | `/api/artists/{artist_id}` | `ArtistDetail` | | 작가 상세 |
 | GET | `/api/artworks?artist_id=&movement_id=` | `ArtworkCard[]` | | 작품 목록. 두 필터 모두 선택 |
 | GET | `/api/artworks/{artwork_id}` | `ArtworkDetail` | | 작품 상세 |
-| GET | `/api/artworks/{artwork_id}/similar` | `ArtworkCard[]` | | 비슷한 작품 3개, 가까운 순 |
+| GET | `/api/artworks/{artwork_id}/similar` | `ArtworkCard[]` | | 비슷한 작품 3개, 가까운 순. 작품 벡터가 없으면 빈 배열 |
 | POST | `/api/artworks/{artwork_id}/chat` | `ChatResponse` | 선택 | 도슨트 질문. 로그인 상태면 질문과 답변을 저장 |
-| GET | `/api/artworks/{artwork_id}/chat/messages` | `ChatMessageOut[]` | 필요 | 이 작품과 나눈 내 대화, 오래된 순 |
-| DELETE | `/api/artworks/{artwork_id}/chat` | `204` | 필요 | 이 작품 대화 초기화 |
+| GET | `/api/artworks/{artwork_id}/chat/messages` | `ChatMessageOut[]` | 필요 | 이 작품과 나눈 내 대화, 오래된 순. 대화가 없으면 빈 배열 |
+| DELETE | `/api/artworks/{artwork_id}/chat` | `204` | 필요 | 이 작품 대화 초기화. 대화가 없어도 `204` |
 | GET | `/api/me/chats` | `ChatSummary[]` | 필요 | 내가 대화한 작품, 최근 대화순 |
 | PUT | `/api/artworks/{artwork_id}/like` | `204` | 필요 | 좋아요. 여러 번 호출해도 결과 동일 |
 | DELETE | `/api/artworks/{artwork_id}/like` | `204` | 필요 | 좋아요 취소. 좋아요가 없어도 `204` |
@@ -56,8 +56,8 @@
 | POST | `/api/artworks/{artwork_id}/views` | `204` | 필요 | 열람 기록. 같은 날 다시 보면 `view_count`만 증가 |
 | GET | `/api/me/library/calendar?month=YYYY-MM` | `CalendarDay[]` | 필요 | 월별 감상 기록. 본 날만 날짜순 |
 | GET | `/api/me/library/days/{YYYY-MM-DD}` | `ViewedArtwork[]` | 필요 | 그날 본 작품, 마지막으로 본 순 |
-| GET | `/api/me/recommendations/artworks` | `RecommendedArtwork[]` | 필요 | 좋아요 기반 맞춤 작품 3개. 좋아요가 없으면 대체 추천 |
-| GET | `/api/me/recommendations/artists` | `RecommendedArtist[]` | 필요 | 추천 작가 3명. 팔로우한 작가 제외 |
+| GET | `/api/me/recommendations/artworks` | `RecommendedArtwork[]` | 필요 | 좋아요 기반 맞춤 작품 3개, 작가당 1개. 좋아요가 없으면 최근 열람 → 팔로우한 작가 작품 → 큐레이션 작품 무작위(사용자·날짜별로 고정, 새로고침해도 같은 결과). 이미지 없는 작품은 나오지 않음 |
+| GET | `/api/me/recommendations/artists` | `RecommendedArtist[]` | 필요 | 추천 작가 3명. 유사도 합산 순위 상위 3명, 팔로우한 작가 제외(좋아요한 작품의 작가는 포함) |
 
 날짜는 서버가 `Asia/Seoul` 기준으로 계산합니다.
 
