@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.env.*
+.sites-runtime/
+.sites-checkout/
+
+# Flutter web
+.dart_tool/
+.flutter-plugins-dependencies
+build/
+coverage/
+*.iml

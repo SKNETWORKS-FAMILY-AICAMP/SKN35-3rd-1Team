@@ -1,6 +1,6 @@
 {
   "artist_slug": "vincent-van-gogh",
-  "collected_at": "2026-10-11",
+  "collected_at": "2026-10-12",
   "sources": [
     {
       "record": "artist_bio",
@@ -141,6 +141,83 @@
       "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-gogh-keeps-the-faith",
       "usage": "화가의 길을 택한 과정과 초기 네덜란드 시기 확인",
       "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-yellow-house",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0032V1962",
+      "usage": "작품 메타데이터, 노란 집의 위치와 남부 작업실 구상 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "the-night-cafe",
+      "source_name": "Yale University Art Gallery",
+      "source_url": "https://artgallery.yale.edu/collections/objects/12507",
+      "usage": "작품 메타데이터, 카페 내부 구성과 색채 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "the-sower-1888",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품명·연도와 씨 뿌리는 사람 연작의 제작 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "self-portrait-with-grey-felt-hat",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0016V1962?v=1",
+      "usage": "작품 메타데이터, 보색과 짧은 붓질 및 안료 퇴색 연구 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "the-langlois-bridge",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품명·연도와 아를 도개교 연작 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-red-vineyard",
+      "source_name": "Pushkin State Museum of Fine Arts",
+      "source_url": "https://pushkinmuseum.art/museum/buildings/gallery/21244_map_gallery_24_eng.pdf",
+      "usage": "소장처·작품명·연도와 전시 위치 확인; 판매 기록은 공개 작품 기록으로 교차 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "gaugins-chair",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0048V1962?v=1",
+      "usage": "작품 메타데이터와 책·촛불·야간 색채, 짝 작품 관계 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "van-goghs-chair",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-van-gogh-s-chair",
+      "usage": "작품 메타데이터와 파이프·양파 상자·짝 작품의 대비 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "olive-trees-1889",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/artists/2206-vincent-van-gogh",
+      "usage": "작품명·연도·소장처와 생레미 올리브나무 연작 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 연결 이미지는 Commons CC BY-SA 2.5 조건"
+    },
+    {
+      "record": "the-church-at-auvers",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/leglise-dauvers-sur-oise-vue-du-chevet-755",
+      "usage": "작품 메타데이터와 오베르 시기 화면 구성 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "portrait-of-dr-gachet",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/le-docteur-paul-gachet-751",
+      "usage": "작품 메타데이터, 두 번째 유화 버전과 자세·디기탈리스 도상 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Wikimedia Commons Public Domain Mark 파일"
     }
   ],
   "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
