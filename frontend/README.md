@@ -26,7 +26,7 @@ flutter run -d chrome --dart-define=ARTLOG_DEMO=false --dart-define=API_BASE_URL
 
 ## Firebase 로그인 및 Vercel 배포
 
-아트로그 전용 Firebase·Vercel 프로젝트는 `artlog-skn35-1team`입니다. Firebase 웹앱 설정은 Vercel 환경변수에 등록하며 Git에 저장하지 않습니다. 웹 설정은 브라우저용 공개 값이며 서비스 계정·Admin 키와 구분합니다.
+Firebase는 팀 프로젝트 `skn35-3rd-1team`, Vercel은 `artlog-skn35-1team`을 사용합니다. 이메일/비밀번호 로그인이 활성화되어 있으며 운영 주소는 https://artlog-skn35-1team.vercel.app 입니다. Firebase 웹앱 설정은 Vercel 환경변수에 등록하며 Git에 저장하지 않습니다. 웹 설정은 브라우저용 공개 값이며 서비스 계정·Admin 키와 구분합니다.
 
 ```bash
 flutter run -d chrome --dart-define-from-file=.dart-defines.local.json
