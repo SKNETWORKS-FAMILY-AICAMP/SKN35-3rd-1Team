@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+.dart_tool
+.flutter-plugins-dependencies
+.sites-runtime
+.sites-checkout
+.openai
+.env*
+.firebase-web-config.json
+.dart-defines*.json
+verification
+src
+test
+public/fonts
+*.tsbuildinfo
+firebase-debug*.log

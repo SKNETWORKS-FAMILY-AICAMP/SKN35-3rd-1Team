@@ -20,6 +20,7 @@ class ArtlogApi {
   final http.Client _client;
   String? token;
   void Function()? onUnauthorized;
+  Future<String?> Function(bool forceRefresh)? tokenProvider;
 
   Uri uri(String path, [Map<String, String>? query]) {
     var prefix = _base.path.replaceAll(RegExp(r'/+$'), '');
@@ -37,13 +38,19 @@ class ArtlogApi {
     Json? body,
     Map<String, String>? query,
     bool authenticated = false,
+    bool retryAuthentication = true,
   }) async {
-    if (authenticated && token == null) {
+    final accessToken = tokenProvider == null
+        ? token
+        : await tokenProvider!(false);
+    if (authenticated && accessToken == null) {
       throw const ApiException('로그인 후 이용할 수 있어요.', status: 401);
     }
     final request = http.Request(method, uri(path, query));
     request.headers['Accept'] = 'application/json';
-    if (token != null) request.headers['Authorization'] = 'Bearer $token';
+    if (accessToken != null) {
+      request.headers['Authorization'] = 'Bearer $accessToken';
+    }
     if (body != null) {
       request.headers['Content-Type'] = 'application/json';
       request.body = jsonEncode(body);
@@ -55,6 +62,19 @@ class ArtlogApi {
           .timeout(const Duration(seconds: 45));
       if (response.statusCode < 200 || response.statusCode >= 300) {
         if (response.statusCode == 401) {
+          if (tokenProvider != null &&
+              accessToken != null &&
+              retryAuthentication) {
+            await tokenProvider!(true);
+            return await _request(
+              method,
+              path,
+              body: body,
+              query: query,
+              authenticated: authenticated,
+              retryAuthentication: false,
+            );
+          }
           token = null;
           onUnauthorized?.call();
         }

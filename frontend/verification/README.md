@@ -18,3 +18,20 @@ API 테스트는 문서 초안에 맞춘 MockClient 검사입니다. **실제 �
 ![모바일 홈](home-mobile.jpg)
 
 ![모바일 작품 목록](collection-mobile.jpg)
+
+
+## Firebase·Vercel 추가 검증 (2026-10-12)
+
+- 최신 `origin/dev` (`9b39e6a`)를 `lsh`로 fast-forward 반영.
+- Flutter 정적 분석 이슈 없음, 기존 화면·API와 Firebase 인증 관련 테스트 총 42개 통과.
+- 배포 설정의 공개 값 허용 목록·필수 설정·HTTPS API 검증 테스트 3개 통과.
+- Firebase SDK를 포함한 로컬 release 빌드 성공.
+- Vercel 원격 환경에서 Flutter 3.47.2 설치·lockfile 의존성 설치·웹 빌드·운영 배포 성공. 상태 `READY`, 빌드 약 2분.
+- 운영 주소: https://artlog-skn35-1team.vercel.app
+- 배포 ID: `dpl_29SURpuiFTZueHkWiuGMEKNP4Xsk`.
+- 운영 브라우저에서 작품 화면, Firebase 로그인·회원가입 입력 화면, SDK 초기 로딩 확인. 콘솔 오류·경고 없음.
+- Firebase 프로젝트와 웹앱을 생성했고 Vercel의 Production·Preview·Development에 공개 웹 설정 등록.
+- **Firebase Authentication 서비스의 첫 ‘시작하기’는 사용자 Google 콘솔 로그인 대기 중.** 아직 실제 회원가입·로그인 성공을 검증하지 않았음. 프론트엔드 인증 연결과 fake-session 테스트 성공을 실제 Firebase 서비스 활성화 성공과 구분함.
+- 현재 운영은 작품·도슨트 미리보기 + Firebase 인증 연결. 서버 자료 조회와 기록 동기화는 백엔드 준비 전.
+
+![운영 로그인 화면](firebase-login-production.jpg)

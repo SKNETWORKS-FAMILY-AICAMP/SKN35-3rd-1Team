@@ -8,6 +8,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/artlog_api.dart';
+import 'auth/auth_session.dart';
+import 'auth/firebase_session.dart';
 import 'config.dart';
 import 'state.dart';
 import 'ui/design.dart';
@@ -20,10 +22,23 @@ import 'pages/library_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const config = AppConfig();
+  AuthSession? session;
+  String? authError;
+  if (config.firebaseAuth) {
+    try {
+      session = await FirebaseSession.initialize(config.firebase);
+    } catch (e) {
+      authError = e is AuthFailure
+          ? e.message
+          : '로그인 서비스에 연결하지 못했어요. 새로고침해 다시 시도해 주세요.';
+    }
+  }
   final state = ArtlogState(
     config,
     ArtlogApi(baseUrl: config.apiBaseUrl),
     await SharedPreferences.getInstance(),
+    session: session,
+    authError: authError,
   );
   LicenseRegistry.addLicense(() async* {
     final licenses =

@@ -340,16 +340,23 @@ class LoginDialog extends StatefulWidget {
 
 class _LoginDialogState extends State<LoginDialog> {
   final email = TextEditingController(), password = TextEditingController();
-  bool busy = false;
-  String? error;
+  final form = GlobalKey<FormState>();
+  bool busy = false, signup = false, obscure = true;
+  String? error, notice;
+  bool get firebase => widget.state.config.firebaseAuth;
   Future<void> submit() async {
-    if (email.text.trim().isEmpty || password.text.isEmpty || busy) return;
+    if (busy || !form.currentState!.validate()) return;
     setState(() {
       busy = true;
       error = null;
+      notice = null;
     });
     try {
-      await widget.state.login(email.text.trim(), password.text);
+      if (signup) {
+        await widget.state.register(email.text.trim(), password.text);
+      } else {
+        await widget.state.login(email.text.trim(), password.text);
+      }
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
       if (mounted) {
@@ -361,6 +368,29 @@ class _LoginDialogState extends State<LoginDialog> {
     }
   }
 
+  Future<void> reset() async {
+    if (busy) return;
+    if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email.text.trim())) {
+      setState(() => error = '비밀번호를 재설정할 이메일을 먼저 입력해 주세요.');
+      return;
+    }
+    setState(() {
+      busy = true;
+      error = null;
+      notice = null;
+    });
+    try {
+      await widget.state.resetPassword(email.text.trim());
+      if (mounted) {
+        setState(() => notice = '가입된 이메일이라면 재설정 안내를 보냈어요. 받은 편지함을 확인해 주세요.');
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
   @override
   void dispose() {
     email.dispose();
@@ -369,47 +399,144 @@ class _LoginDialogState extends State<LoginDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    backgroundColor: paper,
-    title: Text('나만의 미술관에 로그인', style: serif(21)),
-    content: SizedBox(
-      width: 340,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('마음에 든 그림과 감상을 모아보세요.', style: sans(12, color: muted)),
-          const SizedBox(height: 20),
-          TextField(
-            controller: email,
-            autofocus: true,
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: const [AutofillHints.email],
-            decoration: const InputDecoration(labelText: '이메일'),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: password,
-            obscureText: true,
-            autofillHints: const [AutofillHints.password],
-            decoration: const InputDecoration(labelText: '비밀번호'),
-            onSubmitted: (_) => submit(),
-          ),
-          if (error != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text(error!, style: sans(12, color: Colors.brown)),
+  Widget build(BuildContext context) => PopScope(
+    canPop: !busy,
+    child: AlertDialog(
+      backgroundColor: paper,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      title: Text(signup ? '나만의 미술관 시작하기' : '나만의 미술관에 로그인', style: serif(21)),
+      content: SizedBox(
+        width: 340,
+        child: SingleChildScrollView(
+          child: Form(
+            key: form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('마음에 든 그림과 감상을 모아보세요.', style: sans(12, color: muted)),
+                if (firebase && widget.state.config.demo) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    '작품 미리보기의 감상 기록은 이 브라우저에 저장돼요.',
+                    style: sans(10, color: muted),
+                  ),
+                ],
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: email,
+                  autofocus: true,
+                  enabled: !busy,
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  decoration: const InputDecoration(labelText: '이메일'),
+                  validator: (v) =>
+                      RegExp(
+                        r'^[^\s@]+@[^\s@]+\.[^\s@]+$',
+                      ).hasMatch(v?.trim() ?? '')
+                      ? null
+                      : '이메일 주소를 확인해 주세요.',
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: password,
+                  enabled: !busy,
+                  obscureText: obscure,
+                  autofillHints: [
+                    signup ? AutofillHints.newPassword : AutofillHints.password,
+                  ],
+                  decoration: InputDecoration(
+                    labelText: '비밀번호',
+                    helperText: signup ? '8자 이상 입력해 주세요.' : null,
+                    suffixIcon: IconButton(
+                      tooltip: obscure ? '비밀번호 표시' : '비밀번호 숨기기',
+                      onPressed: busy
+                          ? null
+                          : () => setState(() => obscure = !obscure),
+                      icon: Icon(
+                        obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 19,
+                      ),
+                    ),
+                  ),
+                  validator: (v) => (v ?? '').isEmpty
+                      ? '비밀번호를 입력해 주세요.'
+                      : signup && v!.length < 8
+                      ? '비밀번호를 8자 이상 입력해 주세요.'
+                      : null,
+                  onFieldSubmitted: (_) => submit(),
+                ),
+                if (firebase) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: busy || !widget.state.canAuthenticate
+                          ? null
+                          : reset,
+                      child: const Text('비밀번호를 잊었어요'),
+                    ),
+                  ),
+                ],
+                if (!widget.state.canAuthenticate)
+                  Text(
+                    widget.state.authError ?? '로그인 서비스를 준비하고 있어요.',
+                    style: sans(12, color: Colors.brown),
+                  ),
+                if (error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(error!, style: sans(12, color: Colors.brown)),
+                  ),
+                if (notice != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(notice!, style: sans(12, color: green)),
+                  ),
+                if (firebase)
+                  TextButton(
+                    onPressed: busy
+                        ? null
+                        : () => setState(() {
+                            signup = !signup;
+                            error = null;
+                            notice = null;
+                            form.currentState?.reset();
+                          }),
+                    child: Text(signup ? '이미 계정이 있어요 · 로그인' : '처음 오셨나요? 회원가입'),
+                  ),
+              ],
             ),
-        ],
+          ),
+        ),
       ),
+      actions: [
+        TextButton(
+          onPressed: busy ? null : () => Navigator.pop(context, false),
+          child: const Text('닫기'),
+        ),
+        ArtButton(
+          busy
+              ? '잠시만 기다려 주세요…'
+              : signup
+              ? '회원가입'
+              : '로그인',
+          onTap: busy || !widget.state.canAuthenticate ? null : submit,
+        ),
+      ],
     ),
-    actions: [
-      TextButton(
-        onPressed: busy ? null : () => Navigator.pop(context, false),
-        child: const Text('닫기'),
-      ),
-      ArtButton(busy ? '로그인 중…' : '로그인', onTap: busy ? null : submit),
-    ],
   );
+}
+
+Future<void> logoutUser(BuildContext context) async {
+  final state = ArtlogScope.of(context);
+  try {
+    await state.logout();
+  } catch (e) {
+    if (context.mounted) showError(context, e);
+  }
 }
 
 class ArtworkCard extends StatefulWidget {
