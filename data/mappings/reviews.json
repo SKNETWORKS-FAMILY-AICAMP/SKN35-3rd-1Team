@@ -1,0 +1,895 @@
+{
+  "_comment": "검수를 마친 문서. 본문 해시가 달라지면 다시 검토 필요로 돌아간다. uv run python -m scripts.preprocess review --approve ... 로 기록한다.",
+  "reviews": {
+    "_comparisons/chiaroscuro.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "33abfeddefde57de96d5f9c85ae9f6e23faa99ba604a02ec781b4601096db773"
+    },
+    "_comparisons/comparison-van-gogh-and-gauguin-arles": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "15e65bc6d3fe6f9aeee7d7df113a1f7be6fc7abc2b369335cb34ef8997612991"
+    },
+    "_comparisons/tenebrism.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "59b6a7b2d72312ccf09b994a296f0116f8c630f4624227b28fd51283d92a5591"
+    },
+    "caravaggio/bacchus": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "80d4a3c4565180f957dc45adf0405b0b2269383a1cb354d0065bd848286b2f65"
+    },
+    "caravaggio/bio.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "89eacb8c99b2ebe91638cbc73f9999f04cdf074c8bb01d3f45f0c2cad0257b92"
+    },
+    "caravaggio/boy-bitten-by-a-lizard": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2fe1e6b0fa0fa031496e2fd68a8d0eff735375e9568f2f87b777ec4c9f88e19a"
+    },
+    "caravaggio/boy-with-a-basket-of-fruit": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "1c2446c546a8fe2245dde39f1901e4b79e9715dac4b9233ccbfb0779b00b4894"
+    },
+    "caravaggio/caravaggisti.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "f666fceef7ce50cc77d4e46f9e3a73e2943d85fec9568532243da3d6b1b6ebfe"
+    },
+    "caravaggio/crucifixion-of-saint-peter": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "5606942733b045fccf363f95efefd1f39583e47f6694f0a787a4150f24f035f0"
+    },
+    "caravaggio/death-of-the-virgin": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "59ebb5b54ec79059db08b669f3d15aa9ea261b45a90707bdf27d5a8d9e30e155"
+    },
+    "caravaggio/judith-beheading-holofernes": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d2224303e8f61a12a0fe20b1368898ff39ffaa9186590efca8ae70484bdc42b9"
+    },
+    "caravaggio/saint-jerome-writing": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b05d97c495a8c866e2c97228fb07dd60f3f8344b092499afef7659c12ec2246e"
+    },
+    "caravaggio/the-cardsharps": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0fcac946fd191663352160f197c923e3b84eb72513763edea6a22349412cf53a"
+    },
+    "caravaggio/the-conversion-of-saint-paul": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "94dd6ef288967dbd6662b4c5752ba5f23e2f2f4db1507e5ef98349bf66997521"
+    },
+    "caravaggio/the-denial-of-saint-peter": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "8811dfa1da60f200303c128aca5a0dffa046999837a48ec74cf7dd05f5daee5a"
+    },
+    "caravaggio/the-entombment-of-christ": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "7fde18e3200a16a36780b624890a40da156f2b03e4b49843d1f89c302fcaabe0"
+    },
+    "caravaggio/the-fortune-teller": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "294ff678005a431ffa3c17b02f7e819538769be76aaa16f78e1fdfe0cc7e37d7"
+    },
+    "caravaggio/the-incredulity-of-saint-thomas": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a072701e2d363707a2ee5015a9e008196484a1ef3b29a84779aa73bb292859b1"
+    },
+    "caravaggio/the-lute-player": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "636cb2da4f7fbc7af516c6432dbef69247d1a5919e7b668cabd7cdd765000e61"
+    },
+    "caravaggio/the-martyrdom-of-saint-matthew": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d491d487be359c0a53c6b55e2028a8f98f483247309015072a66bf2642f587ff"
+    },
+    "caravaggio/the-martyrdom-of-saint-ursula": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "897e0bbd02dc559ec5e778431b03c7268530fbb6beac2c3354adda0f8af8cce2"
+    },
+    "caravaggio/the-musicians": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4467a5f960c1f2dcd57c5623f1bcab90fc5d9fdb2c5217ea79ce68a9ab61c237"
+    },
+    "caravaggio/the-seven-works-of-mercy": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "80f92fe42df03323ae8a3cb03fd9d17a74d107a1d99d66471aa435407ce46c56"
+    },
+    "caravaggio/the-taking-of-christ": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "385aa72261ab3708afc4c477c5ccaf3704d61e7152b304728c329daae856184e"
+    },
+    "caravaggio/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "49c8086bd6c3e8ef0fb6f3e2176321d7245d9288a6c9b2f1b24f55cc9a6aa8ac"
+    },
+    "caravaggio/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "24f6dd711b54ceb9492697a327e724fce417f3aeb241d267d927e33c90599722"
+    },
+    "caravaggio/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d5d468c8d17f8a652a6da1b2b6727facf4282316eb781736eb55200a2ce047c1"
+    },
+    "caravaggio/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4f735dfb7502efa4e1f431d8217e1673d5eb74673d285419f3f5162e11b7defb"
+    },
+    "caravaggio/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "01c6468f553353f189ee8529488e81616331dbc721a851561e6183b1062c3622"
+    },
+    "caravaggio/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "42943ea0c661965247b4813d9539fe108e9a060c717c16cc9c19e4d6949d9253"
+    },
+    "caravaggio/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "8de2a852fee84b99e1e4a21d01ff272fd9d9cfd9187f98e34b05335c19c9f5be"
+    },
+    "caravaggio/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "eb180926bff01bc99c1dd0727bcd57b7fbce836c5d7632cdaba23f7514749005"
+    },
+    "caravaggio/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "7c7a9e9d40b0e9b0e1efcfbb5bb6fa58f381a6ee7d7fd904eeadd09233bffef1"
+    },
+    "caravaggio/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "58ddacd2ee0b069929062586c50eec99f192289ac481150fa50606fc22c340d2"
+    },
+    "caravaggio/timeline-10": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ff7052719a641fd6a81e8f36d9ca10f5a109449a2e6c9a68aa1caa1567e3a82f"
+    },
+    "caravaggio/timeline-11": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "cc98c966963e698b7f0c2fd7e2d49a43cac09ed4b867752c7fcd20ee4d36e850"
+    },
+    "caravaggio/timeline-12": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "cdc0f64410a298156f1e6d74c66ddf49270c0d1154bbe4d4393d9197fd9f73d4"
+    },
+    "caravaggio/timeline-13": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a2a87c341dd47755f13efea2663af26e14d67ec04cd88fcb7916c03182c15d05"
+    },
+    "caravaggio/young-sick-bacchus": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "60f9d6b2a0952f9473cf98a7d8cf0385f25452b7078e50e26eac28dea1b9fc2d"
+    },
+    "claude-monet/influence": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d9649427116ba02f280d4f82b6e71ea938ee75ba45b862d6996f43e1463619f3"
+    },
+    "claude-monet/people": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "f0119cbbee567b1c8b81fb4366ed3f51d3be7736802e6d91f59ec4ab0d2bd120"
+    },
+    "claude-monet/places": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "de3dcc4eb3623e33620061e960337961825418d6de05e087e7f08a3b6666ddb2"
+    },
+    "claude-monet/technique": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "bfb4b013130434997021122e51b4f9429e6fd00406a282bee495726f27659780"
+    },
+    "claude-monet/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0433ac15454649bf90df0133d020ebc8b0bf43a86c05a9c51baf834d290e3eca"
+    },
+    "claude-monet/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a1404d19bd04a4872590ff04b3525863c6a27db032d70a7429b93bd67664f87d"
+    },
+    "claude-monet/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "7d861f020f5f8be49fd635b01cd69b2be48440942e052fe9640f84e5dddeed26"
+    },
+    "claude-monet/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "59f5917aa0762dcd92958f3cd3c9ee125405b88d812c2595df475e7e204b9154"
+    },
+    "claude-monet/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "6fcca0e3ff1e8ea6e2caa074fd92835e40bb4291003c97cb5beef5b2a5a1c869"
+    },
+    "claude-monet/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "f7c6cfd1f30d83d79fefb8199d05b69e95b7c4b1a8e38175aabe0cd58ad44c72"
+    },
+    "claude-monet/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "89468cc737444a70a05443d1883bd62efcaf456aebb5ec2aed0001106d10764a"
+    },
+    "claude-monet/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "9f843214176775052ba2c13637a7259cb7888d7712e50f36bb3b2ab0b81dac0f"
+    },
+    "claude-monet/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "7f96b1c08c04f3bafdef9fa574793b6efbff694a93b8b12850ec14f9b3432b68"
+    },
+    "claude-monet/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "52d295c8cf856a002b6b4cee3fe561d9414ce2469adcbc6caef38c64ddab87fe"
+    },
+    "claude-monet/woman-with-parasol": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3a577d7bc1e46c2863b0e671cfa0f928e502a9a2cc5d823ac7cb41e4571633e9"
+    },
+    "paul-cezanne/apples-oranges": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "41c75853a6f1058a1f958d41f7bf5875d4d15b043f846224e7152587cacf02ed"
+    },
+    "paul-cezanne/influence": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "81229640173e1792bf3b665a263910f60a7145fb8f165663f891b349da4f34a9"
+    },
+    "paul-cezanne/people": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "316f6b236dc33825fff7e331e05025be53961800ffca908ad8523f758ef09cf0"
+    },
+    "paul-cezanne/places": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "651651f2acbdd3754018c1b909f27808a35872cd1eef77eaa0a9ed47d8f30045"
+    },
+    "paul-cezanne/technique": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3f260b4c9a1a076c3e8c70070e0dbb3f35acee5b097b13547ef87bca1533dc26"
+    },
+    "paul-cezanne/the-basket-of-apples": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "6071ea0dd63c7a122fdd4f58c06eac5659826acc21abde2009e002aa7f39b313"
+    },
+    "paul-cezanne/the-large-bathers": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b3357be6a9a0a32c3ec356c3f3ada76696602fcbf54736ce992a88d596d58411"
+    },
+    "paul-cezanne/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e0dbe668cee504c9908c35a747315b0fbe6cb65d351dda21799a3f27149caa19"
+    },
+    "paul-cezanne/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "859202d295d79a558fc8b36e1c1a97ee348e97142afc3fccb675b6962d61544b"
+    },
+    "paul-cezanne/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3321c8016f209dc26f575127bb3e1aa3f4a9f1da43d42d7c571257aae1e4071a"
+    },
+    "paul-cezanne/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a8686cec3c847ac38023fe212d3130f7cc89b7675a915cc3142b06b23eb7fe12"
+    },
+    "paul-cezanne/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "1aa8ba8828c344967ecf1f9afc3f4f1c79691beae9dfe8593d561a3974a9c7ae"
+    },
+    "paul-cezanne/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "39d1b1ae02c10b5a45115b1e4577624a65a3d04cf72e3fc6cea7b57eeed537c0"
+    },
+    "paul-cezanne/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3836661f78369adc5b03a4796f6628752c7710dceb858891f43a469dcc93ea98"
+    },
+    "paul-cezanne/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "24d5820f9d63c38ac056f4f252bc550ac87267a8372c45f58b9cc458378cb127"
+    },
+    "paul-cezanne/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d629aa27c558499a9ac3bed652112b859746f3a60399ea4aae9550b16dbc1fa4"
+    },
+    "paul-cezanne/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "092b64eed6ac507c6aa3f0e69d195a9e0706d8959fce83f9e0afa38945df3d58"
+    },
+    "paul-gauguin/bio-paul-gauguin": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4a128b9b44801bd7485f0b397f7d67ca2d2537a3977e78d4e11048230b2c310f"
+    },
+    "paul-gauguin/commentary-arearea": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0f2631cf34b45816066c1caeb74e3082448051bee3f071c0a91fa8caf194b6a0"
+    },
+    "paul-gauguin/commentary-ia-orana-maria": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "232be694ad6ba4e3ffacc494a24f420f560ea7e6d812199b452f2e2eb5a05aab"
+    },
+    "paul-gauguin/commentary-nevermore": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "320dff9dff37042990fff1ad593482eda569b3e07ad599ab8461e1ce3fa0edb2"
+    },
+    "paul-gauguin/commentary-spirit-of-the-dead-watching": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0360a565e2d3bb0c184cd821c1053c22ad0358c0813a3663803a408d56f07986"
+    },
+    "paul-gauguin/commentary-still-life-with-teapot-and-fruit": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "427f715cfe86874b51989ecc5a84ee0abb34bbeacd9d365ed3ed8e05b50a2e72"
+    },
+    "paul-gauguin/commentary-tahitian-landscape": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "cf96cfa821dcd431c1659f624bf13a0e7ddbe3d40ea87aa85af6bfe9ee877a25"
+    },
+    "paul-gauguin/commentary-the-siesta": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "85ba2a10e4074a0e555da0e4fd63f41e058f44ab035f36a4fb505cd138472840"
+    },
+    "paul-gauguin/commentary-the-yellow-christ": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "65f544b93aa315c2f683715b478497cebb6718fce64243c5ba0d51dd3298f620"
+    },
+    "paul-gauguin/commentary-three-tahitian-women": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "603ff686fc20b4f990e3fbf0b6a02dfe13443cf49d624e8ddaaa17880bc72510"
+    },
+    "paul-gauguin/commentary-two-tahitian-women": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "bc0836c3f06c4f131b7120d9730efd78a427533840993fe279a62c570a5dfb62"
+    },
+    "paul-gauguin/commentary-vision-after-the-sermon": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "d0dc22ccb50248a3bf7e61a1a2f992bc6d6a48c8d3e02ccd1badae4408d7ac52"
+    },
+    "paul-gauguin/commentary-when-will-you-marry": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "9b469224dcad9ae1e5d03c8a091de78323dc3f356656b7e80f0a3124f316517c"
+    },
+    "paul-gauguin/commentary-where-do-we-come-from": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2e3833fb4c71960da9dbe29f98d1c4dcd07390c2e60be9211aa576dbe958a47e"
+    },
+    "paul-gauguin/gauguin-bio-family-separation": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "8e7adb978bbc4052a677ba09b9d5657ba95022fd8fbcfbc23af17809f778a02f"
+    },
+    "paul-gauguin/gauguin-bio-marquesas-final-years": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "c7e0bd2f368c015de70671ea744188e5e690a0b96a18c0ab7430b9dff514b471"
+    },
+    "paul-gauguin/gauguin-bio-pont-aven-brittany": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "9bc15386200f79fdf7adb800b2f700e34a4bc6bbd834bc96158debe2f0bf29da"
+    },
+    "paul-gauguin/gauguin-bio-stockbroker-artist": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "21ab54f4941bb64fe0fb731166d59074d07931d2e7cb7ba2d3faa0ef2022e44b"
+    },
+    "paul-gauguin/gauguin-bio-two-tahiti-stays": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "95a5a6bc7e8f337d56533a0721d9fe0dc44601cdc01c6159880773a570f914e7"
+    },
+    "paul-gauguin/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "c6f30de1d464e9e9d3719440100bda1c1f61f2183fa043b6c2163465d8d7c482"
+    },
+    "paul-gauguin/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "95ae53ea7d0fb78d77e4c46a967ab000a98a570012726b5dcafa59b9b5de59dc"
+    },
+    "paul-gauguin/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "50572268b712aab2c8cf2c60b7e74a2b7f6b91e4960fe28f3b4501f0a47ba04a"
+    },
+    "paul-gauguin/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a7427291d03735e8ef0409a8246888b5921b7650da969cd6f43a3b74b7a79a2a"
+    },
+    "paul-gauguin/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3d8a459868c3801fc3b250a4370e1e0a89a042eaaeb943cd9bb5357aca3cce9b"
+    },
+    "paul-gauguin/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "9d3831c5faf9619d89be157fd140039b5e8774275699edb2b151c1f9c29cdabb"
+    },
+    "paul-gauguin/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2993420772fc09aa527523a43f119ce3d54113bc0d6f42e69c181d9c7107234f"
+    },
+    "paul-gauguin/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "734eef69cd45d9d5e62875f213d5cf8abc6807f27ca3a17dba900e27fdf2c912"
+    },
+    "paul-gauguin/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4aa2ffe2e05ec2afbbdcb698cffe68b8cbdaa22866c03cc02fdde57735369680"
+    },
+    "paul-gauguin/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "191f8d1603fc3b4165fa00c4588aead3dd49f32228226a797eaac6ccd9f7a856"
+    },
+    "paul-gauguin/timeline-10": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e7acd9f9a1a8623bde014842ea6dbaac34621344ec2a3bee6ff2dd25c5a06fee"
+    },
+    "paul-gauguin/timeline-11": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0a7e89586e2001338e0ec3566aaed075c78160adf9856985afef90173163b187"
+    },
+    "rembrandt/a-woman-bathing-in-a-stream": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b0f5a86495b1566c8a987910e3cf94a87ca273985f8ef025fffd622b23da95f2"
+    },
+    "rembrandt/aristotle-with-a-bust-of-homer": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "32aed329f5bb2759d36169f323616a3e8b64b6a1c24ad0260abe925d8dd5d9f1"
+    },
+    "rembrandt/bathsheba-at-her-bath": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "dcc8cf0498fbfdbadb770583cb2fe50de8f1894d4f116b0239166a11f9b49f5a"
+    },
+    "rembrandt/belshazzars-feast": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "8122e15b87fe1dc834bc479c8eae8b117139f478f35cc0e7ff81984f4f285863"
+    },
+    "rembrandt/bio.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "089e5f1d8603156711b08d191e6f5becfc01e64a3cc4cd1d662a19eecc174703"
+    },
+    "rembrandt/danae": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "299efcce1cc2b8cbf63daf24131a87f63aea4ad8ed4d378c9a408629c4548588"
+    },
+    "rembrandt/judas-repentant": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2c7d627189b023aa1a738291b071945390cb22903809c12561815d4fb8699522"
+    },
+    "rembrandt/lucretia": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "cf7891d95f9963d1d2270f1b08417667d664e9afb8735c07d0b5e6e5fdeb1414"
+    },
+    "rembrandt/people-hendrickje.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "f14540598d6b6b9fb1a89c37cbb1f5c6e01182753bbf7426ddb3ad51253fa2b9"
+    },
+    "rembrandt/people-saskia.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b50248451f157bda87a0d8466104c710cfdf7e18bcaa8316225ca202edb4deaf"
+    },
+    "rembrandt/people-titus.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "9d455de2bd9b19a7ae48165ac503dee6661f0220b9dcb7b586d260d6909805c1"
+    },
+    "rembrandt/philosopher-in-meditation": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "44fd658f644cf2b78fc095277033dfe3a385e3e0e702495515e9a4ac4eaec49a"
+    },
+    "rembrandt/portrait-of-jan-six": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "94c842a07f0006394b905d4c2164535896a0c901fc6515b561bfba905c389636"
+    },
+    "rembrandt/portrait-of-nicolaes-ruts": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "807e7e7fcf3e6b20694c50b1560d0f14bc01d3aba7ad06295ac5f173c4808cfa"
+    },
+    "rembrandt/rembrandt-house.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "cffd85ca62baf88700f683a16e2117715ead64c3f0611d8c6f209e9254033b72"
+    },
+    "rembrandt/saskia-as-flora": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "72155250d089b1526e0cec911bd26463dc8c44e0bebf8bb4dd64450b85509667"
+    },
+    "rembrandt/self-portrait-1659": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "67ee78e929e0880e4a20b1fb9e8d41b84b28f9643d12e7d5d630787517873241"
+    },
+    "rembrandt/self-portrait-at-the-age-of-63": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "dc93eb4aa314894f3fd36d3db6d7de3ec4c4162fdf963b94753f5ab9be2b79d1"
+    },
+    "rembrandt/self-portrait-with-two-circles": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "95abc0502b8c8c9487c2342772a5df1022716a9d6a685b001d8b417c63c8edb5"
+    },
+    "rembrandt/self-portraits.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2b83756973f108796d0051e8f2702c213221f7ffa7a668fa5a0410e29332fe53"
+    },
+    "rembrandt/syndics-of-the-drapers-guild.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "fc5f8f5f39173af34617ac8c22efe2002ada9050c1cf149ff5ce222658923d3b"
+    },
+    "rembrandt/the-abduction-of-europa": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3dc1fb132106e7eeab71a8a09395010ed2bf79a495ce8fbd5fc71b70b1b9096c"
+    },
+    "rembrandt/the-artist-in-his-studio": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "27e0b6a3537cf39dcc4d56f0bd125c9fd18c84ff1ef2724d2b0f4ca8ef331cb0"
+    },
+    "rembrandt/the-blinding-of-samson": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a18064bba5920beb991d34b5ff01d422ca7175ec8976d573ca02301550ed4194"
+    },
+    "rembrandt/the-conspiracy-of-claudius-civilis": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2aac7e74e22e6e68c4430b430fb1c104e1628487e023416bc4fa5d8c930c3052"
+    },
+    "rembrandt/the-jewish-bride.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a95532aac56fb2a4ae997eff3ecd29bd9ee13453bc8fc8a3a88ecbcd187f2218"
+    },
+    "rembrandt/the-night-watch.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ae5b914b12ceee276de3472ffc282e0301ee16968e342e67f19e139f18bd7c3e"
+    },
+    "rembrandt/the-polish-rider": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ba86c7ae523f72853bb4a44635b81a23dd6b31a8a7113a94a7cb5c61d057e0a2"
+    },
+    "rembrandt/the-raising-of-lazarus": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "3460c07afd9196c2aadc3615afbf1a559773c8f79a428ec8ab6815f21eb81b5d"
+    },
+    "rembrandt/the-shipbuilder-and-his-wife": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2f663eecb6b39447c01802a1d20c3d6a432ce5c80c6fc36b2513ba71dae55200"
+    },
+    "rembrandt/the-storm-on-the-sea-of-galilee.en": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "1ba73a59d30e703e2dc47260eef6f6f40251b18663031cd93d6c1b201ac120ab"
+    },
+    "rembrandt/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ff99342977a8cb695ef7d88e27d0ad58aeb1cc43163ddee98da783af6ca0e0ae"
+    },
+    "rembrandt/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e555a802babfd4acd627e48c796f3a1b3a7e2b8895de8fe5f354cf70417e7cc0"
+    },
+    "rembrandt/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "91d9d6c969e95fa0073578522be1beec85de2fd58badc32a98f9c9ccc160a257"
+    },
+    "rembrandt/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b1a828d3839be80e3f1645fdcd06bfe65a327803bfacb0becb2d4a73b7eb3100"
+    },
+    "rembrandt/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "6d3b08bac40483a52a8332528fa4194d87e3997b1d01dd14c6a0503016fb09c7"
+    },
+    "rembrandt/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4dfef81286e3112c00ff0f9d2832eef99fa4df40907fbfb8e0b6eea8a1f913ad"
+    },
+    "rembrandt/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "48e38c773b296bbacee4284e3fd20cb41377e4296367790e31c27fe95819918e"
+    },
+    "rembrandt/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0cc9c8bea0cfb45ec6f84857c14822bb08cfbf4e6fbbce7eed0f6f16c5417192"
+    },
+    "rembrandt/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a6c1031947bf1e5efac7ea86b91227e870e5746bf4ae75b7951d812a5c015314"
+    },
+    "rembrandt/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "98a40ecbf99035c11a1ba793898d74a9c74aac16121faf81ea63310361eee5b6"
+    },
+    "rembrandt/timeline-10": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "a584eee7dbba005e4c55bf849aa7da2b0b9264b8308fe222958dfd1bf1b5336a"
+    },
+    "rembrandt/timeline-11": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "fc924d2656bee9a2c1ea323567814ac7e8d3bac60fb12cd03a08f0cd3645f1d2"
+    },
+    "rembrandt/timeline-12": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "833e00e5de81a03b02d33b75b2a4176a48805d30ee7a335325315979d46a0754"
+    },
+    "rembrandt/timeline-13": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2e682e9eb3f9ecf511078b4290025058f4d64375113622f4418ba8a56403ded1"
+    },
+    "rembrandt/timeline-14": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "b196c94edb2a8986521c602c41fb3870230c156ce65e121855016b7dc0d15768"
+    },
+    "vincent-van-gogh/bio-vincent-van-gogh": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "4e658fee99bc7246d13d671940a900e6f2e8686e3c1799471fe68c5d803ff575"
+    },
+    "vincent-van-gogh/commentary-almond-blossom": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "52e03a269a465b6b96c2d50629f54b9ead1b8758c103498cb66f5428b49480cc"
+    },
+    "vincent-van-gogh/commentary-cafe-terrace-at-night": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "bcfc911cbef3d97a3bba41366009bce7d7dc9ffbf15fb14ccf4d438c613c382f"
+    },
+    "vincent-van-gogh/commentary-irises-1890": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "021abcd1b779f6e27a5568d17207212d5f986dbda5a3ae702d1e8c12a7bec159"
+    },
+    "vincent-van-gogh/commentary-la-berceuse": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0a16a317f7485f20a67fd4c41a498a4c9d7749956a959108438da4db763d9405"
+    },
+    "vincent-van-gogh/commentary-oleanders": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "fb0cec71c9cb2443c28d36d5bad914bc454fbd1642332032d75fe91bf45dd402"
+    },
+    "vincent-van-gogh/commentary-self-portrait-with-a-straw-hat": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "652a748a36e017dd24e7fc01a50ca3cae12897d0eac88aeac0013a5e118253b7"
+    },
+    "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "08c1ddc38416312fa597d49c654e4b66024d396b55939b48178dfeaaeab4ff63"
+    },
+    "vincent-van-gogh/commentary-sunflowers-1887": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e82872a3bede58096c1271c28fe9e15c11535b1e81d123cc11045ff77e333146"
+    },
+    "vincent-van-gogh/commentary-sunflowers-arles": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "30cf8a75e012ba22c0a236a980e27619b955b93f1ce6c1f4a88df9c6d8e1758b"
+    },
+    "vincent-van-gogh/commentary-the-bedroom": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e7a76f5175eeb4e7df1523c80774cdec106ff75d1e037aafde7e9fda99152850"
+    },
+    "vincent-van-gogh/commentary-the-potato-eaters": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "24bd3dc62a117b9a1669e7dca02672a80e9a98de02677b21f70b16537f1e2c10"
+    },
+    "vincent-van-gogh/commentary-the-starry-night": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "e23a3a9d27d6f0331858b25522d6195fd34a713ca94c1acee3031cf1cf6ba713"
+    },
+    "vincent-van-gogh/commentary-wheat-field-with-cypresses": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "14e02a785e609d9faee04012bc0017f33f897d6555cc6f6b5de0d5f0998eb9d1"
+    },
+    "vincent-van-gogh/commentary-wheatfield-with-crows": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "156a17b8ac42f94f1c065e89693929b3331e8bdd2af0f13eea132c9e11a0a973"
+    },
+    "vincent-van-gogh/timeline-00": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "79ae2bfdd624288b4d63525d6607d7636dcad7d6a2279e3972a5fcef2a455e0c"
+    },
+    "vincent-van-gogh/timeline-01": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ce7755e9c39d59bade2388af1aca75eb6353cf6187c7db943a2d700a55f45eae"
+    },
+    "vincent-van-gogh/timeline-02": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2a6c10afaa3c6311e6f00e77e4ca97cfd1ffe5c4ad3fca8caa91c59240b54e56"
+    },
+    "vincent-van-gogh/timeline-03": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "09cd9ce5c1ade4244b500ca630fde261b90d5babe1b45ec2d1d39612c59b4eaf"
+    },
+    "vincent-van-gogh/timeline-04": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "2386cc27dff0700827531c61f38c777e7022b30cd984bf56a74e5a11e3db8665"
+    },
+    "vincent-van-gogh/timeline-05": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "0df7e287f285162ffb54de1acda64158acc0961bca25e5c03fbcc855347e2950"
+    },
+    "vincent-van-gogh/timeline-06": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "13629742b8526fbe57896092919c696ef7b06df97ff4bc0f4ecd2a092d67a918"
+    },
+    "vincent-van-gogh/timeline-07": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ff893aac545c370f3fa0f7e22709cb6ab4653e063c39ec0ce237e968c7474e9b"
+    },
+    "vincent-van-gogh/timeline-08": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "29605e4c56792897fed08737ef28838f6145554f7c9cff3bb885c437eff3ec57"
+    },
+    "vincent-van-gogh/timeline-09": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "7f3aea74bc7007daa075dd0117109755890607be468c8ac52a43cee4c492f9b3"
+    },
+    "vincent-van-gogh/van-gogh-bio-arles-ear": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "006113c3d6d578fbee88873f6267a8ce1942383a6fc110dace044de2b8f42e00"
+    },
+    "vincent-van-gogh/van-gogh-bio-auvers-death": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "64887aa345d6111aad493eb416a7e3a5a21a4ed61a2423f00b7cf6678878c2ea"
+    },
+    "vincent-van-gogh/van-gogh-bio-early-netherlands": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "520d22dfb49d8df9b40cfd1c9b43a695ca25986121f7da05780a70b6589d29cb"
+    },
+    "vincent-van-gogh/van-gogh-bio-saint-remy": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "ef07e1ee056c69da64182d4cce95a0915c40806779c6630228afb1d6c3563289"
+    },
+    "vincent-van-gogh/van-gogh-bio-theo-letters": {
+      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
+      "reviewed_on": "2026-10-11",
+      "content_sha256": "f8af816c665c9be55582e6a4460cfb2afb07b4320cb94ad5068a31834a0fe53f"
+    }
+  }
+}

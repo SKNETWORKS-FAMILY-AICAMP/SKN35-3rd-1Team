@@ -10,7 +10,9 @@
       "year": "1571–1584",
       "title": "밀라노의 가난한 어린 시절",
       "story": "카라바조의 본명은 미켈란젤로 메리시로, 1571년 밀라노에서 태어났다. 아버지는 카라바조 후작 집안의 관리인이었다. 어머니는 다섯 아이를 가난 속에서 키우다 1584년 세상을 떠났고, 같은 해 카라바조는 티치아노의 제자로 알려진 화가 시모네 페테르차노 밑에서 4년 도제 생활을 시작했다.",
-      "people": ["시모네 페테르차노 (스승)"],
+      "people": [
+        "시모네 페테르차노 (스승)"
+      ],
       "related_artworks": [],
       "source_file": "bio.en.md"
     },
@@ -19,15 +21,28 @@
       "title": "빈털터리로 도착한 로마",
       "story": "1592년 카라바조는 '몇 차례의 다툼'과 경찰관을 다치게 한 일로 밀라노를 떠나 로마로 향했다. 초기 전기 작가는 그가 '헐벗고 몹시 궁핍한 채, 머물 곳도 돈도 없이' 로마에 도착했다고 적었다.",
       "people": [],
-      "related_artworks": [],
+      "related_artworks": [
+        "boy-with-a-basket-of-fruit",
+        "young-sick-bacchus",
+        "boy-bitten-by-a-lizard"
+      ],
       "source_file": "bio.en.md"
     },
     {
       "year": "1595 무렵",
       "title": "델 몬테 추기경의 눈에 띄다",
       "story": "화상의 가게에 걸린 카라바조의 그림 두 점이 로마 최고의 감식가 가운데 한 명인 프란체스코 마리아 델 몬테 추기경의 눈에 띄었다. 추기경은 두 점을 모두 사들이고 그를 후원했다. 카라바조는 대상을 이상화하지 않고 눈에 보이는 그대로, 흠까지 그리는 사실주의로 이름을 얻기 시작했다.",
-      "people": ["프란체스코 마리아 델 몬테 (후원자)"],
-      "related_artworks": [],
+      "people": [
+        "프란체스코 마리아 델 몬테 (후원자)"
+      ],
+      "related_artworks": [
+        "the-fortune-teller",
+        "the-cardsharps",
+        "bacchus",
+        "medusa",
+        "the-musicians",
+        "the-lute-player"
+      ],
       "source_file": "bio.en.md"
     },
     {
@@ -35,30 +50,50 @@
       "title": "콘타렐리 예배당, 『성 마태오를 부르심』",
       "story": "델 몬테의 영향으로 카라바조는 산 루이지 데이 프란체시 성당 콘타렐리 예배당의 그림을 맡았다. 1600년 공개된 『성 마태오를 부르심』과 『성 마태오의 순교』는 즉시 화제가 되었고, 그 뒤로 그에게는 주문이 끊이지 않았다. 로마의 젊은 화가들이 앞다투어 그의 화풍을 따르면서 '카라바조 화파'가 생겨났다.",
       "people": [],
-      "related_artworks": ["the-calling-of-saint-matthew"],
+      "related_artworks": [
+        "the-calling-of-saint-matthew",
+        "the-martyrdom-of-saint-matthew"
+      ],
       "source_file": "bio.en.md"
     },
     {
       "year": "1599–1602",
       "title": "피가 튀는 순간을 그리다, 『홀로페르네스의 목을 베는 유디트』",
       "story": "카라바조는 이야기에서 가장 극적인 순간, 즉 목을 베는 바로 그 순간을 골랐다. 인물들은 얕은 무대 위에 옆에서 비추는 연극적인 조명을 받는다. 유디트의 모델은 이 무렵 카라바조의 여러 그림에 등장한 로마의 고급 매춘부 필리데 멜란드로니로 추정된다.",
-      "people": ["필리데 멜란드로니 (모델)"],
-      "related_artworks": ["judith-beheading-holofernes"],
+      "people": [
+        "필리데 멜란드로니 (모델)"
+      ],
+      "related_artworks": [
+        "judith-beheading-holofernes"
+      ],
       "source_file": "judith-beheading-holofernes.md"
     },
     {
       "year": "1601",
       "title": "로마에서 가장 유명한 화가, 『엠마오의 만찬』과 『의심하는 성 토마스』",
       "story": "귀족 수집가 치리아코 마테이를 위해 『엠마오의 만찬』을 그렸고, 같은 무렵 『의심하는 성 토마스』도 제작했다. 성인과 예수를 평범한 사람의 얼굴과 몸으로 그린 이 그림들은 관람자가 장면 안에 함께 있는 듯한 느낌을 준다.",
-      "people": ["치리아코 마테이 (후원자)"],
-      "related_artworks": ["supper-at-emmaus", "the-incredulity-of-saint-thomas"],
+      "people": [
+        "치리아코 마테이 (후원자)"
+      ],
+      "related_artworks": [
+        "supper-at-emmaus",
+        "the-incredulity-of-saint-thomas",
+        "the-conversion-of-saint-paul",
+        "death-of-the-virgin",
+        "crucifixion-of-saint-peter",
+        "amor-vincit-omnia",
+        "the-taking-of-christ",
+        "the-entombment-of-christ"
+      ],
       "source_file": "bio.en.md"
     },
     {
       "year": "1600–1605",
       "title": "칼과 곤봉, 끊이지 않는 싸움",
       "story": "명성이 높아지는 동안 카라바조의 폭력도 잦아졌다. 1600년에는 델 몬테 추기경의 손님을 곤봉으로 때려 고소당했고, 1605년에는 모델이자 연인인 레나를 두고 다툰 공증인의 머리를 칼로 크게 다치게 해 제노바로 3주간 피신했다. 그때마다 후원자들이 그를 감싸 주었다.",
-      "people": ["레나 (모델)"],
+      "people": [
+        "레나 (모델)"
+      ],
       "related_artworks": [],
       "source_file": "bio.en.md"
     },
@@ -66,7 +101,9 @@
       "year": "1606",
       "title": "살인, 그리고 사형 선고",
       "story": "1606년 5월 29일 카라바조는 오랫동안 다퉈 온 라누치오 토마소니를 죽였다. 결투였는지 싸움이었는지, 도박 빚 때문이었는지 여자 문제 때문이었는지는 분명하지 않다. 토마소니의 부유한 집안이 강하게 처벌을 요구하자 후원자들도 더는 그를 지킬 수 없었다. 카라바조는 참수형을 선고받았고, 누구든 그를 죽여도 되는 현상금이 걸렸다.",
-      "people": ["라누치오 토마소니"],
+      "people": [
+        "라누치오 토마소니"
+      ],
       "related_artworks": [],
       "source_file": "bio.en.md"
     },
@@ -74,8 +111,12 @@
       "year": "1606–1607",
       "title": "나폴리로 도망치다",
       "story": "카라바조는 로마 남쪽의 콜론나 가문 영지를 거쳐 나폴리로 도망쳤다. 로마의 사법권이 미치지 않는 그곳에서 콜론나 가문의 보호를 받으며 『자비의 일곱 가지 행위』 같은 중요한 교회 그림을 주문받았다. 그의 짧은 체류만으로 나폴리에 카라바조 화파가 생겨났다.",
-      "people": ["코스탄차 콜론나 (보호자)"],
-      "related_artworks": [],
+      "people": [
+        "코스탄차 콜론나 (보호자)"
+      ],
+      "related_artworks": [
+        "the-seven-works-of-mercy"
+      ],
       "source_file": "bio.en.md"
     },
     {
@@ -83,14 +124,19 @@
       "title": "몰타의 기사가 되었다가 감옥에 갇히다",
       "story": "카라바조는 몰타로 건너가 몰타 기사단의 기사가 되었고, 그곳에서 자신의 가장 큰 그림이자 유일하게 서명한 그림인 『세례 요한의 참수』를 그렸다. 그러나 1608년 8월 다시 귀족 기사와 싸워 그를 크게 다치게 했고, 발레타의 감옥에 갇혔다가 탈출했다. 그해 12월 기사단에서 '썩은 손발'로 불리며 쫓겨났다.",
       "people": [],
-      "related_artworks": [],
+      "related_artworks": [
+        "the-beheading-of-saint-john-the-baptist",
+        "saint-jerome-writing"
+      ],
       "source_file": "bio.en.md"
     },
     {
       "year": "1608–1609",
       "title": "시칠리아를 떠도는 도망자",
       "story": "시칠리아로 건너간 카라바조는 로마 시절 친구 마리오 민니티를 시라쿠사에서 다시 만나, 메시나와 팔레르모까지 이어지는 개선 여행 같은 시간을 보냈다. 하지만 기록에는 몰타 이후 그의 기이한 행동이 더 심해졌다고 적혀 있다. 그는 적에게 쫓기고 있다고 느꼈다.",
-      "people": ["마리오 민니티 (친구)"],
+      "people": [
+        "마리오 민니티 (친구)"
+      ],
       "related_artworks": [],
       "source_file": "bio.en.md"
     },
@@ -98,8 +144,12 @@
       "year": "1609–1610",
       "title": "자비를 구하는 그림, 『골리앗의 머리를 든 다윗』",
       "story": "1609년 10월 나폴리에서 습격을 받아 얼굴을 크게 다쳤고, 로마에는 그가 죽었다는 소문까지 돌았다. 『골리앗의 머리를 든 다윗』에서 잘린 골리앗의 머리는 카라바조 자신의 얼굴로 여겨진다. 이 그림이 살인죄를 사면할 권한을 가진 보르게세 추기경에게 보낸 선물이었다면, 자비를 구하는 개인적인 탄원으로 읽을 수 있다. 다만 제작 시기는 1605년부터 1610년까지 의견이 갈린다.",
-      "people": ["시피오네 보르게세 추기경"],
-      "related_artworks": ["david-with-the-head-of-goliath"],
+      "people": [
+        "시피오네 보르게세 추기경"
+      ],
+      "related_artworks": [
+        "david-with-the-head-of-goliath"
+      ],
       "source_file": "david-with-the-head-of-goliath.md"
     },
     {
@@ -107,7 +157,10 @@
       "title": "사면을 받으러 가는 길에서 맞은 죽음",
       "story": "사면이 곧 내려진다는 소식을 듣고, 카라바조는 1610년 여름 보르게세 추기경에게 줄 그림 세 점을 싣고 배로 로마를 향했다. 그는 그해 7월 18일 열병으로 숨졌다고 전해지며, 포르토 에르콜레에 묻혔다. 당시에도 토마소니 가문이나 몰타 기사단이 복수했다는 소문이 돌았고, 사인은 지금도 논쟁거리다. 서른여덟 살이었다.",
       "people": [],
-      "related_artworks": [],
+      "related_artworks": [
+        "the-martyrdom-of-saint-ursula",
+        "the-denial-of-saint-peter"
+      ],
       "source_file": "bio.en.md"
     },
     {

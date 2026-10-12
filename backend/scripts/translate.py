@@ -64,6 +64,29 @@ The Basket of Apples = 사과 바구니 / The Bathers (Les Grandes Baigneuses) =
 Musée d'Orsay = 오르세 미술관 / Art Institute of Chicago = 시카고 미술관 / Philadelphia Museum of Art = 필라델피아 미술관
 National Gallery of Art = 미국 국립미술관 / Impressionism = 인상주의 / Post-Impressionism = 후기 인상주의
 Fauvism = 야수파 / Cubism = 입체파
+Flora / Saskia as Flora = 플로라로 분장한 사스키아 / Danaë = 다나에 / Belshazzar's Feast = 벨사살의 연회
+The Storm on the Sea of Galilee = 갈릴리 바다의 폭풍 / Aristotle with a Bust of Homer = 호메로스의 흉상을 바라보는 아리스토텔레스
+Bathsheba at Her Bath = 목욕하는 밧세바 / The Conspiracy of Claudius Civilis = 클라우디우스 키빌리스의 음모
+Syndics of the Drapers' Guild = 직물 길드 이사회 (De Staalmeesters) / Self-Portrait at the Age of 63 = 63세의 자화상
+Isabella Stewart Gardner Museum = 이저벨라 스튜어트 가드너 박물관 / National Gallery (London) = 내셔널 갤러리
+The Fortune Teller = 점쟁이 / The Cardsharps = 카드 사기꾼 / Bacchus = 바쿠스 / Medusa = 메두사
+The Martyrdom of Saint Matthew = 성 마태오의 순교 / Conversion on the Way to Damascus = 성 바울의 회심
+Death of the Virgin = 성모의 죽음 / The Seven Works of Mercy = 자비의 일곱 가지 행위
+The Beheading of Saint John the Baptist = 세례 요한의 참수 / Tiberio Cerasi = 티베리오 체라시 / Cerasi Chapel = 체라시 예배당
+Santa Maria del Popolo = 산타 마리아 델 포폴로 성당 / Pio Monte della Misericordia = 피오 몬테 델라 미세리코르디아
+Laerzio Cherubini = 라에르치오 케루비니 / Uffizi = 우피치 미술관 / Kimbell Art Museum = 킴벨 미술관
+Judas Returning the Thirty Pieces of Silver = 은화 30냥을 돌려주는 유다 / The Artist in his Studio = 화실의 화가
+Portrait of Nicolaes Ruts = 니콜라스 뤼츠의 초상 / Philosopher in Meditation = 명상하는 철학자
+The Abduction of Europa = 에우로페의 납치 / The Shipbuilder and his Wife = 조선업자와 그의 아내
+The Blinding of Samson = 삼손의 실명 / A Woman Bathing in a Stream = 시냇물에서 목욕하는 여인
+Portrait of Jan Six = 얀 식스의 초상 / Jan Six = 얀 식스 / The Polish Rider = 폴란드 기수 / Lucretia = 루크레티아
+The Raising of Lazarus = 나사로의 부활 / Self-Portrait with Two Circles = 두 개의 원이 있는 자화상
+Boy with a Basket of Fruit = 과일 바구니를 든 소년 / Young Sick Bacchus = 병든 바쿠스 / Boy Bitten by a Lizard = 도마뱀에게 물린 소년
+The Musicians = 음악가들 / The Lute Player = 류트 연주자 / Basket of Fruit = 과일 바구니
+Crucifixion of Saint Peter = 성 베드로의 십자가형 / Amor Vincit Omnia = 승리자 아모르 / The Taking of Christ = 그리스도의 체포
+The Entombment of Christ = 그리스도의 매장 / The Martyrdom of Saint Ursula = 성녀 우르술라의 순교
+The Denial of Saint Peter = 성 베드로의 부인 / Saint Jerome Writing = 글 쓰는 성 히에로니무스
+Galleria Borghese = 보르게세 미술관 / Frick Collection = 프릭 컬렉션 / Hermitage = 에르미타주 미술관
 """
 
 SYSTEM = f"""너는 미술사 문서를 한국어로 옮기는 번역가다. 위키백과 영어 원문을 한국어로 번역한다.

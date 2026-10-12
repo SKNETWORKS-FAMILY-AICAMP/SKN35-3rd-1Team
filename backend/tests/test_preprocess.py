@@ -37,11 +37,15 @@ def build_with(monkeypatch, change):
 def test_counts_and_uniqueness(out):
     assert pp.main() == 0
     manifest = json.loads((out / "_SUCCESS.json").read_text(encoding="utf-8"))
-    rows = {name: f["rows"] for name, f in manifest["files"].items()}
-    assert rows == {"movements.jsonl": 3, "artists.jsonl": 6, "artworks.jsonl": 32, "documents.jsonl": 83}
+    # 데이터가 늘어도 깨지지 않게 고정 건수 대신 '기록된 줄 수 = 실제 파일 줄 수'와 하한을 본다
+    for name, f in manifest["files"].items():
+        assert f["rows"] == len(pp.load_processed(name)), name
+    assert manifest["files"]["artists.jsonl"]["rows"] >= 6
+    assert manifest["files"]["artworks.jsonl"]["rows"] >= 6 * pp.MIN_ARTWORKS
     docs = pp.load_processed("documents.jsonl")
     assert len({d["doc_key"] for d in docs}) == len(docs)
-    assert len({w["slug"] for w in pp.load_processed("artworks.jsonl")}) == 32
+    works = pp.load_processed("artworks.jsonl")
+    assert len({w["slug"] for w in works}) == len(works)
     assert not (out / ".staging").exists()
 
 
@@ -54,7 +58,7 @@ def test_rerun_is_deterministic_and_warnings_reset(out):
     assert len(pp.warnings) == n_warnings
 
 
-def test_needs_review_is_preserved(out):
+def test_needs_review_is_preserved(out, reviews):
     assert pp.main() == 0
     docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}
     assert all(isinstance(d["needs_review"], bool) for d in docs.values())
@@ -162,7 +166,7 @@ def test_review_pattern_and_missing_reviewer(out, reviews):
     assert len(json.loads(reviews.read_text(encoding="utf-8"))["reviews"]) == 14
 
 
-def test_translation_replaces_english_original(out):
+def test_translation_replaces_english_original(out, reviews):
     """번역본이 있으면 영어 원문 대신 한국어 번역을 내보내고, doc_key 는 원문과 같다."""
     assert pp.main() == 0
     docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}
@@ -199,3 +203,51 @@ def test_fix_korean_year_notation():
 
     assert fix_korean("c. 1893년에 제작") == "1893년경에 제작"
     assert fix_korean("(c. 1600–1601)은") == "(1600–1601년경)은"
+
+
+def test_artist_aliases_cover_collected_artists(out):
+    assert pp.main() == 0
+    rows = {r["slug"]: r for r in pp.load_processed("artist_aliases.jsonl")}
+    collected = {a["slug"] for a in pp.load_processed("artists.jsonl")}
+    assert {s for s, r in rows.items() if r["status"] == "collected"} == collected
+    assert all(r["aliases"] for r in rows.values())
+
+
+def test_duplicate_alias_is_an_error(out, monkeypatch):
+    def dup(cat):
+        cat["aliases"]["paul-gauguin"]["aliases"].append("모네")
+
+    assert pp.main() == 0
+    before = snapshot(out)
+    build_with(monkeypatch, dup)
+    assert pp.main() == 1
+    after = snapshot(out)
+    failed = json.loads(after.pop("_FAILED.json"))
+    assert after == before
+    assert any("겹침" in e for e in failed["errors"])
+
+
+def test_aliases_in_artist_slugs_are_fixed(out, monkeypatch):
+    """수집 담당이 artist_slugs 에 별칭을 넣어도 멈추지 않고 작가 slug 로 고친다."""
+    real_build = pp.build
+
+    def build_with_alias():
+        cat = real_build()
+        bio = next(d for d in cat["documents"] if d["doc_key"] == "claude-monet/bio")
+        bio["artist_slugs"] = ["claude-monet", "monet", "모네"]
+        pp.normalize_artist_slugs(cat)
+        return cat
+
+    monkeypatch.setattr(pp, "build", build_with_alias)
+    assert pp.main() == 0
+    docs = {d["doc_key"]: d for d in pp.load_processed("documents.jsonl")}
+    assert docs["claude-monet/bio"]["artist_slugs"] == ["claude-monet"]
+    assert any("고침" in w for w in pp.warnings)
+
+
+def test_crlf_checkout_is_still_accepted(out):
+    """Windows 에서 git 이 줄바꿈을 CRLF 로 바꿔 받아도 load_processed() 가 거부하지 않는다."""
+    assert pp.main() == 0
+    path = out / "artists.jsonl"
+    path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+    assert len(pp.load_processed("artists.jsonl")) >= 6

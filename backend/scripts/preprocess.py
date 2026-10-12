@@ -8,7 +8,7 @@
 원본에 없는 값(모네·세잔 작품 정보, 사조)은 data/mappings/catalog.json 에서 채운다.
 
 실행 (backend/ 에서):  uv run python -m scripts.preprocess
-결과: data/processed/{movements,artists,artworks,documents}.jsonl + _SUCCESS.json
+결과: data/processed/{movements,artists,artworks,documents,artist_aliases}.jsonl + _SUCCESS.json
 
 검수 (data/mappings/reviews.json 에 기록):
     uv run python -m scripts.preprocess review --list
@@ -16,7 +16,7 @@
     검수할 때의 본문 해시를 함께 저장한다. 그 뒤 본문이 바뀌면 다시 검토 필요(needs_review=true)로 돌아간다.
 
 출력 규칙
-    - 4개 파일을 data/processed/.staging/ 에 모두 만든 뒤 한꺼번에 교체한다.
+    - 5개 파일을 data/processed/.staging/ 에 모두 만든 뒤 한꺼번에 교체한다.
     - 성공하면 _SUCCESS.json(파일별 sha256, 줄 수)을 마지막에 쓴다. 적재 스크립트는
       load_processed() 로 읽는다. _SUCCESS.json 이 없거나 해시가 다르면 읽지 않는다.
     - 실패하면 기존 결과와 _SUCCESS.json 은 그대로 두고 _FAILED.json 에 이유를 남긴다.
@@ -41,7 +41,8 @@ SUCCESS = OUT / "_SUCCESS.json"
 FAILED = OUT / "_FAILED.json"
 MAPPING = ROOT / "data" / "mappings" / "catalog.json"
 REVIEWS = ROOT / "data" / "mappings" / "reviews.json"
-OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl")
+ALIASES = ROOT / "data" / "mappings" / "artist_aliases.json"
+OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl", "artist_aliases.jsonl")
 
 MIN_CONTENT = 200  # 이보다 짧은 문서는 경고
 MIN_ARTWORKS = 3  # 기획서 기준: 작가당 대표작 5점, 최소 3점
@@ -60,7 +61,7 @@ DROP_SECTIONS = {
 }
 HEADING = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
 # 한국어·로마자 문서에 섞이면 안 되는 문자 (기계 번역이 단어 일부를 다른 언어로 내놓는 경우)
-FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿ฀-๿぀-ヿ]")
+FOREIGN_SCRIPT = re.compile(r"[֐-׿؀-ۿЀ-ӿऀ-ॿ฀-๿぀-ヿ]")
 FOOTNOTE = re.compile(r"\[(?:\*|\d{1,3}|편집|출처 필요)\]")  # 위키 각주 표식
 # 화면용 짧은 글(카드 설명, 작가 소개)에서 지우는 것: 원어 병기 괄호, 발음 기호
 LANG_PAREN = re.compile(
@@ -364,6 +365,17 @@ def validate(cat: dict) -> list[str]:
             errors.append(f"작가 {slug}: 생애 문서 없음")
         if n_works < MIN_ARTWORKS:
             errors.append(f"작가 {slug}: 작품 {n_works}점 (최소 {MIN_ARTWORKS}점)")
+    # 별칭: 수집된 작가는 반드시 있어야 하고, 같은 별칭이 두 작가에 겹치면 안 된다 (챗봇이 작가를 헷갈림)
+    owner: dict[str, str] = {}
+    for slug, a in cat["aliases"].items():
+        for alias in a["aliases"]:
+            key = alias.casefold()
+            if key in owner and owner[key] != slug:
+                errors.append(f"별칭 '{alias}' 가 {owner[key]}, {slug} 두 작가에 겹침")
+            owner[key] = slug
+    for slug in artists:
+        if slug not in cat["aliases"]:
+            errors.append(f"작가 {slug}: 별칭 없음 (data/mappings/artist_aliases.json 에 추가)")
     return errors
 
 
@@ -379,7 +391,7 @@ def write_atomic(path: Path, data: bytes) -> None:
 
 
 def publish(outputs: dict[str, list[dict]]) -> dict:
-    """4개 파일을 .staging 에 모두 만든 뒤 교체하고, 마지막에 _SUCCESS.json 을 쓴다.
+    """5개 파일을 .staging 에 모두 만든 뒤 교체하고, 마지막에 _SUCCESS.json 을 쓴다.
 
     교체 도중에 멈추면 _SUCCESS.json 이 없는 상태로 남으므로, load_processed() 는 그 결과를 읽지 않는다.
     """
@@ -417,7 +429,8 @@ def load_processed(name: str) -> list[dict]:
     if not SUCCESS.exists():
         raise RuntimeError("data/processed/_SUCCESS.json 이 없습니다. 전처리를 다시 실행하세요.")
     expected = json.loads(SUCCESS.read_text(encoding="utf-8"))["files"][name]["sha256"]
-    data = (OUT / name).read_bytes()
+    # git 이 줄바꿈을 CRLF 로 바꿔 받아도 같은 내용으로 본다 (전처리는 항상 LF 로 쓴다)
+    data = (OUT / name).read_bytes().replace(b"\r\n", b"\n")
     if hashlib.sha256(data).hexdigest() != expected:
         raise RuntimeError(f"{name} 이 _SUCCESS.json 과 다릅니다. 전처리를 다시 실행하세요.")
     return [json.loads(line) for line in data.decode("utf-8").splitlines()]
@@ -440,7 +453,34 @@ def build() -> dict:
     read_comparisons(RAW / "_comparisons", cat)
     apply_overrides(cat, mapping)
     apply_reviews(cat, read_reviews())
+    cat["aliases"] = json.loads(ALIASES.read_text(encoding="utf-8"))["artists"]
+    normalize_artist_slugs(cat)
     return cat
+
+
+def normalize_artist_slugs(cat: dict) -> None:
+    """artist_slugs 에 별칭(예: "monet", "모네")이 섞여 들어오면 작가 slug 로 바꾸고 중복을 지운다.
+
+    수집 담당이 별칭을 적어 넣는 일이 실제로 있었다. 멈추지 않고 고친 뒤 경고만 남긴다.
+    별칭 목록에도 없는 값은 그대로 두어 검증에서 오류로 잡히게 한다.
+    """
+    by_alias = {alias.casefold(): slug for slug, a in cat["aliases"].items() for alias in [slug, *a["aliases"]]}
+    for d in cat["documents"]:
+        fixed = []
+        for s in d["artist_slugs"]:
+            slug = s if s in cat["artists"] else by_alias.get(s.casefold(), s)
+            if slug not in fixed:
+                fixed.append(slug)
+        if fixed != d["artist_slugs"]:
+            warnings.append(f"문서 {d['doc_key']}: artist_slugs {d['artist_slugs']} 를 {fixed} 로 고침 (별칭은 artist_aliases.json 에)")
+            d["artist_slugs"] = fixed
+
+
+def alias_rows(cat: dict) -> list[dict]:
+    """기획된 작가 전부의 별칭. status 는 이번 결과에 작가 데이터가 있는지로 정한다 (손으로 적지 않음)."""
+    return [{"slug": slug, "name": a["name"], "status": "collected" if slug in cat["artists"] else "planned",
+             "aliases": a["aliases"], "confusable": a.get("confusable", [])}
+            for slug, a in sorted(cat["aliases"].items())]
 
 
 def apply_overrides(cat: dict, mapping: dict) -> None:
@@ -548,6 +588,7 @@ def run() -> int:
         "artists.jsonl": sorted(cat["artists"].values(), key=lambda r: r["slug"]),
         "artworks.jsonl": sorted(cat["artworks"].values(), key=lambda r: r["slug"]),
         "documents.jsonl": sorted(cat["documents"], key=lambda r: r["doc_key"]),
+        "artist_aliases.jsonl": alias_rows(cat),
     })
 
     print(f"사조 {len(cat['movements'])} · 작가 {len(cat['artists'])} · 작품 {len(cat['artworks'])} · "

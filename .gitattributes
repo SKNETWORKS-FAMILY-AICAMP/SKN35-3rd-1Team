@@ -1,0 +1,4 @@
+# 전처리 결과는 _SUCCESS.json 의 sha256 과 바이트 단위로 비교하므로 줄바꿈을 바꾸지 않는다.
+# (Windows 의 core.autocrlf=true 가 LF 를 CRLF 로 바꾸면 해시가 달라져 load_processed() 가 거부함)
+data/processed/*.jsonl text eol=lf
+data/processed/*.json text eol=lf

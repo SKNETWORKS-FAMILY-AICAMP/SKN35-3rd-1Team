@@ -1,0 +1,90 @@
+{
+  "artist_slug": "claude-monet",
+  "purpose": "스토리텔링용 연표. 생애 사건과 작품을 연결한다. 각 사건은 같은 폴더의 원문에 근거한다.",
+  "content_author": "SKN35-3rd-1Team 데이터팀 (기존 원문과 미술관 자료를 바탕으로 정리)",
+  "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+  "collected_at": "2026-10-11",
+  "needs_review": true,
+  "events": [
+    {
+      "year": "1840–1858",
+      "title": "르아브르에서 발견한 그림과 바다",
+      "story": "모네는 1840년 파리에서 태어나 노르망디의 항구도시 르아브르에서 자랐다. 십대에는 캐리커처로 이름을 알렸고, 외젠 부댕을 만나 야외에서 자연을 직접 관찰하며 그리는 법을 배웠다. 해안의 빛과 날씨는 이후 풍경화의 출발점이 되었다.",
+      "people": ["외젠 부댕 (초기 스승)"],
+      "related_artworks": ["view-from-rouelles"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1862–1865",
+      "title": "파리 화실에서 만난 인상주의 동료들",
+      "story": "장티푸스를 앓은 뒤 이모의 도움으로 군 복무에서 조기 제대한 모네는 파리의 샤를 글레르 화실에서 르누아르, 시슬레, 바지유를 만났다. 이들은 화실 밖에서 현대 생활과 풍경을 그렸고, 모네는 1865년 살롱에 해안 풍경을 출품하며 화단에 데뷔했다.",
+      "people": ["샤를 글레르 (스승)", "오귀스트 르누아르", "알프레드 시슬레", "프레데리크 바지유"],
+      "related_artworks": ["le-dejeuner-sur-l-herbe", "women-in-the-garden"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1866–1869",
+      "title": "카미유와 라 그르누이에르",
+      "story": "카미유 동시외는 모네의 동반자이자 주요 모델이 되었다. 모네는 인물과 풍경을 야외에서 결합하는 큰 그림을 시도했고, 1869년에는 르누아르와 센강의 휴양지 라 그르누이에르를 나란히 그리며 물과 반사광을 빠른 붓질로 포착했다.",
+      "people": ["카미유 동시외 (첫 번째 아내)", "오귀스트 르누아르"],
+      "related_artworks": ["camille", "la-grenouillere", "the-magpie"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1870–1871",
+      "title": "전쟁을 피해 런던으로",
+      "story": "모네는 카미유와 결혼한 뒤 프로이센-프랑스 전쟁을 피해 런던으로 갔다. 그곳에서 터너와 컨스터블의 풍경화를 접하고 화상 폴 뒤랑뤼엘을 만났다. 귀국 후에는 파리 근교 아르장퇴유에 정착했다.",
+      "people": ["카미유 모네", "폴 뒤랑뤼엘 (화상)"],
+      "related_artworks": [],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1872–1874",
+      "title": "『인상, 해돋이』와 첫 독립 전시",
+      "story": "모네는 르아브르 항구의 새벽빛을 『인상, 해돋이』에 담았다. 1874년 동료들과 연 첫 독립 전시에서 이 작품이 공개되자 비평가 루이 르루아가 전시 화가들을 ‘인상주의자’라고 조롱했고, 그 명칭은 새로운 미술 운동의 이름이 되었다.",
+      "people": ["루이 르루아 (비평가)"],
+      "related_artworks": ["impression-sunrise", "boulevard-des-capucines", "poppy-field-near-argenteuil"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1875–1879",
+      "title": "아르장퇴유의 전성기와 카미유의 죽음",
+      "story": "아르장퇴유에서 모네는 강, 다리, 열차와 가족의 일상을 그리며 현대적 교외 풍경을 발전시켰다. 재정난으로 1878년 베퇴유로 옮겼고, 오랫동안 병을 앓던 카미유는 1879년 세상을 떠났다.",
+      "people": ["카미유 모네", "장 모네 (아들)"],
+      "related_artworks": ["woman-with-parasol", "the-bridge-at-argenteuil", "gare-saint-lazare"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1883",
+      "title": "지베르니에 자리 잡다",
+      "story": "모네는 가족과 함께 지베르니의 집으로 이사했다. 이곳은 남은 생애의 거주지이자 작업장이 되었으며, 정원과 주변 들판은 작품의 핵심 모티프로 발전했다. 같은 시기 노르망디 해안과 지중해를 여행하며 다양한 빛을 탐구했다.",
+      "people": ["알리스 오슈데 (두 번째 아내)"],
+      "related_artworks": ["cliffs-at-etretat", "the-pyramides-at-port-coton"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1890–1894",
+      "title": "빛의 변화를 좇은 연작",
+      "story": "경제적으로 안정된 모네는 지베르니의 집을 구입하고 같은 대상을 다른 시간과 날씨에 반복하는 연작에 집중했다. 『건초더미』, 『포플러』, 『루앙 대성당』은 대상보다 빛과 대기의 변화를 앞세운 작업이었다.",
+      "people": [],
+      "related_artworks": ["haystacks", "poplars", "rouen-cathedral"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1893–1914",
+      "title": "정원을 만들고 수련을 그리다",
+      "story": "모네는 집 건너편의 땅에 물길을 끌어 수련 연못을 만들고 꽃과 나무를 직접 배치했다. 일본식 다리, 수련, 물에 비친 하늘을 반복해서 그리면서 화면에서 수평선과 전통적인 원근법은 점차 약해졌다.",
+      "people": [],
+      "related_artworks": ["water-lilies", "the-artists-garden-at-giverny"],
+      "source_file": "bio.md"
+    },
+    {
+      "year": "1918–1926",
+      "title": "프랑스에 남긴 대형 『수련』",
+      "story": "제1차 세계대전 휴전 다음 날 모네는 대형 『수련』 패널을 프랑스에 기증하겠다는 뜻을 밝혔다. 시력이 약해지는 가운데서도 대작을 계속 수정했고, 1926년 지베르니에서 세상을 떠났다. 패널은 이듬해 오랑주리 미술관에 설치되었다.",
+      "people": ["조르주 클레망소 (친구이자 정치가)"],
+      "related_artworks": ["water-lilies"],
+      "source_file": "bio.md"
+    }
+  ]
+}
