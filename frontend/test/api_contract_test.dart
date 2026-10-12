@@ -37,7 +37,11 @@ void main() {
     api.close();
   });
   test('base URL accepts root and /api without duplicating prefix', () {
-    for (final base in ['https://example.org', 'https://example.org/api/']) {
+    for (final base in [
+      'https://example.org',
+      'https://example.org/',
+      'https://example.org/api/',
+    ]) {
       final api = ArtlogApi(baseUrl: base);
       expect(
         api.uri('artworks', {'artist_id': '7'}).toString(),
@@ -267,4 +271,23 @@ void main() {
     await expectLater(malformed.artworks(), throwsA(isA<ApiException>()));
     malformed.close();
   });
+
+  test(
+    'unimplemented docent is shown as preparing without demo fallback',
+    () async {
+      final api = ArtlogApi(
+        baseUrl: 'https://example.org/',
+        client: MockClient((_) async => http.Response('', 501)),
+      );
+      await expectLater(
+        api.chat('42', '작품을 소개해 주세요.', []),
+        throwsA(
+          isA<ApiException>()
+              .having((e) => e.status, 'status', 501)
+              .having((e) => e.message, 'message', contains('준비 중')),
+        ),
+      );
+      api.close();
+    },
+  );
 }

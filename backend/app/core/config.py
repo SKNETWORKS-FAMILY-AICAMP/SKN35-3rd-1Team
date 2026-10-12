@@ -58,9 +58,14 @@ class Settings(BaseSettings):
     # Local Flutter dev servers on localhost/127.0.0.1 are always allowed.
     cors_origins: str = ""
     # "dev": every request acts as one fixed development user (no login yet).
-    # "firebase": verify the Firebase ID token (to be implemented in core/auth.py).
+    # "firebase": verify the Firebase ID token and resolve its UID in TiDB.
     auth_mode: str = "dev"
     dev_user_uid: str = "dev-user"
+    firebase_project_id: str = "skn35-3rd-1team"
+    # Railway can inject the JSON directly. Otherwise the Admin SDK uses ADC
+    # (for example GOOGLE_APPLICATION_CREDENTIALS pointing to a mounted file).
+    firebase_service_account_json: SecretStr | None = None
+    google_application_credentials: str | None = None
     app_timezone: str = "Asia/Seoul"
 
     @property

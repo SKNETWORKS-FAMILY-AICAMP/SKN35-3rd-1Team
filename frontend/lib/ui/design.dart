@@ -221,6 +221,9 @@ class ArtImage extends StatelessWidget {
           )
         : Image.network(
             resolved,
+            // Museum URLs can redirect without CORS headers. Let the browser
+            // display the same public image when CanvasKit cannot fetch bytes.
+            webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
             width: width,
             height: height,
             fit: fit,
