@@ -1,39 +1,70 @@
-# RAG 담당 인계 문서
+# RAG 담당(B) 인계 문서
 
-전처리가 끝난 문서로 청킹·임베딩·검색을 시작하는 데 필요한 내용만 모았습니다. 데이터 형식 전체는 [`docs/data-spec.pdf`](data-spec.pdf), 전처리 기준은 [`docs/data-collection.md`](data-collection.md)에 있습니다.
+데이터는 DB에 모두 들어가 있습니다. B는 **청킹·임베딩 → 검색 → 답변 생성**만 만들면 됩니다. 이 문서는 위에서부터 순서대로 따라 하면 되도록 썼습니다.
 
-기준: 2026-10-12 전처리 결과 (작가 8명, 작품 196점, 문서 338건)
+기준: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건 (모두 한국어, 모두 검토 완료)
 
-## 1. 바로 시작하기
+## 0. 한눈에 보기
 
-읽을 파일은 `data/processed/documents.jsonl` 하나입니다. 파일을 직접 열지 말고 `load_processed()`로 읽습니다. 마지막으로 성공한 전처리 결과만 돌려주고, 파일이 중간에 바뀌었으면 예외를 냅니다.
+### 지금 상태
+
+| 항목 | 상태 | 비고 |
+| --- | --- | --- |
+| 전처리 (`data/processed/`) | 완료 | 검토 필요 0건 |
+| DB 스키마 | 완료 | Alembic `20261012_0003`까지 적용 |
+| 카탈로그·문서 적재 | 완료 | 사조 4 · 작가 8 · 작품 219 · 문서 361 · 작가 연결 134 · 작품 연결 173 · 근거 연결 135 |
+| 검색 범위 SQL (5절) | 실제 DB에서 확인 | 『야경』 범위 28건, 연표 연결 1건 |
+| `document_chunks` | **비어 있음 → B** | 3·4절 |
+| `artwork_embeddings` | **비어 있음 → B** | 4절 |
+| 검색·답변 서비스 (`app/rag`, `app/services`) | **비어 있음 → B** | 5·6절 |
+
+### B가 할 일 (순서대로)
+
+1. **환경 준비** — 루트 `.env`에 `OPENAI_API_KEY`를 추가합니다 (`.env.example`에는 아직 없음). `langchain-openai`, `langchain-text-splitters`, `tidb-vector`는 이미 의존성에 있습니다.
+   - 완료 기준: `uv run python -m scripts.check_db`가 `missing=(none)`
+2. **청킹·임베딩 스크립트** `backend/scripts/build_chunks.py` — 청크가 없는 문서만 골라 잘라서 임베딩하고 `document_chunks`에 넣습니다 (3·4절).
+   - 완료 기준: 모든 문서에 청크가 1개 이상, 다시 실행하면 0건 처리
+3. **작품 임베딩 스크립트** `backend/scripts/build_artwork_embeddings.py` — 작품 219점의 벡터를 `artwork_embeddings`에 넣습니다 (4절).
+   - 완료 기준: 219행
+4. **검색 함수** (`app/rag`) — 고른 작품 범위 안에서만 벡터 검색하고, 연표 사건을 항상 붙입니다 (5절).
+5. **답변 생성** (`app/services`) — 6절의 시스템 프롬프트 규칙과 출처 표시를 적용합니다.
+6. **검증** — 9절 테스트 질문 27개를 돌려서 기대 문서가 근거로 나오는지, 거절해야 할 질문을 거절하는지 확인합니다.
+
+### B가 쓰는 테이블과 쓰지 않는 테이블
+
+| 구분 | 테이블 |
+| --- | --- |
+| B가 **읽기만** | `documents`, `artworks`, `artists`, `art_movements`, `document_artists`, `document_artworks`, `document_basis_documents` |
+| B가 **씀** | `document_chunks`, `artwork_embeddings` |
+| RAG 범위 아님 | `users`, `artwork_likes`, `artist_follows`, `artwork_views` — 서비스에서는 앱이 채우고, 발표용 시연 데이터는 `scripts/seed_demo_users.py`(미작성, 담당 미정)로 넣을 예정 |
+
+연결 고리는 `document_chunks.document_id` → `documents.id`, `artwork_embeddings.artwork_id` → `artworks.id` 두 개뿐입니다.
+
+## 1. 데이터 읽기
+
+청크에 `document_id`를 넣어야 하므로 **DB에서 읽습니다.** 청크가 아직 없는 문서만 고르면 처음 실행과 재실행을 같은 코드로 처리할 수 있습니다.
 
 ```python
 # backend/ 에서 실행
-from scripts.preprocess import load_processed
+from sqlalchemy import select
+from app.db.session import SessionLocal
+from app.models import Document
 
-docs = load_processed("documents.jsonl")   # list[dict], 338건
+with SessionLocal() as session:
+    todo = session.scalars(select(Document).where(~Document.chunks.any())).all()
+    # 처음에는 361건, 다 처리한 뒤에는 0건
 ```
 
-DB 적재를 기다릴 필요는 없습니다. 이 파일로 청킹·임베딩·검색을 먼저 실험해 볼 수 있습니다. LangChain `Document`로 바꾸는 예시는 [`data/processed/README.md`](../data/processed/README.md)에 있습니다.
+DB 없이 빠르게 실험만 해 볼 때는 같은 내용을 파일에서 읽을 수 있습니다. 파일을 직접 열지 말고 `load_processed()`를 쓰세요 (전처리가 중간에 실패한 결과를 걸러 줍니다).
 
-### 역할 나눔
-
-| 단계 | 담당 | 읽는 것 | 쓰는 테이블 |
-| --- | --- | --- | --- |
-| 적재 | A | `data/processed/*.jsonl` | `art_movements`, `artists`, `artworks`, `documents`, `document_artists`, `document_artworks` |
-| 청킹·임베딩 | B | DB `documents` | `document_chunks`, `artwork_embeddings` |
-
-B는 `documents`를 읽기만 하고 자기 테이블에만 씁니다. 연결 고리는 `document_chunks.document_id` → `documents.id` 하나입니다.
+```python
+from scripts.preprocess import load_processed
+docs = load_processed("documents.jsonl")   # list[dict], 361건
+```
 
 ### 작가 별칭 (`artist_aliases.jsonl`)
 
-질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`가 `collected`(데이터 있음) 또는 `planned`(수집 전)입니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선).
-
-```python
-aliases = load_processed("artist_aliases.jsonl")
-# {"slug": "claude-monet", "name": "클로드 모네", "status": "collected", "aliases": ["모네", "Monet", …], "confusable": ["마네 …"]}
-```
+질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`가 `collected`(데이터 있음) 또는 `planned`(수집 전, 클림트·실레)입니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선). 이 파일은 DB에 넣지 않았으므로 `load_processed("artist_aliases.jsonl")`로 읽습니다.
 
 ## 2. 문서 한 건의 모양
 
@@ -57,45 +88,77 @@ aliases = load_processed("artist_aliases.jsonl")
 }
 ```
 
-| 필드 | 검색에서 쓰는 곳 |
-| --- | --- |
-| `doc_key` | 문서 고유 키. DB `documents.doc_key` (UNIQUE) |
-| `doc_type` | `artist_bio` / `artwork_commentary` / `artist_comparison` |
-| `title`, `source_name`, `source_url` | 답변 아래 출처 표시 |
-| `artwork_slug` | 해설 문서의 대상 작품 → DB `documents.artwork_id` |
-| `artist_slugs` | 생애·비교 문서의 작가 → DB `document_artists` |
-| `related_artwork_slugs` | 연표 사건이 언급하는 작품 → DB `document_artworks` |
-| `basis_doc_keys` | 편집 보충·보정의 근거 문서 → DB `document_basis_documents`. 근거 문서의 출처도 답변에 함께 표시 |
-| `basis_external_sources` | 데이터셋 밖의 공식 보정 근거 → DB `documents.basis_external_sources` |
-| `topic` | 생애 문서의 성격 (`연표`, `생애 전체`, `주변 인물` 등) |
-| `needs_review` | 사람 검토 전 문서 (4절) |
+| 필드 (파일) | DB 위치 | 쓰는 곳 |
+| --- | --- | --- |
+| `doc_key` | `documents.doc_key` (UNIQUE) | 문서 고유 키. 문의할 때 이 값을 알려 주세요 |
+| `doc_type` | `documents.doc_type` | `artist_bio` / `artwork_commentary` / `artist_comparison` |
+| `title`, `source_name`, `source_url`, `license` | `documents` 같은 이름 | 답변 아래 출처 표시 (6절) |
+| `artwork_slug` | `documents.artwork_id` | 해설 문서의 대상 작품 |
+| `artist_slugs` | `document_artists` | 생애·비교 문서의 작가 |
+| `related_artwork_slugs` | `document_artworks` | 연표 사건이 언급하는 작품 |
+| `basis_doc_keys` | `document_basis_documents` | 덧붙인 보충·보정문의 근거 문서. 출처 표시에 함께 씀 |
+| `basis_external_sources` | `documents.basis_external_sources` (JSON) | 데이터셋 밖 근거 `[{"source_name", "source_url"}]` |
+| `topic` | `documents.topic` | 생애 문서의 성격 (`연표`, `생애 전체`, `주변 인물` 등) |
+| `needs_review` | `documents.needs_review` | 지금은 361건 모두 `false` (7절) |
 
-## 3. 청킹 권장
+## 3. 청킹
 
-문서 성격이 세 가지로 크게 달라서, 한 가지 길이로 일괄 자르기보다 종류별로 다르게 자르는 것을 권장합니다.
+문서 길이가 종류마다 크게 달라서, 한 가지 길이로 일괄 자르지 말고 종류별로 자르는 것을 권장합니다.
 
 | 문서 | 건수 | 본문 길이 (최소 / 중앙값 / 최대) | 권장 |
 | --- | --- | --- | --- |
 | 연표 (`topic: "연표"`) | 71 | 131 / 199 / 296자 | 자르지 않음. 문서 하나 = 청크 하나 |
-| 고흐·고갱 팀 작성 문서 | 40 | 543 / 656 / 850자 | 자르지 않음. `[화면 관찰]`, `[근거 있는 해석]` 같은 구간 표시는 그대로 둠 |
-| 모네·세잔 주제 문서 | 8 | 590 / 634 / 649자 | 문서 하나 = 청크 하나. 주변 인물·기법·장소·영향 문서 |
+| 고흐·고갱 팀 작성 문서 | 62 | 543 / 1,202 / 1,399자 | 짧은 문서는 자르지 않음. 작품 해설은 `## 감상 포인트` 앞뒤로 나눌 수 있음. `[화면 관찰]`, `[근거 있는 해석]` 같은 구간 표시는 그대로 둠 |
+| 모네·세잔 주제 문서 | 8 | 590 / 634 / 649자 | 문서 하나 = 청크 하나 |
 | 위키 원문·번역본 | 130 | 347 / 2,079 / 33,056자 | `## 제목` 섹션 단위로 먼저 나누고, 긴 섹션만 문단 경계에서 다시 자름 |
-| 김홍도·정선 기관 원문·번역본 | 89 | 214 / 567 / 6,922자 | `##` 절을 먼저 나누고 긴 절은 문단·문장 경계로 다시 자름. `감상 포인트`와 `답변 시 주의` 절은 제목 문맥을 유지 |
+| 김홍도·정선 기관 원문·번역본 | 89 | 214 / 850 / 6,922자 | `##` 절을 먼저 나누고 긴 절은 문단·문장 경계로 다시 자름 |
 
-- 청크 앞에 `문서 제목 > 섹션 제목`을 붙여서 임베딩하면 짧은 조각도 맥락을 잃지 않습니다. 예: `카라바조의 생애 (영문 번역) > 추방과 죽음 (1606–1610) > 몰타`
-- 섹션 제목 줄(`## …`)은 본문이 아니므로 청크 본문에서는 빼고 위의 머리말로만 씁니다.
-- 본문 합계는 약 60만 자입니다. 500자 기준 약 1,400개 청크가 나옵니다 (추정).
+규칙:
 
-### 임베딩
+- **머리말을 붙입니다.** 청크 앞에 `문서 제목 > 섹션 제목`을 붙이면 짧은 조각도 맥락을 잃지 않습니다. 예: `카라바조의 생애 (영문 번역) > 추방과 죽음 (1606–1610) > 몰타`. 섹션 제목 줄(`## …`)은 본문에서 빼고 머리말로만 씁니다.
+- **덧붙인 절은 제목을 유지합니다.** `## 감상 포인트`(편집 보충문)와 `## 답변 시 주의`(보정문)는 원문 뒤에 붙인 절입니다. 이 절을 자른 청크도 머리말에 절 제목이 남아 있어야 LLM이 원문과 구분할 수 있습니다.
+- **`content`에는 머리말까지 포함해 저장하고, 같은 텍스트로 임베딩합니다.** 검색 결과를 그대로 프롬프트에 넣을 수 있습니다.
+- 본문 합계는 약 65만 자입니다. 500자 기준 약 1,300개 청크이고, 섹션 경계에서 자르면 조금 더 늘어납니다 (추정).
 
-- DB 컬럼은 `VECTOR(1536)`입니다. `text-embedding-3-small`(1536차원)을 기준으로 설계했습니다. 다른 모델을 쓰려면 차원 수를 먼저 정하고 Alembic 마이그레이션으로 컬럼을 바꿔야 합니다.
-- `document_chunks.embedding_model`에 모델 이름을 꼭 넣습니다. 모델이 섞이면 거리 값이 의미가 없어집니다.
-- 문서 338건이 모두 한국어입니다 (`lang: "ko"`). 영어 위키백과 원문 61건은 한국어로 번역해 넣었습니다 (7절).
-- 같은 주제를 한국어 원문과 번역본이 함께 다루는 경우가 있습니다 (예: 『야경』, 키아로스쿠로). 내용이 겹치는 청크가 상위에 나란히 나오면 `doc_key`가 다른 것을 하나씩만 고르면 됩니다.
+저장 형식:
 
-## 4. 작품을 골랐을 때 검색 범위
+```python
+from app.models import DocumentChunk
 
-챗봇은 사용자가 고른 작품 범위 안에서만 답합니다. 범위를 SQL로 먼저 좁히고 그 안에서만 벡터 거리를 계산합니다. 범위 안 청크가 많아야 수백 개라 벡터 인덱스 없이 정확 검색으로 충분합니다.
+EMBEDDING_MODEL = "text-embedding-3-small"
+
+for doc in todo:                                   # 1절의 청크 없는 문서
+    pieces = split(doc)                            # 위 규칙대로 자른 문자열 목록 (머리말 포함)
+    vectors = embeddings.embed_documents(pieces)   # langchain_openai.OpenAIEmbeddings, 여러 건 묶어 호출
+    session.add_all(
+        DocumentChunk(document_id=doc.id, chunk_index=i, content=text,
+                      embedding=vec, embedding_model=EMBEDDING_MODEL)
+        for i, (text, vec) in enumerate(zip(pieces, vectors))
+    )
+session.commit()
+```
+
+- `(document_id, chunk_index)`는 UNIQUE입니다. `chunk_index`는 0부터 매깁니다.
+- `content` 컬럼은 `TEXT`(약 64KB)라 청크 하나로는 넉넉합니다.
+
+## 4. 임베딩
+
+- **차원**: DB 컬럼은 `VECTOR(1536)`입니다 (`backend/app/models/base.py`의 `EMBEDDING_DIMENSION`). `text-embedding-3-small`(1536차원) 기준으로 설계했습니다. 다른 모델을 쓰려면 차원을 먼저 정하고 Alembic 마이그레이션으로 컬럼을 바꿔야 합니다.
+- **모델 이름 기록**: `embedding_model`에 모델 이름을 꼭 넣습니다. 모델이 섞이면 거리 값이 의미가 없어집니다.
+- **비용**: 여러 건을 묶어 호출하고, 이미 같은 모델로 만든 벡터는 건너뜁니다.
+- **겹치는 문서**: 같은 주제를 한국어 원문과 번역본이 함께 다루는 경우가 있습니다 (예: 『야경』, 키아로스쿠로). 내용이 겹치는 청크가 상위에 나란히 나오면 `doc_key`가 다른 것을 하나씩만 고르면 됩니다.
+
+### 작품 벡터 (`artwork_embeddings`)
+
+추천용 작품 벡터입니다. 작품 하나에 한 행입니다 (`artwork_id`가 PK).
+
+- 임베딩할 텍스트: `제목 / 사조 이름 / 재료·기법(medium) / 설명(description)`을 한 덩어리로 만듭니다.
+- 작가 이름을 넣으면 같은 작가 작품끼리 더 가까워집니다. 넣을지는 팀에서 정합니다.
+- 연작(건초더미, 수련 등)은 `collection`·`dimensions`가 비어 있을 수 있습니다 (의도된 null).
+
+## 5. 검색: 작품을 골랐을 때의 범위
+
+챗봇은 사용자가 고른 작품 범위 안에서만 답합니다. **범위를 SQL로 먼저 좁히고, 그 안에서만 벡터 거리를 계산합니다.** 범위 안 청크가 많아야 수백 개라 벡터 인덱스 없이 정확 검색으로 충분합니다.
 
 | 근거 | 찾는 방법 | 비고 |
 | --- | --- | --- |
@@ -104,12 +167,12 @@ aliases = load_processed("artist_aliases.jsonl")
 | ③ 그 작가가 들어간 비교 문서 | ②와 같음 (`artist_comparison`도 `document_artists`에 연결) | 예: 고흐·고갱 비교, 명암 기법 |
 | ④ 그 작품을 언급한 연표 사건 | `document_artworks.artwork_id = :artwork_id` | ②에 이미 포함됨. **거리와 상관없이 항상 컨텍스트에 넣는 용도** |
 
-④가 중요한 이유: 사용자가 『야경』을 고르고 "그때 렘브란트는 어땠어?"라고 물으면, 질문 벡터만으로는 "사스키아의 죽음" 사건이 상위에 오지 않을 수 있습니다. 작품과 연결된 연표 사건은 거리 순위와 별개로 항상 넣어 주면 스토리텔링 답변이 안정됩니다.
+④가 필요한 이유: 사용자가 『야경』을 고르고 "그때 렘브란트는 어땠어?"라고 물으면, 질문 벡터만으로는 "사스키아의 죽음" 사건이 상위에 오지 않을 수 있습니다. 작품과 연결된 연표 사건을 거리 순위와 별개로 항상 넣으면 스토리텔링 답변이 안정됩니다.
 
 ```sql
 -- 범위 안에서 질문과 가까운 청크 5개 (docs/db/02_queries.sql C절과 같은 방식)
 SELECT c.id AS chunk_id, c.content,
-       d.id AS document_id, d.doc_key, d.doc_type, d.title, d.source_name, d.source_url, d.needs_review,
+       d.id AS document_id, d.doc_key, d.doc_type, d.title, d.source_name, d.source_url, d.license,
        VEC_COSINE_DISTANCE(c.embedding, :question_vec) AS distance
 FROM document_chunks AS c
 JOIN documents AS d ON d.id = c.document_id
@@ -133,39 +196,59 @@ ORDER BY d.doc_key;
 
 - `SELECT` 목록에 `c.embedding`을 넣지 않습니다. 벡터가 통째로 네트워크로 넘어옵니다.
 - `VEC_COSINE_DISTANCE`는 거리라 작을수록 비슷합니다. 항상 오름차순입니다.
-- 위 SQL은 문법만 맞춘 예시이며, 실제 DB에서는 아직 실행해 보지 않았습니다 (테이블이 비어 있음).
+- 범위 조건(①②③)과 ④는 실제 DB에서 확인했습니다 (『야경』 28건·연표 1건, 「해인사」 12건·연표 0건, 「아레아레아」 20건·연표 0건). 거리 정렬은 청크가 생긴 뒤에 확인하면 됩니다.
 
-## 5. 출처 표시와 검토 상태
+## 6. 답변 생성
 
-- **출처**: `title`, `source_name`, `source_url`을 답변 아래에 보여 줍니다. 번역본은 제목 끝에 `(영문 번역)`, `source_name`에 `· 한국어 번역 (gpt-5.4-mini)`가 붙어 있고, `source_url`은 영어 원문 주소입니다.
-- **편집 보강 출처**: `basis_doc_keys`가 있으면 해당 문서들의 `source_name`, `source_url`도 함께 표시합니다. `basis_external_sources`는 이름과 URL을 그대로 표시합니다. 보충·보정문을 현재 문서의 원출처가 직접 쓴 글처럼 표시하면 안 됩니다.
-- **`needs_review`**: 현재 문서 338건은 모두 검토를 마쳐 `false`이며, 검색에서 제외할 문서는 없습니다. 승인 당시의 본문 해시는 `data/mappings/reviews.json`에 기록되어 있습니다. 김홍도·정선 89건의 검토 기록은 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
-- **공공누리 변경금지 문서**: 국립중앙박물관 큐레이터 해설 5건은 공공누리 제3유형(출처표시+변경금지)이고, 그중 `kim-hong-do/artwork-world-curator`는 제4유형(상업적 이용금지 추가)입니다. `license` 필드로 구분됩니다. 검색 근거로 쓰고 출처를 표시하는 것은 괜찮지만, 답변에서 원문을 길게 그대로 옮기거나 개작한 글을 원문처럼 내보이지 않도록 합니다.
-- 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 해당 문서만 다시 `true`가 됩니다. A가 검토 후 `review --approve`로 기록하고 전처리·적재하면 다시 `false`로 바뀝니다.
+### 시스템 프롬프트에 넣을 규칙
 
-## 6. 데이터가 바뀔 때
+문서 본문에는 답변 규칙을 넣지 않았습니다 (같은 문단이 여러 문서에 있으면 검색 품질이 떨어지기 때문). 아래 규칙을 프롬프트에 넣어 주세요.
 
-- 적재는 `doc_key` 기준으로 갱신합니다. 문서를 지우고 다시 넣지 않으므로 `documents.id`가 유지되고, 청크도 남아 있습니다.
-- **본문이 바뀐 문서만** 다시 청킹·임베딩하면 됩니다. 적재 쪽에서 본문이 바뀐 문서의 청크를 지우는 방식으로 맞출 예정이므로, B는 "청크가 없는 문서"만 처리하면 됩니다.
-- 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다.
+1. **범위**: 고른 작품 범위에서 찾은 근거로만 답한다. 근거가 없으면 모른다고 답하고, 데이터가 없는 작가(클림트·실레)나 다루지 않는 작가(피카소 등)는 다루지 않는다고 답한다.
+2. **판본 구분**: 같은 제목의 다른 판본·연작이 많다 (해바라기, 씨 뿌리는 사람, 랑글루아 다리, 가셰 박사 등). 제목만으로 합치지 말고 연도·소장처·소장 번호로 구분한다.
+3. **해석의 강도**: 작가 편지나 기관 연구가 의도를 밝히지 않았으면 '시선을 이끈다', '연상시킬 수 있다'처럼 가능한 해석으로 말한다.
+4. **단정 금지**: 인물의 신원, 사물의 개수, 색과 정신질환의 관계처럼 문서에 없는 내용은 단정하지 않는다.
+5. **사후 해석 금지**: 훗날의 사건(귀 사건, 죽음 등)을 그림이 미리 예고했다고 서술하지 않는다.
+6. **이미지 한계**: 이 시스템은 그림을 보지 않는 문서 RAG다. 문서에 없는 화면 세부를 물으면 답을 유보한다.
+7. **보정문 우선**: `## 답변 시 주의` 절은 원문의 오래된 정보나 오류를 바로잡은 것이다. 원문과 다르면 이 절을 따른다 (예: 육상묘도의 '영조 6년'은 '영조 1년').
+8. **보충문 표시**: `## 감상 포인트` 절은 팀이 덧붙인 편집 보충문이다. 원출처 기관이 직접 쓴 글처럼 말하지 않는다.
 
-## 7. 알고 있어야 할 약점
+### 출처 표시
+
+- 답변 아래에 근거 문서의 `title`, `source_name`, `source_url`을 보여 줍니다.
+- 번역본은 제목 끝에 `(영문 번역)`, `source_name`에 `· 한국어 번역 (gpt-5.4-mini)`가 붙어 있고, `source_url`은 영어 원문 주소입니다.
+- 근거 청크가 `## 감상 포인트`나 `## 답변 시 주의` 절에서 나왔으면 편집 근거도 함께 보여 줍니다. `document_basis_documents`로 연결된 문서의 `source_name`·`source_url`과, `basis_external_sources`의 이름·URL입니다.
+
+### 라이선스
+
+- `license`에 적힌 그대로 보여 주면 됩니다. 고흐·고갱 팀 작성 해설은 `CC BY 4.0 (… 새로 작성한 해설문에만 적용)`처럼 적용 범위가 괄호 안에 있습니다. 괄호를 자르면 Met 같은 기관 원문의 라이선스로 오해되므로 자르지 않습니다.
+- **공공누리 변경금지 문서**: 국립중앙박물관 큐레이터 해설 5건은 공공누리 제3유형(출처표시+변경금지)이고, 그중 `kim-hong-do/artwork-world-curator`는 제4유형(상업적 이용금지 추가)입니다. 검색 근거로 쓰고 출처를 표시하는 것은 괜찮지만, 답변에서 원문을 길게 그대로 옮기거나 개작한 글을 원문처럼 내보이지 않습니다.
+
+## 7. 데이터가 바뀔 때
+
+- A가 원본을 고치면 전처리 → 검토 → `load_catalog` / `load_documents` 순서로 다시 적재합니다.
+- 적재는 `doc_key` 기준 갱신이라 `documents.id`가 유지됩니다.
+- **본문이 바뀐 문서는 `load_documents`가 그 문서의 청크를 지웁니다.** 그래서 B의 스크립트는 1절처럼 "청크가 없는 문서"만 처리하면 자동으로 따라옵니다.
+- 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다 (`document_chunks`를 비우고 다시 실행).
+- `needs_review`: 지금은 361건 모두 `false`입니다. 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 그 문서만 `true`가 되고, A가 검토 후 다시 `false`로 바꿉니다. `true`인 문서를 검색에서 뺄지는 B가 정하면 됩니다. 검토 기록은 `data/mappings/reviews.json`과 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
+
+## 8. 알고 있어야 할 약점
 
 | 약점 | 영향 | 상태 |
 | --- | --- | --- |
-| 고흐·고갱 작품 해설은 작품당 600~850자 (청크 1~2개) | 작품 하나만 깊게 묻는 질문에는 근거가 빨리 바닥남. 대신 주제별 생애 문서와 연표가 보강됨 | 보강 완료 (고흐 작품 14·문서 31, 고갱 작품 13·문서 32) |
+| 고흐·고갱 작품 해설은 작품당 1,000~1,400자 | 기관 웹페이지 해설을 복제하지 않은 팀 작성 요약이라 세부 근거는 `basis_external_sources`(Met·NGA·MoMA·위키백과 등)에 의존 | 각 25점·50건 사실 확인 완료. 판본 혼동 등 14건 수정, 50건 공통 반복 문단 제거, 43건 출처 보강 |
 | 모네·세잔의 새 연표·주제 문서는 팀 작성 자료 | 고유명사·사건 연결을 확인해야 했음 | 28건 검토·승인 완료 |
 | 클림트·실레 데이터 없음 | 이 작가 질문은 거절해야 정상 | 수집 대기. 환각 방지 테스트에 활용 가능 |
-| 김홍도·정선 기관 원문의 오래된 정보와 학설 | 현재 정보와 확정 사실처럼 답할 위험 | 60점·89문서 수집 완료. 5개 문서에 `답변 시 주의` 보정 레이어와 근거 연결 적용 |
+| 김홍도·정선 기관 원문의 오래된 정보와 학설 | 현재 정보와 확정 사실처럼 답할 위험 | 60점·89문서. 5개 문서에 `답변 시 주의` 보정 레이어와 근거 연결 적용 |
 | 위키 원문·번역본은 위키백과 기반 | 원문 자체는 위키백과 수준의 정확도 | 원문 대조 후 검토·승인 완료 |
-| 번역본 59건은 기계 번역 | 고유명사 표기, 원문 누락, 섹션·문단·연도 구조, 다른 언어 문자 혼입을 확인해야 함 | 원문 대조·오류 수정·승인 완료 |
+| 번역본 59건은 기계 번역 | 고유명사 표기, 원문 누락 가능성 | 원문 대조·오류 수정·승인 완료 |
 | 연작(건초더미, 수련 등)은 작품 하나가 여러 그림을 대표 | 소장처·크기가 비어 있음 | 의도된 null |
 
-## 8. 검색 테스트용 질문
+## 9. 검색 테스트용 질문
 
 작품을 고른 상태에서 이 질문을 넣었을 때 아래 문서가 근거로 나와야 합니다. 문서 내용을 직접 확인해서 고른 쌍입니다. E(테스트 담당)의 질문셋과 합쳐서 쓰면 됩니다.
 
-| # | 고른 작품 | 질문 | 나와야 할 문서 (`doc_key`) |
+| # | 고른 작품 | 질문 | 나와야 할 문서 (`doc_key`) / 기대 답 |
 | --- | --- | --- | --- |
 | 1 | 야경 | 야경 그릴 때 렘브란트에게 무슨 일이 있었어? | `rembrandt/timeline-05` |
 | 2 | 니콜라스 튈프 박사의 해부학 수업 | 해부대 위의 시신은 누구야? | `rembrandt/the-anatomy-lesson-of-dr-tulp`, `rembrandt/timeline-02` |
@@ -188,7 +271,15 @@ ORDER BY d.doc_key;
 | 19 | 육상묘도 | 육상묘가 영조 6년에 세워졌어? | `jeong-seon/yuksangmyodo` (`답변 시 주의`: 1725년은 영조 1년) |
 | 20 | 단원 풍속도첩 낱장 | 이 그림이 김홍도 진품으로 확정됐어? | `kim-hong-do/artwork-world-aks` (여러 학설을 확정 사실과 구분) |
 | 21 | 추성부도 | 그림에 적힌 글의 마지막 문장을 알려줘 | `kim-hong-do/chuseongbudo-inscription` (절단 이후를 추정하지 않음) |
+| 22 | 씨 뿌리는 사람 (1888, 크뢸러뮐러) | 화면을 가르는 큰 나무는 무슨 뜻이야? | `vincent-van-gogh/commentary-the-sower-1888` — 그 나무는 11월 판본(반 고흐 미술관)의 요소라고 바로잡아야 함 (규칙 2) |
+| 23 | 랑글루아 다리 (반 고흐 미술관) | 다리 아래 빨래하는 여자들은 누구야? | `vincent-van-gogh/commentary-the-langlois-bridge` — 빨래 장면은 크뢸러뮐러 판본(F397)이라고 구분해야 함 (규칙 2) |
+| 24 | 밤의 카페 테라스 | 정확히 며칠 밤에 그렸어? | `vincent-van-gogh/commentary-cafe-terrace-at-night` — 9월 16~17일 설과 9월 초 설을 함께 소개 |
+| 25 | 별이 빛나는 밤 | 고흐는 이 그림을 마음에 들어 했어? | `vincent-van-gogh/commentary-the-starry-night` — 베르나르에게 '실패작'이라고 씀 |
+| 26 | 아레오이의 씨앗 | 여자가 손에 든 과일은 뭐야? | `paul-gauguin/commentary-the-seed-of-the-areoi` — 과일이 아니라 꽃이 핀 씨앗 |
+| 27 | 정양사 (덕수1191) | 국립중앙박물관 큐레이터 글에 나온 그 정양사도가 이 그림이야? | `jeong-seon/jeongyangsa-deoksu-1191` — 크기가 달라 단정할 수 없다고 답해야 함 |
 
-## 9. 문의
+## 10. 문의
 
-데이터 형식이나 값이 이상하면 A에게 `doc_key`와 함께 알려 주세요. 원본을 고친 뒤 전처리를 다시 돌려 반영합니다. `data/processed/`의 파일은 직접 고치지 않습니다 (다음 전처리 때 덮어써짐).
+데이터 형식이나 값이 이상하면 A에게 `doc_key`와 함께 알려 주세요. A가 원본을 고친 뒤 전처리·적재를 다시 돌려 반영합니다. `data/processed/`의 파일이나 DB의 `documents`는 직접 고치지 않습니다 (다음 적재 때 덮어써짐).
+
+데이터 형식 전체는 [`docs/data-spec.pdf`](data-spec.pdf), 전처리 기준은 [`docs/data-collection.md`](data-collection.md), DB 설계는 [`docs/db/db-design.md`](db/db-design.md)에 있습니다.

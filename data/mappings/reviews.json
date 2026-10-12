@@ -806,70 +806,130 @@
       "reviewed_on": "2026-10-11",
       "content_sha256": "4a128b9b44801bd7485f0b397f7d67ca2d2537a3977e78d4e11048230b2c310f"
     },
+    "paul-gauguin/commentary-a-farm-in-brittany": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "282b4db2c43c52211a48f6bc5fafea6b3083332ba998d6dabe634344a5c0986b"
+    },
     "paul-gauguin/commentary-arearea": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "0f2631cf34b45816066c1caeb74e3082448051bee3f071c0a91fa8caf194b6a0"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d583e1501380321059fd50fd08a6ccd73294314229c819118f0aef09494d1b9b"
+    },
+    "paul-gauguin/commentary-breton-girls-dancing-pont-aven": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "280c4fc1117b7401e77fef82cf817f6fb44ef3d6eb09b30e59227f1d844998b8"
+    },
+    "paul-gauguin/commentary-fatata-te-miti": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "5ddd40b336bd21f7963e953dd0f6602799c225962ed7b93580d9600176bb97cb"
     },
     "paul-gauguin/commentary-ia-orana-maria": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "232be694ad6ba4e3ffacc494a24f420f560ea7e6d812199b452f2e2eb5a05aab"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d809868a08a74a2911133fe3ac9dadcebf423c64fd64c8bb72d59855c25b366a"
+    },
+    "paul-gauguin/commentary-la-belle-angele": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "325b223faf88adcfe66e63c05a18a974a473bc4b783621ed8b774e5b47335c31"
+    },
+    "paul-gauguin/commentary-mahana-no-atua": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "3697c727c924b4a932c3ef3501b3fe5af4d997b1decd2be07be4d25f7c45cbad"
     },
     "paul-gauguin/commentary-nevermore": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "320dff9dff37042990fff1ad593482eda569b3e07ad599ab8461e1ce3fa0edb2"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "92d56030a9d4224fb7741c633525f2b8a6a9a6fdbbc12d08e1a9cbcc66948b0f"
+    },
+    "paul-gauguin/commentary-self-portrait-les-miserables": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "50b19b863ec8f18cc9d10343a5371a0d0d92f062bbaae7821d049c7c868bc070"
+    },
+    "paul-gauguin/commentary-self-portrait-with-halo-and-snake": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "05f084cfa69603c7b7a72d2f3842549d2be195ea565418e30105f8f818db823f"
     },
     "paul-gauguin/commentary-spirit-of-the-dead-watching": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "0360a565e2d3bb0c184cd821c1053c22ad0358c0813a3663803a408d56f07986"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "41042dcf59ca5b883f3ebbe98820e86b1dd44439906cb603f2e238e55bf66319"
     },
     "paul-gauguin/commentary-still-life-with-teapot-and-fruit": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "427f715cfe86874b51989ecc5a84ee0abb34bbeacd9d365ed3ed8e05b50a2e72"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "fb2f8206f940c75ff0209e89c2ca7c5022dac884df63cf353181c567880ee89b"
     },
     "paul-gauguin/commentary-tahitian-landscape": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "cf96cfa821dcd431c1659f624bf13a0e7ddbe3d40ea87aa85af6bfe9ee877a25"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "bcef6927315d083489e278e14b9b427c15d4bf2419fb3cf2cc83ff7e6dc5e600"
+    },
+    "paul-gauguin/commentary-tehamana-has-many-parents": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a9a35f105bfd8af93f8af057989cc008c7459da7aa9e0f61f951de96ad505043"
+    },
+    "paul-gauguin/commentary-the-bathers-gauguin": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "dc02fbb08d7ccd741d2542239f4ec3ec0327f3b0798f88a1972a99828f5054f8"
+    },
+    "paul-gauguin/commentary-the-seed-of-the-areoi": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "7f2ce7a37b48ba78e037a1c617a853ff265642741ae6b73e641d4fdea535e874"
     },
     "paul-gauguin/commentary-the-siesta": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "85ba2a10e4074a0e555da0e4fd63f41e058f44ab035f36a4fb505cd138472840"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "c0fd1371b9b78ee07a297547c663e0380ece0228d289a7b5b948d8190c105548"
     },
     "paul-gauguin/commentary-the-yellow-christ": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "65f544b93aa315c2f683715b478497cebb6718fce64243c5ba0d51dd3298f620"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "934f75a2652aeeae03f2ae16806711eb2c6c372073849d1a9ee41a0409fa8eb7"
     },
     "paul-gauguin/commentary-three-tahitian-women": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "603ff686fc20b4f990e3fbf0b6a02dfe13443cf49d624e8ddaaa17880bc72510"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2190482f62c7abd6fc3fb28b1aa1ff48d0af59a73ae5c77e6b35d269379a4f8f"
     },
     "paul-gauguin/commentary-two-tahitian-women": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "bc0836c3f06c4f131b7120d9730efd78a427533840993fe279a62c570a5dfb62"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "8d6b288b1c7a9cc25f0cb63739ce87dc356639d9ad3cc00c9534b44d36dcee80"
+    },
+    "paul-gauguin/commentary-vincent-van-gogh-painting-sunflowers": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "4258e4cd110cbd3d6a052d04bf818b581786320ec7ba7becff38d72ebe58ca47"
     },
     "paul-gauguin/commentary-vision-after-the-sermon": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "d0dc22ccb50248a3bf7e61a1a2f992bc6d6a48c8d3e02ccd1badae4408d7ac52"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "6466f32379489091dd46be02b5e73a8fc08e7c304d683e9461bda3219ba524e8"
     },
     "paul-gauguin/commentary-when-will-you-marry": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "9b469224dcad9ae1e5d03c8a091de78323dc3f356656b7e80f0a3124f316517c"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "8246574c2d8385901a4357e3e8284f908edf899344f1de1761596ef00c78c43d"
     },
     "paul-gauguin/commentary-where-do-we-come-from": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "2e3833fb4c71960da9dbe29f98d1c4dcd07390c2e60be9211aa576dbe958a47e"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "ee533615dbb0fa132bdd57a04dd6b0ad4fd500284dbc79150edd3409077089be"
+    },
+    "paul-gauguin/commentary-words-of-the-devil": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "509e7d4f3010e0172d811e6854779b36993ad32eaf393224203ef59fefb23be1"
     },
     "paul-gauguin/gauguin-bio-family-separation": {
       "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
@@ -1192,74 +1252,129 @@
       "content_sha256": "4e658fee99bc7246d13d671940a900e6f2e8686e3c1799471fe68c5d803ff575"
     },
     "vincent-van-gogh/commentary-almond-blossom": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "52e03a269a465b6b96c2d50629f54b9ead1b8758c103498cb66f5428b49480cc"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a977580924d515d00f64f85079496eceab4c8dd4fc058113178a761c673c6c69"
     },
     "vincent-van-gogh/commentary-cafe-terrace-at-night": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "bcfc911cbef3d97a3bba41366009bce7d7dc9ffbf15fb14ccf4d438c613c382f"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "1a701d639c0ebf4790bf2db9a97194a7e01fb686ac684b655ced9e5ee895f4d3"
+    },
+    "vincent-van-gogh/commentary-gaugins-chair": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "d4130390889aded57d861cae16a29278eddd3d0f124493d769a16a1136b743a6"
     },
     "vincent-van-gogh/commentary-irises-1890": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "021abcd1b779f6e27a5568d17207212d5f986dbda5a3ae702d1e8c12a7bec159"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e5af88ff8c71f8990632a2ee649bc2e0107d4c7db692c2305caa0e465b361a44"
     },
     "vincent-van-gogh/commentary-la-berceuse": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "0a16a317f7485f20a67fd4c41a498a4c9d7749956a959108438da4db763d9405"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e49e11435711640c866a458a8a554610bfa25d1f4164598cb073fe4d84fd1d89"
     },
     "vincent-van-gogh/commentary-oleanders": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "fb0cec71c9cb2443c28d36d5bad914bc454fbd1642332032d75fe91bf45dd402"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "033a12dc9c9d5c71f63ffd004adc2f20a408ea0dee5c03716f5af573ac34b07b"
+    },
+    "vincent-van-gogh/commentary-olive-trees-1889": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "48512216ffd19a718e66063b67685d284aac25a8085f9c1510dc6aacd669cc48"
+    },
+    "vincent-van-gogh/commentary-portrait-of-dr-gachet": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "60f43ec4218a09a72b6e4cde5535abd55ba0a3d934d7642787795817e22140cb"
     },
     "vincent-van-gogh/commentary-self-portrait-with-a-straw-hat": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "652a748a36e017dd24e7fc01a50ca3cae12897d0eac88aeac0013a5e118253b7"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "9cb4721ddfcd3849bbfe8dad9c3bd27a17caf922fd42e9b00e4f812a933b4b9c"
     },
     "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "08c1ddc38416312fa597d49c654e4b66024d396b55939b48178dfeaaeab4ff63"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "e7c67852a1333a8b768ecd512cddd9dcfa4a1f25eb5b7e05082056df7a9ca906"
+    },
+    "vincent-van-gogh/commentary-self-portrait-with-grey-felt-hat": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "870cd5cc88bce350674fb200bf975bf4deafd77b3c182162cea5eea36a1818e5"
     },
     "vincent-van-gogh/commentary-sunflowers-1887": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "e82872a3bede58096c1271c28fe9e15c11535b1e81d123cc11045ff77e333146"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "ea47b87e2c1a8deb122db91f77bb7a33ddebffe1318c3b1f06cf45ab7b2f0525"
     },
     "vincent-van-gogh/commentary-sunflowers-arles": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "30cf8a75e012ba22c0a236a980e27619b955b93f1ce6c1f4a88df9c6d8e1758b"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "2635aa971eea36f40223d0885e76ada427bdbb6d174ada1376bd44af5dcce609"
     },
     "vincent-van-gogh/commentary-the-bedroom": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "e7a76f5175eeb4e7df1523c80774cdec106ff75d1e037aafde7e9fda99152850"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "dbea0ccd1a3c9bde58c459b82c4fe864433ba061a98127ca5205d808f5592166"
+    },
+    "vincent-van-gogh/commentary-the-church-at-auvers": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "1da6e1be18356a0eb854f521bbb2f9d2f744ba754e8a872532738480f1ee2748"
+    },
+    "vincent-van-gogh/commentary-the-langlois-bridge": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "89577d40d778c17600638f6143e4b709a3902cba056fec37f4d1e3fc00d489e1"
+    },
+    "vincent-van-gogh/commentary-the-night-cafe": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "9ea31d248befd2406816b7d0d70c41cc528eccf2cc0683277a097cbbfc4723c0"
     },
     "vincent-van-gogh/commentary-the-potato-eaters": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "24bd3dc62a117b9a1669e7dca02672a80e9a98de02677b21f70b16537f1e2c10"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "a5f729f67d4a802ed6244630079abb8aeaf394c3c0dd60909a8d727efd0e4edc"
+    },
+    "vincent-van-gogh/commentary-the-red-vineyard": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "271d83c45667ed7409d9f86834a18dc6914194539a057be40a3dbdcad744a2ae"
+    },
+    "vincent-van-gogh/commentary-the-sower-1888": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "050fe1369d7a7b9e75946197654f3a1cc8807727648b0f54654c15e00b2a58c4"
     },
     "vincent-van-gogh/commentary-the-starry-night": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "e23a3a9d27d6f0331858b25522d6195fd34a713ca94c1acee3031cf1cf6ba713"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "18726ea0843b8b8b065010eb92b7fbf5280559643d86ad4e58d9799cb96dd3d2"
+    },
+    "vincent-van-gogh/commentary-the-yellow-house": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "010965a9b8a55e0165b1da4a81ebd5781aa36ffb08e141a83da2a424537d5e5c"
+    },
+    "vincent-van-gogh/commentary-van-goghs-chair": {
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "df48e26e96bdc25b47165618359a2a828393fef861da72620c2d8957a650b1b7"
     },
     "vincent-van-gogh/commentary-wheat-field-with-cypresses": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "14e02a785e609d9faee04012bc0017f33f897d6555cc6f6b5de0d5f0998eb9d1"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "5d1e0fb19f426fe00fdcb8570993e3e62b6ce7826b97661f8691fb9d296827b9"
     },
     "vincent-van-gogh/commentary-wheatfield-with-crows": {
-      "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
-      "reviewed_on": "2026-10-11",
-      "content_sha256": "156a17b8ac42f94f1c065e89693929b3331e8bdd2af0f13eea132c9e11a0a973"
+      "reviewer": "A(PM·전처리) 요청 / Claude AI 사실 확인·판본 대조·출처 보강",
+      "reviewed_on": "2026-10-12",
+      "content_sha256": "aa46ec118bac2ce5c01aa0eca86b83d6cb3de6c123ff0ba3e24f40f87244b0d6"
     },
     "vincent-van-gogh/timeline-00": {
       "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",

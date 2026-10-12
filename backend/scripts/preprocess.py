@@ -211,7 +211,8 @@ def read_dataset(folder: Path, cat: dict) -> None:
             "doc_type": x["doc_type"], "title": x["title"], "content": x["content"].strip(),
             "artist_slugs": x.get("artist_slugs") or [], "artwork_slug": x.get("artwork_slug"),
             "source_url": x["source_url"], "source_name": x.get("source_name"),
-            "license": (x.get("license") or "").split(" (")[0] or None,
+            # 괄호 안 적용 범위(팀이 새로 쓴 해설문에만 적용)를 지우면 기관 원문의 라이선스로 오해된다
+            "license": x.get("license") or None,
             "lang": "ko", "topic": None, "related_artwork_slugs": [],
             "needs_review": needs_review_of(d.get("record_status"), x.get("review_status")),
         })

@@ -2,6 +2,8 @@
 
 import json
 import os
+import re
+from collections import Counter
 
 import pytest
 
@@ -150,7 +152,6 @@ def test_gogh_and_gauguin_commentary_length_and_rights_scope(artist_slug):
     docs = [d for d in dataset["documents"] if d["doc_type"] == "artwork_commentary"]
 
     assert len(docs) == 25
-    assert min(len(d["content"]) for d in docs) >= 1000
     assert all("새로 작성한 해설문에만 적용" in d["license"] for d in docs)
     assert all("출처 기관의 웹페이지 해설문" in d["copyright_notice"] for d in docs)
 
@@ -158,6 +159,26 @@ def test_gogh_and_gauguin_commentary_length_and_rights_scope(artist_slug):
     assert met_docs
     assert all("기본 데이터" in d["source_rights_note"] for d in met_docs)
     assert all("웹페이지의 큐레이터 해설문은 CC0 대상으로 간주하지 않았" in d["source_rights_note"] for d in met_docs)
+
+
+def test_dataset_license_scope_survives_preprocess(out):
+    """CC BY 4.0의 적용 범위 단서가 processed까지 남아야 기관 원문의 라이선스로 오해되지 않는다."""
+    assert pp.main() == 0
+    docs = [d for d in pp.load_processed("documents.jsonl")
+            if d["doc_key"].startswith(("vincent-van-gogh/commentary-", "paul-gauguin/commentary-"))]
+    assert len(docs) == 50
+    assert all("새로 작성한 해설문에만 적용" in d["license"] for d in docs)
+    assert all(len(d["license"]) <= 100 for d in docs)  # documents.license String(100)
+
+
+def test_gogh_and_gauguin_commentary_depth_without_boilerplate(out):
+    """보충문을 합친 최종 해설은 1,000자 이상이고, 여러 문서에 같은 문장을 붙여 분량을 채우지 않는다."""
+    assert pp.main() == 0
+    docs = [d for d in pp.load_processed("documents.jsonl")
+            if d["doc_key"].startswith(("vincent-van-gogh/commentary-", "paul-gauguin/commentary-"))]
+    assert min(len(d["content"]) for d in docs) >= 1000
+    sentences = Counter(s.strip() for d in docs for s in re.split(r"(?<=다\.)\s+", d["content"]) if len(s) > 30)
+    assert not [s for s, c in sentences.items() if c >= 5]
 
 
 def test_review_approval_and_invalidation(out, reviews, monkeypatch):
