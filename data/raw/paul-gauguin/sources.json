@@ -1,6 +1,6 @@
 {
   "artist_slug": "paul-gauguin",
-  "collected_at": "2026-10-11",
+  "collected_at": "2026-10-12",
   "sources": [
     {
       "record": "artist_bio",
@@ -134,6 +134,90 @@
       "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
       "usage": "두 번째 타히티 체류, 마르키즈 이주와 사망 확인",
       "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "self-portrait-with-halo-and-snake",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/46625-self-portrait",
+      "usage": "작품 메타데이터와 후광·뱀·사과의 복합 자기 이미지 확인",
+      "rights": "NGA 공개 사실과 메타데이터를 참고해 새 한국어 문장으로 작성; 이미지는 Commons Public Domain Mark 파일"
+    },
+    {
+      "record": "self-portrait-les-miserables",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품 메타데이터와 고흐·베르나르 사이 초상 교환 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "vincent-van-gogh-painting-sunflowers",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품 메타데이터와 아를 공동생활·상상해 구성한 제작 장면 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "la-belle-angele",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/la-belle-angele-286",
+      "usage": "작품 메타데이터, 모델·원형 구도·페루계 도자기 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 이미지는 Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "fatata-te-miti",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/46624-fatata-te-miti-sea",
+      "usage": "작품 메타데이터와 두 인물·해변의 화면 구성 확인",
+      "rights": "NGA 공개 사실과 메타데이터를 참고해 새 한국어 문장으로 작성; 연결 이미지는 CC0"
+    },
+    {
+      "record": "mahana-no-atua",
+      "source_name": "Art Institute of Chicago",
+      "source_url": "https://publications.artic.edu/gauguin/reader/gauguinart/section/140370",
+      "usage": "작품 메타데이터, 프랑스 제작과 혼합된 신화·색면 구성 확인",
+      "rights": "공식 학술 자료의 사실만 참고해 새 한국어 문장으로 작성; 이미지는 Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-seed-of-the-areoi",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/collection/works/83387",
+      "usage": "작품 메타데이터와 인물·망고·배경 구성 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 연결 이미지는 Commons CC BY-SA 조건"
+    },
+    {
+      "record": "a-farm-in-brittany",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436448",
+      "usage": "작품 메타데이터와 브르타뉴 풍경 구성 확인",
+      "rights": "The Met CC0 소장품 데이터와 이미지를 참고해 새 한국어 문장으로 작성; 연결 이미지는 CC0"
+    },
+    {
+      "record": "words-of-the-devil",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/53130-parau-na-te-varua-ino-words-devil",
+      "usage": "작품 메타데이터와 여성·뒤 인물·도마뱀의 모호한 서사 확인",
+      "rights": "NGA 공개 사실과 메타데이터를 참고해 새 한국어 문장으로 작성; 이미지는 Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "tehamana-has-many-parents",
+      "source_name": "Art Institute of Chicago",
+      "source_url": "https://publications.artic.edu/gauguin/reader/gauguinart/section/140288",
+      "usage": "작품 메타데이터, 모델·복장·배경 기호와 식민주의 맥락 확인",
+      "rights": "공식 학술 자료의 사실만 참고해 새 한국어 문장으로 작성; 이미지는 Commons 퍼블릭 도메인 파일"
+    },
+    {
+      "record": "the-bathers-gauguin",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/39758-bathers",
+      "usage": "작품 메타데이터와 물가 인물군의 화면 구성 확인",
+      "rights": "NGA 공개 사실과 메타데이터를 참고해 새 한국어 문장으로 작성; 연결 이미지는 CC0"
+    },
+    {
+      "record": "breton-girls-dancing-pont-aven",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/61369-breton-girls-dancing-pont-aven",
+      "usage": "작품 메타데이터와 브르타뉴 복장·춤·평면적 구성 확인",
+      "rights": "NGA 공개 사실과 메타데이터를 참고해 새 한국어 문장으로 작성; 연결 이미지는 CC0"
     }
   ],
   "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
