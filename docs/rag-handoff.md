@@ -4,6 +4,13 @@
 
 기준: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건 (모두 한국어, 모두 검토 완료)
 
+**저장 위치 (10/12 결정)**: 청크와 벡터는 **TiDB에 원본으로 저장**하고(`document_chunks`, `artwork_embeddings`), 같은 내용을 **Chroma에 옮겨 검색은 Chroma로** 합니다. TiDB에 벡터가 있으므로 Chroma가 날아가도 OpenAI를 다시 부르지 않고 그대로 복원할 수 있고, 검색 결과를 TiDB `VEC_COSINE_DISTANCE`와 비교해 볼 수도 있습니다.
+
+```text
+documents ─(build_chunks: 자르기·임베딩)→ TiDB document_chunks ─(sync_chroma: 옮기기)→ Chroma chunks
+artworks  ─(build_artwork_embeddings)───→ TiDB artwork_embeddings ─(sync_chroma)──────→ Chroma artworks
+```
+
 ## 0. 한눈에 보기
 
 ### 지금 상태
@@ -14,31 +21,35 @@
 | DB 스키마 | 완료 | Alembic `20261012_0003`까지 적용 |
 | 카탈로그·문서 적재 | 완료 | 사조 4 · 작가 8 · 작품 219 · 문서 361 · 작가 연결 134 · 작품 연결 173 · 근거 연결 135 |
 | 검색 범위 SQL (5절) | 실제 DB에서 확인 | 『야경』 범위 28건, 연표 연결 1건 |
-| `document_chunks` | **비어 있음 → B** | 3·4절 |
-| `artwork_embeddings` | **비어 있음 → B** | 4절 |
+| `document_chunks` (TiDB) | **비어 있음 → B** | 3·4절 |
+| `artwork_embeddings` (TiDB) | **비어 있음 → B** | 4절 |
+| Chroma `chunks`·`artworks` 컬렉션 | **비어 있음 → B** | 4절 동기화 |
 | 검색·답변 서비스 (`app/rag`, `app/services`) | **비어 있음 → B** | 5·6절 |
 
 ### B가 할 일 (순서대로)
 
-1. **환경 준비** — 루트 `.env`에 `OPENAI_API_KEY`를 추가합니다 (`.env.example`에는 아직 없음). `langchain-openai`, `langchain-text-splitters`, `tidb-vector`는 이미 의존성에 있습니다.
-   - 완료 기준: `uv run python -m scripts.check_db`가 `missing=(none)`
-2. **청킹·임베딩 스크립트** `backend/scripts/build_chunks.py` — 청크가 없는 문서만 골라 잘라서 임베딩하고 `document_chunks`에 넣습니다 (3·4절).
+1. **환경 준비** — 루트 `.env`에 `OPENAI_API_KEY`와 Chroma 접속 정보를 추가합니다 (`.env.example`에는 아직 없음). 로컬 실험은 `chromadb.PersistentClient(path=...)`, 배포·공용 적재는 Railway의 Chroma 서버에 `chromadb.HttpClient`로 붙습니다. `chromadb`·`langchain-chroma` 의존성은 별도로 추가합니다.
+   - 완료 기준: `uv run python -m scripts.check_db`가 `missing=(none)`이고, Chroma `heartbeat()`가 응답
+2. **청킹·임베딩 스크립트** `backend/scripts/build_chunks.py` — 청크가 없는 문서만 골라 잘라서 임베딩하고 TiDB `document_chunks`에 넣습니다 (1·3·4절).
    - 완료 기준: 모든 문서에 청크가 1개 이상, 다시 실행하면 0건 처리
-3. **작품 임베딩 스크립트** `backend/scripts/build_artwork_embeddings.py` — 작품 219점의 벡터를 `artwork_embeddings`에 넣습니다 (4절).
+3. **작품 임베딩 스크립트** `backend/scripts/build_artwork_embeddings.py` — 작품 219점의 벡터를 TiDB `artwork_embeddings`에 넣습니다 (4절).
    - 완료 기준: 219행
-4. **검색 함수** (`app/rag`) — 고른 작품 범위 안에서만 벡터 검색하고, 연표 사건을 항상 붙입니다 (5절).
-5. **답변 생성** (`app/services`) — 6절의 시스템 프롬프트 규칙과 출처 표시를 적용합니다.
-6. **검증** — 9절 테스트 질문 27개를 돌려서 기대 문서가 근거로 나오는지, 거절해야 할 질문을 거절하는지 확인합니다.
+4. **Chroma 동기화 스크립트** `backend/scripts/sync_chroma.py` — TiDB의 청크·작품 벡터를 Chroma로 옮기고, TiDB에서 사라진 것은 Chroma에서도 지웁니다. 임베딩을 다시 만들지 않습니다 (4절).
+   - 완료 기준: Chroma `chunks` 개수 = `document_chunks` 행 수, `artworks` 개수 = 219, 다시 실행하면 추가·삭제 0건
+5. **검색 함수** (`app/rag`) — 고른 작품 범위 안에서만 Chroma로 벡터 검색하고, 연표 사건을 항상 붙입니다 (5절).
+6. **답변 생성** (`app/services`) — 6절의 시스템 프롬프트 규칙과 출처 표시를 적용합니다.
+7. **검증** — 9절 테스트 질문 27개를 돌려서 기대 문서가 근거로 나오는지, 거절해야 할 질문을 거절하는지 확인합니다.
 
-### B가 쓰는 테이블과 쓰지 않는 테이블
+### B가 쓰는 저장소
 
-| 구분 | 테이블 |
+| 구분 | 대상 |
 | --- | --- |
-| B가 **읽기만** | `documents`, `artworks`, `artists`, `art_movements`, `document_artists`, `document_artworks`, `document_basis_documents` |
-| B가 **씀** | `document_chunks`, `artwork_embeddings` |
-| RAG 범위 아님 | `users`, `artwork_likes`, `artist_follows`, `artwork_views` — 서비스에서는 앱이 채우고, 발표용 시연 데이터는 `scripts/seed_demo_users.py`(미작성, 담당 미정)로 넣을 예정 |
+| B가 **읽기만** (TiDB) | `documents`, `artworks`, `artists`, `art_movements`, `document_artists`, `document_artworks`, `document_basis_documents` |
+| B가 **씀** (TiDB, 원본) | `document_chunks`, `artwork_embeddings` |
+| B가 **씀** (Chroma, 검색용 사본) | `chunks` 컬렉션, `artworks` 컬렉션 — `sync_chroma`만 씀 |
+| RAG 범위 아님 (TiDB) | `users`, `artwork_likes`, `artist_follows`, `artwork_views` — 서비스에서는 앱이 채우고, 발표용 시연 데이터는 `scripts/seed_demo_users.py`(미작성, 담당 미정)로 넣을 예정 |
 
-연결 고리는 `document_chunks.document_id` → `documents.id`, `artwork_embeddings.artwork_id` → `artworks.id` 두 개뿐입니다.
+연결 고리는 `document_chunks.document_id` → `documents.id`, `artwork_embeddings.artwork_id` → `artworks.id`, 그리고 Chroma id = TiDB 행 id 세 가지입니다. Chroma 검색 결과의 `document_id`로 출처·연표·작가 연결을 TiDB에서 조회합니다.
 
 ## 1. 데이터 읽기
 
@@ -120,16 +131,18 @@ docs = load_processed("documents.jsonl")   # list[dict], 361건
 - **`content`에는 머리말까지 포함해 저장하고, 같은 텍스트로 임베딩합니다.** 검색 결과를 그대로 프롬프트에 넣을 수 있습니다.
 - 본문 합계는 약 65만 자입니다. 500자 기준 약 1,300개 청크이고, 섹션 경계에서 자르면 조금 더 늘어납니다 (추정).
 
-저장 형식:
+저장 형식 (TiDB):
 
 ```python
+from langchain_openai import OpenAIEmbeddings
 from app.models import DocumentChunk
 
 EMBEDDING_MODEL = "text-embedding-3-small"
+embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
 
 for doc in todo:                                   # 1절의 청크 없는 문서
     pieces = split(doc)                            # 위 규칙대로 자른 문자열 목록 (머리말 포함)
-    vectors = embeddings.embed_documents(pieces)   # langchain_openai.OpenAIEmbeddings, 여러 건 묶어 호출
+    vectors = embeddings.embed_documents(pieces)   # 여러 건 묶어 호출
     session.add_all(
         DocumentChunk(document_id=doc.id, chunk_index=i, content=text,
                       embedding=vec, embedding_model=EMBEDDING_MODEL)
@@ -141,16 +154,67 @@ session.commit()
 - `(document_id, chunk_index)`는 UNIQUE입니다. `chunk_index`는 0부터 매깁니다.
 - `content` 컬럼은 `TEXT`(약 64KB)라 청크 하나로는 넉넉합니다.
 
-## 4. 임베딩
+## 4. 임베딩과 Chroma 동기화
 
-- **차원**: DB 컬럼은 `VECTOR(1536)`입니다 (`backend/app/models/base.py`의 `EMBEDDING_DIMENSION`). `text-embedding-3-small`(1536차원) 기준으로 설계했습니다. 다른 모델을 쓰려면 차원을 먼저 정하고 Alembic 마이그레이션으로 컬럼을 바꿔야 합니다.
-- **모델 이름 기록**: `embedding_model`에 모델 이름을 꼭 넣습니다. 모델이 섞이면 거리 값이 의미가 없어집니다.
-- **비용**: 여러 건을 묶어 호출하고, 이미 같은 모델로 만든 벡터는 건너뜁니다.
+- **차원**: DB 컬럼은 `VECTOR(1536)`입니다 (`backend/app/models/base.py`의 `EMBEDDING_DIMENSION`). `text-embedding-3-small`(1536차원) 기준입니다. 다른 모델을 쓰려면 Alembic 마이그레이션으로 컬럼을 바꾸고, Chroma 컬렉션도 지우고 다시 만들어야 합니다.
+- **모델 이름 기록**: `embedding_model`에 모델 이름을 꼭 넣습니다. 모델이 섞이면 거리 값이 의미가 없어집니다. 검색할 때 질문도 같은 모델로 임베딩합니다.
+- **비용**: 여러 건을 묶어 호출하고, 이미 TiDB에 있는 벡터는 다시 만들지 않습니다. Chroma는 TiDB 벡터를 옮기기만 하므로 OpenAI 비용이 들지 않습니다.
 - **겹치는 문서**: 같은 주제를 한국어 원문과 번역본이 함께 다루는 경우가 있습니다 (예: 『야경』, 키아로스쿠로). 내용이 겹치는 청크가 상위에 나란히 나오면 `doc_key`가 다른 것을 하나씩만 고르면 됩니다.
 
-### 작품 벡터 (`artwork_embeddings`)
+### Chroma 동기화 (`sync_chroma.py`)
 
-추천용 작품 벡터입니다. 작품 하나에 한 행입니다 (`artwork_id`가 PK).
+TiDB가 원본이고 Chroma는 검색용 사본입니다. **Chroma id는 TiDB 행 id**(`document_chunks.id`, `artwork_embeddings.artwork_id`)를 문자열로 바꾼 값입니다. id 집합만 비교하면 추가할 것과 지울 것이 바로 나옵니다.
+
+```python
+from itertools import batched                            # Python 3.12+
+import chromadb
+from sqlalchemy import select
+from sqlalchemy.orm import undefer
+from app.models import Document, DocumentChunk
+
+client = chromadb.HttpClient(host=..., port=...)        # 로컬 실험은 chromadb.PersistentClient(path=...)
+chunks = client.get_or_create_collection(
+    "chunks",                                           # 개발용·발표용은 이름을 나눔 (예: chunks_dev)
+    metadata={"hnsw:space": "cosine", "embedding_model": EMBEDDING_MODEL},
+)
+
+in_chroma = set(chunks.get(include=[])["ids"])
+with SessionLocal() as session:
+    in_tidb = {str(i) for i in session.scalars(select(DocumentChunk.id))}
+
+    gone = list(in_chroma - in_tidb)                    # 본문이 바뀌어 TiDB에서 지워진 청크
+    if gone:
+        chunks.delete(ids=gone)
+
+    new_ids = [int(i) for i in in_tidb - in_chroma]
+    rows = session.execute(
+        select(DocumentChunk, Document)
+        .join(Document, Document.id == DocumentChunk.document_id)
+        .where(DocumentChunk.id.in_(new_ids))
+        .options(undefer(DocumentChunk.embedding))      # embedding은 deferred 컬럼
+    ).all()
+    for batch in batched(rows, 500):                    # 한 번에 너무 많이 넣지 않음
+        chunks.add(
+            ids=[str(c.id) for c, _ in batch],
+            documents=[c.content for c, _ in batch],
+            embeddings=[list(c.embedding) for c, _ in batch],
+            metadatas=[{
+                "document_id": d.id,
+                "doc_key": d.doc_key,
+                "doc_type": d.doc_type.value,
+                "artwork_id": d.artwork_id or 0,        # Chroma 메타데이터에는 None을 넣을 수 없음
+                "chunk_index": c.chunk_index,
+            } for c, d in batch],
+        )
+```
+
+- 컬렉션을 만들 때 거리 함수를 `cosine`으로 지정합니다 (Chroma 기본값은 `l2`). 이미 만든 컬렉션의 거리 함수는 바꿀 수 없습니다.
+- 메타데이터에는 검색 범위와 TiDB 조회에 필요한 값만 넣습니다. 제목·출처·라이선스는 `document_id`로 TiDB에서 조회합니다 (5·6절). 작가 목록은 넣지 않고, 범위는 5절처럼 TiDB에서 문서 id로 구합니다.
+- Chroma가 비거나 날아가면 컬렉션을 지우고 `sync_chroma`만 다시 돌리면 복원됩니다.
+
+### 작품 벡터 (`artwork_embeddings` → Chroma `artworks`)
+
+추천용 작품 벡터입니다. TiDB에는 작품 하나에 한 행입니다 (`artwork_id`가 PK). Chroma `artworks` 컬렉션의 id는 `artwork_id`이고, 메타데이터에 `artist_id`, `movement_id`(값이 없으면 `0`)를 넣으면 "같은 작가 제외" 같은 조건을 `where`로 걸 수 있습니다. 작품 설명이 바뀌면 벡터도 바뀌므로, 219건은 매번 `upsert`로 전부 덮어써도 됩니다.
 
 - 임베딩할 텍스트: `제목 / 사조 이름 / 재료·기법(medium) / 설명(description)`을 한 덩어리로 만듭니다.
 - 작가 이름을 넣으면 같은 작가 작품끼리 더 가까워집니다. 넣을지는 팀에서 정합니다.
@@ -158,7 +222,7 @@ session.commit()
 
 ## 5. 검색: 작품을 골랐을 때의 범위
 
-챗봇은 사용자가 고른 작품 범위 안에서만 답합니다. **범위를 SQL로 먼저 좁히고, 그 안에서만 벡터 거리를 계산합니다.** 범위 안 청크가 많아야 수백 개라 벡터 인덱스 없이 정확 검색으로 충분합니다.
+챗봇은 사용자가 고른 작품 범위 안에서만 답합니다. **범위에 드는 문서 id를 TiDB에서 먼저 구하고, Chroma에서는 그 문서들의 청크 안에서만 검색합니다.** 범위 안 문서는 많아야 수십 건이라 `$in` 필터 하나로 충분합니다.
 
 | 근거 | 찾는 방법 | 비고 |
 | --- | --- | --- |
@@ -170,23 +234,14 @@ session.commit()
 ④가 필요한 이유: 사용자가 『야경』을 고르고 "그때 렘브란트는 어땠어?"라고 물으면, 질문 벡터만으로는 "사스키아의 죽음" 사건이 상위에 오지 않을 수 있습니다. 작품과 연결된 연표 사건을 거리 순위와 별개로 항상 넣으면 스토리텔링 답변이 안정됩니다.
 
 ```sql
--- 범위 안에서 질문과 가까운 청크 5개 (docs/db/02_queries.sql C절과 같은 방식)
-SELECT c.id AS chunk_id, c.content,
-       d.id AS document_id, d.doc_key, d.doc_type, d.title, d.source_name, d.source_url, d.license,
-       VEC_COSINE_DISTANCE(c.embedding, :question_vec) AS distance
-FROM document_chunks AS c
-JOIN documents AS d ON d.id = c.document_id
-WHERE c.document_id IN (
-        SELECT id FROM documents WHERE artwork_id = :artwork_id                      -- ①
-        UNION
-        SELECT da.document_id FROM document_artists AS da                           -- ②③
-        JOIN artworks AS aw ON aw.artist_id = da.artist_id
-        WHERE aw.id = :artwork_id
-      )
-ORDER BY distance
-LIMIT 5;
+-- ①②③ 범위에 드는 문서 id (TiDB)
+SELECT id FROM documents WHERE artwork_id = :artwork_id                      -- ①
+UNION
+SELECT da.document_id FROM document_artists AS da                           -- ②③
+JOIN artworks AS aw ON aw.artist_id = da.artist_id
+WHERE aw.id = :artwork_id;
 
--- ④ 작품과 연결된 연표 사건 (거리와 상관없이 함께 넣음)
+-- ④ 작품과 연결된 연표 사건 (거리와 상관없이 함께 넣음, TiDB)
 SELECT d.id, d.doc_key, d.title, d.content, d.source_name, d.source_url
 FROM document_artworks AS dw
 JOIN documents AS d ON d.id = dw.document_id
@@ -194,8 +249,22 @@ WHERE dw.artwork_id = :artwork_id
 ORDER BY d.doc_key;
 ```
 
-- `SELECT` 목록에 `c.embedding`을 넣지 않습니다. 벡터가 통째로 네트워크로 넘어옵니다.
-- `VEC_COSINE_DISTANCE`는 거리라 작을수록 비슷합니다. 항상 오름차순입니다.
+```python
+# 범위 안에서 질문과 가까운 청크 5개 (Chroma)
+result = chunks.query(
+    query_embeddings=[embeddings.embed_query(question)],
+    n_results=5,
+    where={"document_id": {"$in": scope_ids}},          # 위 ①②③의 결과
+    include=["documents", "metadatas", "distances"],
+)
+# result["distances"][0]: 코사인 거리, 작을수록 비슷함 (이미 오름차순)
+# 제목·출처·라이선스는 metadatas의 document_id로 TiDB documents에서 한 번에 조회
+```
+
+- `scope_ids`가 비어 있으면 Chroma를 부르지 말고 바로 거절합니다 (`$in`에 빈 목록을 넣으면 오류).
+- `include`에 `embeddings`를 넣지 않습니다. 벡터가 통째로 네트워크로 넘어옵니다.
+- LangChain을 쓰면 `langchain_chroma.Chroma(client=client, collection_name="chunks", embedding_function=embeddings)`의 `similarity_search_with_score(question, k=5, filter={"document_id": {"$in": scope_ids}})`로 같은 검색을 할 수 있습니다.
+- **비교·디버깅용**: TiDB에도 같은 벡터가 있으므로 `docs/db/02_queries.sql` C절처럼 `VEC_COSINE_DISTANCE`로 같은 범위를 검색해 Chroma 결과와 비교할 수 있습니다. 상위 결과가 크게 다르면 동기화가 덜 된 것입니다.
 - 범위 조건(①②③)과 ④는 실제 DB에서 확인했습니다 (『야경』 28건·연표 1건, 「해인사」 12건·연표 0건, 「아레아레아」 20건·연표 0건). 거리 정렬은 청크가 생긴 뒤에 확인하면 됩니다.
 
 ## 6. 답변 생성
@@ -228,8 +297,8 @@ ORDER BY d.doc_key;
 
 - A가 원본을 고치면 전처리 → 검토 → `load_catalog` / `load_documents` 순서로 다시 적재합니다.
 - 적재는 `doc_key` 기준 갱신이라 `documents.id`가 유지됩니다.
-- **본문이 바뀐 문서는 `load_documents`가 그 문서의 청크를 지웁니다.** 그래서 B의 스크립트는 1절처럼 "청크가 없는 문서"만 처리하면 자동으로 따라옵니다.
-- 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다 (`document_chunks`를 비우고 다시 실행).
+- **본문이 바뀐 문서는 `load_documents`가 그 문서의 TiDB 청크를 지웁니다.** 그래서 A가 적재한 뒤 B가 `build_chunks` → `sync_chroma` 순서로 한 번 더 돌리면 됩니다. `build_chunks`는 청크가 없어진 문서만 다시 만들고, `sync_chroma`는 지워진 청크 id를 Chroma에서 빼고 새 청크를 넣습니다.
+- 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다 (`document_chunks`를 비우고 `build_chunks`, Chroma `chunks` 컬렉션을 지우고 `sync_chroma`).
 - `needs_review`: 지금은 361건 모두 `false`입니다. 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 그 문서만 `true`가 되고, A가 검토 후 다시 `false`로 바꿉니다. `true`인 문서를 검색에서 뺄지는 B가 정하면 됩니다. 검토 기록은 `data/mappings/reviews.json`과 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
 
 ## 8. 알고 있어야 할 약점
