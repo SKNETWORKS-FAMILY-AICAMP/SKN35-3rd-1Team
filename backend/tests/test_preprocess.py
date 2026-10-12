@@ -139,6 +139,24 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     assert all(a["portrait_url"] for a in pp.load_processed("artists.jsonl"))
 
 
+@pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])
+def test_gogh_and_gauguin_commentary_length_and_rights_scope(artist_slug):
+    """두 작가의 직접 작성 해설은 1,000자 이상이고 출처 저작권과 구분되어야 한다."""
+    path = pp.RAW / artist_slug / "dataset.json"
+    dataset = json.loads(path.read_text(encoding="utf-8"))
+    docs = [d for d in dataset["documents"] if d["doc_type"] == "artwork_commentary"]
+
+    assert len(docs) == 25
+    assert min(len(d["content"]) for d in docs) >= 1000
+    assert all("새로 작성한 해설문에만 적용" in d["license"] for d in docs)
+    assert all("출처 기관의 웹페이지 해설문" in d["copyright_notice"] for d in docs)
+
+    met_docs = [d for d in docs if d["source_name"] == "The Metropolitan Museum of Art"]
+    assert met_docs
+    assert all("기본 데이터" in d["source_rights_note"] for d in met_docs)
+    assert all("웹페이지의 큐레이터 해설문은 CC0 대상으로 간주하지 않았" in d["source_rights_note"] for d in met_docs)
+
+
 def test_review_approval_and_invalidation(out, reviews, monkeypatch):
     key = "rembrandt/timeline-00"
     assert pp.main(["review", "--approve", key, "--reviewer", "테스트"]) == 0
