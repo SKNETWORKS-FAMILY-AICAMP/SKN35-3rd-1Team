@@ -9,17 +9,17 @@
       "rows": 8
     },
     "artworks.jsonl": {
-      "sha256": "6974a6ba2702efe567eda3f911aa7b9612f787b78c1640453517e27b01dda60d",
-      "rows": 196
+      "sha256": "ccde7f6899e0bf1e70dc0063994814a367155d25d666a3978c01d44eef9f93fb",
+      "rows": 219
     },
     "documents.jsonl": {
-      "sha256": "534af789b961740fc70c1f93a1faee4c3ff333d7a8fe75e1c7d74b36077047ad",
-      "rows": 338
+      "sha256": "a105398448b479ddf812a48ea359c60e064feff5a6173ff7746a1667cd8758b2",
+      "rows": 361
     },
     "artist_aliases.jsonl": {
       "sha256": "789aaf6bf031eea31f9f1d85c874f7adf96a5ad3d86e5cf91874bfcf2257b6ec",
       "rows": 10
     }
   },
-  "needs_review_documents": 0
+  "needs_review_documents": 23
 }
