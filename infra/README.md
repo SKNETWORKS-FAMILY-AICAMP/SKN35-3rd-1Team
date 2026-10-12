@@ -8,6 +8,32 @@
 - `backend.Dockerfile`, `frontend.Dockerfile`
 - 배포 환경별 설정 예시 (비밀값 제외)
 
+## 배포 구성
+
+| 대상 | 위치 | 설정 |
+| --- | --- | --- |
+| 백엔드 API | Railway | 루트 `railway.toml` → `infra/backend.Dockerfile`. 빌드 컨텍스트는 저장소 루트 |
+| 프론트엔드 | Vercel | `frontend/vercel.json` (Root Directory `frontend`) |
+
+Railway 서비스의 Root Directory는 비워 둡니다(저장소 루트). `pyproject.toml`과 `uv.lock`이 루트에 있기 때문입니다. `backend/`·의존성 파일이 바뀐 push만 다시 배포합니다.
+
+Railway 환경변수:
+
+| 이름 | 값 |
+| --- | --- |
+| `TIDB_HOST`, `TIDB_PORT`, `TIDB_USERNAME`, `TIDB_PASSWORD`, `TIDB_DATABASE` | TiDB Cloud 접속 정보 |
+| `CORS_ORIGINS` | `https://artlog-skn35-1team.vercel.app` (여러 개면 쉼표로 구분) |
+| `AUTH_MODE` | `dev` (Firebase 토큰 검증이 붙으면 `firebase`) |
+
+마이그레이션은 컨테이너 시작 시 자동 실행하지 않습니다. 기존 데이터가 있으면 실패하는 마이그레이션(`0005`)이 있어서, 로컬에서 확인한 뒤 `uv run alembic upgrade head`로 직접 적용합니다.
+
+로컬 빌드 확인:
+
+```bash
+docker build -f infra/backend.Dockerfile -t artlog-api .
+docker run --rm -p 8000:8000 --env-file .env artlog-api
+```
+
 ## TiDB 는 어디서 실행하는가
 
 TiDB는 TiDB Cloud의 클러스터를 사용하므로 `docker-compose.yml`에 넣지 않습니다. 백엔드 컨테이너가 환경변수의 접속 정보로 클라우드에 연결합니다.
