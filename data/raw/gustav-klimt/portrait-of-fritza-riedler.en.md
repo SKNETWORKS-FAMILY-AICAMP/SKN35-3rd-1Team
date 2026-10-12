@@ -1,0 +1,5 @@
+|''Portrait of Fritza Riedler''<ref name="sammlung.belvedere.at-5">{{Cite web |title=Fritza Riedler |url=https://sammlung.belvedere.at/objects/2177/fritza-riedler? |access-date=2025-05-05 |website=sammlung.belvedere.at |language=de}}</ref>
+|1906 
+|Oil on canvas,<br>153&nbsp;cm × 133&nbsp;cm
+|[[Österreichische Galerie Belvedere]]
+|The painting depicts Fritza Riedler, the wife of a wealthy mechanical engineer. The delicate features of her pale face contrast strikingly with her dark hair. She exhibits not the slightest expression nor movement. Klimt combines a lifelike depiction of the model with an ornamental dissolution of the surroundings, rather than a realistic space. Even the armchair becomes part of this design, made up of flowing lines and eye motifs inspired by [[ancient Egyptian art]]. This is characteristic of Klimt's work at this time.<ref name="sammlung.belvedere.at-5" />  ''Portrait of Fritza Riedler'' is one of the most exhibited of Klimt's portraits.{{Citation needed|date=May 2025}}

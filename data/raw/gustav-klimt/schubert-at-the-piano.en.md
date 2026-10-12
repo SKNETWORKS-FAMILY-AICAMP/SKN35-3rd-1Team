@@ -1,0 +1,27 @@
+Schubert at the Piano was an oil-on-canvas painting by Gustav Klimt, from 1899. It depicts Austrian musician and composer Franz Schubert mid-performance. The painting shows Schubert seated at a piano surrounded by onlookers, bathed in candlelight. Klimt painted it in 1899 in the style of Art Nouveau, which focused on the use of organic shapes and flowing lines. The painting may have been commissioned in 1898 by Greek industrialist Nikolaus Dumba. In 1945, the work was destroyed in the fire at Schloss Immendorf. The image pictured is a photograph of the work.
+
+
+== Context ==
+Klimt was born in 1862 in Vienna. His father, a craftsman, encouraged Klimt to paint from an early age. Upon completing his studies at the Vienna School of Decorative Arts in 1883, Klimt began to focus on mural painting. He worked in theaters in Fiume and Karlsbad, and he was commissioned to paint the stairway in the Burgtheater on Vienna's Ringstrasse. Many of his murals can still be seen in some of Vienna's most regal buildings.
+In 1897, Klimt's style changed, becoming similar to the more intricate Art Nouveau. Klimt was one of the founding  artists of the Vienna Secession, who championed Art Nouveau over the more "academic" style of the time. The organization began in May of 1897, promoting freedom of artistic expression and hoping to elevate the artistic taste of Austria. In fact, Klimt was the group's guiding light.
+Beyond his own circle, Klimt’s influence was felt by many members of the creative community such as composer Gustav Mahler, writers Arthur Schnitzler and Robert Musil, and architect Adolf Loos. Many of Klimt's works are of a sensual nature, and several show a fixation on Greek mythology and art. In this regard, Friedrich Nietzsche's book The Birth of Tragedy influenced Klimt's work through its theory that Greek tragedy stems from a medium that can access the recesses of the mind, namely music. Klimt's exploration of music’s aforementioned connection was shown in two works: Schubert at the Piano and Music II, which were both destroyed in 1945.
+
+
+== Description ==
+In the painting, Klimt depicts Schubert at the piano, presumably in an intimate and more private drawing-room performance. Moving from left to right, we begin at the piano, smooth and glossy. Atop the piano rest candles that illuminate Schubert's music. The musician himself is off-center, fingers curved above the piano keys. Clad in a dark jacket and a white-collared shirt, he gazes forward, eyes on the sheet music placed there.
+Beside him at the piano, staring out of the painting at the viewer, is one of the three women in the work. Some claim that this woman is one of Klimt's mistresses Marie Zimmerman, who gave birth to two of the artist's sons. She wears a high, white collared dress with rosy florals, painted in vivid and legible brushstrokes. Like all the other figures in the work, her face is soft and blended. In contrast, their clothing is highly textured and dynamic. Past her right shoulder is another figure, a male, painted deep into the background.
+Standing behind Schubert, in receding proximity to the viewer, stands a woman in white, a woman in red, and a man obscured in shadow. The two women, music clutched in their hands, wear voluminous dresses with the same brushstroke-laden texture. Each woman has at her throat a flower of a color matching her dress, and her hair is gathered at the base of her neck. The man past them appears to be wearing a white dress shirt and a black jacket. Noting the style of their dress, some sources suggest that it's anachronistic, bearing closer resemblance to Klimt's period than Schubert's.
+To the far right of these three figures is a white square, perhaps depicting a mantle. It too bears legible brushstrokes and is illuminated by a candle set upon it. These vivid brushstrokes throughout the painting also impact the way in which the eye is drawn to Schubert. He is the only figure in the work whose clothing is painted smoothly, his coat dark and without coarseness. In this way, he stands out from the dynamic texture around him.
+
+
+== Destruction ==
+Before 1904, Klimt had a contract with Vienna University for the creation of three ceiling paintings for the school. The symbolic nature of these paintings wasn't well received by the university, so Klimt decided to end his contract. Jewish factory owner August Lederer purchased these three works and he and his family went on to become avid collectors, later acquiring Music II and Schubert at the Piano. This collection was seized from the Lederers in 1938 by the Nazis.
+Many of Klimt's patrons were Jewish, as were many of the owners of his works later on. In 1933, Hitler sought to purge Germany of "degenerate artists," believing the modern art scene to be sullied by the dominance of "...Jewish dealers, gallery owners, and collectors." Rather oddly, the Third Reich held an exhibition of Klimt's art in Vienna in 1943, seeming to make an exception for an artist they deemed to be an Austrian icon. Many of the works in this exhibition belonged to the Lederers, and after the showing, they were sent to Schloss Immendorf for secure storage.
+Thirteen of Klimt's paintings were stored there, and in May of 1945, on the heels of German surrender, an SS unit set off explosives in the castle. Eyewitness reports stated that not a single piece of artwork survived.
+
+
+== See also ==
+List of paintings by Gustav Klimt
+
+
+== References ==
