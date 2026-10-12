@@ -1,6 +1,6 @@
 # api/routes
 
-엔드포인트를 기능별 파일로 나눕니다. 아래 경로는 모두 파일에 만들어져 있고, 아직 기능이 없어 `501`을 돌려줍니다(`app/api/stub.py`). 구현할 때 `not_implemented()`를 지우고 서비스를 호출하면 됩니다. 새 파일은 `app/api/router.py`에 등록합니다. 팀에서 확정한 응답 명세는 `docs/`에 둡니다.
+엔드포인트를 기능별 파일로 나눕니다. 카탈로그(`movements`·`artists`·`artworks`)와 사용자 활동(`likes`·`follows`·`library`)은 구현되어 있습니다. `chat.py`와 `recommendations.py`는 아직 `501`을 돌려줍니다(`app/api/stub.py`). 구현할 때 `not_implemented()`를 지우고 서비스를 호출하면 됩니다. 새 파일은 `app/api/router.py`에 등록합니다. 확정한 명세는 `docs/api.md`입니다.
 
 ## 파일과 엔드포인트
 

@@ -19,6 +19,7 @@ dependencies = [
     "requests>=2.34.2",
     "sqlalchemy>=2.1.4",
     "tidb-vector>=0.0.15",
+    "tzdata>=2026.5",
     "uvicorn[standard]>=0.54.0",
 ]
 

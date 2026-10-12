@@ -2,13 +2,14 @@
 
 from fastapi import APIRouter
 
-from app.api.stub import not_implemented
+from app.db.session import DbSession
 from app.schemas.catalog import Movement
+from app.services import catalog_service
 
 router = APIRouter(tags=["catalog"])
 
 
 @router.get("/movements")
-def list_movements() -> list[Movement]:
+def list_movements(db: DbSession) -> list[Movement]:
     """사조 목록."""
-    not_implemented()
+    return catalog_service.list_movements(db)

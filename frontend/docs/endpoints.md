@@ -1,10 +1,10 @@
 # 프론트엔드 엔드포인트 점검표
 
-점검일: 2026-10-12. 기준은 `backend/app/api/routes/README.md`, `backend/app/schemas/README.md`, `backend/app/models/catalog.py`입니다. 변경 범위는 `frontend/`뿐입니다.
+점검일: 2026-10-12. 기준은 확정 명세 `docs/api.md`입니다. 변경 범위는 `frontend/`뿐입니다.
 
 ## 확인 결과
 
-서버 경로 문서에 **초안**이라고 명시되어 있습니다. routes·schemas 디렉터리에 실행 가능한 라우터·응답 모델이 없고, 확정 명세로 안내된 `docs/api.md`도 없습니다. 따라서 아래의 “대조”는 문서와 클라이언트의 일치 여부이며 실제 서버의 존재·응답을 확인했다는 뜻이 아닙니다. 자동 테스트는 MockClient로 요청 경로·메서드·파라미터·응답 처리만 검증합니다.
+서버는 카탈로그(사조·작가·작품)와 좋아요·팔로우·열람·서재 캘린더가 구현되어 있습니다. 도슨트 채팅·비슷한 작품·맞춤 추천은 아직 `501`입니다. 서버 인증은 `AUTH_MODE=dev`라 아무 Bearer 토큰이나 개발용 사용자 한 명으로 처리됩니다(Firebase 토큰 검증 전). 자동 테스트는 MockClient로 요청 경로·메서드·파라미터·응답 처리만 검증합니다.
 
 공통 접두사는 `/api`입니다. `/api/v1` 또는 문서에 없는 검색·감상 메모 저장 경로를 만들지 않았습니다. 실제 API 호출에는 DB의 숫자 `id`를 문자열로 변환해 사용합니다. `slug`는 별도 필드이며 미리보기 ID와 섞지 않습니다. 인증이 필요한 요청은 `Authorization: Bearer <Firebase ID 토큰>`을 보냅니다.
 
@@ -54,8 +54,12 @@ API 모드에서 보호된 요청은 Firebase의 `getIdToken()`으로 얻은 토
 문서에 명시된 응답은 다음과 같습니다. 필수 응답 필드가 없으면 오류를 표시합니다. 응답의 출처만 화면에 표시하고 비어 있는 출처를 만들어 붙이지 않습니다. `refused: true`이면 안내 말풍선으로 표시합니다.
 
 ```json
-{"answer":"근거에 따른 답변","refused":false,"sources":[{"document_id":123,"title":"작품 해설","doc_type":"artwork_commentary","source_name":"국립중앙박물관","source_url":"https://example.org/source"}]}
+{"answer":"근거에 따른 답변","refused":false,"sources":[{"document_id":123,"title":"작품 해설","doc_type":"artwork_commentary","source_name":"국립중앙박물관","source_url":"https://example.org/source","license":"공공누리 제1유형"}]}
 ```
+
+## 검색
+
+검색 API는 없습니다(`docs/api.md` 검색 절). 작품·작가 검색은 받아 둔 전체 목록을 로컬에서 거릅니다. 작품은 제목·영문 제목·작가 이름, 작가는 이름·영문 이름·사조 이름으로 부분 일치합니다.
 
 ## 서버 담당자와 확정할 응답 형식
 
