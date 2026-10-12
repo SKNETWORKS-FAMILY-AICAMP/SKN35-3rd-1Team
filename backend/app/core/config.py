@@ -54,6 +54,12 @@ class Settings(BaseSettings):
     tidb_ssl_verify_cert: bool = True
     tidb_ssl_verify_identity: bool = True
 
+    # 임베딩: 차원 수는 DB 컬럼(app.models.base.EMBEDDING_DIMENSION)이 기준이다.
+    # 모델을 바꾸면 차원도 맞춰 Alembic 으로 컬럼을 바꾸고 청크를 전부 다시 만들어야 한다.
+    openai_api_key: SecretStr | None = Field(default=None, validation_alias="OPENAI_API_KEY")
+    embedding_model: str = Field(default="text-embedding-3-small", validation_alias="EMBEDDING_MODEL")
+    embedding_batch_size: int = Field(default=100, validation_alias="EMBEDDING_BATCH_SIZE")
+
     @property
     def sqlalchemy_url(self) -> URL:
         """Return a safely encoded SQLAlchemy URL without exposing secrets."""
