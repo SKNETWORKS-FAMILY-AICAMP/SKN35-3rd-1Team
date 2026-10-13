@@ -27,6 +27,13 @@ class ChatRequest(BaseModel):
     history: list[ChatTurn] = Field(default_factory=list, max_length=12)
 
 
+class BasisSource(BaseModel):
+    """Source used to support an appended editorial note or correction."""
+
+    source_name: str | None = None
+    source_url: str | None = None
+
+
 class Source(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,6 +43,7 @@ class Source(BaseModel):
     source_name: str | None
     source_url: str | None
     license: str | None
+    basis_sources: list[BasisSource] = Field(default_factory=list)
 
 
 class ChatResponse(BaseModel):

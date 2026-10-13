@@ -24,7 +24,7 @@ API 요청과 응답의 형식을 Pydantic 모델로 정의합니다. 프론트�
 
 - `answer`: 답변 본문
 - `refused`: 근거 문서가 없어 답변을 거절했는지 여부
-- `sources`: 근거 목록. 항목마다 `document_id`, `title`, `doc_type`, `source_name`, `source_url`, `license`(출처 라이선스, 화면에 함께 표시)
+- `sources`: 근거 목록. 항목마다 `document_id`, `title`, `doc_type`, `source_name`, `source_url`, `license`(출처 라이선스), `basis_sources`(편집 보충문·보정문의 근거, 기본 `[]`)
 
 **챗봇 요청**에는 `question`(1~500자)과 `history`(직전 메시지 최대 12개, 항목은 `{role: user|assistant, content}`)가 들어갑니다. 답변 맥락은 로그인 여부와 관계없이 요청의 `history`로 받습니다. 로그인 사용자의 질문과 답변은 서버에도 저장해 대화를 복원할 때 씁니다(`chat_sessions`, `chat_messages`).
 

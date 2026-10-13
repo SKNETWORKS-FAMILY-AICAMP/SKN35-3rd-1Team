@@ -141,7 +141,24 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     works = {w["slug"]: w for w in pp.load_processed("artworks.jsonl")}
     assert works["sunflowers-1887"]["image_url"].startswith("https://images.metmuseum.org/")
     assert works["impression-sunrise"]["image_source_url"].startswith("https://commons.wikimedia.org/wiki/File:")
-    assert all(a["portrait_url"] for a in pp.load_processed("artists.jsonl"))
+    fan = works["jeongyangsa-deoksu-2292"]
+    assert fan["image_url"] == "https://www.museum.go.kr/files/zin/curator_15_1.jpg"
+    assert fan["image_license"] == "공공누리 제3유형 (출처표시+변경금지)"
+    europa = works["the-abduction-of-europa"]
+    civilis = works["the-conspiracy-of-claudius-civilis"]
+    assert europa["image_url"].endswith("1280px-Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg")
+    assert civilis["image_url"].endswith("Nationalmuseum_-_17581.jpg")
+    assert europa["image_license"] == civilis["image_license"] == "Public domain"
+
+    artists = {a["slug"]: a for a in pp.load_processed("artists.jsonl")}
+    assert all(a["portrait_url"] for a in artists.values())
+    assert all(len(artist["summary"]) >= 200 for artist in artists.values())
+    assert all(artist["summary"].count(".") >= 3 for artist in artists.values())
+    assert "빛을 단순한 효과가 아니라" in artists["rembrandt"]["summary"]
+    assert "에칭" in artists["rembrandt"]["summary"]
+    assert "사진처럼" in artists["jeong-seon"]["summary"]
+    assert "풍속화" in artists["kim-hong-do"]["summary"]
+    assert "식민주의적 왜곡" in artists["paul-gauguin"]["summary"]
 
 
 @pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])

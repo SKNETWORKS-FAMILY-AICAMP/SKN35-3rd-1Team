@@ -651,7 +651,7 @@
     "source_url": "https://en.wikipedia.org/wiki/The_Conspiracy_of_Claudius_Civilis",
     "source_name": "Wikipedia (영문)",
     "lang": "en",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.tif",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg/1280px-The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg",
     "image_license": "Public domain",
     "artwork": {
       "slug": "the-conspiracy-of-claudius-civilis",
@@ -664,7 +664,7 @@
       "medium": "캔버스에 유채",
       "dimensions": "196 × 309 cm",
       "collection": "스웨덴 국립미술관 (스톡홀름)",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.tif",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q2234397",
       "is_featured": false
     },
@@ -925,7 +925,7 @@
     "source_url": "https://en.wikipedia.org/wiki/The_Abduction_of_Europa_%28Rembrandt%29",
     "source_name": "Wikipedia (영문)",
     "lang": "en",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg/1280px-Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg",
     "image_license": "Public domain",
     "artwork": {
       "slug": "the-abduction-of-europa",

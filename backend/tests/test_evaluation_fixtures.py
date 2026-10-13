@@ -54,6 +54,8 @@ def test_fake_chat_responses_follow_the_planned_contract() -> None:
         "doc_type",
         "source_name",
         "source_url",
+        "license",
+        "basis_sources",
     }
     assert all(
         set(source) == required_source_fields

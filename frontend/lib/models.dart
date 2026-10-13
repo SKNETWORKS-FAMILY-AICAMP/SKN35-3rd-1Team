@@ -120,6 +120,17 @@ class Artwork {
   }
 }
 
+class BasisSource {
+  const BasisSource({required this.name, required this.url});
+
+  final String name, url;
+
+  factory BasisSource.fromJson(Json j) => BasisSource(
+    name: text(j['source_name']),
+    url: text(j['source_url']),
+  );
+}
+
 class Source {
   const Source({
     required this.id,
@@ -127,14 +138,23 @@ class Source {
     required this.name,
     required this.url,
     required this.type,
+    this.license = '',
+    this.basisSources = const [],
   });
-  final String id, title, name, url, type;
+  final String id, title, name, url, type, license;
+  final List<BasisSource> basisSources;
   factory Source.fromJson(Json j) => Source(
     id: text(j['document_id']),
     title: text(j['title']),
     name: text(j['source_name']),
     url: text(j['source_url']),
     type: text(j['doc_type']),
+    license: text(j['license']),
+    basisSources: j['basis_sources'] is List
+        ? (j['basis_sources'] as List)
+              .map((s) => BasisSource.fromJson(object(s)))
+              .toList()
+        : const [],
   );
 }
 

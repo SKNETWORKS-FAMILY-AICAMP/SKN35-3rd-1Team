@@ -357,12 +357,44 @@ class _DocentChatState extends State<DocentChat> {
                         '${source.name} · ${source.type}',
                         style: sans(11, color: muted),
                       ),
+                      if (source.license.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            '라이선스 · ${source.license}',
+                            style: sans(10, color: muted),
+                          ),
+                        ),
                       if (source.url.isNotEmpty)
                         TextButton.icon(
                           onPressed: () => openSource(context, source.url),
                           icon: const Icon(Icons.open_in_new, size: 14),
                           label: const Text('원문 확인하기'),
                         ),
+                      if (source.basisSources.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          '편집 근거',
+                          style: sans(11, weight: FontWeight.w600),
+                        ),
+                        for (final basis in source.basisSources)
+                          basis.url.isNotEmpty
+                              ? TextButton.icon(
+                                  onPressed: () =>
+                                      openSource(context, basis.url),
+                                  icon: const Icon(Icons.open_in_new, size: 13),
+                                  label: Text(
+                                    basis.name.isEmpty ? '근거 자료' : basis.name,
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    basis.name.isEmpty ? '근거 자료' : basis.name,
+                                    style: sans(10, color: muted),
+                                  ),
+                                ),
+                      ],
                     ],
                   ),
                 ),

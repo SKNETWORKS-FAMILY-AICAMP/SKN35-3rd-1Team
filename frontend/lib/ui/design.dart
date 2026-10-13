@@ -225,13 +225,9 @@ class ArtImage extends StatelessWidget {
   Widget failure() => ColoredBox(
     color: const Color(0xffe8e7df),
     child: Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.image_outlined, color: sage, size: 30),
-          const SizedBox(height: 8),
-          Text('이미지 준비 중', style: sans(11, color: muted)),
-        ],
+      child: Semantics(
+        label: '제공되는 작품 이미지 없음',
+        child: const Icon(Icons.image_outlined, color: sage, size: 30),
       ),
     ),
   );
