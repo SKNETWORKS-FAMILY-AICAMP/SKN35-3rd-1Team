@@ -280,7 +280,7 @@ def add_artwork(
     w["image_license"] = w.get("image_license") or s.get("image_license")
     # 카드 설명 우선순위: 사람이 쓴 설명 > 한국어 원문 > 번역본 (번역본은 비어 있을 때만)
     if lang == "ko" and "description" not in manual and (not translated or not w.get("description")):
-        w["description"] = first_sentences(content)
+        w["description"] = content.strip() if s.get("display_full_description") else first_sentences(content)
     w["is_featured"] = bool(w.get("is_featured"))
     cat["artworks"][slug] = w
 

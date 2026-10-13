@@ -6,7 +6,7 @@
     "artwork_slug": "upper-austrian-farmhouse",
     "source_url": "https://sammlung.belvedere.at/objects/380/oberosterreichisches-bauernhaus",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -26,7 +26,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "allegory-of-sacred-music.md": {
     "doc_type": "artwork_commentary",
@@ -35,7 +37,7 @@
     "artwork_slug": "allegory-of-sacred-music",
     "source_url": "https://sammlung.belvedere.at/objects/471/allegorie-der-kirchlichen-musik-entwurf",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -55,7 +57,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "portrait-of-fritza-riedler.md": {
     "doc_type": "artwork_commentary",
@@ -64,7 +68,7 @@
     "artwork_slug": "portrait-of-fritza-riedler",
     "source_url": "https://sammlung.belvedere.at/objects/2177/fritza-riedler",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Fritza_Riedler_-_3379_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
@@ -84,7 +88,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Fritza_Riedler_-_3379_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q28001663",
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "cottage-garden-with-sunflowers.md": {
     "doc_type": "artwork_commentary",
@@ -93,7 +99,7 @@
     "artwork_slug": "cottage-garden-with-sunflowers",
     "source_url": "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -113,7 +119,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "lady-in-white-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -122,7 +130,7 @@
     "artwork_slug": "lady-in-white-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/3080/dame-in-wei",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -142,7 +150,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "schloss-kammer-at-attersee-iii.md": {
     "doc_type": "artwork_commentary",
@@ -151,7 +161,7 @@
     "artwork_slug": "schloss-kammer-at-attersee-iii",
     "source_url": "https://sammlung.belvedere.at/objects/3112/schloss-kammer-am-attersee-iii",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -171,7 +181,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "adam-and-eve-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -180,7 +192,7 @@
     "artwork_slug": "adam-and-eve-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/3196/adam-und-eva",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -200,7 +212,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "portrait-of-sonja-knips.md": {
     "doc_type": "artwork_commentary",
@@ -209,7 +223,7 @@
     "artwork_slug": "portrait-of-sonja-knips",
     "source_url": "https://sammlung.belvedere.at/objects/3197/sonja-knips",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -229,7 +243,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "judith-i.md": {
     "doc_type": "artwork_commentary",
@@ -238,7 +254,7 @@
     "artwork_slug": "judith-i",
     "source_url": "https://sammlung.belvedere.at/objects/3492/judith",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Judith_1_(cropped).jpg",
@@ -258,7 +274,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Judith_1_(cropped).jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q2324643",
       "is_featured": true
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "water-serpents-i.md": {
     "doc_type": "artwork_commentary",
@@ -267,7 +285,7 @@
     "artwork_slug": "water-serpents-i",
     "source_url": "https://sammlung.belvedere.at/objects/3828/freundinnen-wasserschlangen-i",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_067.jpg",
@@ -287,7 +305,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_067.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q2551417",
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "flowering-poppies.md": {
     "doc_type": "artwork_commentary",
@@ -296,7 +316,7 @@
     "artwork_slug": "flowering-poppies",
     "source_url": "https://sammlung.belvedere.at/objects/3917/bluhender-mohn",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -316,7 +336,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "dusk-lady-at-fireplace.md": {
     "doc_type": "artwork_commentary",
@@ -325,7 +347,7 @@
     "artwork_slug": "dusk-lady-at-fireplace",
     "source_url": "https://sammlung.belvedere.at/objects/4185/dammerung-dame-am-kamin",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -345,7 +367,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "portrait-of-johanna-staude.md": {
     "doc_type": "artwork_commentary",
@@ -354,7 +378,7 @@
     "artwork_slug": "portrait-of-johanna-staude",
     "source_url": "https://sammlung.belvedere.at/objects/4302/johanna-staude",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
@@ -374,7 +398,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q111906665",
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "beethoven-frieze.md": {
     "doc_type": "artwork_commentary",
@@ -383,7 +409,7 @@
     "artwork_slug": "beethoven-frieze",
     "source_url": "https://sammlung.belvedere.at/objects/4737/beethovenfries",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Beethovenfries%2C_%22Die_Sehnsucht_nach_dem_Gl%C3%BCck%22_(nach_Richard_Wagners_Interpretation_der_IX._Sinfonie_von_Ludwig_van_Beethoven)_-_5987_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
@@ -403,7 +429,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Beethovenfries%2C_%22Die_Sehnsucht_nach_dem_Gl%C3%BCck%22_(nach_Richard_Wagners_Interpretation_der_IX._Sinfonie_von_Ludwig_van_Beethoven)_-_5987_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q684689",
       "is_featured": true
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "male-nude-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -412,7 +440,7 @@
     "artwork_slug": "male-nude-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/4742/mannlicher-akt",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -432,7 +460,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "josef-lewinsky-as-carlos.md": {
     "doc_type": "artwork_commentary",
@@ -441,7 +471,7 @@
     "artwork_slug": "josef-lewinsky-as-carlos",
     "source_url": "https://sammlung.belvedere.at/objects/6234/josef-lewinsky-als-carlos-in-clavigo",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -461,7 +491,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "the-kiss.md": {
     "doc_type": "artwork_commentary",
@@ -470,7 +502,7 @@
     "artwork_slug": "the-kiss",
     "source_url": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
@@ -490,7 +522,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q698487",
       "is_featured": true
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "portrait-of-amalie-zuckerkandl.md": {
     "doc_type": "artwork_commentary",
@@ -499,7 +533,7 @@
     "artwork_slug": "portrait-of-amalie-zuckerkandl",
     "source_url": "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -519,7 +553,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "avenue-to-schloss-kammer.md": {
     "doc_type": "artwork_commentary",
@@ -528,7 +564,7 @@
     "artwork_slug": "avenue-to-schloss-kammer",
     "source_url": "https://sammlung.belvedere.at/objects/8691/allee-zum-schloss-kammer",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -548,7 +584,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "old-man-on-deathbed.md": {
     "doc_type": "artwork_commentary",
@@ -557,7 +595,7 @@
     "artwork_slug": "old-man-on-deathbed",
     "source_url": "https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -577,7 +615,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "red-sketchbook-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -586,7 +626,7 @@
     "artwork_slug": "red-sketchbook-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/9997/rotes-skizzenbuch",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -606,7 +646,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "sunflower-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -615,7 +657,7 @@
     "artwork_slug": "sunflower-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/21865/sonnenblume",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -635,7 +677,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "mother-with-two-children-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -644,7 +688,7 @@
     "artwork_slug": "mother-with-two-children-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/27315/mutter-mit-zwei-kindern-familie",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -664,7 +708,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "after-the-rain-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -673,7 +719,7 @@
     "artwork_slug": "after-the-rain-klimt",
     "source_url": "https://sammlung.belvedere.at/objects/6087/nach-dem-regen",
     "source_name": "벨베데레 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -693,7 +739,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
   },
   "death-and-life.md": {
     "doc_type": "artwork_commentary",
@@ -702,7 +750,7 @@
     "artwork_slug": "death-and-life",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/629-death-and-life/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg",
@@ -722,7 +770,9 @@
       "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q17001535",
       "is_featured": true
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "a-morning-by-the-pond.md": {
     "doc_type": "artwork_commentary",
@@ -731,7 +781,7 @@
     "artwork_slug": "a-morning-by-the-pond",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/2148-a-morning-by-the-pond/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -751,7 +801,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "the-large-poplar-ii.md": {
     "doc_type": "artwork_commentary",
@@ -760,7 +812,7 @@
     "artwork_slug": "the-large-poplar-ii",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/2149-the-large-poplar-ii-gathering-storm/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -780,7 +832,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "on-lake-attersee.md": {
     "doc_type": "artwork_commentary",
@@ -789,7 +843,7 @@
     "artwork_slug": "on-lake-attersee",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -809,7 +863,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "forest-floor-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -818,7 +874,7 @@
     "artwork_slug": "forest-floor-klimt",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/31087-forest-floor/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -838,7 +894,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "orchard-in-the-evening.md": {
     "doc_type": "artwork_commentary",
@@ -847,7 +905,7 @@
     "artwork_slug": "orchard-in-the-evening",
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -867,7 +925,9 @@
       "image_source_url": null,
       "wikidata": null,
       "is_featured": false
-    }
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   },
   "bio.md": {
     "doc_type": "artist_bio",
@@ -878,7 +938,7 @@
     "artwork_slug": null,
     "source_url": "https://onlinecollection.leopoldmuseum.org/en/album/f96cizmk3kbppsmrc-gustav-klimt/",
     "source_name": "레오폴트 미술관",
-    "license": "팀 자체 작성 초안 (기관 자료의 사실을 재서술, 기관 원문 미복제; 팀 이용 조건 확인 필요)",
+    "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
     "image_url": null,
@@ -894,6 +954,7 @@
       "death_year": 1918,
       "nationality": "오스트리아",
       "wikidata": "https://www.wikidata.org/wiki/Q34661"
-    }
+    },
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   }
 }
