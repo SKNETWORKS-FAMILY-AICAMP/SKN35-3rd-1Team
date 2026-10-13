@@ -164,8 +164,8 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     assert "사진처럼" in artists["jeong-seon"]["summary"]
     assert "풍속화" in artists["kim-hong-do"]["summary"]
     assert "식민주의적 왜곡" in artists["paul-gauguin"]["summary"]
-    assert artists["egon-schiele"]["portrait_url"] is None
-    assert artists["gustav-klimt"]["portrait_url"] is None
+    assert "commons.wikimedia.org" in artists["egon-schiele"]["portrait_url"]
+    assert "commons.wikimedia.org" in artists["gustav-klimt"]["portrait_url"]
 
 
 @pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])
@@ -377,7 +377,7 @@ def test_crlf_checkout_is_still_accepted(out):
 
 
 def test_approved_artist_documents_and_images(out):
-    """승인 기록과 재생성 산출물에서 신규 작가 문서와 이미지 NULL 상태를 유지한다."""
+    """승인 기록과 재생성 산출물에서 신규 작가 문서와 검증된 이미지 수를 유지한다."""
     assert pp.main() == 0
     new_slugs = {"gustav-klimt", "egon-schiele"}
     docs = [d for d in pp.load_processed("documents.jsonl")
@@ -386,7 +386,8 @@ def test_approved_artist_documents_and_images(out):
     assert all(not d["needs_review"] for d in docs)
     works = [w for w in pp.load_processed("artworks.jsonl") if w["artist_slug"] in new_slugs]
     assert len(works) == 60
-    assert sum(w["image_url"] is None for w in works) == 53
+    assert sum(w["image_url"] is None for w in works) == 17
+    assert sum(w["image_url"] is not None for w in works) == 43
     assert {m["slug"] for m in pp.load_processed("movements.jsonl")} >= {
         "expressionism", "vienna-secession",
     }

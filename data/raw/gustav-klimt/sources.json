@@ -9,8 +9,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "upper-austrian-farmhouse",
@@ -23,9 +21,9 @@
       "medium": "Oil on canvas",
       "dimensions": "110 × 110 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -34,7 +32,9 @@
     ],
     "related_artwork_slugs": [
       "cottage-garden-with-sunflowers"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg",
+    "image_license": "Public domain"
   },
   "allegory-of-sacred-music.md": {
     "doc_type": "artwork_commentary",
@@ -46,8 +46,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "allegory-of-sacred-music",
@@ -60,9 +58,9 @@
       "medium": "Oil on canvas",
       "dimensions": "38,5 × 50 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Orgelspielerin.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -71,7 +69,9 @@
     ],
     "related_artwork_slugs": [
       "male-nude-klimt"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Orgelspielerin.jpg",
+    "image_license": "Public domain"
   },
   "portrait-of-fritza-riedler.md": {
     "doc_type": "artwork_commentary",
@@ -83,8 +83,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-fritza-riedler",
@@ -97,9 +95,9 @@
       "medium": "Oil on canvas",
       "dimensions": "153 × 133 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Fritza_Riedler_-_3379_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q28001663",
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_052.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -109,7 +107,8 @@
     "related_artwork_slugs": [
       "portrait-of-sonja-knips"
     ],
-    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_052.jpg",
+    "image_license": "Public domain"
   },
   "cottage-garden-with-sunflowers.md": {
     "doc_type": "artwork_commentary",
@@ -121,8 +120,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "cottage-garden-with-sunflowers",
@@ -135,9 +132,9 @@
       "medium": "Oil on canvas",
       "dimensions": "110 × 110 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -146,7 +143,9 @@
     ],
     "related_artwork_slugs": [
       "sunflower-klimt"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg",
+    "image_license": "Public domain"
   },
   "lady-in-white-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -232,8 +231,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "adam-and-eve-klimt",
@@ -246,9 +243,9 @@
       "medium": "Oil on canvas (unfinished)",
       "dimensions": "173 × 60 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_001.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -257,7 +254,9 @@
     ],
     "related_artwork_slugs": [
       "portrait-of-amalie-zuckerkandl"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_001.jpg",
+    "image_license": "Public domain"
   },
   "portrait-of-sonja-knips.md": {
     "doc_type": "artwork_commentary",
@@ -269,8 +268,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-sonja-knips",
@@ -283,9 +280,9 @@
       "medium": "Oil on canvas",
       "dimensions": "141,5 × 141,5 × 3 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Bildnis_Sonja_Knips.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -294,7 +291,9 @@
     ],
     "related_artwork_slugs": [
       "portrait-of-fritza-riedler"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bildnis_Sonja_Knips.jpeg",
+    "image_license": "Public domain"
   },
   "judith-i.md": {
     "doc_type": "artwork_commentary",
@@ -343,8 +342,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "water-serpents-i",
@@ -357,9 +354,9 @@
       "medium": "Watercolour, gouache, pencil, gold, silver, platinum and brass on parchment",
       "dimensions": "50 × 20 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_067.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q2551417",
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -369,7 +366,8 @@
     "related_artwork_slugs": [
       "judith-i"
     ],
-    "image_usage_note": "Commons file page does not establish United States public-domain status; display withheld pending rights review."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg",
+    "image_license": "Public domain"
   },
   "flowering-poppies.md": {
     "doc_type": "artwork_commentary",
@@ -381,8 +379,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "flowering-poppies",
@@ -395,9 +391,9 @@
       "medium": "Oil on canvas",
       "dimensions": "110 × 110 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_043.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -406,7 +402,9 @@
     ],
     "related_artwork_slugs": [
       "cottage-garden-with-sunflowers"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_043.jpg",
+    "image_license": "Public domain"
   },
   "dusk-lady-at-fireplace.md": {
     "doc_type": "artwork_commentary",
@@ -455,8 +453,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-johanna-staude",
@@ -469,9 +465,9 @@
       "medium": "Oil on canvas",
       "dimensions": "70 × 50 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q111906665",
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -481,7 +477,8 @@
     "related_artwork_slugs": [
       "portrait-of-fritza-riedler"
     ],
-    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "beethoven-frieze.md": {
     "doc_type": "artwork_commentary",
@@ -493,8 +490,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "beethoven-frieze",
@@ -507,9 +502,9 @@
       "medium": "Kaseinfarben, Stuckauflagen, Zeichenstift, Applikationen aus verschiedenen Materialien (Glas, Perlmutt etc.), Goldauflagen auf Mörtel",
       "dimensions": "215 x 3414 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Beethovenfries%2C_%22Die_Sehnsucht_nach_dem_Gl%C3%BCck%22_(nach_Richard_Wagners_Interpretation_der_IX._Sinfonie_von_Ludwig_van_Beethoven)_-_5987_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q684689",
-      "is_featured": true
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -519,7 +514,8 @@
     "related_artwork_slugs": [
       "allegory-of-sacred-music"
     ],
-    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg",
+    "image_license": "Public domain"
   },
   "male-nude-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -568,8 +564,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "josef-lewinsky-as-carlos",
@@ -582,9 +576,9 @@
       "medium": "Oil on canvas",
       "dimensions": "60 × 44 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -593,7 +587,9 @@
     ],
     "related_artwork_slugs": [
       "portrait-of-sonja-knips"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg",
+    "image_license": "Public domain"
   },
   "the-kiss.md": {
     "doc_type": "artwork_commentary",
@@ -642,8 +638,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-amalie-zuckerkandl",
@@ -656,9 +650,9 @@
       "medium": "Oil on canvas",
       "dimensions": "128 × 128 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_070.JPG"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -667,7 +661,9 @@
     ],
     "related_artwork_slugs": [
       "lady-in-white-klimt"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_070.JPG",
+    "image_license": "Public domain"
   },
   "avenue-to-schloss-kammer.md": {
     "doc_type": "artwork_commentary",
@@ -679,8 +675,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "avenue-to-schloss-kammer",
@@ -693,9 +687,9 @@
       "medium": "Oil on canvas",
       "dimensions": "110 × 110 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Allee_vor_Schloss_Kammer.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -704,7 +698,9 @@
     ],
     "related_artwork_slugs": [
       "schloss-kammer-at-attersee-iii"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Allee_vor_Schloss_Kammer.jpeg",
+    "image_license": "Public domain"
   },
   "old-man-on-deathbed.md": {
     "doc_type": "artwork_commentary",
@@ -716,8 +712,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "old-man-on-deathbed",
@@ -730,9 +724,9 @@
       "medium": "Oil on millboard",
       "dimensions": "30,4 × 44,8 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -741,7 +735,9 @@
     ],
     "related_artwork_slugs": [
       "death-and-life"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg",
+    "image_license": "Public domain"
   },
   "red-sketchbook-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -790,8 +786,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "sunflower-klimt",
@@ -804,9 +798,9 @@
       "medium": "Oil and gold leaf on canvas",
       "dimensions": "110 × 110 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Sunflower_-_Gustav_Klimt.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -815,7 +809,9 @@
     ],
     "related_artwork_slugs": [
       "cottage-garden-with-sunflowers"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower_-_Gustav_Klimt.jpg",
+    "image_license": "Public domain"
   },
   "mother-with-two-children-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -864,8 +860,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "after-the-rain-klimt",
@@ -878,9 +872,9 @@
       "medium": "Oil on canvas",
       "dimensions": "80 × 40 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_033.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -889,7 +883,9 @@
     ],
     "related_artwork_slugs": [
       "orchard-in-the-evening"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_033.jpg",
+    "image_license": "Public domain"
   },
   "death-and-life.md": {
     "doc_type": "artwork_commentary",
@@ -938,8 +934,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "a-morning-by-the-pond",
@@ -952,9 +946,9 @@
       "medium": "Oil on canvas",
       "dimensions": "75.2×75.2×2.2 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -963,7 +957,9 @@
     ],
     "related_artwork_slugs": [
       "on-lake-attersee"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "the-large-poplar-ii.md": {
     "doc_type": "artwork_commentary",
@@ -975,8 +971,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "the-large-poplar-ii",
@@ -989,9 +983,9 @@
       "medium": "Oil on canvas",
       "dimensions": "100.8×100.8 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_022.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -1000,7 +994,9 @@
     ],
     "related_artwork_slugs": [
       "on-lake-attersee"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_022.jpg",
+    "image_license": "Public domain"
   },
   "on-lake-attersee.md": {
     "doc_type": "artwork_commentary",
@@ -1012,8 +1008,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "on-lake-attersee",
@@ -1026,9 +1020,9 @@
       "medium": "Oil on canvas",
       "dimensions": "80.2×80.2×2.1 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -1037,7 +1031,9 @@
     ],
     "related_artwork_slugs": [
       "the-large-poplar-ii"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg",
+    "image_license": "Public domain"
   },
   "forest-floor-klimt.md": {
     "doc_type": "artwork_commentary",
