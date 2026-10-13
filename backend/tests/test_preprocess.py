@@ -161,6 +161,26 @@ def test_gogh_and_gauguin_commentary_length_and_rights_scope(artist_slug):
     assert all("웹페이지의 큐레이터 해설문은 CC0 대상으로 간주하지 않았" in d["source_rights_note"] for d in met_docs)
 
 
+@pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])
+def test_gogh_and_gauguin_images_use_web_sized_urls(artist_slug):
+    """작품 카드는 박물관 원본이나 Commons 리디렉트 대신 웹용 이미지를 사용한다."""
+    path = pp.RAW / artist_slug / "dataset.json"
+    artworks = json.loads(path.read_text(encoding="utf-8"))["artworks"]
+
+    assert len(artworks) == 25
+    assert all(w["image_url"] for w in artworks)
+    assert all("/Special:" not in w["image_url"] for w in artworks)
+    assert all("/original/" not in w["image_url"] for w in artworks)
+
+    for work in artworks:
+        if "metmuseum.org" in work["image_source_url"]:
+            assert "/web-large/" in work["image_url"]
+        if "commons.wikimedia.org" in work["image_source_url"]:
+            assert work["image_url"].startswith(
+                ("https://thumb.wikimedia.org/", "https://upload.wikimedia.org/")
+            )
+
+
 def test_dataset_license_scope_survives_preprocess(out):
     """CC BY 4.0의 적용 범위 단서가 processed까지 남아야 기관 원문의 라이선스로 오해되지 않는다."""
     assert pp.main() == 0
