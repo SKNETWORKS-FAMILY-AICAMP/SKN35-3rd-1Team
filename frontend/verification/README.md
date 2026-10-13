@@ -56,3 +56,29 @@
 최종 운영 배포: `dpl_9w8mf8ZQtZo4Vhqnh3YyXWAKBBMP` (READY). 운영 브라우저에서 숫자 ID의 작품 상세·실제 작품 이미지 표시와 도슨트 501의 준비 중 안내를 확인했습니다.
 
 ![실제 API 작품 상세](api-artwork-production.jpg)
+
+
+## 최신 dev 프론트 기능 연결 (2026-10-13)
+
+- 기준 dev `a7a5fbe`, 직접 수정은 `frontend/`로 제한. Railway·Firebase 콘솔·백엔드 코드·DB 설정 변경 없음.
+- 새 기능: 맞춤 작품/작가 추천 및 이유, 내 대화 목록, 작품 대화 복원·초기화, 출처 라이선스, 서버 기준 질문/history 제한.
+- 계정 변경 중 늦은 대화/복원 응답, 이전 요청의 새 계정 재시도, 진행 중 좋아요 상태, 초기화 확인 창의 계정 변경을 차단.
+- 작은 이미지 오류 표시·좁은 서재 탭 수정. 상세에서 로그인했을 때 열람 기록도 전송.
+- `flutter analyze`: 이슈 없음. Flutter 테스트 **61개**, 배포 스크립트 **4개** 통과. 원격 release 웹 빌드 성공.
+- 새 개인 화면은 MockClient·가짜 세션으로 검증. 320/1280px에서 대화 목록→복원→출처 라이선스와 추천 이유 표시 확인. 운영 개인 계정 통합 검증과 구분.
+- 실제 공개 API: health 200, 사조 4·작가 8·작품 219, 유사 작품 200·3개. 비로그인 도슨트 POST 501 확인.
+- Vercel `dpl_Adsx7224VDavxGVi6cCKnjJsJSys`: READY, Production, `catalog=API, auth=firebase`, 기존 운영 주소에 연결. 정적 프론트이며 AI 답변의 501은 Railway API 응답임.
+
+상세 후속 작업·전달 문구: [프론트 인수인계](../docs/frontend-handoff.md).
+
+## Google 로그인·온보딩 추가 (2026-10-13)
+
+- 소스 수정은 `frontend/`에 한정. 사용자 승인 후 팀 Firebase `skn35-3rd-1team`의 Google 공급자를 활성화하고 콘솔에서 ‘사용 설정됨’을 확인했습니다. Railway·백엔드 코드·TiDB 설정은 변경하지 않았습니다.
+- 로그인/회원가입을 분리한 선택 탭, Google 로그인, 첫 로그인 선택형 나이대·성별·설명 스타일 온보딩과 서재의 감상 프로필 수정 추가.
+- 프로필은 Firebase UID별 현재 브라우저 저장입니다. Google에서 나이·성별을 조회하지 않으며 서버 저장·맞춤 말투는 아직 연결하지 않았습니다.
+- Flutter 분석 이슈 없음, 전체 Flutter 테스트 **74개**, 배포 스크립트 **4개** 통과. Google SDK 공급자 호출·오류 안내, 프로필 저장·건너뛰기·계정 변경 및 320/390/1280px 레이아웃 검사 포함.
+- 최종 운영 배포 `dpl_EmDXDJM59XGuVaYFz4s7oHRLquJS`: READY, Production, `catalog=API, auth=firebase`. 운영 주소 https://artlog-skn35-1team.vercel.app 에 연결. 배포 오류 로그 조회 결과 오류 레코드 없음.
+- 운영 화면의 로그인/회원가입과 Google 버튼을 확인했습니다. Safari 비공개 창에서 Google 버튼을 눌러 Google 계정 인증 페이지 진입까지 확인하고 계정 입력 없이 닫았습니다. Codex 내장 브라우저에서는 팝업 확인이 되지 않아 Safari에서 확인했습니다.
+- 실제 Google 계정 로그인 성공·운영 사용자별 TiDB 저장은 이번 검증 범위에 포함되지 않습니다. 프로필 UI 자동 검사와 운영 서버 인증·개인 기록 통합 검증을 구분합니다.
+
+![Google 로그인과 로그인·회원가입 구분](google-login-production.jpg)

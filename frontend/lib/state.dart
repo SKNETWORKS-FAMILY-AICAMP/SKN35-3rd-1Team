@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'api/artlog_api.dart';
 import 'config.dart';
 import 'models.dart';
+import 'member_profile.dart';
 
 class ArtlogState extends ChangeNotifier {
   ArtlogState(
@@ -42,6 +43,41 @@ class ArtlogState extends ChangeNotifier {
   String _uid = '';
   int _identityRevision = 0;
   bool _disposed = false;
+  bool authUiOpen = false;
+  void setAuthUiOpen(bool value) {
+    authUiOpen = value;
+    notifyListeners();
+  }
+
+  String get _profileKey => 'flutter.profile.firebase.$_uid';
+  MemberProfile? get memberProfile {
+    if (!config.firebaseAuth || !authenticated) return null;
+    final raw = prefs.getString(_profileKey);
+    if (raw == null) return null;
+    try {
+      return MemberProfile.fromJson(object(jsonDecode(raw)));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  bool get needsOnboarding =>
+      config.firebaseAuth && authenticated && memberProfile == null;
+  Future<void> saveMemberProfile(MemberProfile profile) async {
+    if (!config.firebaseAuth || !authenticated) {
+      throw const AuthFailure('로그인 후 저장할 수 있어요.');
+    }
+    final revision = _identityRevision;
+    final key = _profileKey;
+    if (!await prefs.setString(key, jsonEncode(profile.toJson()))) {
+      throw const AuthFailure('프로필을 저장하지 못했어요. 다시 시도해 주세요.');
+    }
+    if (revision != _identityRevision) {
+      throw const AuthFailure('계정이 바뀌었어요. 다시 확인해 주세요.');
+    }
+    notifyListeners();
+  }
+
   bool get loginRequired => config.firebaseAuth || !config.demo;
   bool get canAuthenticate => !config.firebaseAuth || session != null;
   String get userKey => config.firebaseAuth ? _uid : email;
@@ -71,6 +107,9 @@ class ArtlogState extends ChangeNotifier {
 
   void _clearPrivateState() {
     ++_identityRevision;
+    api.invalidateSession();
+    pendingLikes.clear();
+    pendingFollows.clear();
     likes = {};
     follows = {};
     views = {};
@@ -237,8 +276,9 @@ class ArtlogState extends ChangeNotifier {
       _authChanged(auth.user);
       return;
     }
-    await api.login(email, password);
+    final accessToken = await api.login(email, password);
     _clearPrivateState();
+    api.token = accessToken;
     this.email = email;
     notifyListeners();
     await reloadLibrary();
@@ -255,6 +295,15 @@ class ArtlogState extends ChangeNotifier {
     final auth = session;
     if (auth == null) throw const AuthFailure('비밀번호 재설정 서비스가 준비되지 않았어요.');
     await auth.resetPassword(email);
+  }
+
+  Future<void> loginWithGoogle() async {
+    final auth = session;
+    if (auth == null || !config.firebaseAuth) {
+      throw const AuthFailure('Google 로그인을 준비하고 있어요.');
+    }
+    await auth.signInWithGoogle();
+    _authChanged(auth.user);
   }
 
   Future<void> logout() async {
@@ -282,8 +331,10 @@ class ArtlogState extends ChangeNotifier {
       if (config.demo) {
         await prefs.setStringList(_localKey('likes'), likes.toList());
       }
+    } catch (_) {
+      if (revision == _identityRevision) rethrow;
     } finally {
-      pendingLikes.remove(id);
+      if (revision == _identityRevision) pendingLikes.remove(id);
       notifyListeners();
     }
   }
@@ -304,14 +355,17 @@ class ArtlogState extends ChangeNotifier {
       if (config.demo) {
         await prefs.setStringList(_localKey('follows'), follows.toList());
       }
+    } catch (_) {
+      if (revision == _identityRevision) rethrow;
     } finally {
-      pendingFollows.remove(id);
+      if (revision == _identityRevision) pendingFollows.remove(id);
       notifyListeners();
     }
   }
 
   Future<void> recordView(String id) async {
     if (!authenticated) return;
+    final revision = _identityRevision;
     final today = seoulDate();
     final key = '$today/$id';
     if (!_recorded.add(key)) return;
@@ -325,6 +379,7 @@ class ArtlogState extends ChangeNotifier {
       await prefs.setString(_localKey('views'), jsonEncode(views));
       notifyListeners();
     } catch (_) {
+      if (revision != _identityRevision) return;
       _recorded.remove(key);
       rethrow;
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../state.dart';
 import 'design.dart';
+import 'member_profile_dialog.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.location, required this.child});
@@ -13,6 +14,31 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   final scroll = ScrollController();
+  bool onboardingOpen = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scheduleOnboarding();
+  }
+
+  void _scheduleOnboarding() {
+    final state = ArtlogScope.of(context);
+    if (!state.needsOnboarding || state.authUiOpen || onboardingOpen) return;
+    onboardingOpen = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        if (mounted && state.needsOnboarding && !state.authUiOpen) {
+          await showMemberProfile(context, state);
+        }
+      } finally {
+        onboardingOpen = false;
+        if (mounted && state.needsOnboarding && !state.authUiOpen) {
+          _scheduleOnboarding();
+        }
+      }
+    });
+  }
+
   @override
   void didUpdateWidget(covariant AppShell oldWidget) {
     super.didUpdateWidget(oldWidget);

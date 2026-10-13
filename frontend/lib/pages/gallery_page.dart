@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../ui/design.dart';
+import '../ui/personal_recommendations.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -453,6 +454,7 @@ class _GalleryPageState extends State<GalleryPage> {
             ],
           ),
         ),
+        const PersonalRecommendations(),
         PageWidth(
           vertical: 65,
           child: Container(

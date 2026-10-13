@@ -30,6 +30,7 @@ class Artist {
     this.movement = '',
     this.summary = '',
     this.portrait = '',
+    this.reason = '',
   });
   final String id,
       slug,
@@ -39,7 +40,8 @@ class Artist {
       movementId,
       movement,
       summary,
-      portrait;
+      portrait,
+      reason;
   factory Artist.fromJson(Json j) => Artist(
     id: text(j['id']),
     slug: text(j['slug']),
@@ -53,6 +55,7 @@ class Artist {
     movement: text(j['movement_name'], text(object(j['movement'])['name'])),
     summary: text(j['summary']),
     portrait: text(j['portrait_url']),
+    reason: text(j['reason']),
   );
 }
 
@@ -76,6 +79,7 @@ class Artwork {
     this.sourceUrl = '',
     this.imageLicense = '',
     this.asset = false,
+    this.reason = '',
   });
   final String id,
       slug,
@@ -93,7 +97,8 @@ class Artwork {
       dimensions,
       collection,
       sourceUrl,
-      imageLicense;
+      imageLicense,
+      reason;
   final bool asset;
   factory Artwork.fromJson(Json j) {
     final artist = object(j['artist']);
@@ -116,6 +121,7 @@ class Artwork {
       sourceUrl: text(j['image_source_url']),
       imageLicense: text(j['image_license']),
       asset: j['is_asset'] == true,
+      reason: text(j['reason']),
     );
   }
 }
@@ -127,14 +133,22 @@ class Source {
     required this.name,
     required this.url,
     required this.type,
+    this.license = '',
   });
-  final String id, title, name, url, type;
+  final String id, title, name, url, type, license;
+  String get typeLabel => switch (type) {
+    'artist_bio' => '작가 이야기',
+    'artwork_commentary' => '작품 해설',
+    'artist_comparison' => '작가 비교',
+    _ => '근거 자료',
+  };
   factory Source.fromJson(Json j) => Source(
     id: text(j['document_id']),
     title: text(j['title']),
     name: text(j['source_name']),
     url: text(j['source_url']),
     type: text(j['doc_type']),
+    license: text(j['license']),
   );
 }
 
@@ -148,7 +162,46 @@ class ChatTurn {
   final String role, content;
   final List<Source> sources;
   final bool refused;
-  Json toHistory() => {'role': role, 'content': content};
+  factory ChatTurn.fromJson(Json j) {
+    final role = text(j['role']);
+    if ((role != 'user' && role != 'assistant') ||
+        j['content'] is! String ||
+        (j['content'] as String).isEmpty) {
+      throw const FormatException('저장된 대화 형식을 확인해 주세요.');
+    }
+    return ChatTurn(
+      role,
+      j['content'] as String,
+      refused: j['refused'] == true,
+      sources: items(
+        j['sources'],
+      ).map((s) => Source.fromJson(object(s))).toList(),
+    );
+  }
+  Json toHistory() => {
+    'role': role,
+    'content': String.fromCharCodes(content.runes.take(4000)),
+  };
+}
+
+class ChatSummary {
+  const ChatSummary({
+    required this.artwork,
+    required this.lastMessage,
+    required this.updatedAt,
+  });
+  final Artwork artwork;
+  final String lastMessage;
+  final DateTime updatedAt;
+  factory ChatSummary.fromJson(Json j) => ChatSummary(
+    artwork: Artwork.fromJson(object(j['artwork'])),
+    lastMessage: text(j['last_message']),
+    updatedAt: DateTime.parse(text(j['updated_at'])),
+  );
+  String get dateLabel {
+    final seoul = updatedAt.toUtc().add(const Duration(hours: 9));
+    return '${dateKey(seoul)} ${seoul.hour.toString().padLeft(2, '0')}:${seoul.minute.toString().padLeft(2, '0')}';
+  }
 }
 
 class ChatReply {
