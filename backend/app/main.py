@@ -25,7 +25,7 @@ async def lifespan(app):
         yield
 
 
-app = FastAPI(title="ArtLog API", lifespan=lifespan)
+app = FastAPI(title="Docentalk API", lifespan=lifespan)
 register_exception_handlers(app)
 
 app.add_middleware(

@@ -106,25 +106,29 @@ class Brand extends StatelessWidget {
   const Brand({super.key, this.small = false});
   final bool small;
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      CustomPaint(
-        size: Size(small ? 22 : 28, small ? 27 : 32),
-        painter: _BrandMark(),
-      ),
-      const SizedBox(width: 10),
-      Text(
-        'artlog',
-        style: english(
-          small ? 32 : 38,
-        ).copyWith(fontWeight: FontWeight.w600, letterSpacing: -1.5),
-      ),
-      if (!compact(context)) ...[
-        const SizedBox(width: 13),
-        Text('아트로그', style: sans(10, color: muted)),
+  Widget build(BuildContext context) => FittedBox(
+    fit: BoxFit.scaleDown,
+    alignment: Alignment.centerLeft,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomPaint(
+          size: Size(small ? 22 : 28, small ? 27 : 32),
+          painter: _BrandMark(),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          'Docentalk',
+          style: english(
+            small ? 30 : 36,
+          ).copyWith(fontWeight: FontWeight.w600, letterSpacing: -1.2),
+        ),
+        if (MediaQuery.sizeOf(context).width >= 1100) ...[
+          const SizedBox(width: 13),
+          Text('AI ART DOCENT', style: english(9, color: muted)),
+        ],
       ],
-    ],
+    ),
   );
 }
 
@@ -134,20 +138,22 @@ class _BrandMark extends CustomPainter {
     final p = Paint()
       ..color = green
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 6;
+      ..strokeWidth = 2.3
+      ..strokeJoin = StrokeJoin.round;
+    canvas.save();
+    canvas.scale(size.width / 28, size.height / 32);
     final path = Path()
-      ..moveTo(3, size.height)
-      ..lineTo(3, size.width / 2)
-      ..arcToPoint(
-        Offset(size.width - 3, size.width / 2),
-        radius: Radius.circular(size.width / 2),
-      )
-      ..lineTo(size.width - 3, size.height);
+      ..moveTo(4, 3)
+      ..lineTo(12, 3)
+      ..cubicTo(29, 3, 29, 25, 12, 25)
+      ..lineTo(10, 25)
+      ..lineTo(4, 30)
+      ..close();
     canvas.drawPath(path, p);
-    canvas.drawRect(
-      Rect.fromLTWH(size.width / 2 - 2.5, size.height - 12, 5, 12),
-      Paint()..color = green,
-    );
+    for (final x in [11.0, 17.0]) {
+      canvas.drawCircle(Offset(x, 14), 1.4, Paint()..color = green);
+    }
+    canvas.restore();
   }
 
   @override
@@ -275,7 +281,7 @@ class _Header extends StatelessWidget {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Semantics(
-                                label: '아트로그 홈',
+                                label: 'Docentalk 홈',
                                 button: true,
                                 child: InkWell(
                                   onTap: () => context.go('/gallery'),
@@ -297,7 +303,7 @@ class _Header extends StatelessWidget {
                   child: Row(
                     children: [
                       Semantics(
-                        label: '아트로그 홈',
+                        label: 'Docentalk 홈',
                         button: true,
                         child: InkWell(
                           onTap: () => context.go('/gallery'),
@@ -385,7 +391,7 @@ class _Footer extends StatelessWidget {
               TextButton(
                 onPressed: () => showAboutDialog(
                   context: context,
-                  applicationName: '아트로그',
+                  applicationName: 'Docentalk',
                   applicationVersion: '1.0.0',
                   applicationLegalese: '작품 이미지의 출처와 이용 조건은 작품 상세에서 확인할 수 있습니다.',
                   children: [
@@ -397,13 +403,13 @@ class _Footer extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Text('아트로그에 대하여 ↗', style: sans(11)),
+                child: Text('Docentalk에 대하여 ↗', style: sans(11)),
               ),
             ],
           ),
           const SizedBox(height: 24),
           Text(
-            '© 2026 ARTLOG. A LITTLE ART, EVERY DAY.',
+            '© 2026 DOCENTALK. A LITTLE ART, EVERY DAY.',
             style: const TextStyle(
               fontFamily: 'DMSans',
               fontSize: 9,

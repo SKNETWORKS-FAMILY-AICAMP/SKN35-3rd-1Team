@@ -6,6 +6,37 @@ import 'package:artlog_web/ui/design.dart';
 import 'package:artlog_web/ui/app_theme.dart';
 
 void main() {
+  testWidgets('selected glass chip retains its dark surface and toggles', (
+    tester,
+  ) async {
+    var selected = true;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: artlogTheme(),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) => GlassChoiceChip(
+              label: const Text('내 컬렉션'),
+              selected: selected,
+              onSelected: (value) => setState(() => selected = value),
+            ),
+          ),
+        ),
+      ),
+    );
+    final chip = find.byType(ChoiceChip);
+    final material = find.descendant(of: chip, matching: find.byType(Material));
+    expect(material, findsOneWidget);
+    // A transparent Ink alone still hides the dark glass if Material is white.
+    expect(Theme.of(tester.element(material)).canvasColor, Colors.transparent);
+    expect(tester.widget<ChoiceChip>(chip).labelStyle!.color, Colors.white);
+    expect(tester.widget<GlassSurface>(find.byType(GlassSurface)).dark, isTrue);
+    await tester.tap(chip);
+    await tester.pumpAndSettle();
+    expect(selected, false);
+    expect(tester.widget<ChoiceChip>(chip).labelStyle!.color, ink);
+    expect(tester.takeException(), isNull);
+  });
   testWidgets(
     'glass buttons preserve keyboard activation and disabled actions',
     (tester) async {

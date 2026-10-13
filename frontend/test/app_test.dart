@@ -37,7 +37,7 @@ void main() {
     return state;
   }
 
-  for (final width in [1440.0, 768.0, 390.0, 320.0]) {
+  for (final width in [1440.0, 850.0, 768.0, 390.0, 320.0]) {
     for (final route in [
       '/gallery',
       '/artists',
@@ -58,7 +58,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(find.text('아트로그에 대하여 ↗'), findsOneWidget);
+        expect(find.text('Docentalk에 대하여 ↗'), findsOneWidget);
         await tester.pumpWidget(const SizedBox());
         state.dispose();
       });

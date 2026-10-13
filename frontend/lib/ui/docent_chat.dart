@@ -240,7 +240,7 @@ class _DocentChatState extends State<DocentChat> {
                             : CrossAxisAlignment.start,
                         children: [
                           Text(
-                            m.role == 'user' ? '나' : '✳  아트로그 도슨트',
+                            m.role == 'user' ? '나' : '✳  Docentalk 도슨트',
                             style: sans(10, color: muted),
                           ),
                           const SizedBox(height: 7),

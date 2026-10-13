@@ -14,8 +14,8 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
 @pytest.mark.parametrize(("artist", "question", "kind", "reason"), [
     # 거절: 다루지 않는 작가 · 미수집 작가 · 실시간/생활 정보
     ("rembrandt", "피카소의 대표작은?", "refuse", "unknown_artist"),
-    ("rembrandt", "클림트의 키스는 언제 그렸어?", "refuse", "unreviewed_artist"),
-    ("claude-monet", "에곤 쉴레는 어떤 화가야?", "refuse", "unreviewed_artist"),
+    ("rembrandt", "클림트의 키스는 언제 그렸어?", "other_artist", None),
+    ("claude-monet", "에곤 쉴레는 어떤 화가야?", "other_artist", None),
     ("claude-monet", "마네의 대표작은?", "refuse", "unknown_artist"),  # 모네와 헷갈리는 다른 화가
     ("claude-monet", "오늘 서울 날씨 알려줘", "refuse", "off_topic"),
     ("rembrandt", "이 그림을 가장 싸게 살 수 있는 사이트 찾아줘", "refuse", "off_topic"),
@@ -84,7 +84,7 @@ def test_ambiguous_questions_go_to_rag(artist, question):
     ("rembrandt", "반 고흐의 해바라기는?", "other_artist", ("vincent-van-gogh",)),
     # 표기 흔들림도 같은 작가로
     ("rembrandt", "세잔느의 사과는?", "other_artist", ("paul-cezanne",)),
-    ("rembrandt", "에곤 쉴레는 어떤 화가야?", "refuse", ()),
+    ("rembrandt", "에곤 쉴레는 어떤 화가야?", "other_artist", ("egon-schiele",)),
 ])
 def test_confusable_names(artist, question, kind, expect):
     route = classify(question, artist)
@@ -99,7 +99,7 @@ def test_out_of_scope_name_found_in_scope_documents_goes_to_rag():
     route = classify(question, "paul-cezanne", named_in_scope=lambda name: name == "마네")
     assert route.kind == "rag" and route.names == ("마네",)
     assert classify("마네의 대표작은?", "rembrandt", named_in_scope=lambda name: False).kind == "refuse"
-    assert classify("클림트의 키스는?", "rembrandt", named_in_scope=lambda name: False).kind == "refuse"
+    assert classify("클림트의 키스는?", "rembrandt", named_in_scope=lambda name: False).kind == "other_artist"
 def test_eval_set_never_refuses_answerable_questions():
     """E 평가셋 30문항: 답해야 할 질문은 하나도 막지 않고, 막은 질문은 모두 거절 기대 질문이어야 한다."""
     artist_of = {w["slug"]: w["artist_slug"] for w in load_processed("artworks.jsonl")}
@@ -115,13 +115,21 @@ def test_eval_set_never_refuses_answerable_questions():
 
 
 def test_refusal_messages_use_natural_particles():
-    assert refusal_message(classify("클림트의 키스는?", "rembrandt")).startswith("구스타프 클림트 자료는 아직")
+    assert refusal_message(classify("클림트의 키스는?", "rembrandt")).startswith("구스타프 클림트에 관한 질문은")
     assert refusal_message(classify("피카소 대표작?", "rembrandt")).startswith("피카소는 이 미술관")
     assert "작품을 고른 뒤" in refusal_message(classify("고흐는 왜 귀를 잘랐어?", "rembrandt"))
     assert refusal_message(classify("이 그림의 빛은?", "rembrandt")) == ""
 
 
-def test_pending_artist_message_explains_review():
+def test_pending_artist_message_explains_review(monkeypatch):
+    # This branch must remain covered even after all current artists are approved.
+    from app.rag import classifier
+
+    pending = classifier._Artist(
+        "gustav-klimt", "구스타프 클림트", False, ("클림트",), (), True
+    )
+    monkeypatch.setattr(classifier, "_artists", lambda: {pending.slug: pending})
+    monkeypatch.setattr(classifier, "_alias_index", lambda: (("클림트", pending),))
     route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
     assert route.reason == "unreviewed_artist"
     assert "검토 중" in refusal_message(route)

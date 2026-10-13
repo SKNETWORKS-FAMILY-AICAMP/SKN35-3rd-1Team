@@ -391,30 +391,34 @@ class GlassChoiceChip extends StatelessWidget {
     radius: 100,
     dark: selected,
     interactive: false,
-    child: ChoiceChip(
-      label: label,
-      avatar: avatar,
-      selected: selected,
-      onSelected: onSelected,
-      showCheckmark: false,
-      color: const WidgetStatePropertyAll(Colors.transparent),
-      side: BorderSide.none,
-      shape: const StadiumBorder(),
-      elevation: 0,
-      pressElevation: 0,
-      shadowColor: Colors.transparent,
-      selectedShadowColor: Colors.transparent,
-      labelStyle: TextStyle(
-        fontFamily: 'NotoSansKR',
-        fontSize: 11,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-        color: selected ? Colors.white : ink,
+    // RawChip's own Material must not hide the glass beneath transparent Ink.
+    child: Theme(
+      data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+      child: ChoiceChip(
+        label: label,
+        avatar: avatar,
+        selected: selected,
+        onSelected: onSelected,
+        showCheckmark: false,
+        color: const WidgetStatePropertyAll(Colors.transparent),
+        side: BorderSide.none,
+        shape: const StadiumBorder(),
+        elevation: 0,
+        pressElevation: 0,
+        shadowColor: Colors.transparent,
+        selectedShadowColor: Colors.transparent,
+        labelStyle: TextStyle(
+          fontFamily: 'NotoSansKR',
+          fontSize: 11,
+          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+          color: selected ? Colors.white : ink,
+        ),
+        iconTheme: IconThemeData(
+          color: selected ? Colors.white : muted,
+          size: 16,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       ),
-      iconTheme: IconThemeData(
-        color: selected ? Colors.white : muted,
-        size: 16,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
     ),
   );
 }
@@ -433,16 +437,20 @@ class GlassActionChip extends StatelessWidget {
   Widget build(BuildContext context) => GlassSurface(
     radius: 100,
     interactive: false,
-    child: ActionChip(
-      label: label,
-      avatar: avatar,
-      onPressed: onPressed,
-      backgroundColor: Colors.transparent,
-      disabledColor: Colors.transparent,
-      side: BorderSide.none,
-      elevation: 0,
-      pressElevation: 0,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    child: Theme(
+      data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+      child: ActionChip(
+        label: label,
+        avatar: avatar,
+        onPressed: onPressed,
+        color: const WidgetStatePropertyAll(Colors.transparent),
+        backgroundColor: Colors.transparent,
+        disabledColor: Colors.transparent,
+        side: BorderSide.none,
+        elevation: 0,
+        pressElevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      ),
     ),
   );
 }

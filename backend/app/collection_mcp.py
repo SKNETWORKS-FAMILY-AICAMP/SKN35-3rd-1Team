@@ -21,7 +21,7 @@ from app.services import mypage_service as service
 
 settings = get_settings()
 mcp = FastMCP(
-    "Artlog collections",
+    "Docentalk collections",
     stateless_http=True,
     json_response=True,
     streamable_http_path="/",
@@ -127,7 +127,7 @@ mcp_app = AuthenticatedMCP(mcp.streamable_http_app())
 def new_transport():
     """Each application lifespan owns a fresh SDK session manager."""
     server = FastMCP(
-        "Artlog collections",
+        "Docentalk collections",
         stateless_http=True,
         json_response=True,
         streamable_http_path="/",

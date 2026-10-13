@@ -163,7 +163,7 @@ class _ArtlogAppState extends State<ArtlogApp> {
   Widget build(BuildContext context) => ArtlogScope(
     state: widget.state,
     child: MaterialApp.router(
-      title: '아트로그 · 일상에 한 점',
+      title: 'Docentalk · 일상에 한 점',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       locale: const Locale('ko'),
