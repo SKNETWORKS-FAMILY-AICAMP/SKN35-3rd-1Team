@@ -146,9 +146,12 @@
 | `source_name` | string? | 출처 기관·사이트 |
 | `source_url` | string? | |
 | `license` | string? | 출처 라이선스. 화면에 출처와 함께 표시 |
+| `basis_sources` | `BasisSource[]` | 편집 보충문·보정문의 근거. 해당하지 않으면 `[]` 또는 생략 |
+
+`BasisSource`는 `{source_name: string?, source_url: string?}`입니다. `감상 포인트`나 `답변 시 주의` 절을 답변 근거로 사용했을 때 원문 출처와 구분해 표시합니다.
 
 ```json
-{"answer":"근거에 따른 답변","refused":false,"sources":[{"document_id":123,"title":"작품 해설","doc_type":"artwork_commentary","source_name":"국립중앙박물관","source_url":"https://example.org/source","license":"공공누리 제1유형"}]}
+{"answer":"근거에 따른 답변","refused":false,"sources":[{"document_id":123,"title":"작품 해설","doc_type":"artwork_commentary","source_name":"국립중앙박물관","source_url":"https://example.org/source","license":"공공누리 제1유형","basis_sources":[{"source_name":"국립중앙박물관 연구자료","source_url":"https://example.org/basis"}]}]}
 ```
 
 `ChatMessageOut` (저장된 대화):

@@ -112,6 +112,13 @@ void main() {
                 'doc_type': 'artwork_commentary',
                 'source_name': '국립중앙박물관',
                 'source_url': 'https://museum.go.kr/source',
+                'license': '공공누리 제1유형',
+                'basis_sources': [
+                  {
+                    'source_name': '국립중앙박물관 연구자료',
+                    'source_url': 'https://museum.go.kr/basis',
+                  },
+                ],
               },
             ],
           });
@@ -134,6 +141,15 @@ void main() {
       expect(body['history'][0], {'role': 'user', 'content': 'turn2'});
       expect(reply.sources.single.id, '123');
       expect(reply.sources.single.name, '국립중앙박물관');
+      expect(reply.sources.single.license, '공공누리 제1유형');
+      expect(
+        reply.sources.single.basisSources.single.name,
+        '국립중앙박물관 연구자료',
+      );
+      expect(
+        reply.sources.single.basisSources.single.url,
+        'https://museum.go.kr/basis',
+      );
       expect(reply.refused, false);
       expect(
         () => ChatReply.fromJson({'answer': '출처 없는 응답'}),

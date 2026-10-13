@@ -62,7 +62,7 @@ flowchart LR
 | 프론트 | Vercel `artlog-skn35-1team.vercel.app` | 배포됨 | 빌드 때 `ARTLOG_DEMO=false`, `API_BASE_URL=<Railway 주소>` |
 | 백엔드 | Railway `skn35-3rd-1team-production.up.railway.app` | 배포됨 (`/api/health` 정상) | `TIDB_*`, `OPENAI_API_KEY`, `CHROMA_*`, Firebase, `CORS_ORIGINS` |
 | 벡터 검색 | Chroma Cloud (trychroma.com, DB `SKN_artlog`) | 적재 완료 (청크 1,622 · 작품 219) | `CHROMA_API_KEY`(비밀값) · `CHROMA_TENANT` · `CHROMA_DATABASE`. 백엔드 Railway 환경변수 연결 요청함 |
-| DB | TiDB Cloud Starter `3rd_project` | 운영 중 (Alembic `20261012_0005`) | TLS 필수, `pool_recycle=300`, `pool_pre_ping` |
+| DB | TiDB Cloud Starter `3rd_project` | 운영 중 (Alembic `20261013_0006`) | TLS 필수, `pool_recycle=300`, `pool_pre_ping` |
 | 임베딩 | OpenAI `text-embedding-3-small` (1536차원) | 사용 중 | `OPENAI_API_KEY`, `EMBEDDING_MODEL` |
 
 Chroma는 Railway에 직접 띄우는 대신 **Chroma Cloud**를 씁니다. 직접 띄운 Chroma 1.x에는 자체 인증이 없어 공개 주소를 열면 누구나 데이터를 지울 수 있지만, Cloud는 API 키로 보호되고 서버를 관리할 필요가 없습니다. TiDB에 원본이 있으므로 Cloud가 비거나 다른 곳으로 옮겨도 `sync_chroma`로 복원됩니다. 코드는 Cloud, 직접 띄운 서버(`CHROMA_HOST`), 로컬 폴더(`CHROMA_PATH`)를 모두 지원합니다.

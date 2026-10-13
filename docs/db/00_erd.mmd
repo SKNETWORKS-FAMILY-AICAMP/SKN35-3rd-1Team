@@ -1,32 +1,49 @@
 erDiagram
-    users ||--o{ artwork_likes : "좋아요"
-    artworks ||--o{ artwork_likes : "좋아요 받음"
-    users ||--o{ artist_follows : "팔로우"
-    artists ||--o{ artist_follows : "팔로우 받음"
-    users ||--o{ artwork_views : "열람"
-    artworks ||--o{ artwork_views : "열람됨"
-    art_movements |o--o{ artists : "대표 사조"
-    art_movements |o--o{ artworks : "사조"
-    artists ||--o{ artworks : "제작"
-    artworks ||--o| artwork_embeddings : "대표 벡터"
-    artworks |o--o{ documents : "작품 해설"
-    documents ||--o{ document_artists : "관련 작가"
-    artists ||--o{ document_artists : "생애·비교 문서"
-    documents ||--o{ document_artworks : "언급 작품"
-    artworks ||--o{ document_artworks : "연표 등에서 언급"
-    documents ||--o{ document_basis_documents : "편집 보강"
-    documents ||--o{ document_basis_documents : "근거 문서"
-    documents ||--o{ document_chunks : "청크"
-    users ||--o{ chat_sessions : "대화"
-    artworks ||--o{ chat_sessions : "대화 대상"
-    chat_sessions ||--o{ chat_messages : "메시지"
+    users ||--o{ social_accounts : "user_id"
+    users ||--o| user_preferences : "user_id"
+    art_movements ||--o{ artists : "movement_id"
+    art_movements ||--o{ artworks : "movement_id"
+    artists ||--o{ artworks : "artist_id"
+    artworks ||--o| artwork_embeddings : "artwork_id"
+    users ||--o{ artwork_likes : "user_id"
+    artworks ||--o{ artwork_likes : "artwork_id"
+    artists ||--o{ artist_follows : "artist_id"
+    users ||--o{ artist_follows : "user_id"
+    users ||--o{ artwork_views : "user_id"
+    artworks ||--o{ artwork_views : "artwork_id"
+    users ||--o{ chat_sessions : "user_id"
+    artworks ||--o{ chat_sessions : "artwork_id"
+    chat_sessions ||--o{ chat_messages : "session_id"
+    artworks ||--o{ documents : "artwork_id"
+    documents ||--o{ document_artists : "document_id"
+    artists ||--o{ document_artists : "artist_id"
+    documents ||--o{ document_artworks : "document_id"
+    artworks ||--o{ document_artworks : "artwork_id"
+    documents ||--o{ document_basis_documents : "basis_document_id"
+    documents ||--o{ document_basis_documents : "document_id"
+    documents ||--o{ document_chunks : "document_id"
 
     users {
         bigint id PK
-        varchar firebase_uid UK "Firebase Auth uid"
+        varchar firebase_uid UK
         varchar email UK
         varchar nickname
         datetime created_at
+        datetime updated_at
+    }
+    social_accounts {
+        bigint id PK
+        bigint user_id FK
+        varchar provider
+        varchar provider_user_id
+        datetime created_at
+    }
+    user_preferences {
+        bigint user_id PK,FK
+        smallint birth_year
+        varchar gender
+        varchar tone
+        varchar explanation_level
         datetime updated_at
     }
     art_movements {
@@ -72,80 +89,80 @@ erDiagram
         datetime updated_at
     }
     artwork_embeddings {
-        bigint artwork_id PK, FK
-        vector embedding "VECTOR(1536)"
+        bigint artwork_id PK,FK
+        vector embedding
         varchar embedding_model
         datetime updated_at
-    }
-    documents {
-        bigint id PK
-        varchar doc_key UK "data/processed 문서 키"
-        varchar doc_type "artist_bio / artwork_commentary / artist_comparison"
-        bigint artwork_id FK "해설 문서만 값 있음"
-        varchar title
-        mediumtext content
-        varchar source_url
-        varchar source_name
-        varchar license
-        varchar lang "ko / en"
-        varchar topic "생애 문서의 성격"
-        tinyint needs_review "검토 전이면 1"
-        json basis_external_sources "외부 공식 보정 근거"
-        datetime created_at
-        datetime updated_at
-    }
-    document_artists {
-        bigint document_id PK, FK
-        bigint artist_id PK, FK
-    }
-    document_artworks {
-        bigint document_id PK, FK
-        bigint artwork_id PK, FK
-    }
-    document_basis_documents {
-        bigint document_id PK, FK
-        bigint basis_document_id PK, FK
-    }
-    document_chunks {
-        bigint id PK
-        bigint document_id FK
-        int chunk_index "document_id 와 묶어 UNIQUE"
-        text content
-        vector embedding "VECTOR(1536)"
-        varchar embedding_model
-        datetime created_at
     }
     artwork_likes {
-        bigint user_id PK, FK
-        bigint artwork_id PK, FK
+        bigint user_id PK,FK
+        bigint artwork_id PK,FK
         datetime created_at
     }
     artist_follows {
-        bigint user_id PK, FK
-        bigint artist_id PK, FK
+        bigint user_id PK,FK
+        bigint artist_id PK,FK
         datetime created_at
     }
     artwork_views {
-        bigint user_id PK, FK
+        bigint user_id PK,FK
         date viewed_on PK
-        bigint artwork_id PK, FK
+        bigint artwork_id PK,FK
         int view_count
         datetime first_viewed_at
         datetime last_viewed_at
     }
     chat_sessions {
         bigint id PK
-        bigint user_id FK "artwork_id 와 묶어 UNIQUE"
+        bigint user_id FK
         bigint artwork_id FK
         datetime created_at
-        datetime updated_at "마지막 메시지 시각"
+        datetime updated_at
     }
     chat_messages {
         bigint id PK
         bigint session_id FK
-        varchar role "user / assistant"
+        enum role
         text content
-        tinyint refused "거절 답변이면 1"
-        json sources "답변 출처, 질문이면 NULL"
+        tinyint refused
+        json sources
+        datetime created_at
+    }
+    documents {
+        bigint id PK
+        varchar doc_key UK
+        enum doc_type
+        bigint artwork_id FK
+        varchar title
+        mediumtext content
+        varchar source_url
+        varchar source_name
+        varchar license
+        varchar lang
+        varchar topic
+        tinyint needs_review
+        json basis_external_sources
+        datetime created_at
+        datetime updated_at
+    }
+    document_artists {
+        bigint document_id PK,FK
+        bigint artist_id PK,FK
+    }
+    document_artworks {
+        bigint document_id PK,FK
+        bigint artwork_id PK,FK
+    }
+    document_basis_documents {
+        bigint document_id PK,FK
+        bigint basis_document_id PK,FK
+    }
+    document_chunks {
+        bigint id PK
+        bigint document_id FK
+        int chunk_index
+        text content
+        vector embedding
+        varchar embedding_model
         datetime created_at
     }

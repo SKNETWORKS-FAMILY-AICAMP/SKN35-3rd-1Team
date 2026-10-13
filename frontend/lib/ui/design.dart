@@ -230,7 +230,7 @@ class ArtImage extends StatelessWidget {
     builder: (context, constraints) {
       final small = constraints.maxWidth < 90 || constraints.maxHeight < 80;
       return Semantics(
-        label: '이미지 준비 중',
+        label: image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
         child: ColoredBox(
           color: const Color(0xffe8e7df),
           child: Center(
@@ -240,7 +240,7 @@ class ArtImage extends StatelessWidget {
                 Icon(Icons.image_outlined, color: sage, size: small ? 18 : 30),
                 if (!small) ...[
                   const SizedBox(height: 8),
-                  Text('이미지 준비 중', style: sans(11, color: muted)),
+                  Text(image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요', style: sans(11, color: muted)),
                 ],
               ],
             ),

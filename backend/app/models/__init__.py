@@ -14,6 +14,7 @@ from app.models.document import (
 )
 from app.models.embedding import ArtworkEmbedding
 from app.models.user import User
+from app.models.user_profile import SocialAccount, UserPreference
 
 __all__ = [
     "EMBEDDING_DIMENSION",
@@ -34,5 +35,7 @@ __all__ = [
     "DocumentBasis",
     "DocumentChunk",
     "DocumentType",
+    "SocialAccount",
     "User",
+    "UserPreference",
 ]

@@ -11,8 +11,8 @@
     "license": "공공저작물 자유이용 (한국학중앙연구원 콘텐츠 이용 안내: 항목 원고 전체, 출처표시)",
     "collected_at": "2026-10-11",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
+    "image_url": "https://www.museum.go.kr/files/zin/curator_15_1.jpg",
+    "image_license": "공공누리 제3유형 (출처표시+변경금지)",
     "needs_review": true,
     "topic": "생애 전체",
     "license_policy_url": "https://encykorea.aks.ac.kr/Guide/ContentUse",
@@ -387,7 +387,7 @@
     "source_license_label": "공공누리 3유형 - 공공저작물 자유이용허락 출처표시+변경금지",
     "collection_method": "viewStyle1 영역의 해설·원래 소제목·도판 캡션을 표시 순서대로 텍스트 추출. CSS·HTML 태그·사이트 메뉴만 제외; 문구/오탈자/인용문/수치 보존.",
     "document_role": "album_commentary",
-    "reuse_notes": "원문 보존용 수집. 변경금지 조건이 있으므로 번역·개작 등 2차 이용은 별도 검토. 제4유형은 상업적 이용 금지. 이미지 재사용 허가는 별도이며 이 문서에서 이미지 파일은 수집하지 않음.",
+    "reuse_notes": "원문과 대표 이미지는 공공누리 제3유형 조건에 따라 출처를 표시하고 변경 없이 사용. 번역·개작 등 2차 이용은 별도 검토.",
     "review_notes": [
       "원문은 구성 그림을 13점으로 쓰지만 열거한 명칭 수와 차이가 있다. 원문을 보존하고 구성 목록 해석은 검토 대상으로 둔다."
     ],
@@ -431,7 +431,8 @@
     "document_role": "work_commentary",
     "reuse_notes": "원문 보존용 수집. 변경금지 조건이 있으므로 번역·개작 등 2차 이용은 별도 검토. 제4유형은 상업적 이용 금지. 이미지 재사용 허가는 별도이며 이 문서에서 이미지 파일은 수집하지 않음.",
     "review_notes": [
-      "부채꼴 화면·겸로 관서로 덕수2292-6 소장품 설명과 대응 확인. 동명 덕수1191-1과 혼동하지 말 것."
+      "부채꼴 화면·겸로 관서로 덕수2292-6 소장품 설명과 대응 확인. 동명 덕수1191-1과 혼동하지 말 것.",
+      "큐레이터 페이지 대표 이미지 curator_15_1.jpg를 작품 이미지로 사용(2026-10-13 확인)."
     ],
     "content_sha256": "90af56cf9d253a8a97dc057b23737efa119fcbb52aea535325a54ec5c0367d2d",
     "character_count": 3927,

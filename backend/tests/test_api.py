@@ -297,6 +297,12 @@ def test_chat_contract(openapi: dict) -> None:
         "source_name",
         "source_url",
         "license",
+        "basis_sources",
+    }
+    assert "basis_sources" not in schemas["Source"].get("required", [])
+    assert set(schemas["BasisSource"]["properties"]) == {
+        "source_name",
+        "source_url",
     }
 
 

@@ -41,14 +41,15 @@ for d in docs:                                   # 답변에 실제로 쓴 청�
         continue
     seen.add(m["document_id"])
     sources.append(Source(document_id=m["document_id"], title=m["title"], doc_type=m["doc_type"],
-                          source_name=m["source_name"], source_url=m["source_url"], license=m["license"]))
+                          source_name=m["source_name"], source_url=m["source_url"], license=m["license"],
+                          basis_sources=m["basis_sources"]))
 ```
 
 | `metadata` 키 | 쓰는 곳 |
 | --- | --- |
 | `document_id`, `title`, `doc_type`, `source_name`, `source_url`, `license` | `Source`에 그대로 (이름이 같음). **`license`는 괄호까지 자르지 않음** (rag-handoff 6절) |
 | `annotation` | `"답변 시 주의"`면 원문보다 우선(규칙 7), `"감상 포인트"`면 팀 보충문이라고 밝힘(규칙 8) |
-| `basis_sources` | 덧붙인 절의 편집 근거 `[{source_name, source_url}]`. 지금 `Source` 스키마에는 담을 칸이 없음 → 아래 "결정할 것" |
+| `basis_sources` | 덧붙인 절의 편집 근거 `[{source_name, source_url}]`. `Source.basis_sources`에 그대로 전달 |
 | `pinned` | 규칙으로 들어온 청크(연표 사건·보정문). 거리 통계나 "가장 가까운 근거" 판단에서는 빼기 |
 | `distance` | 코사인 거리. **거절 판단에 쓰지 않음** (아래) |
 | `chunk_id`, `chunk_index`, `doc_key` | 로그·디버깅. 문의할 때 `doc_key`를 알려 주면 됨 |
@@ -63,9 +64,9 @@ for d in docs:                                   # 답변에 실제로 쓴 청�
 
 검색은 **마지막 질문만**으로 합니다. "그 작품은?"처럼 생략된 질문도 작품 범위 안에서 찾기 때문에 대부분 근거가 나옵니다(평가셋 멀티턴 2문항 모두 적중). 대화 이력은 답변 프롬프트에만 넣으면 됩니다. 질문을 다시 쓰는 단계(query rewrite)를 넣을지는 C가 정하고, 넣으면 그 결과 문장을 `retrieve()`에 넘기면 됩니다.
 
-### 결정할 것
+### 결정 완료
 
-- **편집 근거 표시**: rag-handoff 6절은 감상 포인트·답변 시 주의에서 나온 근거에 편집 근거도 보여 주라고 합니다. `Source`에 `basis_sources: list[{source_name, source_url}] = []` 같은 필드를 추가하려면 `docs/api.md`와 Flutter 모델(`lib/models.dart`)을 함께 고쳐야 합니다.
+- **편집 근거 표시**: `Source`에 `basis_sources: list[{source_name, source_url}] = []`를 추가했습니다. 감상 포인트·답변 시 주의에서 나온 근거는 원문 출처와 편집 근거를 화면에서 구분해 보여 줍니다.
 
 ## 2. 배포·테스트에게
 
@@ -117,7 +118,7 @@ uv run python -m scripts.sync_chroma               # TiDB → Chroma (비용 0�
 
 - 챗봇 응답은 질문 임베딩, Chroma 검색, LLM 답변을 거치므로 몇 초 걸립니다. 로딩 표시가 필요합니다.
 - 출처의 `license`는 길 수 있습니다(예: `CC BY 4.0 (이 데이터셋의 새 한국어 해설문)`). 자르지 말고 줄바꿈으로 보여 주세요.
-- 편집 근거(`basis_sources`)를 화면에 넣을지는 1절의 "결정할 것"을 따릅니다.
+- 편집 근거(`basis_sources`)는 원문 출처와 구분해 화면에 표시합니다.
 
 ## 5. 문의
 

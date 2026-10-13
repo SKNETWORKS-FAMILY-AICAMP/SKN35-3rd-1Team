@@ -1,6 +1,6 @@
 # ERD 읽는 법
 
-테이블 15개는 "화면에 보이는 것", "사용자가 한 일", "챗봇과 추천의 재료" 세 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다.
+서비스 테이블 17개는 "회원·개인화", "카탈로그", "사용자 활동", "문서·RAG" 네 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다. 운영 TiDB에는 Alembic 관리용 `alembic_version`까지 총 18개 테이블이 있습니다.
 
 ![ERD](../../../docs/db/00_erd.png)
 
@@ -25,17 +25,26 @@
 
 읽는 요령은 "세 갈래가 붙은 쪽이 여러 개인 쪽"입니다. `artists`와 `artworks` 사이 선은 `artworks` 쪽에 세 갈래가 있으므로 "작가 1명에 작품 여러 개"로 읽습니다.
 
-## 2. 세 덩어리로 보기
+## 2. 네 덩어리로 보기
 
 | 덩어리 | 테이블 | 그림에서의 위치 | 맡은 일 |
 | --- | --- | --- | --- |
-| 카탈로그 | `art_movements`, `artists`, `artworks` | 위쪽과 가운데 | 목록과 상세 화면에 보이는 정보 |
-| 사용자 활동 | `users`, `artwork_likes`, `artist_follows`, `artwork_views`, `chat_sessions`, `chat_messages` | 왼쪽과 왼쪽 아래 | 누가 무엇을 좋아하고 팔로우하고 봤는지, 어떤 작품에 무엇을 물었는지 |
-| 문서와 벡터 | `documents`, `document_artists`, `document_artworks`, `document_chunks`, `artwork_embeddings` | 아래쪽과 오른쪽 아래 | 챗봇 답변의 근거, 추천 계산의 재료 |
+| 회원·개인화 | `users`, `social_accounts`, `user_preferences` | 연두색 영역 | 서비스 사용자, 연결 로그인 계정, 선택형 도슨트 설정 |
+| 카탈로그 | `art_movements`, `artists`, `artworks`, `artwork_embeddings` | 파란색 영역 | 목록과 상세 화면에 보이는 정보, 추천용 작품 벡터 |
+| 사용자 활동 | `artwork_likes`, `artist_follows`, `artwork_views`, `chat_sessions`, `chat_messages` | 주황색 영역 | 누가 무엇을 좋아하고 팔로우하고 봤는지, 어떤 작품에 무엇을 물었는지 |
+| 문서·RAG | `documents`, `document_artists`, `document_artworks`, `document_basis_documents`, `document_chunks` | 보라색 영역 | 챗봇 답변의 근거, 청크와 편집 근거 연결 |
 
 `artworks`가 가운데 있는 이유는 세 덩어리가 모두 작품을 거쳐 이어지기 때문입니다. 좋아요도, 열람도, 해설 문서도, 추천 벡터도 작품에 붙습니다.
 
-## 3. 카탈로그 덩어리
+## 3. 회원·개인화 덩어리
+
+**`users`**는 우리 서비스 내부 사용자의 기준점입니다. 좋아요·열람·채팅 같은 서비스 데이터는 외부 로그인 계정이 아니라 변하지 않는 `users.id`를 참조합니다. 현재 인증은 기존과 동일하게 검증된 Firebase UID를 `users.firebase_uid`와 비교합니다.
+
+**`users` → `social_accounts` (1:N)**: 한 사용자가 여러 외부 로그인 계정을 연결할 수 있도록 분리한 테이블입니다. `(provider, provider_user_id)` 조합은 UNIQUE라서 같은 외부 계정이 둘 이상의 사용자에게 붙을 수 없습니다. 2026-10-13 마이그레이션에서는 기존 사용자를 `provider='firebase'`, `provider_user_id=users.firebase_uid`로 백필했습니다. 다만 신규 로그인 시 이 테이블에 쓰는 로직은 아직 연결하지 않았으므로, 현재 로그인 동작은 이 테이블에 의존하지 않습니다.
+
+**`users` → `user_preferences` (1:0..1)**: 사용자당 최대 한 행만 가지는 선택형 개인화 설정입니다. `user_id`가 PK이자 FK라 중복 행을 DB가 막습니다. `birth_year`, `gender`, `tone`, `explanation_level`은 모두 NULL을 허용하므로 가입 필수 정보가 아닙니다. 이후 채팅 담당자가 이 값을 조회해 프롬프트에 적용할 수 있지만, 현재 단계에서는 저장 구조만 준비되어 있습니다.
+
+## 4. 카탈로그 덩어리
 
 **`artists` → `artworks` (제작)**: 작가 1명에 작품 여러 개입니다. `artworks.artist_id`가 작가를 가리킵니다. 작가 없는 작품은 만들 수 없습니다.
 
@@ -43,7 +52,7 @@
 
 **`art_movements` → `artworks` (사조)**: 작품에도 사조를 따로 붙입니다. 한 작가가 시기에 따라 다른 사조의 작품을 그릴 수 있어서, 사조별 목록은 작가가 아니라 작품의 사조로 뽑습니다.
 
-## 4. 사용자 활동 덩어리
+## 5. 사용자 활동 덩어리
 
 좋아요, 팔로우, 열람은 모두 "사용자와 무언가를 잇는 테이블"입니다. 사용자 1명이 여러 작품을 좋아하고 작품 1개를 여러 사용자가 좋아하므로, 둘 사이에 연결 테이블이 필요합니다.
 
@@ -59,13 +68,15 @@
 
 **채팅 기록 (`chat_sessions` → `chat_messages`)**: 로그인한 사용자가 작품 도슨트와 나눈 대화입니다. `chat_sessions`는 사용자와 작품을 잇는 테이블이라 좋아요와 모양이 비슷하지만, 질문과 답변을 여러 개 매달아야 해서 별도 `id`를 두고 (`user_id`, `artwork_id`)에 UNIQUE를 겁니다. 작품 하나에 대화가 하나뿐이라 작품을 다시 열면 이전 대화가 이어집니다. 메시지마다 `role`(질문/답변)이 있고, 답변의 출처는 `sources` JSON에 그대로 담습니다. 출처를 `document_chunks`에 FK로 묶지 않는 이유는 다시 청킹하면 청크 id가 바뀌어 지난 대화의 출처가 사라지기 때문입니다.
 
-## 5. 문서와 벡터 덩어리
+## 6. 문서와 벡터 덩어리
 
 **`artworks` → `documents` (작품 해설)**: 작품 해설 문서는 `documents.artwork_id`로 작품을 가리킵니다. 문서 쪽에서 본 작품이 "0개 또는 1개"인 것은 생애 문서와 비교 문서에는 이 값이 비어 있기 때문입니다.
 
 **`documents` ↔ `artists` (`document_artists`를 거침)**: 생애 문서는 작가 1명, 비교 문서는 작가 2명 이상과 연결됩니다. 문서 하나가 작가 여러 명과 이어져야 해서 `documents`에 `artist_id` 컬럼을 두지 않고 연결 테이블로 뺐습니다.
 
 **`documents` ↔ `artworks` (`document_artworks`를 거침)**: 연표 사건처럼 해설이 아닌 문서가 여러 작품을 언급할 때 연결합니다. 작품을 고르면 그 작품이 나오는 생애 이야기를 찾을 수 있습니다. 해설 문서의 '해설 대상 작품'은 그대로 `documents.artwork_id` 하나로 둡니다.
+
+**`documents` ↔ `documents` (`document_basis_documents`를 거침)**: 편집자가 덧붙인 "감상 포인트"나 오류 보정문이 어떤 수집 문서를 근거로 했는지 연결합니다. 답변 출처를 만들 때 직접 검색된 문서뿐 아니라 이 근거 문서도 함께 표시할 수 있습니다.
 
 **`documents` → `document_chunks` (청크)**: 문서 1개를 여러 조각으로 자른 것입니다. 조각마다 본문과 벡터가 함께 들어 있고, 챗봇은 이 조각을 검색합니다.
 
@@ -78,7 +89,7 @@
 | `document_chunks` | 문서의 한 조각 | 챗봇이 질문과 가까운 문단 찾기 |
 | `artwork_embeddings` | 작품 하나 전체 | 비슷한 작품, 맞춤 추천 |
 
-## 6. 기능을 그림에서 따라가 보기
+## 7. 기능을 그림에서 따라가 보기
 
 선을 따라가 보면 각 기능이 어떤 테이블을 거치는지 보입니다.
 
@@ -114,14 +125,24 @@ users ──→ artwork_views ──→ artworks
 
 `artwork_views`에서 한 사용자의 한 달 치 행을 날짜별로 세면 달력이 됩니다.
 
-## 7. 자주 나오는 질문
+**개인화 도슨트(후속 구현)**:
+
+```text
+users ──→ user_preferences ──→ 채팅 프롬프트의 말투·설명 수준
+```
+
+나이나 성별 자체로 말투를 단정하지 않고, 사용자가 선택한 `tone`과 `explanation_level`을 우선 적용하는 구조가 안전합니다. 출생연도와 성별은 선택 정보로만 보조할 수 있습니다.
+
+## 8. 자주 나오는 질문
 
 | 질문 | 답 |
 | --- | --- |
 | 작품 벡터를 `artworks`의 컬럼으로 두면 안 되나 | 목록을 조회할 때마다 큰 벡터가 함께 딸려 나옵니다. 1:1 테이블로 빼면 필요할 때만 읽습니다. |
 | 좋아요 수는 어디에 있나 | 컬럼으로 두지 않습니다. `artwork_likes`의 행을 세어 구합니다. |
-| 채팅 내용은 어디에 저장되나 | 지금 구조에는 없습니다. 대화 이력은 화면이 들고 있고, 저장이 필요해지면 `03_schema_later.sql`의 테이블을 추가합니다. |
+| 채팅 내용은 어디에 저장되나 | 작품별 대화방은 `chat_sessions`, 질문·답변은 `chat_messages`에 저장합니다. 답변 출처는 `sources` JSON에 남깁니다. |
+| `social_accounts`를 추가했는데 로그인이 바뀌나 | 아닙니다. 현재 Firebase UID 로그인은 그대로이고, 새 테이블은 향후 복수 SNS 계정 연결을 위한 준비입니다. |
+| 성별·출생연도는 필수인가 | 아닙니다. `user_preferences` 행 자체와 모든 개인화 값이 선택 사항입니다. |
 | 작품을 지우면 어떻게 되나 | 그 작품의 벡터, 좋아요, 열람 기록, 해설 문서와 청크가 함께 지워집니다. |
 | 작품이 남아 있는 작가를 지울 수 있나 | 없습니다. DB가 거부합니다. |
 
-컬럼별 타입과 NULL 허용 여부는 `db-design.md` 3장에 있습니다.
+컬럼별 타입과 NULL 허용 여부는 [`docs/db/db-design.md`](../../../docs/db/db-design.md) 3장에 있습니다. ERD는 `uv run python -m scripts.render_erd`로 모델에서 다시 생성할 수 있습니다.

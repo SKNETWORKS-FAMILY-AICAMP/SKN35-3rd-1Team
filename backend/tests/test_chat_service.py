@@ -9,7 +9,7 @@ import pytest
 
 from app.models import ChatRole
 from app.repositories import chat_repository
-from app.schemas.chat import ChatResponse, Source
+from app.schemas.chat import BasisSource, ChatResponse, Source
 from app.services import chat_service
 
 NOW = datetime(2026, 10, 12, 3, 0)
@@ -60,6 +60,12 @@ def test_save_exchange_stores_question_then_answer(repo) -> None:
         source_name="국립중앙박물관",
         source_url=None,
         license="공공누리 제1유형",
+        basis_sources=[
+            BasisSource(
+                source_name="국립중앙박물관 연구자료",
+                source_url="https://example.org/basis",
+            )
+        ],
     )
     response = ChatResponse(
         answer="1642년에 그렸습니다.", refused=False, sources=[source]
@@ -81,6 +87,7 @@ def test_save_exchange_stores_question_then_answer(repo) -> None:
     question, answer = repo.messages
     assert question["sources"] is None
     assert answer["sources"] == [source.model_dump(mode="json")]
+    assert answer["sources"][0]["basis_sources"][0]["source_name"] == "국립중앙박물관 연구자료"
     assert db.commits == 1
 
 

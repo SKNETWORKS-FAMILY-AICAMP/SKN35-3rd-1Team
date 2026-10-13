@@ -42,6 +42,39 @@ CREATE TABLE users (
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- ---------------------------------------------------------------------
+-- 1-a. social_accounts : 서비스 사용자와 외부 로그인 식별자 연결
+--      현재 로그인 로직은 users.firebase_uid 를 계속 사용하며, 이 테이블은
+--      이후 Google/Naver 등 복수 계정 연결을 위한 확장 구조임.
+-- ---------------------------------------------------------------------
+CREATE TABLE social_accounts (
+  id               BIGINT       NOT NULL AUTO_INCREMENT,
+  user_id          BIGINT       NOT NULL,
+  provider         VARCHAR(30)  NOT NULL,
+  provider_user_id VARCHAR(255) NOT NULL,
+  created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_social_accounts_provider_user (provider, provider_user_id),
+  KEY ix_social_accounts_user_id (user_id),
+  CONSTRAINT fk_social_accounts_user FOREIGN KEY (user_id)
+    REFERENCES users (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
+-- 1-b. user_preferences : 선택 입력 개인화 설정 (사용자당 최대 1행)
+-- ---------------------------------------------------------------------
+CREATE TABLE user_preferences (
+  user_id           BIGINT      NOT NULL,
+  birth_year        SMALLINT    NULL,
+  gender            VARCHAR(30) NULL,
+  tone              VARCHAR(30) NULL,
+  explanation_level VARCHAR(30) NULL,
+  updated_at        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id),
+  CONSTRAINT fk_user_preferences_user FOREIGN KEY (user_id)
+    REFERENCES users (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
 -- 2. art_movements : 사조 (인상주의, 입체주의 ...)
 --    문자열 컬럼 대신 테이블로 둔 이유: '인상주의'/'인상파' 같은 표기 흔들림을 막고
 --    사조 목록 화면에 설명을 붙이기 위함. 행 수는 수십 개 수준.
@@ -174,6 +207,8 @@ CREATE TABLE documents (
   topic       VARCHAR(30)   NULL,
   -- 사람 검토 전 문서. 검색에서 뺄지, 답변에 표시할지는 질의 시점에 정함
   needs_review TINYINT(1)   NOT NULL DEFAULT 0,
+  -- 감상 포인트·오류 보정에 사용한 외부 공식 근거 목록
+  basis_external_sources JSON NOT NULL,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -218,6 +253,21 @@ CREATE TABLE document_artworks (
     REFERENCES documents (id) ON DELETE CASCADE,
   CONSTRAINT fk_document_artworks_artwork FOREIGN KEY (artwork_id)
     REFERENCES artworks (id) ON DELETE CASCADE
+) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- ---------------------------------------------------------------------
+-- 7-2. document_basis_documents : 편집·보강 문서와 근거 문서 연결 (N:M 자기 참조)
+--      감상 포인트나 오류 보정문을 화면 출처로 확장할 때 사용.
+-- ---------------------------------------------------------------------
+CREATE TABLE document_basis_documents (
+  document_id       BIGINT NOT NULL,
+  basis_document_id BIGINT NOT NULL,
+  PRIMARY KEY (document_id, basis_document_id),
+  KEY idx_document_basis_basis (basis_document_id, document_id),
+  CONSTRAINT fk_document_basis_document FOREIGN KEY (document_id)
+    REFERENCES documents (id) ON DELETE CASCADE,
+  CONSTRAINT fk_document_basis_basis FOREIGN KEY (basis_document_id)
+    REFERENCES documents (id) ON DELETE CASCADE
 ) DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- ---------------------------------------------------------------------
