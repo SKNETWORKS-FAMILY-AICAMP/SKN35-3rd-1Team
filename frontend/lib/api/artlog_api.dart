@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models.dart';
+import '../diary.dart';
+import '../mypage.dart';
+import '../member_profile.dart';
 
 class ApiException implements Exception {
   const ApiException(this.message, {this.status});
@@ -102,7 +105,8 @@ class ArtlogApi {
           401 => '로그인이 만료되었어요. 다시 로그인해 주세요.',
           403 => '이 기능을 이용할 권한이 없어요.',
           404 => '요청한 자료를 찾을 수 없어요.',
-          422 => '입력 내용을 확인해 주세요. 질문은 1~500자까지 보낼 수 있어요.',
+          409 => '같은 이름이 있는지 확인하고, 취향 소개를 만들 때는 작품을 먼저 담아 주세요.',
+          422 => '입력 내용을 확인해 주세요. 글자 수와 날짜가 올바른지 확인해 주세요.',
           429 => '요청이 잠시 많아요. 조금 뒤 다시 시도해 주세요.',
           501 => '이 기능은 준비 중이에요. 조금 뒤 다시 이용해 주세요.',
           503 => '서비스를 잠시 이용하기 어려워요. 조금 뒤 다시 시도해 주세요.',
@@ -266,6 +270,178 @@ class ArtlogApi {
     token = value;
     return value;
   }
+
+  Future<List<DiaryEntry>> diaryMonth(String month) async => items(
+    await _request(
+      'GET',
+      'me/diary',
+      query: {'month': month},
+      authenticated: true,
+    ),
+  ).map((v) => DiaryEntry.fromJson(object(v))).toList();
+
+  Future<DiaryEntry> saveDiary(
+    String date,
+    String content,
+    bool isPublic,
+    String? artworkId,
+  ) async => DiaryEntry.fromJson(
+    object(
+      await _request(
+        'PUT',
+        'me/diary/${Uri.encodeComponent(date)}',
+        authenticated: true,
+        body: {
+          'content': content,
+          'is_public': isPublic,
+          'artwork_id': artworkId == null ? null : int.parse(artworkId),
+        },
+      ),
+    ),
+  );
+
+  Future<void> deleteDiary(String date) async {
+    await _request(
+      'DELETE',
+      'me/diary/${Uri.encodeComponent(date)}',
+      authenticated: true,
+    );
+  }
+
+  Future<DiaryFeed> diaryFeed({String? cursor, String? artworkId}) async =>
+      DiaryFeed.fromJson(
+        object(
+          await _request(
+            'GET',
+            'diary/feed',
+            query: {
+              'limit': '12',
+              'before_id': ?cursor,
+              'artwork_id': ?artworkId,
+            },
+          ),
+        ),
+      );
+
+  Future<MemberProfile> profile() async => MemberProfile.fromServer(
+    object(await _request('GET', 'me/profile', authenticated: true)),
+  );
+  Future<MemberProfile> saveProfile(MemberProfile profile) async =>
+      MemberProfile.fromServer(
+        object(
+          await _request(
+            'PUT',
+            'me/profile',
+            authenticated: true,
+            body: profile.toServerJson(),
+          ),
+        ),
+      );
+  Future<List<ArtCollection>> collections() async => items(
+    await _request('GET', 'me/collections', authenticated: true),
+  ).map((e) => ArtCollection.fromJson(object(e))).toList();
+  Future<ArtCollection> saveCollection(
+    String name,
+    String description, {
+    String? id,
+  }) async => ArtCollection.fromJson(
+    object(
+      await _request(
+        id == null ? 'POST' : 'PUT',
+        id == null
+            ? 'me/collections'
+            : 'me/collections/${Uri.encodeComponent(id)}',
+        authenticated: true,
+        body: {'name': name, 'description': description},
+      ),
+    ),
+  );
+  Future<void> deleteCollection(String id) async {
+    await _request(
+      'DELETE',
+      'me/collections/${Uri.encodeComponent(id)}',
+      authenticated: true,
+    );
+  }
+
+  Future<ArtCollection> collect(
+    String id,
+    String artworkId,
+  ) async => ArtCollection.fromJson(
+    object(
+      await _request(
+        'PUT',
+        'me/collections/${Uri.encodeComponent(id)}/items/${Uri.encodeComponent(artworkId)}',
+        authenticated: true,
+      ),
+    ),
+  );
+  Future<void> uncollect(String id, String artworkId) async {
+    await _request(
+      'DELETE',
+      'me/collections/${Uri.encodeComponent(id)}/items/${Uri.encodeComponent(artworkId)}',
+      authenticated: true,
+    );
+  }
+
+  Future<ArtworkPage> collectionItems(String id, {String? cursor}) async =>
+      ArtworkPage.fromJson(
+        object(
+          await _request(
+            'GET',
+            'me/collections/${Uri.encodeComponent(id)}/items',
+            authenticated: true,
+            query: {'limit': '12', 'before_id': ?cursor},
+          ),
+        ),
+      );
+  Future<CritiquePage> critiques({String? cursor}) async =>
+      CritiquePage.fromJson(
+        object(
+          await _request(
+            'GET',
+            'me/critiques',
+            authenticated: true,
+            query: {'limit': '12', 'before_id': ?cursor},
+          ),
+        ),
+      );
+  Future<List<MemberActivity>> activity({int offset = 0}) async => items(
+    await _request(
+      'GET',
+      'me/activity',
+      authenticated: true,
+      query: {'limit': '20', 'offset': '$offset'},
+    ),
+  ).map((e) => MemberActivity.fromJson(object(e))).toList();
+  Future<TasteIntro> taste({bool generate = false}) async =>
+      TasteIntro.fromJson(
+        object(
+          await _request(
+            generate ? 'POST' : 'GET',
+            'me/taste',
+            authenticated: true,
+          ),
+        ),
+      );
+  Future<CollectionReply> collectionChat(
+    String message, {
+    String? collectionId,
+  }) async => CollectionReply.fromJson(
+    object(
+      await _request(
+        'POST',
+        'me/collections/chat',
+        authenticated: true,
+        body: {
+          'message': message,
+          'collection_id': collectionId == null
+              ? null
+              : int.parse(collectionId),
+        },
+      ),
+    ),
+  );
 
   void close() => _client.close();
 }

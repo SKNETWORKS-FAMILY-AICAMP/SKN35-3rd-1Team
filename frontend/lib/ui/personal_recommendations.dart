@@ -26,8 +26,8 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
     if (signature != next) {
       signature = next;
       if (!s.config.demo && s.authenticated) {
-        works = s.api.recommendedArtworks();
-        artists = s.api.recommendedArtists();
+        works = s.personalArtworks();
+        artists = s.personalArtists();
       }
     }
   }
@@ -58,7 +58,7 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 return _error(
                   snapshot.error!,
                   () => setState(() {
-                    works = s.api.recommendedArtworks();
+                    works = s.personalArtworks(force: true);
                   }),
                 );
               }
@@ -82,7 +82,7 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 return _error(
                   snapshot.error!,
                   () => setState(() {
-                    artists = s.api.recommendedArtists();
+                    artists = s.personalArtists(force: true);
                   }),
                 );
               }
@@ -93,7 +93,7 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 children: [
                   for (final artist in snapshot.data!)
                     Card(
-                      color: const Color(0xffeef0e7),
+                      color: const Color(0xffe8eeee),
                       elevation: 0,
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(

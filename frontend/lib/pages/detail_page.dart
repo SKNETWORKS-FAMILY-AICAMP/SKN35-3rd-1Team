@@ -5,6 +5,8 @@ import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
 import '../ui/docent_chat.dart';
+import '../ui/diary_feed.dart';
+import '../ui/collection_workspace.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.id});
@@ -84,79 +86,83 @@ class _DetailPageState extends State<DetailPage> {
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: compact(context) ? 340 : 440,
-              decoration: BoxDecoration(
-                color: const Color(0xffeeeee5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(25),
-                    child: ArtImage(
-                      art.image,
-                      fit: BoxFit.contain,
-                      label: art.title,
-                    ),
-                  ),
-                  Positioned(
-                    right: 12,
-                    bottom: 12,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        backgroundColor: paper.withValues(alpha: 0.9),
+              child: GlassSurface(
+                tinted: true,
+                radius: 32,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(25),
+                      child: ArtImage(
+                        art.image,
+                        fit: BoxFit.contain,
+                        label: art.title,
                       ),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (c) => Dialog.fullscreen(
-                          backgroundColor: const Color(0xff17241c),
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: InteractiveViewer(
-                                  minScale: 0.8,
-                                  maxScale: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(40),
-                                    child: ArtImage(
-                                      art.image,
-                                      fit: BoxFit.contain,
-                                      label: art.title,
+                    ),
+                    Positioned(
+                      right: 12,
+                      bottom: 12,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: paper.withValues(alpha: 0.9),
+                        ),
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (c) => Dialog.fullscreen(
+                            backgroundColor: const Color(0xff141e25),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: InteractiveViewer(
+                                    minScale: 0.8,
+                                    maxScale: 5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(40),
+                                      child: ArtImage(
+                                        art.image,
+                                        fit: BoxFit.contain,
+                                        label: art.title,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 15,
-                                right: 15,
-                                child: IconButton(
-                                  tooltip: '확대 화면 닫기',
-                                  onPressed: () => Navigator.pop(c),
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
+                                Positioned(
+                                  top: 15,
+                                  right: 15,
+                                  child: IconButton(
+                                    tooltip: '확대 화면 닫기',
+                                    style: crystalButtonStyle(
+                                      dark: true,
+                                      quiet: true,
+                                    ),
+                                    onPressed: () => Navigator.pop(c),
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 15,
-                                left: 20,
-                                child: Text(
-                                  '${s.artistName(art)} · ${art.title}',
-                                  style: sans(12, color: Colors.white),
+                                Positioned(
+                                  bottom: 15,
+                                  left: 20,
+                                  child: Text(
+                                    '${s.artistName(art)} · ${art.title}',
+                                    style: sans(12, color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
+                        icon: const Icon(Icons.open_in_full, size: 15),
+                        label: Text('크게 보기', style: sans(10)),
                       ),
-                      icon: const Icon(Icons.open_in_full, size: 15),
-                      label: Text('크게 보기', style: sans(10)),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 25),
@@ -328,6 +334,26 @@ class _DetailPageState extends State<DetailPage> {
                       ],
                     ),
             ),
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: ArtButton(
+                '내 컬렉션에 담기',
+                outline: true,
+                onTap: () => pickCollectionForArtwork(
+                  context,
+                  ArtlogScope.of(context),
+                  art,
+                ),
+              ),
+            ),
+            ArtButton(
+              '이 작품의 감상평 남기기',
+              icon: Icons.edit_outlined,
+              onTap: () => context.go('/library?artwork_id=${art.id}'),
+            ),
+            const SizedBox(height: 28),
+            DiaryFeedView(artworkId: art.id),
             const SizedBox(height: 55),
             const Divider(),
             const SizedBox(height: 25),

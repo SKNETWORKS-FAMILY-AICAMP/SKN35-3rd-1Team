@@ -1,7 +1,9 @@
+import '../models.dart';
 import 'package:flutter/material.dart';
 import '../member_profile.dart';
 import '../state.dart';
 import 'design.dart';
+import 'profile_preferences.dart';
 
 Future<void> showMemberProfile(BuildContext context, ArtlogState state) async {
   if (!state.authenticated) return;
@@ -21,60 +23,59 @@ class MemberProfileDialog extends StatefulWidget {
 
 class _MemberProfileDialogState extends State<MemberProfileDialog> {
   late final String identity;
-  late final bool editing;
-  String? ageRange, gender, error;
-  String explanationStyle = 'standard';
+  late final bool editing =
+      widget.state.memberProfile?.onboardingCompleted == true;
+  late MemberProfile draft =
+      widget.state.memberProfile ?? const MemberProfile();
+  int step = 0;
   bool busy = false, closing = false;
+  String? error;
   @override
   void initState() {
     super.initState();
     identity = widget.state.userKey;
-    final profile = widget.state.memberProfile;
-    editing = profile != null;
-    ageRange = profile?.ageRange;
-    gender = profile?.gender;
-    explanationStyle = profile?.explanationStyle ?? 'standard';
-    widget.state.addListener(_identityChanged);
+    widget.state.addListener(identityChanged);
   }
 
-  void _identityChanged() {
-    if (!mounted || closing || widget.state.userKey == identity) return;
+  void identityChanged() {
+    if (!mounted || closing || identity == widget.state.userKey) return;
     closing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.pop(context);
     });
   }
 
   @override
   void dispose() {
-    widget.state.removeListener(_identityChanged);
+    widget.state.removeListener(identityChanged);
     super.dispose();
   }
 
   Future<void> save({bool skip = false}) async {
-    if (busy || closing || widget.state.userKey != identity) return;
+    if (busy || closing || identity != widget.state.userKey) return;
     setState(() {
       busy = true;
       error = null;
     });
     try {
+      if (!skip && draft.birthDate != null) {
+        final d = DateTime.tryParse(draft.birthDate!);
+        if (d == null ||
+            dateKey(d) != draft.birthDate ||
+            d.year < 1900 ||
+            draft.birthDate!.compareTo(seoulDate()) > 0) {
+          throw const FormatException('생년월일을 확인해 주세요.');
+        }
+      }
       await widget.state.saveMemberProfile(
-        skip
-            ? const MemberProfile()
-            : MemberProfile(
-                ageRange: ageRange,
-                gender: gender,
-                explanationStyle: explanationStyle,
-              ),
+        skip ? const MemberProfile() : draft,
       );
-      if (mounted && widget.state.userKey == identity) {
+      if (mounted && identity == widget.state.userKey) {
         closing = true;
         Navigator.pop(context);
       }
     } catch (e) {
-      if (mounted && widget.state.userKey == identity) {
-        setState(() => error = ArtlogState.message(e));
-      }
+      if (mounted) setState(() => error = ArtlogState.message(e));
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -83,94 +84,67 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: closing,
-    child: AlertDialog(
-      backgroundColor: paper,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      title: Text('나만의 감상 취향을 알려주세요', style: serif(21)),
+    child: GlassAlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      title: Text(editing ? '감상 프로필' : '나만의 감상 취향을 알려주세요', style: serif(22)),
       content: SizedBox(
-        width: 400,
+        width: 460,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (!editing) ...[
+                Text('취향을 알면, 그림과 조금 더 가까워져요.', style: sans(13, color: muted)),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    for (var i = 0; i < 3; i++)
+                      Expanded(
+                        child: Container(
+                          height: 4,
+                          margin: const EdgeInsets.only(right: 5),
+                          decoration: BoxDecoration(
+                            color: i <= step ? green : line,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '${step + 1} / 3 · ${['나에 대해', '이야기 순서', '대화 스타일'][step]}',
+                  style: sans(11, color: muted),
+                ),
+                const SizedBox(height: 24),
+              ],
               Text(
-                '모두 선택 사항이에요. 나중에 감상 프로필에서 수정할 수 있어요.',
-                style: sans(12, color: muted),
+                '모두 선택 사항이에요. 나중에 마이페이지 설정에서 바꿀 수 있어요.',
+                style: sans(11, color: muted),
               ),
               const SizedBox(height: 18),
-              _label('나이대 (선택)'),
-              Wrap(
-                spacing: 6,
-                runSpacing: 5,
-                children: [
-                  for (final entry in MemberProfile.ages.entries)
-                    ChoiceChip(
-                      label: Text(entry.value),
-                      selected: ageRange == entry.key,
-                      onSelected: busy
-                          ? null
-                          : (selected) => setState(
-                              () => ageRange = selected ? entry.key : null,
-                            ),
-                    ),
-                  ChoiceChip(
-                    label: const Text('응답하지 않음'),
-                    selected: ageRange == null,
-                    onSelected: busy
-                        ? null
-                        : (_) => setState(() => ageRange = null),
-                  ),
-                ],
+              ProfilePreferences(
+                key: ValueKey(step),
+                initial: draft,
+                enabled: !busy,
+                section: editing ? null : step,
+                onChanged: (p) => draft = p,
               ),
-              const SizedBox(height: 18),
-              _label('성별 (선택)'),
-              Wrap(
-                spacing: 6,
-                runSpacing: 5,
-                children: [
-                  for (final entry in MemberProfile.genders.entries)
-                    ChoiceChip(
-                      label: Text(entry.value),
-                      selected: gender == entry.key,
-                      onSelected: busy
-                          ? null
-                          : (selected) => setState(
-                              () => gender = selected ? entry.key : null,
-                            ),
-                    ),
-                  ChoiceChip(
-                    label: const Text('응답하지 않음'),
-                    selected: gender == null,
-                    onSelected: busy
-                        ? null
-                        : (_) => setState(() => gender = null),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              _label('어떤 설명이 편한가요?'),
-              Wrap(
-                spacing: 6,
-                runSpacing: 5,
-                children: [
-                  for (final entry in MemberProfile.styles.entries)
-                    ChoiceChip(
-                      label: Text(entry.value),
-                      selected: explanationStyle == entry.key,
-                      onSelected: busy
-                          ? null
-                          : (_) => setState(() => explanationStyle = entry.key),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 15),
               Text(
-                '프로필은 이 브라우저에만 저장돼요. 설명 스타일은 맞춤 도슨트 안내가 연결되면 적용돼요.',
+                widget.state.config.demo
+                    ? '미리보기에서는 이 브라우저에만 저장돼요.'
+                    : '설정은 로그인한 계정에 저장돼요. 생년월일은 AI에 전달하지 않아요.',
                 style: sans(11, color: muted),
               ),
               if (error != null)
-                Text(error!, style: sans(12, color: Colors.brown)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    error!,
+                    style: sans(12, color: Colors.red.shade800),
+                  ),
+                ),
             ],
           ),
         ),
@@ -189,15 +163,30 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
                 },
           child: Text(editing ? '취소' : '건너뛰기'),
         ),
+        if (!editing && step > 0)
+          TextButton(
+            onPressed: busy ? null : () => setState(() => step--),
+            child: const Text('이전'),
+          ),
         ArtButton(
-          busy ? '저장 중…' : '저장하고 시작하기',
-          onTap: busy ? null : () => save(),
+          busy
+              ? '저장 중…'
+              : editing
+              ? '설정 저장'
+              : step == 2
+              ? '저장하고 시작하기'
+              : '다음',
+          onTap: busy
+              ? null
+              : () {
+                  if (!editing && step < 2) {
+                    setState(() => step++);
+                  } else {
+                    save();
+                  }
+                },
         ),
       ],
     ),
-  );
-  Widget _label(String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Text(value, style: sans(13, weight: FontWeight.w600)),
   );
 }

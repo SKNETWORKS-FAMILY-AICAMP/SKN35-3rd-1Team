@@ -1,6 +1,6 @@
 # 프론트엔드 엔드포인트 점검표
 
-점검일: 2026-10-13 · 기준: 모든 팀 브랜치를 통합한 dev · 공식 계약: [docs/api.md](../../docs/api.md).
+점검일: 2026-10-14 · 기준: 모든 팀 브랜치를 통합한 dev · 공식 계약: [docs/api.md](../../docs/api.md).
 
 실제 모드는 `API_BASE_URL=https://skn35-3rd-1team-production.up.railway.app/`, `ARTLOG_DEMO=false`, `AUTH_PROVIDER=firebase`입니다. 경로에는 DB 숫자 ID를 쓰며 공통 접두사 `/api`를 한 번만 붙입니다. 목록은 평평한 JSON 배열입니다. 별도 검색 API 없이 전체 목록을 로컬 검색·필터·정렬합니다.
 
@@ -9,7 +9,7 @@
 | GET | `/movements`, `/artists`, `/artworks` | 없음 | 카탈로그·필터·검색 |
 | GET | `/artists/{id}`, `/artworks/{id}` | 없음 | 상세 화면 |
 | GET | `/artworks/{id}/similar` | 없음 | 비슷한 작품. 실제 서버 200·3개 확인 |
-| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 기준 서버 코드는 답변 생성 501 |
+| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 답변 |
 | GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 저장 대화 복원 |
 | DELETE | `/artworks/{id}/chat` | 필요 | 대화 초기화, 204 |
 | GET | `/me/chats` | 필요 | 서재 대화 내역 탭, 작품별 이어보기 |
@@ -36,11 +36,11 @@ Firebase 이메일 가입·로그인·재설정과 Google 팝업 로그인은 Fl
 - 응답 `{answer, refused, sources}`의 출처·원문·라이선스만 표시합니다. `refused: true`는 범위 밖 안내 말풍선입니다.
 - 저장 대화 `{role, content, refused, sources, created_at}`를 복원하고 다시 질문할 때 맥락으로 보냅니다.
 - 내 대화 목록은 `{artwork, last_message, updated_at}`이며 UTC 시각을 서울 시각으로 표시합니다.
-- 실제 답변 생성과 `chat_service.save_exchange` 호출은 서버 담당 후속 작업입니다.
+- 서버 답변 생성과 로그인 사용자의 `chat_service.save_exchange`를 연결했습니다. 실제 운영에는 AI·Chroma 설정과 DB 마이그레이션이 필요합니다.
 
 ## 추천·서재·실패
 
-맞춤 추천은 카드에 `reason`이 더해진 평평한 응답입니다. 서버 순서를 유지하고 nullable reason은 표시하지 않습니다. 좋아요·팔로우가 바뀌면 추천을 새로 요청합니다. 날짜 상세는 작품 카드에 `view_count`·`last_viewed_at`이 추가된 배열입니다. 감상 메모는 서버 API가 없어 현재 브라우저에만 UID별로 저장합니다.
+맞춤 추천은 카드에 `reason`이 더해진 평평한 응답입니다. 서버 순서를 유지하고 nullable reason은 표시하지 않습니다. 좋아요·팔로우가 바뀌면 추천을 새로 요청합니다. 날짜 상세는 작품 카드에 `view_count`·`last_viewed_at`이 추가된 배열입니다. 감상·비평은 서버의 다이어리 API에 저장하며 기본 비공개입니다.
 
 ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_views`는 반복 감상을 포함한 횟수로 분리해 사용합니다. 날짜 상세의 `view_count`도 표시합니다. 같은 작품을 다시 열면 POST `/artworks/{id}/views`를 다시 보내며 동시 중복 호출만 억제합니다. `is_featured`는 공개 작품 목록의 큐레이터 순서·대표 작품에 반영합니다.
 
@@ -54,4 +54,20 @@ ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_view
 
 ## 회원 온보딩
 
-나이대·성별·설명 스타일은 선택형 온보딩에서 받고 UID별로 이 브라우저에만 저장합니다. 통합 ERD에 user_preferences 저장 구조는 있으나 프로필 API는 아직 없으므로 추가 경로를 호출하거나 챗 요청에 임의의 필드를 넣지 않습니다. age_range와 birth_year, explanation_style과 tone/explanation_level의 차이는 계약 확정 후 연결합니다. 프로필 저장·맞춤 말투를 위한 후속 계약 제안은 [인수인계](frontend-handoff.md)의 Google 로그인·회원 온보딩 절을 참고하세요.
+생년월일(선택) → 설명 우선순위 → 대화 스타일의 3단계입니다. 실제 모드에서는 GET/PUT `/api/me/profile`로 계정에 저장하며 완료 여부도 서버가 보관합니다. 이야기 순서와 말투는 도슨트 프롬프트에 적용하고 생년월일은 AI로 보내지 않습니다. 이전 브라우저 프로필의 나이대를 정확한 생년월일로 추정하거나 자동 업로드하지 않습니다. 미리보기에서는 UID별 로컬 저장을 유지합니다.
+
+
+## 감상평·다이어리
+
+`GET /api/diary/feed`, `GET /api/me/diary?month=YYYY-MM`, `PUT/DELETE /api/me/diary/YYYY-MM-DD`를 사용합니다. 상세 계약은 `docs/api.md`의 0007 절을 참고합니다. 공개 감상은 `/community`, 작품별 감상은 상세 화면, 개인 기록은 `/library`의 캘린더·다이어리 탭에서 확인합니다. 작품 상세에서 작성 버튼을 누르면 작품을 선택한 상태로 서재에 진입합니다.
+
+공개 설정은 저장 시 반영되며 새 글은 기본 비공개입니다. 체험 모드에서는 브라우저에만 저장되고 실제 공유로 표시하지 않습니다. 기존 브라우저 메모는 작성란에 불러오되 사용자가 저장하기 전 서버로 전송하지 않습니다.
+
+
+## 마이페이지·컬렉션
+
+`/mypage`는 상단 계정 버튼으로 진입합니다. GET `/me/collections`, POST/PUT/DELETE `/me/collections/{id}`, GET `/me/collections/{id}/items`, PUT/DELETE `/me/collections/{id}/items/{artwork_id}`를 사용합니다. 생성은 POST `/me/collections`입니다. 작품 목록은 12점씩, 활동은 20개씩, 내 감상·비평은 12개씩 더 불러옵니다.
+
+AI 취향 소개는 GET/POST `/me/taste`, 컬렉션 채팅은 POST `/me/collections/chat`입니다. 채팅 응답의 `proposal`을 사용자에게 보여주고 확인 버튼을 누른 뒤 해당 CRUD API로 저장합니다. MCP를 화면에서 별도 호출해 토큰을 전달하는 우회 흐름은 없습니다. 외부 MCP 클라이언트는 별도 `/mcp/` 전송 계층에서 같은 소유권 검사 서비스를 사용합니다.
+
+운영 전환과 전체 계약은 [마이페이지 인수인계](../../docs/mypage-and-collections-2026-10-14.md)를 참고하세요.

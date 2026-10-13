@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../ui/design.dart';
 import '../ui/personal_recommendations.dart';
+import '../ui/daily_artwork_hero.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -65,231 +66,24 @@ class _GalleryPageState extends State<GalleryPage> {
     }
     return Column(
       children: [
-        PageWidth(
-          vertical: 46,
-          child: LayoutBuilder(
-            builder: (context, c) {
-              final wide = c.maxWidth > 640;
-              final copy = Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.auto_awesome_outlined, size: 23, color: sage),
-                      SizedBox(width: 9),
-                      Expanded(child: Eyebrow('A LITTLE ART, EVERY DAY')),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(text: '그림을 보는 시간,\n나를 발견하는 순간'),
-                        TextSpan(
-                          text: '.',
-                          style: serif(wide ? 42 : 34, color: sage),
-                        ),
-                      ],
-                    ),
-                    style: serif(
-                      wide ? (c.maxWidth > 1050 ? 42 : 32) : 34,
-                      height: 1.6,
-                    ),
-                  ),
-                  const SizedBox(height: 19),
-                  Text(
-                    '한 점의 그림에서 시작되는 새로운 이야기.\n나만의 속도로, 나만의 미술관을 만나보세요.',
-                    style: sans(13, color: muted, height: 2),
-                  ),
-                  const SizedBox(height: 26),
-                  ArtButton(
-                    '오늘의 그림 발견하기',
-                    onTap: () => Scrollable.ensureVisible(
-                      collectionKey.currentContext!,
-                      duration: const Duration(milliseconds: 400),
-                    ),
-                  ),
-                  if (wide) ...[
-                    const SizedBox(height: 35),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 88,
-                          height: 35,
-                          child: Stack(
-                            children: [
-                              for (
-                                var i = 0;
-                                i < s.artworks.take(3).length;
-                                i++
-                              )
-                                Positioned(
-                                  left: i * 25.0,
-                                  child: ClipOval(
-                                    child: ArtImage(
-                                      s.artworks[i].image,
-                                      width: 34,
-                                      height: 34,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${s.artists.length}명의 거장과 함께하는\n작지만 깊은 미술 여행',
-                          style: sans(10, color: muted),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              );
-              final image = Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Semantics(
-                      label: '오늘의 작품 ${hero.title} 감상하기',
-                      button: true,
-                      child: InkWell(
-                        onTap: () => context.go('/artwork/${hero.id}'),
-                        child: SizedBox(
-                          height: wide ? 432 : 330,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              ArtImage(hero.image, label: hero.title),
-                              const DecoratedBox(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      Color(0xb314231a),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const Positioned(
-                                top: 24,
-                                left: 25,
-                                right: 25,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Eyebrow(
-                                      'CURATOR’S PICK',
-                                      color: Colors.white,
-                                    ),
-                                    Eyebrow('ART NOTE 01', color: Colors.white),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 29,
-                                left: 29,
-                                right: 29,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '오늘, 이 그림',
-                                            style: sans(
-                                              10,
-                                              color: Colors.white70,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 7),
-                                          Text(
-                                            hero.title,
-                                            style: serif(
-                                              24,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            '${s.artistName(hero)} · ${hero.year}',
-                                            style: sans(
-                                              11,
-                                              color: Colors.white70,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 46,
-                                      height: 46,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.north_east,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'A moment to pause, a world to discover.',
-                          style: english(14, color: muted),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Eyebrow('EST. 2026'),
-                    ],
-                  ),
-                ],
-              );
-              return wide
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(flex: 45, child: copy),
-                        SizedBox(width: c.maxWidth > 1000 ? 52 : 28),
-                        Expanded(flex: 55, child: image),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [copy, const SizedBox(height: 30), image],
-                    );
-            },
+        DailyArtworkHero(
+          works: dailyArtworks(s.artworks, seoulDate()),
+          onExplore: () => Scrollable.ensureVisible(
+            collectionKey.currentContext!,
+            alignment: .24,
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 350),
           ),
         ),
+        const SizedBox(height: 36),
+        const PersonalRecommendations(),
         PageWidth(
           child: Column(
-            key: collectionKey,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionTitle(
+                key: collectionKey,
                 eyebrow: 'THE COLLECTION',
                 title: '어떤 그림에 마음이 머무나요?',
                 subtitle: '마음이 가는 작품을 고르고, 그 안의 이야기를 들어보세요.',
@@ -318,7 +112,7 @@ class _GalleryPageState extends State<GalleryPage> {
                           visible = 8;
                         }),
                       ),
-                      const SizedBox(width: 26),
+                      const SizedBox(width: 8),
                       _tab(
                         '작가별로 보기',
                         byArtist,
@@ -353,16 +147,12 @@ class _GalleryPageState extends State<GalleryPage> {
                                 },
                                 icon: const Icon(Icons.close, size: 16),
                               ),
-                        filled: false,
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
                       ),
                     ),
                   );
-                  return Container(
-                    decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: line)),
-                    ),
+                  return GlassSurface(
+                    radius: 26,
+                    padding: const EdgeInsets.all(8),
                     child: c.maxWidth > 620
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -381,7 +171,7 @@ class _GalleryPageState extends State<GalleryPage> {
                 runSpacing: 9,
                 children: [
                   for (final f in [('', '전체'), ...filters])
-                    ChoiceChip(
+                    GlassChoiceChip(
                       label: Text(
                         f.$2,
                         style: sans(
@@ -390,15 +180,6 @@ class _GalleryPageState extends State<GalleryPage> {
                         ),
                       ),
                       selected: filter == f.$1,
-                      showCheckmark: false,
-                      selectedColor: green,
-                      backgroundColor: paper,
-                      side: BorderSide(color: filter == f.$1 ? green : line),
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 11,
-                        vertical: 7,
-                      ),
                       onSelected: (_) => setState(() {
                         filter = f.$1;
                         visible = 8;
@@ -461,15 +242,11 @@ class _GalleryPageState extends State<GalleryPage> {
             ],
           ),
         ),
-        const PersonalRecommendations(),
         PageWidth(
           vertical: 65,
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: green,
-              borderRadius: BorderRadius.circular(4),
-            ),
+          child: GlassSurface(
+            dark: true,
+            radius: 34,
             padding: EdgeInsets.all(compact(context) ? 28 : 45),
             child: LayoutBuilder(
               builder: (context, c) => Row(
@@ -479,7 +256,7 @@ class _GalleryPageState extends State<GalleryPage> {
                       angle: -0.06,
                       child: Container(
                         padding: const EdgeInsets.all(9),
-                        color: const Color(0xffe3e4d3),
+                        color: const Color(0xffe8effa),
                         child: ArtImage(
                           s.artworks
                                   .where((a) => s.artistName(a).contains('모네'))
@@ -499,7 +276,7 @@ class _GalleryPageState extends State<GalleryPage> {
                       children: [
                         const Eyebrow(
                           '✳  YOUR PERSONAL DOCENT',
-                          color: Color(0xffc2cbb1),
+                          color: Color(0xffd4e2f7),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -512,7 +289,7 @@ class _GalleryPageState extends State<GalleryPage> {
                         const SizedBox(height: 15),
                         Text(
                           '작품을 고르고 도슨트에게 물어보세요.\n답변의 출처까지, 함께 살펴볼 수 있어요.',
-                          style: sans(12, color: const Color(0xffcad2bf)),
+                          style: sans(12, color: const Color(0xffd4e2f7)),
                         ),
                         const SizedBox(height: 25),
                         ArtButton(
@@ -562,7 +339,7 @@ class _GalleryPageState extends State<GalleryPage> {
                               child: Row(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
+                                    borderRadius: BorderRadius.circular(12),
                                     child: ArtImage(
                                       s.representativeImage(a),
                                       width: 50,
@@ -607,25 +384,20 @@ class _GalleryPageState extends State<GalleryPage> {
   int _year(Artwork a) =>
       int.tryParse(RegExp(r'\d{4}').firstMatch(a.year)?.group(0) ?? '9999') ??
       9999;
-  Widget _tab(String label, bool active, VoidCallback action) => InkWell(
-    onTap: action,
-    child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 18),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: active ? green : Colors.transparent,
-            width: 2,
-          ),
-        ),
-      ),
-      child: Text(
-        label,
-        style: sans(
-          12,
-          color: active ? green : muted,
-          weight: active ? FontWeight.w600 : FontWeight.w400,
-        ),
+  Widget _tab(String label, bool active, VoidCallback action) => TextButton(
+    onPressed: action,
+    style: crystalButtonStyle(
+      dark: active,
+      quiet: !active,
+      minimumSize: const Size(44, 46),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    ),
+    child: Text(
+      label,
+      style: sans(
+        12,
+        color: active ? Colors.white : muted,
+        weight: active ? FontWeight.w600 : FontWeight.w500,
       ),
     ),
   );

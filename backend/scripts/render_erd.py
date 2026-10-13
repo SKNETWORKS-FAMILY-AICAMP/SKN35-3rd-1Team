@@ -23,6 +23,9 @@ TABLE_GROUPS = {
     "Identity & Preferences": ("users", "social_accounts", "user_preferences"),
     "Catalog": ("art_movements", "artists", "artworks", "artwork_embeddings"),
     "User Activity": (
+        "diary_entries",
+        "collections",
+        "collection_items",
         "artwork_likes",
         "artist_follows",
         "artwork_views",

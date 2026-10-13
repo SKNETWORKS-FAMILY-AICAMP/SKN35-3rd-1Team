@@ -1,12 +1,12 @@
 # API 명세
 
-확정일: 2026-10-12. 이 문서가 프론트와 백엔드의 공식 계약입니다. 기준 코드는 `backend/app/schemas/`(요청·응답 모델)와 `backend/app/api/routes/`(경로)이며, `backend/tests/test_api.py`가 OpenAPI를 기준으로 이 계약을 고정합니다. 서버를 띄우면 `/docs`(Swagger)와 `/openapi.json`에서 같은 내용을 볼 수 있습니다.
+확정일: 2026-10-12 · 갱신: 2026-10-14. 이 문서가 프론트와 백엔드의 공식 계약입니다. 기준 코드는 `backend/app/schemas/`(요청·응답 모델)와 `backend/app/api/routes/`(경로)이며, `backend/tests/test_api.py`가 OpenAPI를 기준으로 이 계약을 고정합니다. 서버를 띄우면 `/docs`(Swagger)와 `/openapi.json`에서 같은 내용을 볼 수 있습니다.
 
 명세를 바꿀 때는 스키마·라우트·`test_api.py`·이 문서를 같은 PR에서 함께 고칩니다.
 
 ## 공통 규칙
 
-- **접두사**: 모든 경로는 `/api`로 시작합니다. `/api/v1`은 쓰지 않습니다.
+- **접두사**: REST 경로는 `/api`로 시작합니다. 외부 도구용 MCP 전송 계층은 `/mcp/`입니다. `/api/v1`은 쓰지 않습니다.
 - **id**: 경로의 `{artwork_id}`, `{artist_id}`는 DB의 숫자 `id`입니다. `slug`는 응답에만 있는 별도 필드입니다.
 - **인증**: 로그인은 프론트의 Firebase Auth가 처리하고 서버에 로그인·회원가입 API는 없습니다. 로그인이 필요한 요청은 `Authorization: Bearer <Firebase ID 토큰>`을 보냅니다. 사용자 id는 URL이나 본문으로 보내지 않고 서버가 토큰에서 꺼냅니다(`/api/me/...`). 처음 보는 uid는 서버가 `users`에 한 번 등록합니다.
 - **목록**: JSON 배열을 그대로 반환합니다. `{items: ...}` 같은 래퍼가 없습니다.
@@ -20,7 +20,7 @@
 | `401` | 토큰이 없거나 검증 실패. `WWW-Authenticate: Bearer` 헤더 포함 |
 | `404` | 없는 작품·작가 id. 상세 조회, 좋아요·팔로우 `PUT`, 열람 `POST`에 적용. 취소 `DELETE`는 항상 `204` |
 | `422` | 요청 검증 실패 (질문 길이, `month` 형식, 날짜 형식 등). `detail`은 오류 항목 배열 |
-| `501` | 경로만 있고 아직 구현되지 않음 (개발 중에만). 2026-10-12 기준 `POST /chat`(RAG 답변 생성)만 해당 |
+| `501` | 경로만 있고 아직 구현되지 않음 (개발 중에만). 도슨트 POST는 2026-10-14에 구현했으며 AI·검색 연결 실패는 503으로 안내 |
 
 ## 검색
 
@@ -186,3 +186,59 @@
 ## 노출하지 않는 값
 
 응답은 DB 모델이 아니라 스키마로 변환해 반환합니다. `firebase_uid`, `embedding` 같은 내부 컬럼은 어떤 응답에도 없습니다(`test_responses_never_expose_private_columns`).
+
+
+## 감상평·다이어리 API (20261013_0007)
+
+하루에 사용자당 감상평 한 편을 저장합니다. 공개 피드·캘린더·다이어리는 같은 `diary_entries` 데이터를 사용합니다. 기본은 비공개입니다.
+
+| 메서드 | 경로 | 인증 | 동작 |
+| --- | --- | --- | --- |
+| GET | `/api/diary/feed?limit=12&before_id=123&artwork_id=42` | 불필요 | 공개 글만 최신 id순, artwork_id·before_id는 선택. limit 1~30 |
+| GET | `/api/me/diary?month=YYYY-MM` | 필요 | 내 월별 감상평, 날짜 내림차순 |
+| GET | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 날짜별 감상평. 없으면 null |
+| PUT | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 날짜별 감상평 생성·수정·공개 범위 변경 |
+| DELETE | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 글 삭제, 204 |
+
+PUT 본문: `content`(공백 제거 후 1~2000자), `is_public`(기본 false), `artwork_id`(선택, null 허용). 사용자 식별 필드는 받지 않으며 검증된 로그인 사용자로 결정합니다.
+
+응답 글: `id`, `entry_date`, `content`, `is_public`, `author_name`, `artwork`(ArtworkCard 또는 null), `created_at`, `updated_at`(UTC). 이메일·Firebase UID·내부 사용자 ID는 반환하지 않습니다.
+피드 응답: `{items: DiaryEntry[], next_cursor: int|null}`. 다음 페이지는 before_id=next_cursor. 공개 피드는 no-store, 개인 조회는 private/no-store입니다. 비공개 전환·삭제는 다음 조회부터 피드에서 제외됩니다.
+
+운영 전 `alembic upgrade head`로 0007을 적용하고 백엔드를 배포해야 합니다. AUTH_MODE=firebase 설정과 기존 인증 정보는 운영 담당자가 확인합니다. 이번 코드 변경에서 운영 DB나 배포 설정을 직접 변경하지 않았습니다.
+
+
+## 마이페이지·컬렉션 API (20261014_0008)
+
+모든 경로는 Firebase 인증이 필요하고 응답은 `Cache-Control: private, no-store`입니다. 사용자는 토큰에서 결정하며 본문의 user_id/UID 필드는 허용하지 않습니다. 다른 계정의 컬렉션 ID에는 404를 반환합니다.
+
+| 메서드 | 경로 | 응답·용도 |
+| --- | --- | --- |
+| GET / PUT | `/api/me/profile` | 설정 조회·전체 교체. 미설정은 `onboarding_completed=false` |
+| GET | `/api/me/collections` | 컬렉션 최대 50개, 개수와 미리보기 3점, 수정 시각 내림차순 |
+| POST | `/api/me/collections` | 생성 201. 동일 계정 이름 중복은 409 |
+| PUT / DELETE | `/api/me/collections/{id}` | 이름·소개 수정 / 묶음 삭제 204 |
+| GET | `/api/me/collections/{id}/items?limit=12&before_id=...` | `{items: ArtworkCard[], next_cursor: int?}`. 작품 ID 내림차순, limit 1~30 |
+| PUT / DELETE | `/api/me/collections/{id}/items/{artwork_id}` | 작품 담기(컬렉션 응답, 중복 무해) / 꺼내기 204 |
+| GET | `/api/me/critiques?limit=12&before_id=...` | `{items: DiaryEntry[], next_cursor: int?}`. 본인의 공개·비공개 다이어리, ID 내림차순 |
+| GET | `/api/me/activity?limit=20&offset=0` | `ActivityOut[]`, 최신 감상·좋아요·다이어리·컬렉션 변경. limit 최대30, offset 최대10000 |
+| GET / POST | `/api/me/taste` | 저장한 AI 취향 소개 조회 / 근거 변경 시 생성 |
+| POST | `/api/me/collections/chat` | 컬렉션 요청 분석·제안. 이 요청만으로 DB를 변경하지 않음 |
+
+ProfileWrite: `{birth_date: "YYYY-MM-DD" | null, explanation_priorities: ["background","technique","artist_life"], conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘, 세 우선순위는 정확히 한 번씩 담은 순열입니다. 생일은 선택 사항이며 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. GET은 nickname을 추가합니다. 성별과 이전 나이대는 새 요청에 포함하지 않습니다.
+
+CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionOut은 `{id, name, description, artwork_count, previews: ArtworkCard[]}`입니다. 컬렉션은 기본 비공개이며 별도 공개 API는 없습니다. 한 컬렉션에는 최대 500점을 담습니다. 묶음을 삭제해도 좋아요·다이어리와 카탈로그 작품은 유지합니다.
+
+ActivityOut: `{kind: "view"|"like"|"diary"|"collection", title, occurred_at: UTC datetime, artwork_id: int?, entry_date: date?}`. 최근 상태의 활동 집계이며 변경 이벤트를 영구 보관하는 감사 로그는 아닙니다. 좋아요 취소·컬렉션 삭제 시 해당 항목은 목록에서 사라집니다.
+
+TasteOut: `{summary: string?, evidence: ArtworkCard[], generated_at: UTC datetime?, stale: bool}`. 근거는 본인 좋아요·컬렉션의 중복 제거 작품 최대100점입니다. 개인 글·생년월일·이메일·UID는 모델에 전달하지 않습니다. 동일 근거는 저장 결과를 재사용하고 변경 후 30초 이내 재생성 요청은 429입니다. 근거가 없으면 생성 409, AI 설정·응답 문제는 503입니다.
+
+CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `{answer, proposal: {action: "create"|"add", name: string?, collection_id: int?, artwork_id: int?} | null}`. 동명 작품이나 다수 검색 결과는 추가 질문으로 처리합니다. 화면에서 사용자가 제안을 확정하면 위의 컬렉션 CRUD 경로를 호출하고 서버에서 소유권·작품 존재를 다시 확인합니다.
+
+## MCP 컬렉션 도구
+
+`/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
+
+## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.1)
+
+`POST /api/artworks/{id}/chat`는 기존 분류·승인 문서 검색을 답변 생성과 연결합니다. 기본 쉬운 말투 또는 전문용어 스타일, 설명 순서는 서버 사용자 설정에서 읽습니다. 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 인용한 chunk ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.

@@ -4,12 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../state.dart';
 import '../models.dart';
 
-const paper = Color(0xfff7f6f2);
-const ink = Color(0xff252d27);
-const green = Color(0xff364e40);
-const muted = Color(0xff747d6c);
-const line = Color(0xffe1e2d9);
-const sage = Color(0xff8c9c76);
+import 'glass.dart';
+export 'glass.dart';
+
 TextStyle sans(
   double size, {
   Color color = ink,
@@ -102,33 +99,42 @@ class ArtButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FilledButton(
     onPressed: onTap,
-    style: FilledButton.styleFrom(
-      backgroundColor: outline
-          ? Colors.transparent
-          : light
-          ? paper
-          : green,
-      foregroundColor: outline || light ? green : Colors.white,
-      minimumSize: const Size(0, 46),
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(3),
-        side: outline ? const BorderSide(color: line) : BorderSide.none,
-      ),
+    style: crystalButtonStyle(
+      dark: !outline && !light,
+      minimumSize: const Size(44, 50),
+      padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 14),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: sans(
-            12,
-            color: outline || light ? green : Colors.white,
-            weight: FontWeight.w500,
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: sans(
+              12,
+              color: onTap == null
+                  ? muted
+                  : outline || light
+                  ? ink
+                  : Colors.white,
+              weight: FontWeight.w600,
+            ),
           ),
         ),
-        const SizedBox(width: 22),
-        Icon(icon, size: 18),
+        const SizedBox(width: 14),
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: (outline || light ? ink : Colors.white).withValues(
+              alpha: .09,
+            ),
+          ),
+          child: Icon(icon, size: 14),
+        ),
       ],
     ),
   );
@@ -168,14 +174,12 @@ class SectionTitle extends StatelessWidget {
   );
 }
 
-const _wikimediaThumbnailWidth = '800';
-
 /// Avoid downloading multi-hundred-megabyte Wikimedia originals in artwork cards.
 ///
 /// Wikimedia's redirect endpoint chooses an available thumbnail size close to the
 /// requested width and returns a browser-friendly image even when the source is a
 /// TIFF. Non-Wikimedia URLs and local assets are intentionally left unchanged.
-String optimizedArtworkImageUrl(String image) {
+String optimizedArtworkImageUrl(String image, {int thumbnailWidth = 800}) {
   final uri = Uri.tryParse(image);
   if (uri == null || !uri.hasAuthority) return image;
 
@@ -194,7 +198,7 @@ String optimizedArtworkImageUrl(String image) {
         .replace(
           queryParameters: {
             ...uri.queryParameters,
-            'width': _wikimediaThumbnailWidth,
+            'width': thumbnailWidth.toString(),
           },
         )
         .toString();
@@ -206,7 +210,7 @@ String optimizedArtworkImageUrl(String image) {
     return Uri.https(
       'commons.wikimedia.org',
       '/wiki/Special:Redirect/file/$filename',
-      const {'width': _wikimediaThumbnailWidth},
+      {'width': thumbnailWidth.toString()},
     ).toString();
   }
 
@@ -232,7 +236,7 @@ class ArtImage extends StatelessWidget {
       return Semantics(
         label: image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
         child: ColoredBox(
-          color: const Color(0xffe8e7df),
+          color: const Color(0xffe4eaf2),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -265,37 +269,66 @@ class ArtImage extends StatelessWidget {
         !image.startsWith('/')) {
       return failure();
     }
-    final resolved = image.startsWith('/')
-        ? Uri.base.resolve(image).toString()
-        : optimizedArtworkImageUrl(image);
-    return asset
-        ? Image.asset(
-            image,
-            width: width,
-            height: height,
-            fit: fit,
-            semanticLabel: label,
-            errorBuilder: (_, _, _) => failure(),
-          )
-        : Image.network(
-            resolved,
-            // Museum URLs can redirect without CORS headers. Let the browser
-            // display the same public image when CanvasKit cannot fetch bytes.
-            webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
-            width: width,
-            height: height,
-            fit: fit,
-            semanticLabel: label,
-            loadingBuilder: (_, child, progress) => progress == null
-                ? child
-                : const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: sage,
-                    ),
+    return RepaintBoundary(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final logicalWidth = width?.isFinite == true
+              ? width!
+              : constraints.maxWidth.isFinite
+              ? constraints.maxWidth
+              : 400.0;
+          final pixels =
+              logicalWidth * MediaQuery.devicePixelRatioOf(context).clamp(1, 2);
+          final size = pixels <= 160
+              ? 160
+              : pixels <= 320
+              ? 320
+              : pixels <= 640
+              ? 640
+              : pixels <= 960
+              ? 960
+              : 1600;
+          final resolved = image.startsWith('/')
+              ? Uri.base.resolve(image).toString()
+              : optimizedArtworkImageUrl(image, thumbnailWidth: size);
+          Widget frame(
+            BuildContext context,
+            Widget child,
+            int? frame,
+            bool sync,
+          ) => sync || frame != null
+              ? child
+              : const ColoredBox(
+                  color: Color(0xffe4eaf2),
+                  child: Center(
+                    child: Icon(Icons.image_outlined, color: sage, size: 22),
                   ),
-            errorBuilder: (_, _, _) => failure(),
-          );
+                );
+          return asset
+              ? Image.asset(
+                  image,
+                  width: width,
+                  height: height,
+                  fit: fit,
+                  cacheWidth: size,
+                  semanticLabel: label,
+                  frameBuilder: frame,
+                  errorBuilder: (_, _, _) => failure(),
+                )
+              : Image.network(
+                  resolved,
+                  webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+                  width: width,
+                  height: height,
+                  fit: fit,
+                  cacheWidth: size,
+                  semanticLabel: label,
+                  frameBuilder: frame,
+                  errorBuilder: (_, _, _) => failure(),
+                );
+        },
+      ),
+    );
   }
 }
 
@@ -496,7 +529,7 @@ class _LoginDialogState extends State<LoginDialog> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: !busy,
-    child: AlertDialog(
+    child: GlassAlertDialog(
       backgroundColor: paper,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       title: Text(signup ? '나만의 미술관 시작하기' : '나만의 미술관에 로그인', style: serif(21)),
@@ -669,119 +702,130 @@ class _ArtworkCardState extends State<ArtworkCard> {
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context), a = widget.art;
     final liked = s.likes.contains(a.id);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AspectRatio(
-          aspectRatio: 1.10,
-          child: MouseRegion(
-            onEnter: (_) => setState(() => hover = true),
-            onExit: (_) => setState(() => hover = false),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(3),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Semantics(
-                    label: '${a.title} 작품 보기',
-                    button: true,
-                    child: InkWell(
-                      onTap: () => context.go('/artwork/${a.id}'),
-                      child: AnimatedScale(
-                        scale: hover ? 1.035 : 1,
-                        duration: const Duration(milliseconds: 450),
-                        child: ArtImage(
-                          a.image,
-                          label: '${s.artistName(a)}, ${a.title}',
+    return GlassSurface(
+      radius: 28,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 1.10,
+            child: MouseRegion(
+              onEnter: (_) => setState(() => hover = true),
+              onExit: (_) => setState(() => hover = false),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Semantics(
+                      label: '${a.title} 작품 보기',
+                      button: true,
+                      child: InkWell(
+                        onTap: () => context.go('/artwork/${a.id}'),
+                        child: AnimatedScale(
+                          scale: hover ? 1.035 : 1,
+                          duration: MediaQuery.disableAnimationsOf(context)
+                              ? Duration.zero
+                              : const Duration(milliseconds: 250),
+                          child: ArtImage(
+                            a.image,
+                            label: '${s.artistName(a)}, ${a.title}',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    left: 12,
-                    bottom: 12,
-                    child: IgnorePointer(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 9,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: paper.withValues(alpha: 0.94),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        child: Text(
-                          s.movementName(a),
-                          style: sans(10, color: green),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 9,
-                    top: 9,
-                    child: Material(
-                      color: paper.withValues(alpha: 0.94),
-                      shape: const CircleBorder(),
-                      child: IconButton(
-                        tooltip: '${a.title} ${liked ? '좋아요 취소' : '좋아요'}',
-                        isSelected: liked,
-                        iconSize: 17,
-                        constraints: const BoxConstraints(
-                          minHeight: 36,
-                          minWidth: 36,
-                        ),
-                        onPressed: s.pendingLikes.contains(a.id)
-                            ? null
-                            : () => likeArtwork(context, a),
-                        icon: Icon(
-                          liked ? Icons.favorite : Icons.favorite_border,
-                          color: green,
+                    Positioned(
+                      left: 12,
+                      bottom: 12,
+                      child: IgnorePointer(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: paper.withValues(alpha: 0.94),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            s.movementName(a),
+                            style: sans(10, color: green),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 13),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () => context.go('/artwork/${a.id}'),
-                child: Text(a.title, style: sans(14, weight: FontWeight.w500)),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              flex: 0,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 80),
-                child: Text(
-                  a.year,
-                  style: sans(10, color: muted),
-                  textAlign: TextAlign.right,
+                    Positioned(
+                      right: 9,
+                      top: 9,
+                      child: Material(
+                        color: paper.withValues(alpha: 0.94),
+                        shape: const CircleBorder(),
+                        child: IconButton(
+                          tooltip: '${a.title} ${liked ? '좋아요 취소' : '좋아요'}',
+                          isSelected: liked,
+                          iconSize: 17,
+                          constraints: const BoxConstraints(
+                            minHeight: 36,
+                            minWidth: 36,
+                          ),
+                          onPressed: s.pendingLikes.contains(a.id)
+                              ? null
+                              : () => likeArtwork(context, a),
+                          icon: Icon(
+                            liked ? Icons.favorite : Icons.favorite_border,
+                            color: green,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
+          const SizedBox(height: 13),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => context.go('/artwork/${a.id}'),
+                  child: Text(
+                    a.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: sans(14, weight: FontWeight.w500),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                flex: 0,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 80),
+                  child: Text(
+                    a.year,
+                    style: sans(10, color: muted),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Text(s.artistName(a), style: sans(11, color: muted)),
+          const SizedBox(height: 2),
+          Text(
+            s.artistEnglish(a),
+            style: english(15, color: const Color(0xff929b85)),
+          ),
+          if (a.reason.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(a.reason, style: sans(11, color: green)),
           ],
-        ),
-        const SizedBox(height: 3),
-        Text(s.artistName(a), style: sans(11, color: muted)),
-        const SizedBox(height: 2),
-        Text(
-          s.artistEnglish(a),
-          style: english(15, color: const Color(0xff929b85)),
-        ),
-        if (a.reason.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text(a.reason, style: sans(11, color: green)),
         ],
-      ],
+      ),
     );
   }
 }
@@ -812,7 +856,9 @@ class ArtworkGrid extends StatelessWidget {
             .map(
               (a) => SizedBox(
                 width: width,
-                child: ArtworkCard(a, key: ValueKey(a.id)),
+                child: RepaintBoundary(
+                  child: ArtworkCard(a, key: ValueKey(a.id)),
+                ),
               ),
             )
             .toList(),

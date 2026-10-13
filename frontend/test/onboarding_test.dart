@@ -146,9 +146,15 @@ void main() {
         await tester.tap(find.text('Google로 계속하기'));
         await tester.pumpAndSettle();
         expect(find.text('나만의 감상 취향을 알려주세요'), findsOneWidget);
-        await tester.tap(find.text('20대'));
-        await tester.tap(find.text('여성'));
-        final easy = find.text('쉽고 친근하게');
+        await tester.enterText(
+          find.byKey(const ValueKey('profile-birth-date')),
+          '2001-02-03',
+        );
+        await tester.tap(find.text('다음'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('다음'));
+        await tester.pumpAndSettle();
+        final easy = find.text('편안하고 쉬운 대화');
         await tester.ensureVisible(easy);
         await tester.tap(easy);
         await tester.pumpAndSettle();
@@ -156,8 +162,8 @@ void main() {
         await tester.ensureVisible(save);
         await tester.tap(save);
         await tester.pumpAndSettle();
-        expect(s.memberProfile!.ageRange, '20s');
-        expect(s.memberProfile!.gender, 'female');
+        expect(s.memberProfile!.birthDate, '2001-02-03');
+        expect(s.memberProfile!.gender, isNull);
         expect(s.memberProfile!.explanationStyle, 'easy');
         expect(find.text('나만의 감상 취향을 알려주세요'), findsNothing);
         expect(find.text('감상 프로필'), findsOneWidget);
@@ -197,15 +203,20 @@ void main() {
     final s = (await tester.runAsync(() => boot(session)))!;
     await tester.pumpWidget(ArtlogApp(state: s));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('20대'));
-    await tester.tap(find.text('여성'));
+    await tester.enterText(
+      find.byKey(const ValueKey('profile-birth-date')),
+      '2001-02-03',
+    );
     session.change('b');
     await tester.pumpAndSettle();
     expect(s.memberProfile, isNull);
-    final selected = tester.widget<ChoiceChip>(
-      find.widgetWithText(ChoiceChip, '여성'),
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const ValueKey('profile-birth-date')))
+          .controller!
+          .text,
+      isEmpty,
     );
-    expect(selected.selected, false);
     await tester.tap(find.text('건너뛰기'));
     await tester.pumpAndSettle();
     expect(s.memberProfile!.gender, isNull);

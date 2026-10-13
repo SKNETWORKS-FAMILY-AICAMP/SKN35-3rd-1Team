@@ -41,24 +41,38 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context);
+    final immersive = widget.location == '/gallery';
+    final headerHeight = MediaQuery.sizeOf(context).width < 850 ? 140.0 : 100.0;
     return Scaffold(
-      body: Column(
-        children: [
-          _Header(location: widget.location),
-          Expanded(
-            child: state.loading
-                ? const Center(child: CircularProgressIndicator(color: green))
-                : state.error != null
-                ? EmptyView(
-                    state.error!,
-                    action: ArtButton('다시 불러오기', onTap: state.load),
-                  )
-                : Semantics(
-                    container: true,
-                    child: SelectionArea(child: widget.child),
-                  ),
-          ),
-        ],
+      body: AuroraBackdrop(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.only(top: immersive ? 0 : headerHeight),
+                child: state.loading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: green),
+                      )
+                    : state.error != null
+                    ? EmptyView(
+                        state.error!,
+                        action: ArtButton('다시 불러오기', onTap: state.load),
+                      )
+                    : Semantics(
+                        container: true,
+                        child: SelectionArea(child: widget.child),
+                      ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _Header(location: widget.location),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -143,143 +157,160 @@ class _BrandMark extends CustomPainter {
 class _Header extends StatelessWidget {
   const _Header({required this.location});
   final String location;
+  void account(BuildContext context, ArtlogState state) async {
+    if (!state.authenticated) {
+      if (!await ensureLogin(context) || !context.mounted) return;
+    }
+    if (context.mounted) context.go('/mypage');
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context),
-        mobile = MediaQuery.sizeOf(context).width < 980;
+        mobile = MediaQuery.sizeOf(context).width < 850;
     final active = location.startsWith('/artwork')
         ? '/gallery'
         : location.startsWith('/artist')
         ? '/artists'
         : location;
-    return Container(
-      decoration: const BoxDecoration(
-        color: paper,
-        border: Border(bottom: BorderSide(color: line)),
-      ),
-      child: PageWidth(
-        child: SizedBox(
-          height: mobile ? 70 : 86,
-          child: Row(
-            children: [
-              Semantics(
-                label: '아트로그 홈',
-                button: true,
-                child: InkWell(
-                  onTap: () => context.go('/gallery'),
-                  child: Brand(small: mobile),
+    final nav = Row(
+      mainAxisSize: mobile ? MainAxisSize.max : MainAxisSize.min,
+      children: [
+        for (final item in [
+          ('/gallery', '발견하기'),
+          ('/artists', mobile ? '작가' : '작가 이야기'),
+          ('/community', '감상 피드'),
+          ('/library', '내 서재'),
+        ])
+          Flexible(
+            fit: mobile ? FlexFit.tight : FlexFit.loose,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: TextButton(
+                onPressed: () => context.go(item.$1),
+                style:
+                    crystalButtonStyle(
+                      dark: active == item.$1,
+                      quiet: active != item.$1,
+                    ).copyWith(
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(mobile ? 0 : 84, 44),
+                      ),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: mobile ? 8 : 14),
+                      ),
+                    ),
+                child: Text(
+                  item.$2,
+                  style: sans(
+                    mobile ? 11 : 12,
+                    color: active == item.$1 ? Colors.white : muted,
+                    weight: active == item.$1
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                  ),
                 ),
               ),
-              const Spacer(),
-              for (final item in [
-                ('/gallery', '발견하기'),
-                ('/artists', '작가 이야기'),
-                ('/library', '내 서재'),
-              ])
-                Padding(
-                  padding: EdgeInsets.only(left: mobile ? 12 : 34),
-                  child: SizedBox(
-                    height: mobile ? 70 : 86,
-                    child: InkWell(
-                      onTap: () => context.go(item.$1),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: active == item.$1
-                                  ? green
-                                  : Colors.transparent,
-                              width: 3,
+            ),
+          ),
+      ],
+    );
+    final tools = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (state.config.demo && !mobile)
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text('미리보기', style: sans(10, color: muted)),
+          ),
+        IconButton(
+          tooltip: '작품 검색',
+          onPressed: () =>
+              showSearch(context: context, delegate: _ArtSearch(state)),
+          icon: const Icon(Icons.search, size: 20),
+        ),
+        IconButton(
+          style: crystalButtonStyle(
+            dark: location == '/mypage',
+            quiet: location != '/mypage',
+          ),
+          tooltip: !state.loginRequired
+              ? '마이페이지'
+              : state.authenticated
+              ? '마이페이지'
+              : '로그인',
+          onPressed: () => account(context, state),
+          icon: Icon(
+            !state.loginRequired
+                ? Icons.menu_book_outlined
+                : Icons.person_outline,
+            size: 20,
+          ),
+        ),
+      ],
+    );
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: mobile ? 12 : 24,
+          vertical: 12,
+        ),
+        child: GlassSurface(
+          blur: true,
+          radius: mobile ? 28 : 100,
+          padding: EdgeInsets.symmetric(
+            horizontal: mobile ? 12 : 22,
+            vertical: 8,
+          ),
+          child: mobile
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Semantics(
+                                label: '아트로그 홈',
+                                button: true,
+                                child: InkWell(
+                                  onTap: () => context.go('/gallery'),
+                                  child: const Brand(small: true),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        child: Text(
-                          item.$2,
-                          style: sans(
-                            mobile ? 10 : 14,
-                            color: active == item.$1 ? green : muted,
-                            weight: active == item.$1
-                                ? FontWeight.w700
-                                : FontWeight.w400,
-                          ),
+                        tools,
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    nav,
+                  ],
+                )
+              : SizedBox(
+                  height: 50,
+                  child: Row(
+                    children: [
+                      Semantics(
+                        label: '아트로그 홈',
+                        button: true,
+                        child: InkWell(
+                          onTap: () => context.go('/gallery'),
+                          child: const Brand(),
                         ),
                       ),
-                    ),
+                      const Spacer(),
+                      nav,
+                      const Spacer(),
+                      tools,
+                    ],
                   ),
                 ),
-              if (!mobile) ...[
-                const Spacer(),
-                if (state.config.demo)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 9,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: line,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text('미리보기', style: sans(10, color: green)),
-                  )
-                else
-                  Text('일상에 한 점.', style: serif(11, color: muted)),
-                const SizedBox(width: 16),
-              ],
-              if (!mobile)
-                IconButton(
-                  tooltip: '작품 검색',
-                  icon: const Icon(Icons.search, size: 21),
-                  onPressed: () =>
-                      showSearch(context: context, delegate: _ArtSearch(state)),
-                ),
-              if (!mobile)
-                IconButton(
-                  tooltip: !state.loginRequired
-                      ? '나의 감상 기록'
-                      : state.authenticated
-                      ? '계정'
-                      : '로그인',
-                  icon: Icon(
-                    !state.loginRequired
-                        ? Icons.menu_book_outlined
-                        : Icons.person_outline,
-                    size: 21,
-                  ),
-                  onPressed: () async {
-                    if (!state.loginRequired) {
-                      context.go('/library');
-                      return;
-                    }
-                    if (!state.authenticated) {
-                      await ensureLogin(context);
-                      return;
-                    }
-                    if (!context.mounted) return;
-                    showDialog(
-                      context: context,
-                      builder: (c) => AlertDialog(
-                        title: Text('나의 미술관', style: serif(22)),
-                        content: Text(state.email, style: sans(13)),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              await logoutUser(context);
-                              if (c.mounted) Navigator.pop(c);
-                            },
-                            child: const Text('로그아웃'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(c),
-                            child: const Text('닫기'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-            ],
-          ),
         ),
       ),
     );

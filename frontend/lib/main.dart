@@ -13,11 +13,14 @@ import 'auth/firebase_session.dart';
 import 'config.dart';
 import 'state.dart';
 import 'ui/design.dart';
+import 'ui/app_theme.dart';
 import 'ui/shell.dart';
 import 'pages/gallery_page.dart';
 import 'pages/detail_page.dart';
 import 'pages/artists_page.dart';
 import 'pages/library_page.dart';
+import 'pages/community_page.dart';
+import 'pages/mypage_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,10 +119,25 @@ class _ArtlogAppState extends State<ArtlogApp> {
               ),
             ),
             GoRoute(
+              path: '/community',
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: const CommunityPage(),
+              ),
+            ),
+            GoRoute(
+              path: '/mypage',
+              builder: (_, state) =>
+                  AppPage(key: ValueKey(state.uri.path), child: const MyPage()),
+            ),
+            GoRoute(
               path: '/library',
               builder: (_, state) => AppPage(
                 key: ValueKey(state.uri.path),
-                child: const LibraryPage(),
+                child: LibraryPage(
+                  artworkId: state.uri.queryParameters['artwork_id'],
+                  initialDate: state.uri.queryParameters['date'],
+                ),
               ),
             ),
           ],
@@ -151,37 +169,7 @@ class _ArtlogAppState extends State<ArtlogApp> {
       locale: const Locale('ko'),
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [Locale('ko'), Locale('en')],
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: paper,
-        fontFamily: 'NotoSansKR',
-        colorScheme: ColorScheme.fromSeed(seedColor: green, surface: paper),
-        dividerColor: line,
-        textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'NotoSansKR',
-          bodyColor: ink,
-          displayColor: ink,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.6),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: line),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: line),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 14,
-          ),
-        ),
-        iconButtonTheme: IconButtonThemeData(
-          style: IconButton.styleFrom(foregroundColor: green),
-        ),
-      ),
+      theme: artlogTheme(),
     ),
   );
 }
