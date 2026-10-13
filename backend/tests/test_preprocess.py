@@ -382,13 +382,16 @@ def test_approved_artist_documents_and_images(out):
     new_slugs = {"gustav-klimt", "egon-schiele"}
     docs = [d for d in pp.load_processed("documents.jsonl")
             if d["doc_key"].split("/", 1)[0] in new_slugs]
-    assert len(docs) == 68
+    assert len(docs) == 65
     assert all(not d["needs_review"] for d in docs)
     works = [w for w in pp.load_processed("artworks.jsonl") if w["artist_slug"] in new_slugs]
-    assert len(works) == 60
-    assert sum(w["image_url"] is None for w in works) == 3
+    assert len(works) == 57
+    assert sum(w["image_url"] is None for w in works) == 0
     assert sum(w["image_url"] is not None for w in works) == 57
     assert sum(w["image_license"].startswith("CC BY") for w in works if w["image_license"]) == 3
+    assert {w["slug"] for w in works}.isdisjoint({
+        "small-town-iii", "still-life-with-books", "red-sketchbook-klimt",
+    })
     assert {m["slug"] for m in pp.load_processed("movements.jsonl")} >= {
         "expressionism", "vienna-secession",
     }

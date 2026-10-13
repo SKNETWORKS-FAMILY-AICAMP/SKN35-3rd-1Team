@@ -5,10 +5,10 @@
 ## 앱 표시 데이터
 
 - 두 작가 소개: 실레 252자, 클림트 257자. 각각 3문장이다. `data/mappings/catalog.json`의 `summary`가 앱 카드에 들어간다.
-- 작품 해설: 각 30점, 총 60점의 `data/raw/<작가>/<작품>.md`를 `artworks.description`에 전체 반영한다. 500자는 최소 기준으로만 적용하고, 작품별 소장처 자료의 깊이에 따라 인물·대상·구도·재료·기법·제작 맥락·해석의 한계·관련 작품 비교를 확장했다. 현재 전처리 결과의 작품별 설명은 967~1,356자이며, 길이를 일정한 목표값으로 맞추지 않았다. 짧은 첫 두 문장 추출은 이 두 작가의 해설에서만 건너뛴다.
+- 작품 해설 원문은 각 30점, 총 60점을 보존한다. 이 가운데 이미지 권리를 확보하지 못한 3점은 `data/mappings/catalog.json`의 `excluded_artworks`로 배포 카탈로그와 전용 문서에서 제외한다. 앱에는 실레 28점, 클림트 29점, 총 57점이 표시된다.
 - 작가 심화 자료: 두 작가 모두 `bio.md`를 약 1,400~1,500자로 확장하고 `technique.md`, `landscape.md`, `context.md`를 추가했다. 카드용 250~300자 소개와 검색용 장문 자료를 구별한다. 각 파일의 공식 기관 근거 URL은 같은 폴더의 `sources.json`에 있다.
 - 감상 포인트: 작품마다 별도 내용을 `data/mappings/document_supplements.json`에 기록했다. 전처리 문서에는 `## 감상 포인트` 절로 들어가므로 챗봇 검색 근거로 쓸 수 있다. 현재 앱 작품 상세 응답의 독립 필드로는 아직 노출되지 않는다.
-- 원본 소개 `bio.md`와 작품 해설은 팀이 미술관의 개별 수장품 페이지를 참고해 새로 작성한 한국어 문서다. 사용자 ju의 최종 승인 후 두 작가의 문서 68건 모두 `needs_review: false`이며, 승인자·본문 해시는 `data/mappings/reviews.json`에 있다. 원문 문장을 복제하지 않았다.
+- 원본 소개 `bio.md`와 작품 해설은 팀이 미술관의 개별 수장품 페이지를 참고해 새로 작성한 한국어 문서다. 사용자 ju가 68건을 최종 승인했으며, 제외 3건을 뺀 65건이 전처리 문서로 배포된다. 승인자·본문 해시는 `data/mappings/reviews.json`에 보존한다.
 
 ## 출처와 이용 조건
 
@@ -18,9 +18,9 @@
 - [레오폴트 온라인 컬렉션 법적 고지](https://onlinecollection.leopoldmuseum.org/en/legal-notice/): 게시된 글과 이미지는 저작권 보호 대상이고, 복제·출판을 금지한다고 안내한다. 사후 70년이 지난 작가의 작품 이미지는 사적 목적으로 다운로드할 수 있지만, 출판·복제 허가는 별도라고 명시한다. [이미지 권리 안내](https://www.leopoldmuseum.org/en/collection/image-rights)에서도 사진 이용 신청을 안내한다.
 - 이 저장소의 한국어 설명은 팀이 작성한 문장이라는 뜻이며, 위 기관의 원문이나 사진을 앱에 재게시할 권리를 얻었다는 뜻은 아니다. 출처 URL은 참고 근거다. 이미지 사용은 작품별 `image_url`·`image_license`를 별도로 확인해야 한다. 권리 검토 전인 이미지는 `null`로 남겨 두었다.
 
-전처리 검증 결과: 사조 6개, 작가 10명, 작품 279점, 문서 429건으로 정상 생성됐다. 실레와 클림트는 각 30작품·34문서이며, 작품별 `description` 60건 모두 500자 이상이고 감상 포인트 60건이 별도 절로 포함됐다. Wikimedia Commons의 작품 동일성과 이용 조건을 파일별로 재확인해 이미지 표시 URL은 57건(실레 28건, 클림트 29건), 제공하지 않는 이미지 URL은 `null` 3건이다. 54건은 Public Domain이고, 3건은 상세 화면의 이미지 이용 문구와 원본 링크에 사진 저작자 및 CC 라이선스를 표시한다. 두 작가의 공개 도메인 초상 URL도 추가했다. 개별 이미지 권리 검수와 문서 승인 상태는 [2026-10-13 사전 검수 기록](docs/data-review-klimt-schiele-2026-10-13.md) 및 [68건 장부](data/mappings/review_audit_klimt_schiele.json)를 따른다. 로컬 파일의 갱신만으로 배포된 DB나 앱 화면이 자동 갱신되지는 않는다.
+전처리 검증 결과: 사조 6개, 작가 10명, 작품 276점, 문서 426건으로 정상 생성됐다. 실레 28작품·32문서와 클림트 29작품·33문서가 배포되며, 57점 모두 이미지 URL이 있다. 54건은 Public Domain이고, 3건은 상세 화면의 이미지 이용 문구와 원본 링크에 사진 저작자 및 CC 라이선스를 표시한다. 《작은 도시 III》, 《책이 있는 정물: 화가의 책상》, 《붉은 스케치북》의 수집 원문과 검수 이력은 보존하지만 앱·전처리 산출물·DB에서는 제외한다.
 
-## 구스타프 클림트 (30점)
+## 구스타프 클림트 (수집 30점 · 앱 표시 29점)
 
 | 번호 | 작품 | 연도 | 해설 파일 | 근거 기관 |
 | ---: | --- | --- | --- | --- |
@@ -32,7 +32,7 @@
 | 6 | 소냐 크닙스의 초상 | 1897/1898 | [열기](data/raw/gustav-klimt/portrait-of-sonja-knips.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3197/sonja-knips) |
 | 7 | 비가 온 뒤 | 1898 | [열기](data/raw/gustav-klimt/after-the-rain-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/6087/nach-dem-regen) |
 | 8 | 저녁의 과수원 | 1898 | [열기](data/raw/gustav-klimt/orchard-in-the-evening.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/) |
-| 9 | 붉은 스케치북 | 1898 | [열기](data/raw/gustav-klimt/red-sketchbook-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/9997/rotes-skizzenbuch) |
+| 9 | 붉은 스케치북 (앱 제외) | 1898 | [열기](data/raw/gustav-klimt/red-sketchbook-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/9997/rotes-skizzenbuch) |
 | 10 | 연못가의 아침 | 1899 | [열기](data/raw/gustav-klimt/a-morning-by-the-pond.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/2148-a-morning-by-the-pond/) |
 | 11 | 임종한 노인 | 1900 | [열기](data/raw/gustav-klimt/old-man-on-deathbed.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett) |
 | 12 | 아터제 호수 위에서 | 1900 | [열기](data/raw/gustav-klimt/on-lake-attersee.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/) |
@@ -55,7 +55,7 @@
 | 29 | 흰옷을 입은 여인 | 1917/1918 | [열기](data/raw/gustav-klimt/lady-in-white-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3080/dame-in-wei) |
 | 30 | 요한나 슈타우데의 초상 | 1917/1918 | [열기](data/raw/gustav-klimt/portrait-of-johanna-staude.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/4302/johanna-staude) |
 
-## 에곤 실레 (30점)
+## 에곤 실레 (수집 30점 · 앱 표시 28점)
 
 | 번호 | 작품 | 연도 | 해설 파일 | 근거 기관 |
 | ---: | --- | --- | --- | --- |
@@ -75,12 +75,12 @@
 | 14 | 고개를 숙인 자화상 | 1912 | [열기](data/raw/egon-schiele/self-portrait-with-lowered-head.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/) |
 | 15 | 은둔자들 | 1912 | [열기](data/raw/egon-schiele/the-hermits-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/) |
 | 16 | 지는 해 | 1913 | [열기](data/raw/egon-schiele/setting-sun-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/624-setting-sun/) |
-| 17 | 작은 도시 III | 1913 | [열기](data/raw/egon-schiele/small-town-iii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/) |
+| 17 | 작은 도시 III (앱 제외) | 1913 | [열기](data/raw/egon-schiele/small-town-iii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/) |
 | 18 | 도나우강의 슈타인 II | 1913 | [열기](data/raw/egon-schiele/stein-on-the-danube-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/553-stein-on-the-danube-ii/) |
 | 19 | 눈먼 어머니 | 1914 | [열기](data/raw/egon-schiele/blind-mother-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/2-blind-mother/) |
 | 20 | 바닷가의 집들 | 1914 | [열기](data/raw/egon-schiele/houses-by-the-sea.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/526-houses-by-the-sea-row-of-houses/) |
 | 21 | 블타바강의 크루마우 | 1914 | [열기](data/raw/egon-schiele/krumau-on-the-vltava.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/654-krumau-on-the-vltava-the-small-town-iv/) |
-| 22 | 책이 있는 정물: 화가의 책상 | 1914–16 | [열기](data/raw/egon-schiele/still-life-with-books.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/532-still-life-with-books-the-artists-desk/) |
+| 22 | 책이 있는 정물: 화가의 책상 (앱 제외) | 1914–16 | [열기](data/raw/egon-schiele/still-life-with-books.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/532-still-life-with-books-the-artists-desk/) |
 | 23 | 집들의 초승달 II | 1915 | [열기](data/raw/egon-schiele/crescent-of-houses-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/) |
 | 24 | 죽음과 소녀 | 1915 | [열기](data/raw/egon-schiele/death-and-the-maiden-schiele.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/1968/tod-und-madchen) |
 | 25 | 강가의 집 벽 | 1915 | [열기](data/raw/egon-schiele/house-wall-on-the-river.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/542-house-wall-on-the-river/) |

@@ -505,9 +505,34 @@ def build() -> dict:
     apply_document_supplements(cat, read_document_supplements())
     apply_document_corrections(cat, read_document_corrections())
     apply_reviews(cat, read_reviews())
+    apply_catalog_exclusions(cat, mapping)
     cat["aliases"] = json.loads(ALIASES.read_text(encoding="utf-8"))["artists"]
     normalize_artist_slugs(cat)
     return cat
+
+
+def apply_catalog_exclusions(cat: dict, mapping: dict) -> None:
+    """배포 카탈로그에서 명시적으로 제외한 작품과 전용 해설을 제거한다.
+
+    수집 원문은 근거와 변경 이력을 위해 보존하되, 산출물·DB 재적재 시 카드와
+    작품 전용 RAG 문서가 다시 나타나지 않도록 매핑에서 일관되게 제외한다.
+    """
+    excluded = set(mapping.get("excluded_artworks", []))
+    if not excluded:
+        return
+    known = set(cat["artworks"])
+    unknown = excluded - known
+    if unknown:
+        raise ValueError("제외할 작품이 원본 카탈로그에 없음: " + ", ".join(sorted(unknown)))
+    for slug in excluded:
+        cat["artworks"].pop(slug)
+    cat["documents"] = [
+        d for d in cat["documents"] if d.get("artwork_slug") not in excluded
+    ]
+    for doc in cat["documents"]:
+        doc["related_artwork_slugs"] = [
+            slug for slug in doc.get("related_artwork_slugs", []) if slug not in excluded
+        ]
 
 
 def normalize_artist_slugs(cat: dict) -> None:

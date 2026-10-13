@@ -9,12 +9,12 @@
       "rows": 10
     },
     "artworks.jsonl": {
-      "sha256": "a5a8051c972d79dd07939034a90b1bee5673a7b9362611beb665145e755866bc",
-      "rows": 279
+      "sha256": "db2a7e514d7f622526e8497bc37c85db1353d72d3bb3bea84a54a2d19d830c59",
+      "rows": 276
     },
     "documents.jsonl": {
-      "sha256": "7805e1d9f93ba638da1de0b8feaa1f782084dce81a24ad55c69968b3124f489b",
-      "rows": 429
+      "sha256": "01a0773d2d05e97704f023f698db9f2c7930d9dd1d0dbc24034a12b60f12fee3",
+      "rows": 426
     },
     "artist_aliases.jsonl": {
       "sha256": "e092bfee01bbfcd7e410e2fcaae5e2f4c93d01ce8a070b6838f26f1f7ab5aa37",

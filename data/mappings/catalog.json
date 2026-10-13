@@ -1,5 +1,10 @@
 {
   "_comment": "원본에 없는 값을 사람이 채우는 곳. 전처리 스크립트가 모든 원본 형식에 덮어쓴다. data/processed/ 는 손으로 고치지 말고 여기를 고친다. 값은 원문 첫 문단, 위키데이터(CC0), 메트 오픈 액세스 API(퍼블릭 도메인 확인)에서 확인한 것만 넣었다. 작가 초상은 위키데이터 P18(위키미디어 공용 퍼블릭 도메인 파일), 고흐·고갱 이미지는 담당자가 원본에 채워서 매핑에서 뺐다.",
+  "excluded_artworks": [
+    "small-town-iii",
+    "still-life-with-books",
+    "red-sketchbook-klimt"
+  ],
   "movements": [
     {
       "slug": "baroque",
