@@ -1,7 +1,7 @@
 {
   "version": "2026-10-13-final-approved-4-image-enrichment",
   "processed_documents_sha256": "7805e1d9f93ba638da1de0b8feaa1f782084dce81a24ad55c69968b3124f489b",
-  "processed_artworks_sha256": "b3067f09030b48cbf964355110b5510a04fae072f1da6c13e2e215917e57a520",
+  "processed_artworks_sha256": "a5a8051c972d79dd07939034a90b1bee5673a7b9362611beb665145e755866bc",
   "review_authority": "사용자 ju가 68건 최종 승인을 확인했고, reviews.json에 승인자와 본문 해시를 기록함",
   "rows": [
     {
