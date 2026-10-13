@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
+import '../ui/saved_chats.dart';
+import '../ui/member_profile_dialog.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});
@@ -20,7 +22,10 @@ class _LibraryPageState extends State<LibraryPage> {
       saving = false,
       saved = false;
   int monthRevision = 0, dayRevision = 0;
-  Map<String, int> counts = {};
+  Map<String, CalendarDay> calendarDays = {};
+  Map<String, int> get counts => {
+    for (final day in calendarDays.values) day.date: day.artworkCount,
+  };
   List<Artwork> dayWorks = [];
   final note = TextEditingController();
   @override
@@ -36,8 +41,16 @@ class _LibraryPageState extends State<LibraryPage> {
         key = '${s.config.demo}/${s.userKey}/${s.authenticated}';
     if (identity != key) {
       identity = key;
+      ++monthRevision;
+      ++dayRevision;
+      calendarDays = {};
+      dayWorks = [];
+      calendarError = dayError = null;
+      loading = dayLoading = saving = saved = false;
+      sample = false;
+      note.clear();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) loadMonth();
+        if (mounted && identity == key) loadMonth();
       });
     }
   }
@@ -55,10 +68,11 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Future<void> loadMonth() async {
     final s = ArtlogScope.of(context), revision = ++monthRevision;
+    final currentIdentity = identity;
     ++dayRevision;
     if (!s.authenticated) {
       setState(() {
-        counts = {};
+        calendarDays = {};
         dayWorks = [];
         calendarError = null;
         dayLoading = false;
@@ -69,16 +83,34 @@ class _LibraryPageState extends State<LibraryPage> {
     setState(() {
       loading = true;
       calendarError = null;
-      counts = {};
+      calendarDays = {};
       dayWorks = [];
       dayLoading = false;
     });
     try {
       final result = s.config.demo
-          ? demoRecords(s).map((k, v) => MapEntry(k, v.length))
-          : await s.api.calendar(dateKey(month).substring(0, 7));
-      if (!mounted || revision != monthRevision) return;
-      setState(() => counts = result);
+          ? demoRecords(s).map(
+              (k, v) => MapEntry(
+                k,
+                CalendarDay(
+                  date: k,
+                  artworkCount: v.length,
+                  totalViews: v.length,
+                ),
+              ),
+            )
+          : {
+              for (final day in await s.api.calendarDays(
+                dateKey(month).substring(0, 7),
+              ))
+                day.date: day,
+            };
+      if (!mounted ||
+          revision != monthRevision ||
+          identity != currentIdentity) {
+        return;
+      }
+      setState(() => calendarDays = result);
       await loadDay(selected);
     } catch (e) {
       if (mounted && revision == monthRevision) {
@@ -91,6 +123,8 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Future<void> loadDay(String date) async {
     final s = ArtlogScope.of(context), revision = ++dayRevision;
+    final currentIdentity = identity;
+    if (!s.authenticated) return;
     setState(() {
       selected = date;
       dayLoading = true;
@@ -105,7 +139,9 @@ class _LibraryPageState extends State<LibraryPage> {
                 .where((a) => (demoRecords(s)[date] ?? []).contains(a.id))
                 .toList()
           : await s.api.day(date);
-      if (mounted && revision == dayRevision) setState(() => dayWorks = result);
+      if (mounted && revision == dayRevision && identity == currentIdentity) {
+        setState(() => dayWorks = result);
+      }
     } catch (e) {
       if (mounted && revision == dayRevision) {
         setState(() => dayError = ArtlogState.message(e));
@@ -128,14 +164,19 @@ class _LibraryPageState extends State<LibraryPage> {
   Future<void> save() async {
     final s = ArtlogScope.of(context);
     final date = selected;
+    final currentIdentity = identity;
     setState(() => saving = true);
     try {
       await s.saveNote(date, note.text);
-      if (mounted && selected == date) setState(() => saved = true);
+      if (mounted && selected == date && identity == currentIdentity) {
+        setState(() => saved = true);
+      }
     } catch (e) {
-      if (mounted) showError(context, e);
+      if (mounted && identity == currentIdentity) showError(context, e);
     } finally {
-      if (mounted) setState(() => saving = false);
+      if (mounted && identity == currentIdentity) {
+        setState(() => saving = false);
+      }
     }
   }
 
@@ -153,6 +194,9 @@ class _LibraryPageState extends State<LibraryPage> {
               .toSet()
               .length
         : null;
+    final totalViews = calendarDays.values
+        .where((day) => day.date.startsWith(monthPrefix))
+        .fold<int>(0, (total, day) => total + day.totalViews);
     return PageWidth(
       vertical: 42,
       child: Column(
@@ -200,6 +244,11 @@ class _LibraryPageState extends State<LibraryPage> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(s.email, style: sans(11, color: muted)),
+                  if (s.config.firebaseAuth)
+                    TextButton(
+                      onPressed: () => showMemberProfile(context, s),
+                      child: const Text('감상 프로필'),
+                    ),
                   TextButton(
                     onPressed: () => logoutUser(context),
                     child: const Text('로그아웃'),
@@ -290,6 +339,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   ('calendar', '감상 캘린더', Icons.calendar_today_outlined),
                   ('likes', '좋아요한 작품', Icons.favorite_border),
                   ('follows', '팔로우한 작가', Icons.people_outline),
+                  ('chats', '대화 내역', Icons.forum_outlined),
                 ])
                   Expanded(
                     child: InkWell(
@@ -316,7 +366,14 @@ class _LibraryPageState extends State<LibraryPage> {
                               const SizedBox(width: 8),
                             ],
                             Text(
-                              t.$2,
+                              compact(context)
+                                  ? switch (t.$1) {
+                                      'calendar' => '캘린더',
+                                      'likes' => '좋아요',
+                                      'follows' => '팔로우',
+                                      _ => t.$2,
+                                    }
+                                  : t.$2,
                               style: sans(
                                 compact(context) ? 10 : 12,
                                 color: tab == t.$1 ? green : muted,
@@ -341,7 +398,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     children: [
                       Text('${month.year}년 ${month.month}월', style: serif(26)),
                       Text(
-                        '$visited일의 감상 · 그림을 만난 날을 눌러보세요.',
+                        '$visited일의 감상 · 총 $totalViews회 감상',
                         style: sans(11, color: muted),
                       ),
                     ],
@@ -426,6 +483,11 @@ class _LibraryPageState extends State<LibraryPage> {
                   },
                 ),
             ],
+            if (tab == 'chats')
+              const Padding(
+                padding: EdgeInsets.only(top: 25),
+                child: SavedChats(),
+              ),
             if (tab == 'likes')
               Padding(
                 padding: const EdgeInsets.only(top: 30),
@@ -685,6 +747,11 @@ class _LibraryPageState extends State<LibraryPage> {
                         children: [
                           Text(a.title, style: sans(12)),
                           Text(s.artistName(a), style: sans(10, color: muted)),
+                          if (!s.config.demo && a.viewCount > 0)
+                            Text(
+                              '이날 ${a.viewCount}회 감상',
+                              style: sans(10, color: muted),
+                            ),
                         ],
                       ),
                     ),

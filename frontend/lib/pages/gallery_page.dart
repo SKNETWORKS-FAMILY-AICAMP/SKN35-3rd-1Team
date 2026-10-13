@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../ui/design.dart';
+import '../ui/personal_recommendations.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -32,11 +33,12 @@ class _GalleryPageState extends State<GalleryPage> {
         ),
       );
     }
-    final hero = s.artworks.first;
+    final hero =
+        s.artworks.where((a) => a.isFeatured).firstOrNull ?? s.artworks.first;
     final filters = byArtist
         ? s.artists.map((a) => (a.id, a.name)).toList()
         : s.movements.map((m) => (m.id, m.name)).toList();
-    final list = s.artworks
+    var list = s.artworks
         .where(
           (a) =>
               (filter.isEmpty ||
@@ -48,6 +50,12 @@ class _GalleryPageState extends State<GalleryPage> {
         .toList();
     if (sort == 'year') list.sort((a, b) => _year(a).compareTo(_year(b)));
     if (sort == 'name') list.sort((a, b) => a.title.compareTo(b.title));
+    if (sort == 'curated' && !s.config.demo) {
+      list = [
+        ...list.where((a) => a.isFeatured),
+        ...list.where((a) => !a.isFeatured),
+      ];
+    }
     if (sort == 'curated' && s.config.demo) {
       list.sort(
         (a, b) => (s.follows.contains(b.artistId) ? 1 : 0).compareTo(
@@ -453,6 +461,7 @@ class _GalleryPageState extends State<GalleryPage> {
             ],
           ),
         ),
+        const PersonalRecommendations(),
         PageWidth(
           vertical: 65,
           child: Container(
@@ -533,7 +542,12 @@ class _GalleryPageState extends State<GalleryPage> {
               const SizedBox(height: 25),
               LayoutBuilder(
                 builder: (context, c) {
-                  final cols = c.maxWidth > 800 ? 4 : 2;
+                  if (c.maxWidth <= 0) return const SizedBox.shrink();
+                  final cols = c.maxWidth > 800
+                      ? 4
+                      : c.maxWidth >= 280
+                      ? 2
+                      : 1;
                   final width = (c.maxWidth - (cols - 1) * 24) / cols;
                   return Wrap(
                     spacing: 24,

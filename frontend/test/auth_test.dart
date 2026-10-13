@@ -38,6 +38,8 @@ class TestAuth implements AuthSession {
   Future<void> register(String email, String password) =>
       signIn(email, password);
   @override
+  Future<void> signInWithGoogle() => signIn('google@example.invalid', '');
+  @override
   Future<void> resetPassword(String email) async {
     lastEmail = email;
   }

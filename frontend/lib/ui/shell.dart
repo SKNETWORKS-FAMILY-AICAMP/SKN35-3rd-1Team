@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../state.dart';
 import 'design.dart';
+import 'member_profile_dialog.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.location, required this.child});
@@ -12,19 +13,29 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  final scroll = ScrollController();
+  bool onboardingOpen = false;
   @override
-  void didUpdateWidget(covariant AppShell oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.location != widget.location && scroll.hasClients) {
-      scroll.jumpTo(0);
-    }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scheduleOnboarding();
   }
 
-  @override
-  void dispose() {
-    scroll.dispose();
-    super.dispose();
+  void _scheduleOnboarding() {
+    final state = ArtlogScope.of(context);
+    if (!state.needsOnboarding || state.authUiOpen || onboardingOpen) return;
+    onboardingOpen = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        if (mounted && state.needsOnboarding && !state.authUiOpen) {
+          await showMemberProfile(context, state);
+        }
+      } finally {
+        onboardingOpen = false;
+        if (mounted && state.needsOnboarding && !state.authUiOpen) {
+          _scheduleOnboarding();
+        }
+      }
+    });
   }
 
   @override
@@ -42,17 +53,39 @@ class _AppShellState extends State<AppShell> {
                     state.error!,
                     action: ArtButton('다시 불러오기', onTap: state.load),
                   )
-                : SelectionArea(
-                    child: SingleChildScrollView(
-                      controller: scroll,
-                      child: Column(children: [widget.child, const _Footer()]),
-                    ),
+                : Semantics(
+                    container: true,
+                    child: SelectionArea(child: widget.child),
                   ),
           ),
         ],
       ),
     );
   }
+}
+
+// Each route owns its scroll view. Keeping the Navigator inside an unbounded
+// scroll view constrains outgoing routes to the next page's content height.
+class AppPage extends StatefulWidget {
+  const AppPage({super.key, required this.child});
+  final Widget child;
+  @override
+  State<AppPage> createState() => _AppPageState();
+}
+
+class _AppPageState extends State<AppPage> {
+  final scroll = ScrollController(keepScrollOffset: false);
+  @override
+  void dispose() {
+    scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    controller: scroll,
+    child: Column(children: [widget.child, const _Footer()]),
+  );
 }
 
 class Brand extends StatelessWidget {
