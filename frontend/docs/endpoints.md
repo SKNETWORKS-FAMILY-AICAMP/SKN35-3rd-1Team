@@ -1,6 +1,6 @@
 # 프론트엔드 엔드포인트 점검표
 
-점검일: 2026-10-13 · 기준 dev `a7a5fbe` · 공식 계약: [docs/api.md](../../docs/api.md).
+점검일: 2026-10-13 · 기준: 모든 팀 브랜치를 통합한 dev · 공식 계약: [docs/api.md](../../docs/api.md).
 
 실제 모드는 `API_BASE_URL=https://skn35-3rd-1team-production.up.railway.app/`, `ARTLOG_DEMO=false`, `AUTH_PROVIDER=firebase`입니다. 경로에는 DB 숫자 ID를 쓰며 공통 접두사 `/api`를 한 번만 붙입니다. 목록은 평평한 JSON 배열입니다. 별도 검색 API 없이 전체 목록을 로컬 검색·필터·정렬합니다.
 
@@ -44,7 +44,7 @@ Firebase 이메일 가입·로그인·재설정과 Google 팝업 로그인은 Fl
 
 ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_views`는 반복 감상을 포함한 횟수로 분리해 사용합니다. 날짜 상세의 `view_count`도 표시합니다. 같은 작품을 다시 열면 POST `/artworks/{id}/views`를 다시 보내며 동시 중복 호출만 억제합니다. `is_featured`는 공개 작품 목록의 큐레이터 순서·대표 작품에 반영합니다.
 
-출처에 선택 필드 `basis_sources: [{source_name, source_url}]`가 오면 원문과 별도로 ‘편집 보강 근거’를 표시합니다. 현재 dev에는 아직 없는 `taemin` 브랜치의 추가 응답 계약이며, 필드 생략 시 기존 계약과 호환됩니다. 전체 ERD 대응은 [ERD 연결 점검](erd-mapping.md)에 정리했습니다.
+출처에 선택 필드 `basis_sources: [{source_name, source_url}]`가 오면 원문과 별도로 ‘편집 보강 근거’를 표시합니다. 통합 dev의 공통 API 계약에 포함되며, 필드 생략 시 기존 응답과도 호환됩니다. 전체 ERD 대응은 [ERD 연결 점검](erd-mapping.md)에 정리했습니다.
 
 401/403/404/422/429/501/503, 기타 서버 실패·시간 초과·연결 오류·잘못된 JSON을 구분합니다. 미리보기 데이터로 대체하지 않습니다. 추천·대화 복원·대화 목록은 각각 로딩·빈 상태·오류·재시도를 제공합니다. 대화 초기화 실패 시 기존 내용을 유지합니다.
 
@@ -54,4 +54,4 @@ ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_view
 
 ## 회원 온보딩
 
-나이대·성별·설명 스타일은 선택형 온보딩에서 받고 UID별로 이 브라우저에만 저장합니다. 서버 프로필 API는 아직 없으므로 추가 경로를 호출하거나 챗 요청에 임의의 필드를 넣지 않습니다. 프로필 저장·맞춤 말투를 위한 후속 계약 제안은 [인수인계](frontend-handoff.md)의 Google 로그인·회원 온보딩 절을 참고하세요.
+나이대·성별·설명 스타일은 선택형 온보딩에서 받고 UID별로 이 브라우저에만 저장합니다. 통합 ERD에 user_preferences 저장 구조는 있으나 프로필 API는 아직 없으므로 추가 경로를 호출하거나 챗 요청에 임의의 필드를 넣지 않습니다. age_range와 birth_year, explanation_style과 tone/explanation_level의 차이는 계약 확정 후 연결합니다. 프로필 저장·맞춤 말투를 위한 후속 계약 제안은 [인수인계](frontend-handoff.md)의 Google 로그인·회원 온보딩 절을 참고하세요.

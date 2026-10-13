@@ -151,7 +151,12 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     assert europa["image_license"] == civilis["image_license"] == "Public domain"
 
     artists = {a["slug"]: a for a in pp.load_processed("artists.jsonl")}
-    assert all(a["portrait_url"] for a in artists.values())
+    # Portraits are nullable; preserve supplied portraits without inventing images
+    # for newly collected drafts that have no approved portrait URL.
+    mapping = json.loads(pp.MAPPING.read_text(encoding="utf-8"))
+    supplied = {slug for slug, values in mapping["artists"].items() if values.get("portrait_url")}
+    assert supplied
+    assert all(artists[slug]["portrait_url"] for slug in supplied)
     assert all(len(artist["summary"]) >= 200 for artist in artists.values())
     assert all(artist["summary"].count(".") >= 3 for artist in artists.values())
     assert "빛을 단순한 효과가 아니라" in artists["rembrandt"]["summary"]
@@ -365,3 +370,19 @@ def test_crlf_checkout_is_still_accepted(out):
     path = out / "artists.jsonl"
     path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
     assert len(pp.load_processed("artists.jsonl")) >= 6
+
+
+def test_new_artist_drafts_keep_review_required(out):
+    """Merging source folders and movement mappings must not approve their content."""
+    assert pp.main() == 0
+    new_slugs = {"gustav-klimt", "egon-schiele"}
+    docs = [d for d in pp.load_processed("documents.jsonl")
+            if d["doc_key"].split("/", 1)[0] in new_slugs]
+    assert len(docs) == 62
+    assert all(d["needs_review"] for d in docs)
+    works = [w for w in pp.load_processed("artworks.jsonl") if w["artist_slug"] in new_slugs]
+    assert len(works) == 60
+    assert any(w["image_url"] is None for w in works)
+    assert {m["slug"] for m in pp.load_processed("movements.jsonl")} >= {
+        "expressionism", "vienna-secession",
+    }

@@ -7,10 +7,9 @@ Revises: None
 from collections.abc import Sequence
 
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import mysql
 from tidb_vector.sqlalchemy import VectorType
-
-from alembic import op
 
 revision: str = "20261011_0001"
 down_revision: str | None = None

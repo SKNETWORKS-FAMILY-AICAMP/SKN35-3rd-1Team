@@ -240,7 +240,10 @@ class ArtImage extends StatelessWidget {
                 Icon(Icons.image_outlined, color: sage, size: small ? 18 : 30),
                 if (!small) ...[
                   const SizedBox(height: 8),
-                  Text(image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요', style: sans(11, color: muted)),
+                  Text(
+                    image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
+                    style: sans(11, color: muted),
+                  ),
                 ],
               ],
             ),

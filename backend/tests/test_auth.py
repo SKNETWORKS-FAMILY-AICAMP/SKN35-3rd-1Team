@@ -4,9 +4,6 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from app.core import auth
-from app.db.session import get_db
-from app.repositories import user_repository
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from firebase_admin import auth as firebase_auth
@@ -14,6 +11,10 @@ from google.auth.exceptions import DefaultCredentialsError
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
+
+from app.core import auth
+from app.db.session import get_db
+from app.repositories import user_repository
 
 
 @pytest.fixture
