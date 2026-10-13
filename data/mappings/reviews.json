@@ -271,6 +271,346 @@
       "reviewed_on": "2026-10-11",
       "content_sha256": "3a577d7bc1e46c2863b0e671cfa0f928e502a9a2cc5d823ac7cb41e4571633e9"
     },
+    "egon-schiele/autumn-tree-in-stirred-air": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "80da8ee6c3435b7668b5dc53412106fbefa7933554d779d1a165ae98af5917b5"
+    },
+    "egon-schiele/bio": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "4bcf60e0141b0564c455a60c8fbb30595e055c3753d309777216b6818d3067b5"
+    },
+    "egon-schiele/blind-mother-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "4d536ffbbc1518be5e570a6ac7c2d508707c7187d770c9f79ca386b0132179b2"
+    },
+    "egon-schiele/calvary-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "f1cd1b52ff875fcfc69dea9b167f32e71e0ce28ed2a6afa572c5680731e10e9f"
+    },
+    "egon-schiele/caress-cardinal-and-nun": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c49bab21b63e5e88b92ea22820b0990f06767b56772dda2ab0a6146ccbfef9c5"
+    },
+    "egon-schiele/context": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "5693cf798ab888c5a8e6a4edae48148f1de6e7a7da13403be2bd34551f5ba6ce"
+    },
+    "egon-schiele/crescent-of-houses-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0a057fec202dc7f21146892e6e786207b3531c14426590a5233abf02c1449789"
+    },
+    "egon-schiele/dead-city-iii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "74162d7f273455d2c9afdb15f10cccdbb3e4e6a3a92c16f72fa848425587714d"
+    },
+    "egon-schiele/dead-mother-i": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "2bd1f0f920856763204047a3bd946627e63eab7f7611145c89869d87f4f4d98c"
+    },
+    "egon-schiele/death-and-the-maiden-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "92be21548164c5f4acd47742ddf730ac3f7e905e362f7e45a1c5778847890034"
+    },
+    "egon-schiele/house-wall-on-the-river": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "db92d8c10418bb9da65bd36e6db8d4a34c794650038a2caa9169ad4d18a2df8a"
+    },
+    "egon-schiele/house-with-shingle-roof": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a964d2b4d23f290e62949264c9e970a782702f4fc174cb92377c3d44c0dd47cc"
+    },
+    "egon-schiele/houses-by-the-sea": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "96d9392452bda22313955477ef118f651b37c68cc5f446e684aa9db9275cf67f"
+    },
+    "egon-schiele/krumau-on-the-vltava": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0e0a3136d6e64ac823c0036ae102b588ea058b715d8b6d0ff83b113271d8dfe0"
+    },
+    "egon-schiele/landscape": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "166fd1d8c855c25ad5c5de6e8885c349fdea2fc22c6d23c8fb1311de39129310"
+    },
+    "egon-schiele/landscape-with-ravens": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "1979c43e3f50a7a970faded9f084a76b35f225b965b9a7005ed802ee17ea7afc"
+    },
+    "egon-schiele/lyricist-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "ebd862a641e79be45362cc5a57a56ae21f213b8044f338a68f4f7bcb32ea7367"
+    },
+    "egon-schiele/mother-and-child-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c5e139d3177de5af8a6b31bfa55b9b67aafb03090d0c55d2a677fcd2be1635cf"
+    },
+    "egon-schiele/mother-with-two-children-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "e79d1bff55b55aa9e6cdc07dbe96dbcdf10b131706bd94b04f10b5cf4c454798"
+    },
+    "egon-schiele/mourning-woman": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c90b17f0e426b9c4250de918de3a33c5a76f0f2e5432d5452aaf7712b81bff49"
+    },
+    "egon-schiele/portrait-of-wally": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "61891cc946b2a557eaa5e28646003f8afd85af68e9809024db990b0f950da9f5"
+    },
+    "egon-schiele/reclining-woman-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a7af12d876a5fc95d13324490e2fae397a22cb92611e01a82938195d09e1845b"
+    },
+    "egon-schiele/seated-male-nude-self-portrait": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "b7a8e39c6d788f6215abe3230573aa599542d624b408a68c80ca8aad21ca7b8e"
+    },
+    "egon-schiele/self-portrait-with-chinese-lantern-plant": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "3a3911b6f2d1220257384d72bf2bcd92fbd62d80da0e42a5ad2eb3a34365b5fc"
+    },
+    "egon-schiele/self-portrait-with-lowered-head": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "8cbcb627ba046fdd1b1f2310174f0e277c9c3a8108c209ca9c8ae1b8119589e3"
+    },
+    "egon-schiele/self-seers-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a750ef9debcdd2faabc607552a3ef81daf0bf9753f89b3a410849f9d75ad292c"
+    },
+    "egon-schiele/setting-sun-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "3d03214e4a2662662922f5fb7f6842972458ddc10015426d38da5bb301834fc6"
+    },
+    "egon-schiele/small-town-iii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a5219cf30f9eb5e27b61d89c25fb8dbe7eea7a775e2fa1077631602791f244ec"
+    },
+    "egon-schiele/stein-on-the-danube-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "923297c2da74809afe426265b1470fe7cf7ccddf0194f3bafa8fc5769f27d377"
+    },
+    "egon-schiele/still-life-with-books": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "70053c28663b2f6d3ed4a4cca1f6941228402c75992566f29f0a61caf2df421b"
+    },
+    "egon-schiele/technique": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "3de4d515f6506dfc7762f28fc6841d983f93a5c128ad21fedbb23d74ca4595f1"
+    },
+    "egon-schiele/the-family-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "aa3222b0e2e2c394b35b47d9b26a7ca1ba2793420a30ea47afa875ed1543bd5a"
+    },
+    "egon-schiele/the-hermits-schiele": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "b88838bb5e1c4c3ad308c09632845abd52cc3f4f511cbec5433e697fcaa8c4d0"
+    },
+    "egon-schiele/transfiguration-the-blind-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "812645f8519c93e7055bdcc9afa49bcdcd610fe7f85030f4d873f162c27c25e0"
+    },
+    "gustav-klimt/a-morning-by-the-pond": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a17b283edbe5f4c5e6066107c14bff92b2b1ebfc736f948e0ca7f23d8887cf0c"
+    },
+    "gustav-klimt/adam-and-eve-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "ea46106b804727af4eac31eb00962dc86470708884bf3686260d14ff496d811f"
+    },
+    "gustav-klimt/after-the-rain-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "a19a6919af03ff662e7b7feda53e571c080aa011a5d2e1fde7b81c8b7df166f2"
+    },
+    "gustav-klimt/allegory-of-sacred-music": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "d9314e262e15ed83d6fb9935e315be61c512d1cc24d256bc150d595bcb5d4bf2"
+    },
+    "gustav-klimt/avenue-to-schloss-kammer": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "bcf85310ab6a340313294bc2e131582b2dd36821645daec088b805e93b0c635e"
+    },
+    "gustav-klimt/beethoven-frieze": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0dd71bceec6da216f311bbacd9c96310934ba0f4cd5678f93afe7d850b0660da"
+    },
+    "gustav-klimt/bio": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c4929ea457940fbfebb70f1ae6a9c5751c492db912e1ca306f7f95d5561f0e64"
+    },
+    "gustav-klimt/context": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "3ca8edd4ba1fb5a6f7f1dfc299bd62a32b67be28ca347ffaa46107650bda84e1"
+    },
+    "gustav-klimt/cottage-garden-with-sunflowers": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "6b8c240499d5ed91918ceca48f22781f9987561b67aef54366ccbfa27ebb7757"
+    },
+    "gustav-klimt/death-and-life": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "9cb53cec4fdf7a5f74680c380eeaf40fd9050f5d0454adbda1cca6529b52bd8c"
+    },
+    "gustav-klimt/dusk-lady-at-fireplace": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "284a09d1a99094346004bec760cb00b1f548873f94fbbb334a292f7da2562c0c"
+    },
+    "gustav-klimt/flowering-poppies": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "56e920c7188114ded08779a45f334457eb8c4520473309eaec69d2df4d16e51e"
+    },
+    "gustav-klimt/forest-floor-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "24cc2c062a3732fc9bc88bca82ff98a45c20a5a058e837edae24bdec56b11db5"
+    },
+    "gustav-klimt/josef-lewinsky-as-carlos": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "67e59c5de36410a15e8bcdbe0b0392ba555711c9858d990c1c9d9795817320d8"
+    },
+    "gustav-klimt/judith-i": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0ae4edeabb751d01ad9935d652790d8e19a3a72de77b58ac4705cc997748e555"
+    },
+    "gustav-klimt/lady-in-white-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "9b05c961f17cb907172df0b81f5a1003e034aa00d2b9a4448ba6e639a26d6ab0"
+    },
+    "gustav-klimt/landscape": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "4bd0711aa9c33fd7d9460aae7213b276c345114d750f8b6c12917c241b95f50a"
+    },
+    "gustav-klimt/male-nude-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c0153822ca87e585d20a5dd75803a4990a4c6c63fe003785351d8c367aa3e7ae"
+    },
+    "gustav-klimt/mother-with-two-children-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "b5341f7a2ad334e2947ef1006ca9f3c425a5f6f2d62e8cd8068c21e1e190140b"
+    },
+    "gustav-klimt/old-man-on-deathbed": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0117d6d858f24bf14239d496fb8c0a1c88562174faf0a47d48d7781c75f2f0d5"
+    },
+    "gustav-klimt/on-lake-attersee": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "84cfa8f897c70229862d715afc0ed9dbc347073d5bb16d26459a35d753000904"
+    },
+    "gustav-klimt/orchard-in-the-evening": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "d341ec64982290325ec905aff3eaa10fff70838a919f2282cccd06dd4fd142c0"
+    },
+    "gustav-klimt/portrait-of-amalie-zuckerkandl": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "1644fee9fb4dece138e89c548c8ce390c1793340dafb0e8d5500dc3620062464"
+    },
+    "gustav-klimt/portrait-of-fritza-riedler": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0a3a237d260a09f68c24e027f2930b02125bbc6f6c6f8ad19b959c775e39c874"
+    },
+    "gustav-klimt/portrait-of-johanna-staude": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "1ed99ab1ce1e583c3df8f1cf45193f820c6f1c17cf53e775380a97833499c440"
+    },
+    "gustav-klimt/portrait-of-sonja-knips": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "68eff02eaa67357e0f0c6987258df1acd07cc3496cc8088902716e2d2dc964fa"
+    },
+    "gustav-klimt/red-sketchbook-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "8d17677df6f75a52d3dfaac715bde07a28f997533d4841a252040b87d1d08ce9"
+    },
+    "gustav-klimt/schloss-kammer-at-attersee-iii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c84dbbd41dad5e667897362a88b412384805f1fea579bc3c855cbf49ab7a99bf"
+    },
+    "gustav-klimt/sunflower-klimt": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "1dfd956e8c06b6d4dc56eed437d107cad14f47d7ba996a12cd8c4a006141b650"
+    },
+    "gustav-klimt/technique": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "d96c8e2b597a0705fbe6736de8dc92ecbbb0dbb6684c0bb821b196039cd734a8"
+    },
+    "gustav-klimt/the-kiss": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "c26375038e883e99bbfb6c6af2f5552735955f9ba5f8c54cd6f0c6a1346e6fa0"
+    },
+    "gustav-klimt/the-large-poplar-ii": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "0e613a9eabb2eda4b44f92cbe5162076076b743107322bc005dc64562cad719e"
+    },
+    "gustav-klimt/upper-austrian-farmhouse": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "aa33df76ca4f3a3aaa45eeaec70cfe20d53d3125ec804bebff391c9b67ce7e34"
+    },
+    "gustav-klimt/water-serpents-i": {
+      "reviewer": "ju (팀 최종 승인; Codex AI 사전 검수)",
+      "reviewed_on": "2026-10-13",
+      "content_sha256": "953df64614aabcfe0bfcedb047cfd1feea02fc153d3cd770868a0d2a9df4bc10"
+    },
     "jeong-seon/artwork-world": {
       "reviewer": "A(PM·전처리) 요청 / Claude AI 1차 검토 / Codex AI 보강·재검토",
       "reviewed_on": "2026-10-12",

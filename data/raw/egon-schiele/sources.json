@@ -9,8 +9,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Kauerndes_Menschenpaar_(Die_Familie)_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
     "needs_review": true,
     "artwork": {
       "slug": "the-family-schiele",
@@ -23,12 +21,20 @@
       "medium": "Oil on canvas",
       "dimensions": "150 × 160.8 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Kauerndes_Menschenpaar_(Die_Familie)_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q28002609",
-      "is_featured": true
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "death-and-the-maiden-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -40,8 +46,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Tod_und_M%C3%A4dchen_-_3171_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
     "needs_review": true,
     "artwork": {
       "slug": "death-and-the-maiden-schiele",
@@ -54,12 +58,20 @@
       "medium": "Oil on canvas",
       "dimensions": "150 × 180 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Tod_und_M%C3%A4dchen_-_3171_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q2438357",
-      "is_featured": true
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Der_Tod_und_das_M%C3%A4dchen.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/"
+    ],
+    "related_artwork_slugs": [
+      "the-hermits-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Der_Tod_und_das_M%C3%A4dchen.jpg",
+    "image_license": "Public domain"
   },
   "portrait-of-wally.md": {
     "doc_type": "artwork_commentary",
@@ -90,7 +102,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/528-self-portrait-with-chinese-lantern-plant/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-chinese-lantern-plant"
+    ]
   },
   "self-portrait-with-chinese-lantern-plant.md": {
     "doc_type": "artwork_commentary",
@@ -102,8 +120,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "self-portrait-with-chinese-lantern-plant",
@@ -116,12 +132,20 @@
       "medium": "Oil, opaque color on wood",
       "dimensions": "32.2×39.8 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": true
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Self-Portrait_with_Physalis_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-wally"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Self-Portrait_with_Physalis_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "seated-male-nude-self-portrait.md": {
     "doc_type": "artwork_commentary",
@@ -133,8 +157,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "seated-male-nude-self-portrait",
@@ -147,12 +169,20 @@
       "medium": "Oil, opaque color on canvas",
       "dimensions": "152.5×150 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Seated_Male_Nude_%28Self-Portrait%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Seated_Male_Nude_%28Self-Portrait%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "caress-cardinal-and-nun.md": {
     "doc_type": "artwork_commentary",
@@ -164,8 +194,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "caress-cardinal-and-nun",
@@ -178,12 +206,20 @@
       "medium": "Oil on canvas",
       "dimensions": "70×80.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Cardinal_and_Nun_%28Caress%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/1968/tod-und-madchen"
+    ],
+    "related_artwork_slugs": [
+      "death-and-the-maiden-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Cardinal_and_Nun_%28Caress%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "the-hermits-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -195,8 +231,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "the-hermits-schiele",
@@ -209,12 +243,20 @@
       "medium": "Oil on canvas",
       "dimensions": "181×181 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_The_Hermits_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_The_Hermits_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "dead-city-iii.md": {
     "doc_type": "artwork_commentary",
@@ -245,7 +287,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ]
   },
   "mother-with-two-children-ii.md": {
     "doc_type": "artwork_commentary",
@@ -257,8 +305,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mother_with_two_children_II_Egon_Schiele_1915.jpg",
-    "image_license": "CC BY-SA 3.0",
     "needs_review": true,
     "artwork": {
       "slug": "mother-with-two-children-ii",
@@ -271,12 +317,21 @@
       "medium": "Oil on canvas",
       "dimensions": "149.5×160 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Mother_with_two_children_II_Egon_Schiele_1915.jpg",
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Mother_with_two_children_II_Egon_Schiele_1915.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3071/kauerndes-menschenpaar-die-familie"
+    ],
+    "related_artwork_slugs": [
+      "the-family-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mother_with_two_children_II_Egon_Schiele_1915.jpg",
+    "image_license": "CC BY-SA 3.0 · Photo: Yelkrokoyade",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Yelkrokoyade, CC BY-SA 3.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "blind-mother-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -288,8 +343,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "blind-mother-schiele",
@@ -302,12 +355,20 @@
       "medium": "Oil on canvas",
       "dimensions": "99×120 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Die_blinde_Mutter.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/651-mother-and-child/"
+    ],
+    "related_artwork_slugs": [
+      "mother-and-child-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Die_blinde_Mutter.jpg",
+    "image_license": "Public domain"
   },
   "dead-mother-i.md": {
     "doc_type": "artwork_commentary",
@@ -319,8 +380,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "dead-mother-i",
@@ -333,12 +392,20 @@
       "medium": "Oil, pencil on wood",
       "dimensions": "32.1×25.7 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Dead_Mother_I_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Dead_Mother_I_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "landscape-with-ravens.md": {
     "doc_type": "artwork_commentary",
@@ -350,8 +417,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "landscape-with-ravens",
@@ -364,12 +429,20 @@
       "medium": "Oil on canvas",
       "dimensions": "95.8×89 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Landscape_with_Ravens_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/523-autumn-tree-in-stirred-air-winter-tree/"
+    ],
+    "related_artwork_slugs": [
+      "autumn-tree-in-stirred-air"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Landscape_with_Ravens_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "autumn-tree-in-stirred-air.md": {
     "doc_type": "artwork_commentary",
@@ -381,8 +454,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "autumn-tree-in-stirred-air",
@@ -395,12 +466,20 @@
       "medium": "Oil, pencil on canvas",
       "dimensions": "80×80.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Autumn_Tree_in_Stirred_Air_%28Winter_Tree%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/46-landscape-with-ravens/"
+    ],
+    "related_artwork_slugs": [
+      "landscape-with-ravens"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Autumn_Tree_in_Stirred_Air_%28Winter_Tree%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "setting-sun-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -412,8 +491,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "setting-sun-schiele",
@@ -426,12 +503,20 @@
       "medium": "Oil on canvas",
       "dimensions": "90×90.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Setting_Sun_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/554-calvary/"
+    ],
+    "related_artwork_slugs": [
+      "calvary-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Setting_Sun_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "small-town-iii.md": {
     "doc_type": "artwork_commentary",
@@ -443,8 +528,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_015.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "small-town-iii",
@@ -457,12 +542,19 @@
       "medium": "Oil, soft pencil on canvas",
       "dimensions": "89.9×90 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_015.jpg",
+      "image_source_url": null,
       "wikidata": null,
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/"
+    ],
+    "related_artwork_slugs": [
+      "crescent-of-houses-ii"
+    ],
+    "image_usage_note": "Previous Commons file depicts Small Town II, not Small Town III; wrong image removed."
   },
   "crescent-of-houses-ii.md": {
     "doc_type": "artwork_commentary",
@@ -474,8 +566,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "crescent-of-houses-ii",
@@ -488,12 +578,20 @@
       "medium": "Oil on canvas",
       "dimensions": "110.5×140.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Crescent_of_Houses_II_%28Island_Town%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Crescent_of_Houses_II_%28Island_Town%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "stein-on-the-danube-ii.md": {
     "doc_type": "artwork_commentary",
@@ -505,8 +603,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "stein-on-the-danube-ii",
@@ -519,12 +615,21 @@
       "medium": "Oil on canvas",
       "dimensions": "91.5×91.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/654-krumau-on-the-vltava-the-small-town-iv/"
+    ],
+    "related_artwork_slugs": [
+      "krumau-on-the-vltava"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg",
+    "image_license": "CC BY 2.0 · Photo: Prof. Mortel",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Prof. Mortel, CC BY 2.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "house-wall-on-the-river.md": {
     "doc_type": "artwork_commentary",
@@ -536,8 +641,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "house-wall-on-the-river",
@@ -550,12 +653,20 @@
       "medium": "Oil on canvas",
       "dimensions": "109.5×140 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_House_Wall_on_the_River_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/543-house-with-shingle-roof-old-house-ii/"
+    ],
+    "related_artwork_slugs": [
+      "house-with-shingle-roof"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_House_Wall_on_the_River_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "house-with-shingle-roof.md": {
     "doc_type": "artwork_commentary",
@@ -586,7 +697,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/542-house-wall-on-the-river/"
+    ],
+    "related_artwork_slugs": [
+      "house-wall-on-the-river"
+    ]
   },
   "houses-by-the-sea.md": {
     "doc_type": "artwork_commentary",
@@ -598,8 +715,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "houses-by-the-sea",
@@ -612,12 +727,20 @@
       "medium": "Oil on canvas",
       "dimensions": "99.5×119.7 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Die_H%C3%A4user_am_Meer_%281914%29.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/"
+    ],
+    "related_artwork_slugs": [
+      "crescent-of-houses-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Die_H%C3%A4user_am_Meer_%281914%29.jpg",
+    "image_license": "Public domain"
   },
   "self-portrait-with-lowered-head.md": {
     "doc_type": "artwork_commentary",
@@ -648,7 +771,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/539-seated-male-nude-self-portrait/"
+    ],
+    "related_artwork_slugs": [
+      "seated-male-nude-self-portrait"
+    ]
   },
   "self-seers-ii.md": {
     "doc_type": "artwork_commentary",
@@ -660,8 +789,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "self-seers-ii",
@@ -674,12 +801,20 @@
       "medium": "Oil on canvas",
       "dimensions": "80.5×80 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Self-Seer_II_%28Death_and_Man%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/"
+    ],
+    "related_artwork_slugs": [
+      "the-hermits-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Self-Seer_II_%28Death_and_Man%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "lyricist-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -691,8 +826,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "lyricist-schiele",
@@ -705,12 +838,20 @@
       "medium": "Oil on canvas",
       "dimensions": "80.5×80 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_The_Lyricist_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_The_Lyricist_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "mourning-woman.md": {
     "doc_type": "artwork_commentary",
@@ -722,8 +863,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "mourning-woman",
@@ -736,12 +875,20 @@
       "medium": "Oil on wood",
       "dimensions": "42.5×34 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Mourning_Woman_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Mourning_Woman_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "reclining-woman-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -753,8 +900,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "reclining-woman-schiele",
@@ -767,12 +912,20 @@
       "medium": "Oil on canvas",
       "dimensions": "96×171 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Reclining_Woman_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/539-seated-male-nude-self-portrait/"
+    ],
+    "related_artwork_slugs": [
+      "seated-male-nude-self-portrait"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Reclining_Woman_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "mother-and-child-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -784,8 +937,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "mother-and-child-schiele",
@@ -798,12 +949,20 @@
       "medium": "Oil on wood",
       "dimensions": "36.5×29.2 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Schiele_-_Mutter_und_Kind_%28Mother_and_Child%29_%281912%29.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/2-blind-mother/"
+    ],
+    "related_artwork_slugs": [
+      "blind-mother-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Schiele_-_Mutter_und_Kind_%28Mother_and_Child%29_%281912%29.jpg",
+    "image_license": "Public domain"
   },
   "calvary-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -815,8 +974,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "calvary-schiele",
@@ -829,12 +986,20 @@
       "medium": "Oil, gouache, pencil on canvas",
       "dimensions": "81.7×80 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Schiele_-_Kalvarienberg_%28Calvary%29_%281912%29.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/624-setting-sun/"
+    ],
+    "related_artwork_slugs": [
+      "setting-sun-schiele"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Schiele_-_Kalvarienberg_%28Calvary%29_%281912%29.jpg",
+    "image_license": "Public domain"
   },
   "transfiguration-the-blind-ii.md": {
     "doc_type": "artwork_commentary",
@@ -846,8 +1011,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "transfiguration-the-blind-ii",
@@ -860,12 +1023,20 @@
       "medium": "Oil, opaque color on canvas",
       "dimensions": "201.2×171.6×3.9 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Levitation_%28The_Blind_II%29_-_Google_Art_Project.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Levitation_%28The_Blind_II%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
   },
   "still-life-with-books.md": {
     "doc_type": "artwork_commentary",
@@ -896,7 +1067,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ]
   },
   "krumau-on-the-vltava.md": {
     "doc_type": "artwork_commentary",
@@ -908,8 +1085,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "krumau-on-the-vltava",
@@ -922,12 +1097,21 @@
       "medium": "Oil, black chalk on canvas",
       "dimensions": "99.5×120.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg"
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg",
+    "image_license": "CC BY-SA 3.0 · Photo: Yelkrokoyade",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Yelkrokoyade, CC BY-SA 3.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "bio.md": {
     "doc_type": "artist_bio",
@@ -936,7 +1120,7 @@
       "egon-schiele"
     ],
     "artwork_slug": null,
-    "source_url": "https://onlinecollection.leopoldmuseum.org/en/album/yw5dhca8qkawynbky-egon-schiele/",
+    "source_url": "https://www.leopoldmuseum.org/en/collection/egon-schiele",
     "source_name": "레오폴트 미술관",
     "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
@@ -955,6 +1139,60 @@
       "nationality": "오스트리아",
       "wikidata": "https://www.wikidata.org/wiki/Q44032"
     },
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "에곤 실레의 선과 인체 표현",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.belvedere.at/en/stories/who-was-egon-schiele",
+    "source_name": "벨베데레 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "기법",
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+  },
+  "landscape.md": {
+    "doc_type": "artist_bio",
+    "title": "에곤 실레의 도시와 자연 풍경",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/egon-schiele",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "작품 세계",
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "context.md": {
+    "doc_type": "artist_bio",
+    "title": "실레와 빈 근대미술의 시대적 맥락",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/expressionism-new-objectivity",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "영향",
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   }
 }

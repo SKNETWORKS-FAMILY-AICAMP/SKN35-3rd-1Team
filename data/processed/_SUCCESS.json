@@ -5,21 +5,21 @@
       "rows": 6
     },
     "artists.jsonl": {
-      "sha256": "a6f61fb242b348e0cbdcc5cf035c74cfa6ad4bc0eb4176e3e67ac205efec362c",
+      "sha256": "87245f9edaffb148e4a1d8314730db60076fc00950a8a9f733985c533f3b413c",
       "rows": 10
     },
     "artworks.jsonl": {
-      "sha256": "224fc08b68624a903a1994c8b097bf2bd184cad4daa90c8aede8a3d2233f09b0",
-      "rows": 279
+      "sha256": "db2a7e514d7f622526e8497bc37c85db1353d72d3bb3bea84a54a2d19d830c59",
+      "rows": 276
     },
     "documents.jsonl": {
-      "sha256": "10b86c415705accfbffa93cc84c7fddc0739b99165e7add6585e2e993cb356c9",
-      "rows": 423
+      "sha256": "01a0773d2d05e97704f023f698db9f2c7930d9dd1d0dbc24034a12b60f12fee3",
+      "rows": 426
     },
     "artist_aliases.jsonl": {
-      "sha256": "a6e01e76a9750428aa15619afd158cd7724baf910e2585371d8d1e6c38368457",
+      "sha256": "e092bfee01bbfcd7e410e2fcaae5e2f4c93d01ce8a070b6838f26f1f7ab5aa37",
       "rows": 10
     }
   },
-  "needs_review_documents": 62
+  "needs_review_documents": 0
 }

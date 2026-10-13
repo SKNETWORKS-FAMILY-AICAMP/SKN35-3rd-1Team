@@ -164,6 +164,8 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     assert "사진처럼" in artists["jeong-seon"]["summary"]
     assert "풍속화" in artists["kim-hong-do"]["summary"]
     assert "식민주의적 왜곡" in artists["paul-gauguin"]["summary"]
+    assert "commons.wikimedia.org" in artists["egon-schiele"]["portrait_url"]
+    assert "commons.wikimedia.org" in artists["gustav-klimt"]["portrait_url"]
 
 
 @pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])
@@ -329,7 +331,7 @@ def test_artist_aliases_cover_collected_artists(out):
     rows = {r["slug"]: r for r in pp.load_processed("artist_aliases.jsonl")}
     collected = {a["slug"] for a in pp.load_processed("artists.jsonl")}
     pending = {s for s, r in rows.items() if r["status"] == "pending_review"}
-    assert pending == {"gustav-klimt", "egon-schiele"}
+    assert pending == set()
     assert {s for s, r in rows.items() if r["status"] == "collected"} == collected - pending
     assert all(r["aliases"] for r in rows.values())
 
@@ -374,17 +376,22 @@ def test_crlf_checkout_is_still_accepted(out):
     assert len(pp.load_processed("artists.jsonl")) >= 6
 
 
-def test_new_artist_drafts_keep_review_required(out):
-    """Merging source folders and movement mappings must not approve their content."""
+def test_approved_artist_documents_and_images(out):
+    """승인 기록과 재생성 산출물에서 신규 작가 문서와 검증된 이미지 수를 유지한다."""
     assert pp.main() == 0
     new_slugs = {"gustav-klimt", "egon-schiele"}
     docs = [d for d in pp.load_processed("documents.jsonl")
             if d["doc_key"].split("/", 1)[0] in new_slugs]
-    assert len(docs) == 62
-    assert all(d["needs_review"] for d in docs)
+    assert len(docs) == 65
+    assert all(not d["needs_review"] for d in docs)
     works = [w for w in pp.load_processed("artworks.jsonl") if w["artist_slug"] in new_slugs]
-    assert len(works) == 60
-    assert any(w["image_url"] is None for w in works)
+    assert len(works) == 57
+    assert sum(w["image_url"] is None for w in works) == 0
+    assert sum(w["image_url"] is not None for w in works) == 57
+    assert sum(w["image_license"].startswith("CC BY") for w in works if w["image_license"]) == 3
+    assert {w["slug"] for w in works}.isdisjoint({
+        "small-town-iii", "still-life-with-books", "red-sketchbook-klimt",
+    })
     assert {m["slug"] for m in pp.load_processed("movements.jsonl")} >= {
         "expressionism", "vienna-secession",
     }

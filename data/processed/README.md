@@ -37,7 +37,7 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | `artist_aliases.jsonl` | `slug`, `name`, `status` (`collected`/`pending_review`/`planned`), `aliases`, `confusable` | (DB 적재 안 함. 챗봇 작가 인식용) |
 | `documents.jsonl` | `doc_key`, `doc_type`, `title`, `content`, `artist_slugs`, `artwork_slug`, `source_url`, `source_name`, `license`, `lang`, `topic`, `related_artwork_slugs`, `basis_doc_keys`, `basis_external_sources`, `needs_review` | `documents`, `document_artists`, `document_artworks`, `document_basis_documents` |
 
-2026-10-13 통합 산출물: 사조 6 · 작가 10 · 작품 279 · 문서 423(검수 대기 62). 별칭의 `collected`는 승인 문서가 있는 작가, `pending_review`는 자료는 있지만 승인 문서가 없는 작가, `planned`는 수집 전 작가입니다. 현재 클림트·실레는 `pending_review`입니다. SQL 검색 범위·고정 근거와 청킹 입력은 승인 문서만 사용합니다. 운영 DB/Chroma 적재 완료를 뜻하지 않습니다.
+2026-10-13 통합 산출물: 사조 6 · 작가 10 · 작품 279 · 문서 429(검수 대기 0). 별칭의 `collected`는 승인 문서가 있는 작가, `pending_review`는 자료는 있지만 승인 문서가 없는 작가, `planned`는 수집 전 작가입니다. 현재 클림트·실레를 포함한 10명 모두 `collected`입니다. SQL 검색 범위·고정 근거와 청킹 입력은 승인 문서만 사용합니다. 운영 DB/Chroma 적재 완료를 뜻하지 않습니다.
 
 ### documents.jsonl의 검색 메타데이터 저장 위치
 
@@ -46,7 +46,7 @@ artworks = load_processed("artworks.jsonl")  # list[dict]
 | 필드 | 저장 위치와 뜻 |
 | --- | --- |
 | `doc_key` | `documents.doc_key`. 문서 고유 키이며 재적재할 때 갱신 기준으로 씁니다 |
-| `lang` | `documents.lang`. 현재 결과 423건은 모두 `ko`입니다 |
+| `lang` | `documents.lang`. 현재 결과 429건은 모두 `ko`입니다 |
 | `topic` | `documents.topic`. 생애 문서의 성격이며 없으면 `null`입니다 |
 | `related_artwork_slugs` | `document_artworks`. 연표 사건과 관련 작품을 연결합니다 |
 | `basis_doc_keys` | `document_basis_documents`. 보충·보정문 작성에 사용한 다른 수집 문서를 연결합니다. 답변 출처에는 현재 문서뿐 아니라 이 문서들의 `source_name`, `source_url`도 함께 표시합니다 |
