@@ -157,8 +157,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "lady-in-white-klimt",
@@ -171,9 +169,9 @@
       "medium": "Oil on canvas (unfinished)",
       "dimensions": "70 x 70 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -182,7 +180,9 @@
     ],
     "related_artwork_slugs": [
       "portrait-of-amalie-zuckerkandl"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "schloss-kammer-at-attersee-iii.md": {
     "doc_type": "artwork_commentary",
@@ -527,8 +527,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "male-nude-klimt",
@@ -541,9 +539,9 @@
       "medium": "Oil on canvas",
       "dimensions": "68 × 54,8 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -552,7 +550,9 @@
     ],
     "related_artwork_slugs": [
       "beethoven-frieze"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "josef-lewinsky-as-carlos.md": {
     "doc_type": "artwork_commentary",
@@ -823,8 +823,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "mother-with-two-children-klimt",
@@ -837,9 +835,9 @@
       "medium": "Oil on canvas",
       "dimensions": "90 x 90 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -848,7 +846,9 @@
     ],
     "related_artwork_slugs": [
       "mother-with-two-children-ii"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "after-the-rain-klimt.md": {
     "doc_type": "artwork_commentary",

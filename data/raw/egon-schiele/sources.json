@@ -9,8 +9,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "the-family-schiele",
@@ -23,9 +21,9 @@
       "medium": "Oil on canvas",
       "dimensions": "150 × 160.8 cm",
       "collection": "벨베데레 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Kauerndes_Menschenpaar_(Die_Familie)_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
       "wikidata": "https://www.wikidata.org/wiki/Q28002609",
-      "is_featured": true
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
@@ -35,7 +33,8 @@
     "related_artwork_slugs": [
       "mother-with-two-children-ii"
     ],
-    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
   },
   "death-and-the-maiden-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -306,8 +305,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": "CC BY-SA 3.0",
     "needs_review": true,
     "artwork": {
       "slug": "mother-with-two-children-ii",
@@ -320,9 +317,9 @@
       "medium": "Oil on canvas",
       "dimensions": "149.5×160 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Mother_with_two_children_II_Egon_Schiele_1915.jpg",
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Mother_with_two_children_II_Egon_Schiele_1915.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -332,7 +329,9 @@
     "related_artwork_slugs": [
       "the-family-schiele"
     ],
-    "image_usage_note": "Yelkrokoyade photograph requires attribution, license link, change notice and share alike; display withheld pending UI support."
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mother_with_two_children_II_Egon_Schiele_1915.jpg",
+    "image_license": "CC BY-SA 3.0 · Photo: Yelkrokoyade",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Yelkrokoyade, CC BY-SA 3.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "blind-mother-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -604,8 +603,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "stein-on-the-danube-ii",
@@ -618,9 +615,9 @@
       "medium": "Oil on canvas",
       "dimensions": "91.5×91.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -629,7 +626,10 @@
     ],
     "related_artwork_slugs": [
       "krumau-on-the-vltava"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg",
+    "image_license": "CC BY 2.0 · Photo: Prof. Mortel",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Prof. Mortel, CC BY 2.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "house-wall-on-the-river.md": {
     "doc_type": "artwork_commentary",
@@ -1085,8 +1085,6 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": null,
-    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "krumau-on-the-vltava",
@@ -1099,9 +1097,9 @@
       "medium": "Oil, black chalk on canvas",
       "dimensions": "99.5×120.5 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": null,
       "wikidata": null,
-      "is_featured": false
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg"
     },
     "display_full_description": true,
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
@@ -1110,7 +1108,10 @@
     ],
     "related_artwork_slugs": [
       "small-town-iii"
-    ]
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg",
+    "image_license": "CC BY-SA 3.0 · Photo: Yelkrokoyade",
+    "image_usage_note": "원본 파일을 변경 없이 표시. 사진 저작자 Yelkrokoyade, CC BY-SA 3.0; 상세 화면의 원본·이용 조건 링크 제공."
   },
   "bio.md": {
     "doc_type": "artist_bio",
