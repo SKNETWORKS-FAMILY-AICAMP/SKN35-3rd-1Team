@@ -3,16 +3,17 @@
 검색 계층이 무엇을 주는지, 다음 담당자가 무엇을 하면 되는지만 모았습니다. 설계 이유와 평가 근거는 [`architecture.md`](architecture.md)에 있습니다.
 
 - 작성: 2026-10-13 · 박수휘 (검색)
-- 상태: TiDB 청크 1,622개 · 작품 벡터 219개 적재 완료, 검색 함수 완료, **Railway Chroma 생성 전**
+- 상태: TiDB 청크 1,622개 · 작품 벡터 219개 적재 완료, **Chroma Cloud 동기화 완료**, 검색 함수 완료
 
 ## 0. 지금 상태
 
 | 항목 | 상태 |
 | --- | --- |
 | TiDB `document_chunks` 1,622행 · `artwork_embeddings` 219행 | ✅ 적재 완료 (`text-embedding-3-small`, 1536차원) |
-| `retrieve()` 검색 함수 | ✅ 완료. E 평가셋 검색 근거 적중률 96% (22/23) |
+| `retrieve()` 검색 함수 | ✅ 완료. E 평가셋 검색 근거 적중률 100% (23/23), 기대 문서 전부 들어온 질문 23/23 |
 | 유사 작품·개인 추천 (`recommendation_repository`) | ✅ TiDB 작품 벡터로 바로 동작 |
-| Railway Chroma 서비스 | ⬜ **생성 전**. 만들어지기 전까지 배포 서버의 `retrieve()`는 동작하지 않음 |
+| Chroma Cloud (`SKN_artlog`) | ✅ 청크 1,622 · 작품 219 동기화 완료 |
+| 백엔드 Railway 환경변수 | ⬜ Chroma Cloud 값 전달함. 설정 전까지 배포 서버의 `retrieve()`는 동작하지 않음 (2절) |
 | `POST /api/artworks/{id}/chat` | ⬜ 빈 함수 (C) |
 
 ## 1. 답변생성 담당자에게
@@ -27,7 +28,7 @@ docs = retrieve(db, artwork_id, body.question)   # list[langchain_core.documents
 
 - `page_content`: 청크 본문. 맨 앞에 `문서 제목 > 섹션` 머리말이 붙어 있어 **그대로 프롬프트에 넣으면 됩니다.**
 - 순서: 거리로 고른 청크(가까운 순) → 규칙으로 항상 넣는 청크(`pinned=True`).
-- 양: 질문당 평균 6개, 최대 10개 청크. 청크 하나는 최대 약 1,200자라, 근거 전체가 최대 1만 자 안팎입니다.
+- 양: 질문당 평균 6개, 최대 11개 청크. 청크 하나는 최대 약 1,200자라, 근거 전체가 최대 1만 자 안팎입니다.
 - 질문 임베딩 API를 1번 부릅니다. `OPENAI_API_KEY`와 Chroma 접속 설정이 필요합니다.
 
 ### `metadata` → 응답 `Source`
@@ -62,7 +63,7 @@ for d in docs:                                   # 답변에 실제로 쓴 청�
 
 검색은 **마지막 질문만**으로 합니다. "그 작품은?"처럼 생략된 질문도 작품 범위 안에서 찾기 때문에 대부분 근거가 나옵니다(평가셋 멀티턴 2문항 모두 적중). 대화 이력은 답변 프롬프트에만 넣으면 됩니다. 질문을 다시 쓰는 단계(query rewrite)를 넣을지는 C가 정하고, 넣으면 그 결과 문장을 `retrieve()`에 넘기면 됩니다.
 
-### 결정할 것 (C·D·A)
+### 결정할 것
 
 - **편집 근거 표시**: rag-handoff 6절은 감상 포인트·답변 시 주의에서 나온 근거에 편집 근거도 보여 주라고 합니다. `Source`에 `basis_sources: list[{source_name, source_url}] = []` 같은 필드를 추가하려면 `docs/api.md`와 Flutter 모델(`lib/models.dart`)을 함께 고쳐야 합니다.
 
@@ -80,8 +81,8 @@ Chroma 접속은 아래 두 방식 중 **하나만** 넣습니다. 세 Cloud 값
 
 | 방식 | 변수 | 값 |
 | --- | --- | --- |
-| **Chroma Cloud** (trychroma.com) | `CHROMA_API_KEY` / `CHROMA_TENANT` / `CHROMA_DATABASE` | 발급받은 API 키(비밀값) / 테넌트 ID / DB 이름 |
-| Railway에 직접 띄운 Chroma | `CHROMA_HOST` / `CHROMA_PORT` / `CHROMA_SSL` | `<chroma 서비스>.railway.internal` / `8000` / `false` (내부망은 HTTP) |
+| **Chroma Cloud** (trychroma.com) **← 사용 중** | `CHROMA_API_KEY` / `CHROMA_TENANT` / `CHROMA_DATABASE` | API 키(비밀값, 개인 메시지로 전달) / `7bdea74c-355a-4e13-b5f7-61ad06a932d3` / `SKN_artlog` |
+| (대안) Railway에 직접 띄운 Chroma | `CHROMA_HOST` / `CHROMA_PORT` / `CHROMA_SSL` | `<chroma 서비스>.railway.internal` / `8000` / `false` (내부망은 HTTP) |
 
 Railway에 직접 띄울 때 Chroma 서비스 쪽: 이미지 `chromadb/chroma:1.5.9`(클라이언트 버전과 맞춤), 볼륨 `/data`, 포트 8000. Chroma 1.x는 자체 인증이 없으니 공개 도메인은 `sync_chroma`를 돌릴 때만 열어 두세요. 내부망 접속이 안 되면 Chroma 서비스 환경변수에 `CHROMA_HOST=::`가 필요할 수 있습니다 (Railway 내부망은 IPv6).
 
@@ -92,9 +93,10 @@ uv run python -m scripts.eval_retrieval --out ../docs/eval/retrieval-<날짜>.js
 ```
 
 - `docs/test-plan.md`의 "검색 근거 적중률"을 LLM 없이 계산합니다. 질문별로 검색된 `doc_key`, 거리, `pinned` 여부가 JSON에 남습니다.
-- 2026-10-13 결과: 22/23 (96%), [`eval/retrieval-2026-10-13.json`](eval/retrieval-2026-10-13.json).
-- **질문셋 수정 요청**: `compare-004`의 `target_doc_keys` 중 `vincent-van-gogh/commentary-sunflowers-arles`는 다른 작품의 해설이라 『해바라기』(1887) 범위 밖입니다. 설계상 검색될 수 없으니 빼거나, 이 질문은 "다른 작품은 그 작품에서 물어 달라"는 답이 기대값이 되어야 합니다.
-- `detail-008`(야경)은 같은 작품의 영문 번역 해설(`rembrandt/the-night-watch.en`)이 근거로 나와 실패로 집계됩니다. 내용이 같으므로 `target_doc_keys`에 `.en`도 넣는 것을 권합니다.
+- 2026-10-13 결과 (Chroma Cloud): 적중률 23/23 (100%), 기대 문서가 전부 들어온 질문 23/23, [`eval/retrieval-2026-10-13.json`](eval/retrieval-2026-10-13.json). 한국어 원문과 영문 번역본(`.en`)은 같은 근거로 셉니다.
+- **질문셋을 고쳤습니다** (`tests/questions/rag-eval.json`, 기대값 4건):
+  - `compare-004`: `commentary-sunflowers-arles`는 다른 작품의 해설이라 『해바라기』(1887) 범위 밖이어서 뺐습니다. 1887년 해설 안에 아를 해바라기와의 차이가 설명돼 있어 질문은 그대로 답할 수 있습니다.
+  - `fact-004`·`detail-008`(야경), `compare-003`(명암): 같은 내용의 영문 번역본 키(`.en`)를 추가했습니다.
 - 거절률·출처 포함률 등 나머지 지표는 `/chat`이 완성된 뒤 답변까지 포함해 재야 합니다.
 
 ## 3. 데이터 담당자에게
