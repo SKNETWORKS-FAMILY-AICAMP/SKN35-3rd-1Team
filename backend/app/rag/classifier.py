@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | rag | 기본값. 고른 작품·작가에 관한 질문 | retrieve() → 답변 체인 |
 | other_artist | 데이터에 있는 **다른** 작가만 묻고, 고른 작가·비교·관계 표현이 없음 | 그 작가 작품을 골라 물어보라고 안내 (route.artists) |
-| refuse | 검수 대기 작가(클림트·실레) 또는 미수집 작가, 다루지 않는 작가(피카소 등), 날씨·실시간 시세 같은 범위 밖 질문 | LLM 없이 refused=true |
+| refuse | 검수 대기·미수집 작가, 다루지 않는 작가(피카소 등), 날씨·실시간 시세 같은 범위 밖 질문 | LLM 없이 refused=true |
 | recommend_similar | "이 작품과 비슷한 작품 추천해 줘" | recommendation_service.similar() (고른 작품 기준) |
 | recommend_personal | "내 취향에 맞는 작품 추천해 줘" | 로그인 사용자면 recommend_artworks(), 비로그인이면 similar() 로 대신 |
 

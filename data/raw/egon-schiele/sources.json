@@ -9,8 +9,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Kauerndes_Menschenpaar_(Die_Familie)_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "the-family-schiele",
@@ -28,7 +28,14 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ],
+    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "death-and-the-maiden-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -40,8 +47,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Tod_und_M%C3%A4dchen_-_3171_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "death-and-the-maiden-schiele",
@@ -59,7 +66,14 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/"
+    ],
+    "related_artwork_slugs": [
+      "the-hermits-schiele"
+    ],
+    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "portrait-of-wally.md": {
     "doc_type": "artwork_commentary",
@@ -90,7 +104,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/528-self-portrait-with-chinese-lantern-plant/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-chinese-lantern-plant"
+    ]
   },
   "self-portrait-with-chinese-lantern-plant.md": {
     "doc_type": "artwork_commentary",
@@ -121,7 +141,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-wally"
+    ]
   },
   "seated-male-nude-self-portrait.md": {
     "doc_type": "artwork_commentary",
@@ -152,7 +178,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ]
   },
   "caress-cardinal-and-nun.md": {
     "doc_type": "artwork_commentary",
@@ -183,7 +215,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/1968/tod-und-madchen"
+    ],
+    "related_artwork_slugs": [
+      "death-and-the-maiden-schiele"
+    ]
   },
   "the-hermits-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -214,7 +252,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ]
   },
   "dead-city-iii.md": {
     "doc_type": "artwork_commentary",
@@ -245,7 +289,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ]
   },
   "mother-with-two-children-ii.md": {
     "doc_type": "artwork_commentary",
@@ -257,7 +307,7 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mother_with_two_children_II_Egon_Schiele_1915.jpg",
+    "image_url": null,
     "image_license": "CC BY-SA 3.0",
     "needs_review": true,
     "artwork": {
@@ -276,7 +326,14 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3071/kauerndes-menschenpaar-die-familie"
+    ],
+    "related_artwork_slugs": [
+      "the-family-schiele"
+    ],
+    "image_usage_note": "Yelkrokoyade photograph requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "blind-mother-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -307,7 +364,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/651-mother-and-child/"
+    ],
+    "related_artwork_slugs": [
+      "mother-and-child-schiele"
+    ]
   },
   "dead-mother-i.md": {
     "doc_type": "artwork_commentary",
@@ -338,7 +401,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ]
   },
   "landscape-with-ravens.md": {
     "doc_type": "artwork_commentary",
@@ -369,7 +438,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/523-autumn-tree-in-stirred-air-winter-tree/"
+    ],
+    "related_artwork_slugs": [
+      "autumn-tree-in-stirred-air"
+    ]
   },
   "autumn-tree-in-stirred-air.md": {
     "doc_type": "artwork_commentary",
@@ -400,7 +475,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/46-landscape-with-ravens/"
+    ],
+    "related_artwork_slugs": [
+      "landscape-with-ravens"
+    ]
   },
   "setting-sun-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -431,7 +512,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/554-calvary/"
+    ],
+    "related_artwork_slugs": [
+      "calvary-schiele"
+    ]
   },
   "small-town-iii.md": {
     "doc_type": "artwork_commentary",
@@ -443,8 +530,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_015.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "small-town-iii",
@@ -457,12 +544,19 @@
       "medium": "Oil, soft pencil on canvas",
       "dimensions": "89.9×90 cm",
       "collection": "레오폴트 미술관",
-      "image_source_url": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_015.jpg",
+      "image_source_url": null,
       "wikidata": null,
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/"
+    ],
+    "related_artwork_slugs": [
+      "crescent-of-houses-ii"
+    ],
+    "image_usage_note": "Previous Commons file depicts Small Town II, not Small Town III; wrong image removed."
   },
   "crescent-of-houses-ii.md": {
     "doc_type": "artwork_commentary",
@@ -493,7 +587,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ]
   },
   "stein-on-the-danube-ii.md": {
     "doc_type": "artwork_commentary",
@@ -524,7 +624,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/654-krumau-on-the-vltava-the-small-town-iv/"
+    ],
+    "related_artwork_slugs": [
+      "krumau-on-the-vltava"
+    ]
   },
   "house-wall-on-the-river.md": {
     "doc_type": "artwork_commentary",
@@ -555,7 +661,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/543-house-with-shingle-roof-old-house-ii/"
+    ],
+    "related_artwork_slugs": [
+      "house-with-shingle-roof"
+    ]
   },
   "house-with-shingle-roof.md": {
     "doc_type": "artwork_commentary",
@@ -586,7 +698,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/542-house-wall-on-the-river/"
+    ],
+    "related_artwork_slugs": [
+      "house-wall-on-the-river"
+    ]
   },
   "houses-by-the-sea.md": {
     "doc_type": "artwork_commentary",
@@ -617,7 +735,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/"
+    ],
+    "related_artwork_slugs": [
+      "crescent-of-houses-ii"
+    ]
   },
   "self-portrait-with-lowered-head.md": {
     "doc_type": "artwork_commentary",
@@ -648,7 +772,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/539-seated-male-nude-self-portrait/"
+    ],
+    "related_artwork_slugs": [
+      "seated-male-nude-self-portrait"
+    ]
   },
   "self-seers-ii.md": {
     "doc_type": "artwork_commentary",
@@ -679,7 +809,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/"
+    ],
+    "related_artwork_slugs": [
+      "the-hermits-schiele"
+    ]
   },
   "lyricist-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -710,7 +846,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ]
   },
   "mourning-woman.md": {
     "doc_type": "artwork_commentary",
@@ -741,7 +883,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ]
   },
   "reclining-woman-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -772,7 +920,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/539-seated-male-nude-self-portrait/"
+    ],
+    "related_artwork_slugs": [
+      "seated-male-nude-self-portrait"
+    ]
   },
   "mother-and-child-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -803,7 +957,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/2-blind-mother/"
+    ],
+    "related_artwork_slugs": [
+      "blind-mother-schiele"
+    ]
   },
   "calvary-schiele.md": {
     "doc_type": "artwork_commentary",
@@ -834,7 +994,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/624-setting-sun/"
+    ],
+    "related_artwork_slugs": [
+      "setting-sun-schiele"
+    ]
   },
   "transfiguration-the-blind-ii.md": {
     "doc_type": "artwork_commentary",
@@ -865,7 +1031,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/"
+    ],
+    "related_artwork_slugs": [
+      "self-seers-ii"
+    ]
   },
   "still-life-with-books.md": {
     "doc_type": "artwork_commentary",
@@ -896,7 +1068,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/"
+    ],
+    "related_artwork_slugs": [
+      "self-portrait-with-lowered-head"
+    ]
   },
   "krumau-on-the-vltava.md": {
     "doc_type": "artwork_commentary",
@@ -927,7 +1105,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/"
+    ],
+    "related_artwork_slugs": [
+      "small-town-iii"
+    ]
   },
   "bio.md": {
     "doc_type": "artist_bio",
@@ -936,7 +1120,7 @@
       "egon-schiele"
     ],
     "artwork_slug": null,
-    "source_url": "https://onlinecollection.leopoldmuseum.org/en/album/yw5dhca8qkawynbky-egon-schiele/",
+    "source_url": "https://www.leopoldmuseum.org/en/collection/egon-schiele",
     "source_name": "레오폴트 미술관",
     "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
@@ -955,6 +1139,60 @@
       "nationality": "오스트리아",
       "wikidata": "https://www.wikidata.org/wiki/Q44032"
     },
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "에곤 실레의 선과 인체 표현",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.belvedere.at/en/stories/who-was-egon-schiele",
+    "source_name": "벨베데레 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "기법",
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+  },
+  "landscape.md": {
+    "doc_type": "artist_bio",
+    "title": "에곤 실레의 도시와 자연 풍경",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/egon-schiele",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "작품 세계",
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "context.md": {
+    "doc_type": "artist_bio",
+    "title": "실레와 빈 근대미술의 시대적 맥락",
+    "artist_slugs": [
+      "egon-schiele"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/expressionism-new-objectivity",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "영향",
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   }
 }

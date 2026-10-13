@@ -28,7 +28,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ]
   },
   "allegory-of-sacred-music.md": {
     "doc_type": "artwork_commentary",
@@ -59,7 +65,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/4742/mannlicher-akt"
+    ],
+    "related_artwork_slugs": [
+      "male-nude-klimt"
+    ]
   },
   "portrait-of-fritza-riedler.md": {
     "doc_type": "artwork_commentary",
@@ -71,8 +83,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Fritza_Riedler_-_3379_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-fritza-riedler",
@@ -90,7 +102,14 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ],
+    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "cottage-garden-with-sunflowers.md": {
     "doc_type": "artwork_commentary",
@@ -121,7 +140,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/21865/sonnenblume"
+    ],
+    "related_artwork_slugs": [
+      "sunflower-klimt"
+    ]
   },
   "lady-in-white-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -152,7 +177,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-amalie-zuckerkandl"
+    ]
   },
   "schloss-kammer-at-attersee-iii.md": {
     "doc_type": "artwork_commentary",
@@ -183,7 +214,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/8691/allee-zum-schloss-kammer"
+    ],
+    "related_artwork_slugs": [
+      "avenue-to-schloss-kammer"
+    ]
   },
   "adam-and-eve-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -214,7 +251,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-amalie-zuckerkandl"
+    ]
   },
   "portrait-of-sonja-knips.md": {
     "doc_type": "artwork_commentary",
@@ -245,7 +288,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2177/fritza-riedler"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-fritza-riedler"
+    ]
   },
   "judith-i.md": {
     "doc_type": "artwork_commentary",
@@ -276,7 +325,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar"
+    ],
+    "related_artwork_slugs": [
+      "the-kiss"
+    ]
   },
   "water-serpents-i.md": {
     "doc_type": "artwork_commentary",
@@ -288,8 +343,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_067.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": null,
     "needs_review": true,
     "artwork": {
       "slug": "water-serpents-i",
@@ -307,7 +362,14 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ],
+    "image_usage_note": "Commons file page does not establish United States public-domain status; display withheld pending rights review."
   },
   "flowering-poppies.md": {
     "doc_type": "artwork_commentary",
@@ -338,7 +400,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ]
   },
   "dusk-lady-at-fireplace.md": {
     "doc_type": "artwork_commentary",
@@ -369,7 +437,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ]
   },
   "portrait-of-johanna-staude.md": {
     "doc_type": "artwork_commentary",
@@ -381,8 +455,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "portrait-of-johanna-staude",
@@ -400,7 +474,14 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2177/fritza-riedler"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-fritza-riedler"
+    ],
+    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "beethoven-frieze.md": {
     "doc_type": "artwork_commentary",
@@ -412,8 +493,8 @@
     "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
     "lang": "ko",
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Beethovenfries%2C_%22Die_Sehnsucht_nach_dem_Gl%C3%BCck%22_(nach_Richard_Wagners_Interpretation_der_IX._Sinfonie_von_Ludwig_van_Beethoven)_-_5987_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
-    "image_license": "Public domain",
+    "image_url": null,
+    "image_license": "CC BY-SA 4.0",
     "needs_review": true,
     "artwork": {
       "slug": "beethoven-frieze",
@@ -431,7 +512,14 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/471/allegorie-der-kirchlichen-musik-entwurf"
+    ],
+    "related_artwork_slugs": [
+      "allegory-of-sacred-music"
+    ],
+    "image_usage_note": "Digital reproduction requires attribution, license link, change notice and share alike; display withheld pending UI support."
   },
   "male-nude-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -462,7 +550,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/4737/beethovenfries"
+    ],
+    "related_artwork_slugs": [
+      "beethoven-frieze"
+    ]
   },
   "josef-lewinsky-as-carlos.md": {
     "doc_type": "artwork_commentary",
@@ -493,7 +587,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ]
   },
   "the-kiss.md": {
     "doc_type": "artwork_commentary",
@@ -524,7 +624,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ]
   },
   "portrait-of-amalie-zuckerkandl.md": {
     "doc_type": "artwork_commentary",
@@ -555,7 +661,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3080/dame-in-wei"
+    ],
+    "related_artwork_slugs": [
+      "lady-in-white-klimt"
+    ]
   },
   "avenue-to-schloss-kammer.md": {
     "doc_type": "artwork_commentary",
@@ -586,7 +698,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3112/schloss-kammer-am-attersee-iii"
+    ],
+    "related_artwork_slugs": [
+      "schloss-kammer-at-attersee-iii"
+    ]
   },
   "old-man-on-deathbed.md": {
     "doc_type": "artwork_commentary",
@@ -617,7 +735,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/629-death-and-life/"
+    ],
+    "related_artwork_slugs": [
+      "death-and-life"
+    ]
   },
   "red-sketchbook-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -648,7 +772,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ]
   },
   "sunflower-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -679,7 +809,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ]
   },
   "mother-with-two-children-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -710,7 +846,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ]
   },
   "after-the-rain-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -741,7 +883,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/"
+    ],
+    "related_artwork_slugs": [
+      "orchard-in-the-evening"
+    ]
   },
   "death-and-life.md": {
     "doc_type": "artwork_commentary",
@@ -772,7 +920,13 @@
       "is_featured": true
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett"
+    ],
+    "related_artwork_slugs": [
+      "old-man-on-deathbed"
+    ]
   },
   "a-morning-by-the-pond.md": {
     "doc_type": "artwork_commentary",
@@ -803,7 +957,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/"
+    ],
+    "related_artwork_slugs": [
+      "on-lake-attersee"
+    ]
   },
   "the-large-poplar-ii.md": {
     "doc_type": "artwork_commentary",
@@ -834,7 +994,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/"
+    ],
+    "related_artwork_slugs": [
+      "on-lake-attersee"
+    ]
   },
   "on-lake-attersee.md": {
     "doc_type": "artwork_commentary",
@@ -865,7 +1031,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/2149-the-large-poplar-ii-gathering-storm/"
+    ],
+    "related_artwork_slugs": [
+      "the-large-poplar-ii"
+    ]
   },
   "forest-floor-klimt.md": {
     "doc_type": "artwork_commentary",
@@ -896,7 +1068,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3917/bluhender-mohn"
+    ],
+    "related_artwork_slugs": [
+      "flowering-poppies"
+    ]
   },
   "orchard-in-the-evening.md": {
     "doc_type": "artwork_commentary",
@@ -927,7 +1105,13 @@
       "is_featured": false
     },
     "display_full_description": true,
-    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/6087/nach-dem-regen"
+    ],
+    "related_artwork_slugs": [
+      "after-the-rain-klimt"
+    ]
   },
   "bio.md": {
     "doc_type": "artist_bio",
@@ -936,7 +1120,7 @@
       "gustav-klimt"
     ],
     "artwork_slug": null,
-    "source_url": "https://onlinecollection.leopoldmuseum.org/en/album/f96cizmk3kbppsmrc-gustav-klimt/",
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
     "source_name": "레오폴트 미술관",
     "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
     "collected_at": "2026-10-13",
@@ -955,6 +1139,60 @@
       "nationality": "오스트리아",
       "wikidata": "https://www.wikidata.org/wiki/Q34661"
     },
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트의 금속 재료와 평면적 화법",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.belvedere.at/en/stories/why-did-gustav-klimt-use-gold",
+    "source_name": "벨베데레 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "기법",
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+  },
+  "landscape.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트의 아터제 풍경과 자연관",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "작품 세계",
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "context.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트와 빈 분리파의 시대적 의미",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "영향",
     "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
   }
 }

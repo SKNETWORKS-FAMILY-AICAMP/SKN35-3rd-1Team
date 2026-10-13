@@ -240,6 +240,10 @@ def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
             "artist_slugs": s.get("artist_slugs") or [], "artwork_slug": s.get("artwork_slug"),
             "source_url": s["source_url"], "source_name": source_name, "license": s.get("license"),
             "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": s.get("related_artwork_slugs") or [],
+            "basis_external_sources": [
+                {"source_name": "관련 작품 소장처 자료", "source_url": url}
+                for url in s.get("related_source_urls", [])
+            ],
             "needs_review": needs_review,
         })
     cat["artists"][slug] = {k: artist.get(k) for k in ARTIST_FIELDS}
@@ -580,8 +584,8 @@ def read_document_corrections() -> dict:
 def initialize_editorial_metadata(cat: dict) -> None:
     """편집 보강이 없는 문서도 같은 출력 스키마를 갖게 한다."""
     for d in cat["documents"]:
-        d["basis_doc_keys"] = []
-        d["basis_external_sources"] = []
+        d.setdefault("basis_doc_keys", [])
+        d.setdefault("basis_external_sources", [])
 
 
 def merge_editorial_basis(d: dict, entry: dict) -> None:

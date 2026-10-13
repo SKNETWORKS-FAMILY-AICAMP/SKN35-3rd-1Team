@@ -1,10 +1,8 @@
 # RAG 담당(B) 인계 문서
 
-데이터는 DB에 모두 들어가 있습니다. B는 **청킹·임베딩 → 검색 → 답변 생성**만 만들면 됩니다. 이 문서는 위에서부터 순서대로 따라 하면 되도록 썼습니다.
+이 문서는 RAG 구현과 적재 순서를 설명한다. 2026-10-13 로컬 전처리에는 클림트·실레 최종 승인분이 포함돼 있으며, 실제 DB·Chroma 반영은 접속 설정 후 확인해야 한다.
 
-기존 적재·평가 기준: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건 (모두 한국어, 모두 검토 완료)
-
-2026-10-13 dev 통합: 저장소 산출물은 작가 10명 · 작품 279점 · 문서 423건이며 신규 62건은 검수 대기입니다. 이번 통합에서 운영 적재·임베딩·Chroma 동기화는 하지 않았습니다. 아래 기존 적재·평가 수치는 이전 스냅샷입니다. 현재 분담과 검수 제외 정책은 [통합·분담표](integration-and-task-board-2026-10-13.md)를 참고합니다.
+이전 DB 적재 기록: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건. 현재 로컬 전처리: 작가 10명 · 작품 279점 · 문서 429건 (검토 필요 0건). 이번 통합에서 운영 적재·임베딩·Chroma 동기화는 하지 않았습니다. 아래 기존 적재·평가 수치는 이전 스냅샷입니다. 당시 분담과 검수 제외 정책은 [통합·분담표](integration-and-task-board-2026-10-13.md)를 참고합니다.
 
 **저장 위치 (10/12 결정)**: 청크와 벡터는 **TiDB에 원본으로 저장**하고(`document_chunks`, `artwork_embeddings`), 같은 내용을 **Chroma에 옮겨 검색은 Chroma로** 합니다. TiDB에 벡터가 있으므로 Chroma가 날아가도 OpenAI를 다시 부르지 않고 그대로 복원할 수 있고, 검색 결과를 TiDB `VEC_COSINE_DISTANCE`와 비교해 볼 수도 있습니다.
 
@@ -19,7 +17,7 @@ artworks  ─(build_artwork_embeddings)───→ TiDB artwork_embeddings ─(
 
 | 항목 | 상태 | 비고 |
 | --- | --- | --- |
-| 전처리 (`data/processed/`) | 완료 | 검토 필요 0건 |
+| 전처리 (`data/processed/`) | 로컬 산출물 갱신 | 2026-10-13 기준 429문서, 검토 필요 0건. 클림트·실레 68건 최종 승인 기록 완료. 아래 DB 행 수는 이전 적재 시점의 기록 |
 | DB 스키마 | 완료 | Alembic `20261012_0003`까지 적용 |
 | 카탈로그·문서 적재 | 완료 | 사조 4 · 작가 8 · 작품 219 · 문서 361 · 작가 연결 134 · 작품 연결 173 · 근거 연결 135 |
 | 검색 범위 SQL (5절) | 실제 DB에서 확인 | 『야경』 범위 28건, 연표 연결 1건 |
@@ -30,14 +28,14 @@ artworks  ─(build_artwork_embeddings)───→ TiDB artwork_embeddings ─(
 
 ### B가 할 일 (순서대로)
 
-1. **환경 준비** — 루트 `.env`에 `OPENAI_API_KEY`와 Chroma 접속 정보를 추가합니다 (`.env.example`에는 아직 없음). 로컬 실험은 `chromadb.PersistentClient(path=...)`, 배포·공용 적재는 Railway의 Chroma 서버에 `chromadb.HttpClient`로 붙습니다. `chromadb`·`langchain-chroma` 의존성은 별도로 추가합니다.
+1. **환경 준비** — 루트 `.env`에 TiDB, `OPENAI_API_KEY`, Chroma 접속 정보를 `.env.example`에 맞춰 설정합니다. 로컬 실험은 `chromadb.PersistentClient(path=...)`, 배포·공용 적재는 Chroma 서버에 `chromadb.HttpClient`로 붙습니다.
    - 완료 기준: `uv run python -m scripts.check_db`가 `missing=(none)`이고, Chroma `heartbeat()`가 응답
 2. **청킹·임베딩 스크립트** `backend/scripts/build_chunks.py` — 청크가 없는 문서만 골라 잘라서 임베딩하고 TiDB `document_chunks`에 넣습니다 (1·3·4절).
-   - 완료 기준: 모든 문서에 청크가 1개 이상, 다시 실행하면 0건 처리
-3. **작품 임베딩 스크립트** `backend/scripts/build_artwork_embeddings.py` — 작품 219점의 벡터를 TiDB `artwork_embeddings`에 넣습니다 (4절).
-   - 완료 기준: 219행
+   - 완료 기준: 승인된 문서마다 청크가 1개 이상, 검토 대기 문서는 0개, 다시 실행하면 0건 처리
+3. **작품 임베딩 스크립트** `backend/scripts/build_artwork_embeddings.py` — 적재된 작품의 벡터를 TiDB `artwork_embeddings`에 넣습니다 (4절).
+   - 완료 기준: 승인 후 적재된 현재 작품 수와 일치 (2026-10-13 로컬 산출물은 전체 279점)
 4. **Chroma 동기화 스크립트** `backend/scripts/sync_chroma.py` — TiDB의 청크·작품 벡터를 Chroma로 옮기고, TiDB에서 사라진 것은 Chroma에서도 지웁니다. 임베딩을 다시 만들지 않습니다 (4절).
-   - 완료 기준: Chroma `chunks` 개수 = `document_chunks` 행 수, `artworks` 개수 = 219, 다시 실행하면 추가·삭제 0건
+   - 완료 기준: Chroma `chunks` ID 집합 = 승인 문서의 `document_chunks` ID 집합, `artworks` 개수 = 작품 임베딩 수, 다시 실행하면 추가·삭제 0건
 5. **검색 함수** (`app/rag`) — 고른 작품 범위 안에서만 Chroma로 벡터 검색하고, 연표 사건을 항상 붙입니다 (5절).
 6. **답변 생성** (`app/services`) — 6절의 시스템 프롬프트 규칙과 출처 표시를 적용합니다.
 7. **검증** — 9절 테스트 질문 27개를 돌려서 기대 문서가 근거로 나오는지, 거절해야 할 질문을 거절하는지 확인합니다.
@@ -65,19 +63,19 @@ from app.models import Document
 
 with SessionLocal() as session:
     todo = session.scalars(select(Document).where(~Document.chunks.any())).all()
-    # 처음에는 361건, 다 처리한 뒤에는 0건
+    # 최초 처리 건수는 실제 DB 적재와 기존 청크 상태에 따라 달라짐
 ```
 
 DB 없이 빠르게 실험만 해 볼 때는 같은 내용을 파일에서 읽을 수 있습니다. 파일을 직접 열지 말고 `load_processed()`를 쓰세요 (전처리가 중간에 실패한 결과를 걸러 줍니다).
 
 ```python
 from scripts.preprocess import load_processed
-docs = load_processed("documents.jsonl")   # list[dict], 361건
+docs = load_processed("documents.jsonl")   # list[dict], 2026-10-13 현재 429건
 ```
 
 ### 작가 별칭 (`artist_aliases.jsonl`)
 
-질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`는 `collected`(승인 문서 있음), `pending_review`(자료는 있으나 승인 문서 없음), `planned`(수집 전)입니다. 현재 클림트·실레는 `pending_review`입니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선). 이 파일은 DB에 넣지 않았으므로 `load_processed("artist_aliases.jsonl")`로 읽습니다.
+질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`는 `collected`(승인 문서 있음), `pending_review`(자료는 있으나 승인 문서 없음), `planned`(수집 전)입니다. 현재 로컬 산출물은 클림트·실레를 포함해 10명 모두 `collected`입니다. 실제 서비스에서 수집 완료로 안내하려면 해당 환경의 DB 적재 상태도 확인해야 합니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선). 이 파일은 DB에 넣지 않았으므로 `load_processed("artist_aliases.jsonl")`로 읽습니다.
 
 ## 2. 문서 한 건의 모양
 
@@ -112,7 +110,7 @@ docs = load_processed("documents.jsonl")   # list[dict], 361건
 | `basis_doc_keys` | `document_basis_documents` | 덧붙인 보충·보정문의 근거 문서. 출처 표시에 함께 씀 |
 | `basis_external_sources` | `documents.basis_external_sources` (JSON) | 데이터셋 밖 근거 `[{"source_name", "source_url"}]` |
 | `topic` | `documents.topic` | 생애 문서의 성격 (`연표`, `생애 전체`, `주변 인물` 등) |
-| `needs_review` | `documents.needs_review` | 기존 361건은 `false`, 신규 62건은 `true` (7절) |
+| `needs_review` | `documents.needs_review` | 로컬 전처리 429건 모두 `false`; 실제 DB 값은 재적재 후 확인 (7절) |
 
 ## 3. 청킹
 
@@ -299,9 +297,9 @@ result = chunks.query(
 
 - A가 원본을 고치면 전처리 → 검토 → `load_catalog` / `load_documents` 순서로 다시 적재합니다.
 - 적재는 `doc_key` 기준 갱신이라 `documents.id`가 유지됩니다.
-- **본문이 바뀐 문서는 `load_documents`가 그 문서의 TiDB 청크를 지웁니다.** 그래서 A가 적재한 뒤 B가 `build_chunks` → `sync_chroma` 순서로 한 번 더 돌리면 됩니다. `build_chunks`는 청크가 없어진 문서만 다시 만들고, `sync_chroma`는 지워진 청크 id를 Chroma에서 빼고 새 청크를 넣습니다.
+- **본문이 바뀐 문서와 `needs_review=true` 문서는 `load_documents`가 TiDB 청크를 지웁니다.** 승인 취소처럼 본문은 같고 상태만 바뀐 경우도 포함합니다. A가 적재한 뒤 B가 `build_chunks` → `sync_chroma` 순서로 돌리면 승인 문서만 청크를 만들고, Chroma에서 없어진 청크 id를 지웁니다.
 - 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다 (`document_chunks`를 비우고 `build_chunks`, Chroma `chunks` 컬렉션을 지우고 `sync_chroma`).
-- `needs_review`: 기존 361건은 `false`이고 신규 62건은 `true`입니다. 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 그 문서만 `true`가 되고, A가 검토 후 다시 `false`로 바꿉니다. `true`인 문서는 SQL 검색 범위·고정 근거와 청킹 입력에서 제외합니다. 작품별 Chroma 검색도 승인된 SQL 범위로 제한합니다. 검토 기록은 `data/mappings/reviews.json`과 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
+- `needs_review`: 로컬 전처리 429문서 모두 `false`다. 클림트·실레 68건의 팀 최종 승인은 `data/mappings/reviews.json`에 본문 해시와 승인자를 기록했다. 새 작가 문서가 들어오거나 승인된 본문이 바뀌면 다시 `true`가 되고, 검토 후 재승인이 필요하다. `true` 문서는 범위 SQL·고정 근거·청킹·Chroma 동기화 입력에서 제외한다. 작품별 Chroma 검색도 승인된 SQL 범위로 제한한다. 기존 검수 기록은 [`data-review-2026-10-12.md`](data-review-2026-10-12.md), 신규 자료의 검수와 이미지 이용 조건은 [`data-review-klimt-schiele-2026-10-13.md`](data-review-klimt-schiele-2026-10-13.md)에 있다. 실제 DB·Chroma가 갱신됐다는 뜻은 아니다.
 
 ## 8. 알고 있어야 할 약점
 
@@ -309,7 +307,7 @@ result = chunks.query(
 | --- | --- | --- |
 | 고흐·고갱 작품 해설은 작품당 1,000~1,400자 | 기관 웹페이지 해설을 복제하지 않은 팀 작성 요약이라 세부 근거는 `basis_external_sources`(Met·NGA·MoMA·위키백과 등)에 의존 | 각 25점·50건 사실 확인 완료. 판본 혼동 등 14건 수정, 50건 공통 반복 문단 제거, 43건 출처 보강 |
 | 모네·세잔의 새 연표·주제 문서는 팀 작성 자료 | 고유명사·사건 연결을 확인해야 했음 | 28건 검토·승인 완료 |
-| 클림트·실레 데이터 없음 | 이 작가 질문은 거절해야 정상 | 수집 대기. 환각 방지 테스트에 활용 가능 |
+| 클림트·실레 데이터 없음 | 이 작가 질문은 거절해야 정상 | 원본·전처리 승인 완료. DB·Chroma 적재 전에는 해당 환경에서 데이터가 없을 수 있음 |
 | 김홍도·정선 기관 원문의 오래된 정보와 학설 | 현재 정보와 확정 사실처럼 답할 위험 | 60점·89문서. 5개 문서에 `답변 시 주의` 보정 레이어와 근거 연결 적용 |
 | 위키 원문·번역본은 위키백과 기반 | 원문 자체는 위키백과 수준의 정확도 | 원문 대조 후 검토·승인 완료 |
 | 번역본 59건은 기계 번역 | 고유명사 표기, 원문 누락 가능성 | 원문 대조·오류 수정·승인 완료 |

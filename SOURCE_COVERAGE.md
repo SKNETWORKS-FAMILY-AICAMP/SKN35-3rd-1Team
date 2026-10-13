@@ -5,19 +5,20 @@
 ## 앱 표시 데이터
 
 - 두 작가 소개: 실레 252자, 클림트 257자. 각각 3문장이다. `data/mappings/catalog.json`의 `summary`가 앱 카드에 들어간다.
-- 작품 해설: 각 30점, 총 60점의 `data/raw/<작가>/<작품>.md`를 `artworks.description`에 전체 반영한다. 500자는 최소 기준으로만 적용하고, 작품별로 확인되는 자료의 깊이에 따라 해설을 확장했다. 현재 전처리 결과의 작품별 설명은 749~1,151자(중앙값 약 804자)다. 짧은 첫 두 문장 추출은 이 두 작가의 해설에서만 건너뛴다.
+- 작품 해설: 각 30점, 총 60점의 `data/raw/<작가>/<작품>.md`를 `artworks.description`에 전체 반영한다. 500자는 최소 기준으로만 적용하고, 작품별 소장처 자료의 깊이에 따라 인물·대상·구도·재료·기법·제작 맥락·해석의 한계·관련 작품 비교를 확장했다. 현재 전처리 결과의 작품별 설명은 967~1,356자이며, 길이를 일정한 목표값으로 맞추지 않았다. 짧은 첫 두 문장 추출은 이 두 작가의 해설에서만 건너뛴다.
+- 작가 심화 자료: 두 작가 모두 `bio.md`를 약 1,400~1,500자로 확장하고 `technique.md`, `landscape.md`, `context.md`를 추가했다. 카드용 250~300자 소개와 검색용 장문 자료를 구별한다. 각 파일의 공식 기관 근거 URL은 같은 폴더의 `sources.json`에 있다.
 - 감상 포인트: 작품마다 별도 내용을 `data/mappings/document_supplements.json`에 기록했다. 전처리 문서에는 `## 감상 포인트` 절로 들어가므로 챗봇 검색 근거로 쓸 수 있다. 현재 앱 작품 상세 응답의 독립 필드로는 아직 노출되지 않는다.
-- 원본 소개 `bio.md`와 작품 해설은 팀이 미술관의 개별 수장품 페이지를 참고해 새로 작성한 한국어 초안이다. 62개 문서 모두 `needs_review: true`이며 팀의 사실·표현 검수 전이다. 원문 문장을 복제하지 않았다.
+- 원본 소개 `bio.md`와 작품 해설은 팀이 미술관의 개별 수장품 페이지를 참고해 새로 작성한 한국어 문서다. 사용자 ju의 최종 승인 후 두 작가의 문서 68건 모두 `needs_review: false`이며, 승인자·본문 해시는 `data/mappings/reviews.json`에 있다. 원문 문장을 복제하지 않았다.
 
 ## 출처와 이용 조건
 
-작품별 정확한 출처 URL과 소장처는 아래 표 및 각 작가의 `sources.json`에 있다. 작가 소개의 출처는 레오폴트 미술관의 [실레 소개](https://onlinecollection.leopoldmuseum.org/en/album/yw5dhca8qkawynbky-egon-schiele/)와 [클림트 소개](https://onlinecollection.leopoldmuseum.org/en/album/f96cizmk3kbppsmrc-gustav-klimt/)다.
+작품별 정확한 출처 URL과 소장처는 아래 표 및 각 작가의 `sources.json`에 있다. 비교에 사용한 다른 작품의 소장처 URL은 `related_source_urls`, 관련 작품 ID는 `related_artwork_slugs`에 기록했고 전처리 문서의 근거 메타데이터로 전달한다. 작가 소개의 출처는 레오폴트 미술관의 [실레 소개](https://www.leopoldmuseum.org/en/collection/egon-schiele)와 [클림트 소개](https://www.leopoldmuseum.org/en/collection/gustav-klimt)다.
 
 - [벨베데레 법적 고지](https://www.belvedere.at/en/legal-notice): 웹사이트의 글과 이미지 등은 저작권 보호 대상이며, 허락 없는 복제·출판·기타 이용을 금지한다. 출처를 밝힌 링크 공유는 허용한다고 안내한다. 텍스트·데이터 마이닝과 AI 학습에 대한 이용 유보도 명시한다.
 - [레오폴트 온라인 컬렉션 법적 고지](https://onlinecollection.leopoldmuseum.org/en/legal-notice/): 게시된 글과 이미지는 저작권 보호 대상이고, 복제·출판을 금지한다고 안내한다. 사후 70년이 지난 작가의 작품 이미지는 사적 목적으로 다운로드할 수 있지만, 출판·복제 허가는 별도라고 명시한다. [이미지 권리 안내](https://www.leopoldmuseum.org/en/collection/image-rights)에서도 사진 이용 신청을 안내한다.
 - 이 저장소의 한국어 설명은 팀이 작성한 문장이라는 뜻이며, 위 기관의 원문이나 사진을 앱에 재게시할 권리를 얻었다는 뜻은 아니다. 출처 URL은 참고 근거다. 이미지 사용은 작품별 `image_url`·`image_license`를 별도로 확인해야 한다. 권리 검토 전인 이미지는 `null`로 남겨 두었다.
 
-전처리 검증 결과: 사조 6개, 작가 10명, 작품 279점, 문서 423건으로 정상 생성됐다. 실레와 클림트는 각 30작품·31문서이며, 작품별 `description` 60건 모두 500자 이상이고 감상 포인트 60건이 별도 절로 포함됐다. 로컬 파일의 갱신만으로 배포된 DB나 앱 화면이 자동 갱신되지는 않는다.
+전처리 검증 결과: 사조 6개, 작가 10명, 작품 279점, 문서 429건으로 정상 생성됐다. 실레와 클림트는 각 30작품·34문서이며, 작품별 `description` 60건 모두 500자 이상이고 감상 포인트 60건이 별도 절로 포함됐다. 이미지 표시 URL은 7건, 제공하지 않는 이미지 URL은 `null` 53건이다. 개별 이미지 권리 검수와 문서 승인 상태는 [2026-10-13 사전 검수 기록](docs/data-review-klimt-schiele-2026-10-13.md) 및 [68건 장부](data/mappings/review_audit_klimt_schiele.json)를 따른다. 로컬 파일의 갱신만으로 배포된 DB나 앱 화면이 자동 갱신되지는 않는다.
 
 ## 구스타프 클림트 (30점)
 

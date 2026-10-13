@@ -60,7 +60,8 @@ def retrieve(
         return _hits(collection.query(query_embeddings=[vector], n_results=n, where=where, include=INCLUDE))
 
     in_scope = {"document_id": {"$in": scope}}
-    found = search(in_scope, k) + _one_per_document(search({"$and": [in_scope, {"artwork_id": artwork_id}]}, SEAT_POOL), OWN_K)
+    own_scope = {"$and": [in_scope, {"artwork_id": artwork_id}]}
+    found = search(in_scope, k) + _one_per_document(search(own_scope, SEAT_POOL), OWN_K)
     if is_comparison(question):
         comparisons = search({"$and": [in_scope, {"doc_type": "artist_comparison"}]}, SEAT_POOL)
         found += _one_per_document(comparisons, COMPARISON_K)

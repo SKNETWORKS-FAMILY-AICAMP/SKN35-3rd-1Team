@@ -101,6 +101,8 @@ def load(session: Session) -> tuple[list[dict], dict[int, list[tuple[int, str, s
     # embedding 컬럼은 읽지 않는다 (청크마다 벡터 6KB 가 네트워크로 넘어옴)
     for r in session.execute(
         select(DocumentChunk.document_id, DocumentChunk.chunk_index, DocumentChunk.content, DocumentChunk.embedding_model)
+        .join(Document, Document.id == DocumentChunk.document_id)
+        .where(Document.needs_review.is_(False))
     ):
         existing[r.document_id].append((r.chunk_index, r.content, r.embedding_model))
     return docs, existing
