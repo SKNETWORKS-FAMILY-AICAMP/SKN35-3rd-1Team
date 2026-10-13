@@ -81,7 +81,7 @@ class _MyPageState extends State<MyPage> {
             builder: (context, c) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                profile,
+                ScrollReveal(child: profile),
                 const SizedBox(height: 22),
                 Wrap(
                   spacing: 10,

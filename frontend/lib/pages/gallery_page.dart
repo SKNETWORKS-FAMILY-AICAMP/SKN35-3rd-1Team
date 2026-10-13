@@ -69,7 +69,7 @@ class _GalleryPageState extends State<GalleryPage> {
           onExplore: () => Scrollable.ensureVisible(
             collectionKey.currentContext!,
             alignment: .24,
-            duration: MediaQuery.disableAnimationsOf(context)
+            duration: reduceMotion(context)
                 ? Duration.zero
                 : const Duration(milliseconds: 350),
           ),

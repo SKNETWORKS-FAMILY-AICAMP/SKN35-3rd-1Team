@@ -5,7 +5,9 @@ import '../state.dart';
 import '../models.dart';
 
 import 'surfaces.dart';
+import 'motion.dart';
 export 'surfaces.dart';
+export 'motion.dart';
 
 TextStyle sans(
   double size, {
@@ -142,25 +144,27 @@ class SectionTitle extends StatelessWidget {
   final String? subtitle;
   final Widget? trailing;
   @override
-  Widget build(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.end,
-    children: [
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Eyebrow(eyebrow),
-            const SizedBox(height: 9),
-            Text(title, style: serif(compact(context) ? 22 : 26)),
-            if (subtitle != null) ...[
-              const SizedBox(height: 5),
-              Text(subtitle!, style: sans(12, color: muted)),
+  Widget build(BuildContext context) => ScrollReveal(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Eyebrow(eyebrow),
+              const SizedBox(height: 9),
+              Text(title, style: serif(compact(context) ? 22 : 26)),
+              if (subtitle != null) ...[
+                const SizedBox(height: 5),
+                Text(subtitle!, style: sans(12, color: muted)),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-      if (trailing != null) ...[const SizedBox(width: 12), trailing!],
-    ],
+        if (trailing != null) ...[const SizedBox(width: 12), trailing!],
+      ],
+    ),
   );
 }
 
@@ -713,8 +717,8 @@ class _ArtworkCardState extends State<ArtworkCard> {
                       child: InkWell(
                         onTap: () => context.go('/artwork/${a.id}'),
                         child: AnimatedScale(
-                          scale: hover ? 1.035 : 1,
-                          duration: MediaQuery.disableAnimationsOf(context)
+                          scale: hover && !reduceMotion(context) ? 1.035 : 1,
+                          duration: reduceMotion(context)
                               ? Duration.zero
                               : const Duration(milliseconds: 250),
                           child: ArtImage(
@@ -821,12 +825,14 @@ class ArtworkGrid extends StatelessWidget {
       return Wrap(
         spacing: gap,
         runSpacing: 32,
-        children: works
+        children: works.indexed
             .map(
-              (a) => SizedBox(
+              (item) => SizedBox(
+                key: ValueKey(item.$2.id),
                 width: width,
-                child: RepaintBoundary(
-                  child: ArtworkCard(a, key: ValueKey(a.id)),
+                child: ScrollReveal(
+                  order: item.$1 % columns,
+                  child: RepaintBoundary(child: ArtworkCard(item.$2)),
                 ),
               ),
             )

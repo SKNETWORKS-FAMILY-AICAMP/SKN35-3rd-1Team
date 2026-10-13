@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'motion.dart';
 
 const paper = Color(0xfff8f7f4);
 const ink = Color(0xff252823);
@@ -111,6 +112,7 @@ ButtonStyle editorialButtonStyle({
     ),
   ),
   animationDuration: Duration.zero,
+  foregroundBuilder: buttonMotionBuilder,
   splashFactory: NoSplash.splashFactory,
 );
 

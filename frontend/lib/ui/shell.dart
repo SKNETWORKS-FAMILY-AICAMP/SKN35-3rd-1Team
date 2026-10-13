@@ -14,6 +14,14 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   bool onboardingOpen = false;
+  final motion = PageMotionController();
+
+  @override
+  void dispose() {
+    motion.dispose();
+    super.dispose();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -42,32 +50,46 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context);
     final mobile = MediaQuery.sizeOf(context).width < 850;
-    return Scaffold(
-      backgroundColor: paper,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            _Header(location: widget.location),
-            Expanded(
-              child: state.loading
-                  ? const Center(child: CircularProgressIndicator(color: green))
-                  : state.error != null
-                  ? EmptyView(
-                      state.error!,
-                      action: ArtButton('다시 불러오기', onTap: state.load),
-                    )
-                  : Semantics(
-                      container: true,
-                      child: SelectionArea(child: widget.child),
-                    ),
-            ),
-          ],
+    return PageMotionScope(
+      controller: motion,
+      child: Scaffold(
+        backgroundColor: paper,
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  _Header(location: widget.location, motion: motion),
+                  Expanded(
+                    child: state.loading
+                        ? const Center(
+                            child: CircularProgressIndicator(color: green),
+                          )
+                        : state.error != null
+                        ? EmptyView(
+                            state.error!,
+                            action: ArtButton('다시 불러오기', onTap: state.load),
+                          )
+                        : Semantics(
+                            container: true,
+                            child: SelectionArea(child: widget.child),
+                          ),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 20,
+                right: mobile ? 16 : 28,
+                child: _ReturnToTop(motion: motion),
+              ),
+            ],
+          ),
         ),
+        bottomNavigationBar: mobile
+            ? _MobileNavigation(location: widget.location)
+            : null,
       ),
-      bottomNavigationBar: mobile
-          ? _MobileNavigation(location: widget.location)
-          : null,
     );
   }
 }
@@ -83,16 +105,80 @@ class AppPage extends StatefulWidget {
 
 class _AppPageState extends State<AppPage> {
   final scroll = ScrollController(keepScrollOffset: false);
+  PageMotionController? motion;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = PageMotionScope.maybeOf(context);
+    if (motion != next) {
+      motion?.unbind(scroll);
+      motion = next;
+      motion?.bind(scroll);
+    }
+  }
+
   @override
   void dispose() {
+    motion?.unbind(scroll);
     scroll.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    controller: scroll,
-    child: Column(children: [widget.child, const _Footer()]),
+  Widget build(BuildContext context) =>
+      NotificationListener<ScrollMetricsNotification>(
+        onNotification: (notification) {
+          if (notification.depth == 0) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) motion?.refresh();
+            });
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: scroll,
+          child: Column(children: [widget.child, const _Footer()]),
+        ),
+      );
+}
+
+class _ReturnToTop extends StatelessWidget {
+  const _ReturnToTop({required this.motion});
+  final PageMotionController motion;
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: motion,
+    builder: (context, _) {
+      final visible = motion.offset > 600;
+      final duration = reduceMotion(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 220);
+      return IgnorePointer(
+        ignoring: !visible,
+        child: ExcludeSemantics(
+          excluding: !visible,
+          child: AnimatedSlide(
+            offset: Offset(0, visible ? 0 : .4),
+            duration: duration,
+            curve: Curves.easeOutCubic,
+            child: AnimatedOpacity(
+              opacity: visible ? 1 : 0,
+              duration: duration,
+              child: IconButton(
+                tooltip: '맨 위로',
+                style: editorialButtonStyle(dark: true).copyWith(
+                  side: const WidgetStatePropertyAll(BorderSide(color: sage)),
+                ),
+                onPressed: () =>
+                    motion.returnToTop(immediately: reduceMotion(context)),
+                icon: const Icon(Icons.arrow_upward, size: 20),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
   );
 }
 
@@ -173,117 +259,155 @@ Future<void> _openAccount(BuildContext context) async {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.location});
+  const _Header({required this.location, required this.motion});
   final String location;
+  final PageMotionController motion;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: motion,
+    builder: (context, _) => content(context),
+  );
+
+  Widget content(BuildContext context) {
     final mobile = MediaQuery.sizeOf(context).width < 850;
+    final collapse = mobile || reduceMotion(context)
+        ? 0.0
+        : (motion.offset / 220).clamp(0.0, 1.0);
     final active = _activeRoute(location);
     final white = editorialButtonStyle(dark: true, quiet: true);
-    return ColoredBox(
-      color: ink,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            key: const ValueKey('primary-header'),
-            height: mobile ? 64 : 80,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: mobile ? 12 : 40),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Center(
-                    child: SizedBox(
-                      width: mobile ? 180 : 230,
-                      child: Semantics(
-                        label: 'Docentalk 홈',
-                        button: true,
-                        child: InkWell(
-                          onTap: () => context.go('/gallery'),
-                          child: Brand(small: mobile, color: Colors.white),
+    return Stack(
+      children: [
+        ColoredBox(
+          color: ink,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                key: const ValueKey('primary-header'),
+                height: mobile ? 64 : 80 - 32 * collapse,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: mobile ? 12 : 40),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                          width: mobile ? 180 : 230,
+                          child: Semantics(
+                            label: 'Docentalk 홈',
+                            button: true,
+                            child: InkWell(
+                              onTap: () => context.go('/gallery'),
+                              child: Transform.scale(
+                                scale: 1 - .12 * collapse,
+                                child: Brand(
+                                  small: mobile,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      tooltip: '작품 검색',
-                      style: white,
-                      onPressed: () => showSearch(
-                        context: context,
-                        delegate: _ArtSearch(ArtlogScope.of(context)),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          tooltip: '작품 검색',
+                          style: white,
+                          onPressed: () => showSearch(
+                            context: context,
+                            delegate: _ArtSearch(ArtlogScope.of(context)),
+                          ),
+                          icon: const Icon(Icons.search, size: 21),
+                        ),
                       ),
-                      icon: const Icon(Icons.search, size: 21),
-                    ),
+                      if (!mobile)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton.icon(
+                            key: const ValueKey('navigation-/mypage'),
+                            style: white,
+                            onPressed: () => _openAccount(context),
+                            icon: const Icon(Icons.person_outline, size: 18),
+                            label: const Text('마이페이지'),
+                          ),
+                        ),
+                    ],
                   ),
-                  if (!mobile)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton.icon(
-                        key: const ValueKey('navigation-/mypage'),
-                        style: white,
-                        onPressed: () => _openAccount(context),
-                        icon: const Icon(Icons.person_outline, size: 18),
-                        label: const Text('마이페이지'),
-                      ),
-                    ),
-                ],
+                ),
+              ),
+              if (!mobile)
+                Container(
+                  height: 48,
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: Color(0xff3d403b))),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (final item in [
+                        ('/gallery', '발견하기'),
+                        ('/artists', '작가'),
+                        ('/community', '감상 피드'),
+                        ('/library', '내 서재'),
+                      ])
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: DecoratedBox(
+                            position: DecorationPosition.foreground,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: active == item.$1
+                                      ? Colors.white
+                                      : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            child: TextButton(
+                              key: ValueKey('navigation-${item.$1}'),
+                              style: white,
+                              onPressed: () => context.go(item.$1),
+                              child: Text(
+                                item.$2,
+                                style: sans(
+                                  14,
+                                  color: Colors.white,
+                                  weight: active == item.$1
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: SizedBox(
+            height: 2,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                key: const ValueKey('page-reading-progress'),
+                widthFactor: motion.progress,
+                child: const ColoredBox(
+                  color: sage,
+                  child: SizedBox(height: 2),
+                ),
               ),
             ),
           ),
-          if (!mobile)
-            Container(
-              height: 48,
-              decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Color(0xff3d403b))),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (final item in [
-                    ('/gallery', '발견하기'),
-                    ('/artists', '작가'),
-                    ('/community', '감상 피드'),
-                    ('/library', '내 서재'),
-                  ])
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: DecoratedBox(
-                        position: DecorationPosition.foreground,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: active == item.$1
-                                  ? Colors.white
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: TextButton(
-                          key: ValueKey('navigation-${item.$1}'),
-                          style: white,
-                          onPressed: () => context.go(item.$1),
-                          child: Text(
-                            item.$2,
-                            style: sans(
-                              14,
-                              color: Colors.white,
-                              weight: active == item.$1
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

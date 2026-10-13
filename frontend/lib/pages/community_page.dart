@@ -12,7 +12,7 @@ class CommunityPage extends StatelessWidget {
     final feed = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('감상 피드', style: serif(32)),
+        ScrollReveal(child: Text('감상 피드', style: serif(32))),
         const SizedBox(height: 10),
         Text('한 점의 그림에서 시작된, 각자의 이야기.', style: sans(14, color: muted)),
         const SizedBox(height: 28),
