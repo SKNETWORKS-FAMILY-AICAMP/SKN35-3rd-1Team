@@ -5,6 +5,7 @@
 ## 들어갈 파일
 
 - `chunking.py`: 문서를 청크로 자르는 규칙 (길이, 겹침)
+- `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend`로 분류 (규칙 기반 수퍼바이저)
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
 - `chain.py`: 검색 결과와 질문, 이전 대화를 LLM에 넘겨 답변 생성

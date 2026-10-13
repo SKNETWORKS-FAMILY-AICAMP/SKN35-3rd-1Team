@@ -6,6 +6,7 @@ from sqlalchemy import func, select, union
 from sqlalchemy.orm import Session
 
 from app.models import (
+    Artist,
     Artwork,
     Document,
     DocumentArtist,
@@ -84,3 +85,8 @@ def document_sources(session: Session, document_ids: set[int]) -> dict[int, Docu
         )
         for d in docs
     }
+
+
+def artwork_artist_slug(session: Session, artwork_id: int) -> str | None:
+    """질문 분류(app.rag.classifier)에 넘길 '고른 작품의 작가' slug. 없는 작품이면 None."""
+    return session.scalar(select(Artist.slug).join(Artwork, Artwork.artist_id == Artist.id).where(Artwork.id == artwork_id))
