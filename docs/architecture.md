@@ -27,9 +27,9 @@ flowchart LR
     end
     subgraph RAILWAY["Railway"]
         API[FastAPI<br/>ArtLog API]
-        CH[(Chroma<br/>chunks · artworks)]
     end
     subgraph EXT["외부 서비스"]
+        CH[(Chroma Cloud<br/>chunks · artworks)]
         DB[(TiDB Cloud Starter<br/>카탈로그·문서·청크 원본·사용자 기록)]
         OAI[OpenAI<br/>임베딩 · LLM]
         FB[Firebase Auth]
@@ -61,11 +61,11 @@ flowchart LR
 | --- | --- | --- | --- |
 | 프론트 | Vercel `artlog-skn35-1team.vercel.app` | 배포됨 | 빌드 때 `ARTLOG_DEMO=false`, `API_BASE_URL=<Railway 주소>` |
 | 백엔드 | Railway `skn35-3rd-1team-production.up.railway.app` | 배포됨 (`/api/health` 정상) | `TIDB_*`, `OPENAI_API_KEY`, `CHROMA_*`, Firebase, `CORS_ORIGINS` |
-| 벡터 검색 | Railway Chroma (`chromadb/chroma:1.5.9`, 볼륨 `/data`, 포트 8000) | **생성 예정** | 백엔드는 같은 프로젝트 내부망 `<서비스>.railway.internal:8000`, 로컬 적재는 공개 도메인 `:443` + SSL |
+| 벡터 검색 | Chroma Cloud (trychroma.com, DB `SKN_artlog`) | 적재 완료 (청크 1,622 · 작품 219) | `CHROMA_API_KEY`(비밀값) · `CHROMA_TENANT` · `CHROMA_DATABASE`. 백엔드 Railway 환경변수 연결 요청함 |
 | DB | TiDB Cloud Starter `3rd_project` | 운영 중 (Alembic `20261012_0005`) | TLS 필수, `pool_recycle=300`, `pool_pre_ping` |
 | 임베딩 | OpenAI `text-embedding-3-small` (1536차원) | 사용 중 | `OPENAI_API_KEY`, `EMBEDDING_MODEL` |
 
-Chroma 1.x에는 자체 인증이 없습니다. 공개 도메인은 적재할 때만 열고, 평소에는 백엔드만 내부망으로 접근하게 합니다. 데이터는 공개 문서이고 TiDB에 원본이 있어 유실돼도 `sync_chroma`로 복원됩니다.
+Chroma는 Railway에 직접 띄우는 대신 **Chroma Cloud**를 씁니다. 직접 띄운 Chroma 1.x에는 자체 인증이 없어 공개 주소를 열면 누구나 데이터를 지울 수 있지만, Cloud는 API 키로 보호되고 서버를 관리할 필요가 없습니다. TiDB에 원본이 있으므로 Cloud가 비거나 다른 곳으로 옮겨도 `sync_chroma`로 복원됩니다. 코드는 Cloud, 직접 띄운 서버(`CHROMA_HOST`), 로컬 폴더(`CHROMA_PATH`)를 모두 지원합니다.
 
 ## 4. 요청 흐름: 챗봇 질문 하나
 
@@ -109,7 +109,7 @@ artworks  ─(build_artwork_embeddings)────→ TiDB artwork_embeddings �
 | 메타데이터 | 문서·작가·작품 관계 전부 | 범위 필터에 필요한 값만: `document_id`, `doc_key`, `doc_type`, `artwork_id`(없으면 0), `chunk_index` / 작품은 `artist_id`, `movement_id` |
 | 거리 함수 | `VEC_COSINE_DISTANCE` | `hnsw:space = cosine` (Chroma 기본값 l2를 바꿈) |
 
-제목·출처·라이선스는 Chroma에 넣지 않고 검색 결과의 `document_id`로 TiDB에서 조회합니다. 출처가 바뀌어도 Chroma를 다시 만들 필요가 없습니다. 같은 질문으로 Chroma와 TiDB를 각각 검색해 상위 5개의 문서와 거리가 소수점 셋째 자리까지 같은 것을 확인했습니다.
+제목·출처·라이선스는 Chroma에 넣지 않고 검색 결과의 `document_id`로 TiDB에서 조회합니다. 출처가 바뀌어도 Chroma를 다시 만들 필요가 없습니다. 같은 질문으로 Chroma와 TiDB를 각각 검색해 상위 5개의 문서와 거리가 소수점 셋째 자리까지 같은 것을 확인했고, 로컬 Chroma와 Chroma Cloud의 평가 결과도 질문 단위로 같았습니다.
 
 ## 6. 검색 계층 상세 (B)
 
@@ -143,7 +143,11 @@ artworks  ─(build_artwork_embeddings)────→ TiDB artwork_embeddings �
 - **작품**: 219건을 매번 upsert합니다. 벡터가 같은 id로 덮어써지기 때문입니다.
 - 임베딩을 다시 만들지 않습니다(OpenAI 비용 0원, 약 10초).
 - 컬렉션이 다른 모델이나 다른 거리 함수로 만들어졌으면 섞어 넣지 않고 멈춥니다. 그때는 `--reset`으로 다시 만듭니다.
-- 접속 설정: `CHROMA_HOST`가 있으면 서버(HttpClient), 없으면 `CHROMA_PATH` 폴더(PersistentClient)를 씁니다. 개발용과 발표용은 컬렉션 이름으로 나눕니다(`CHROMA_CHUNKS_COLLECTION` 등).
+- 접속 우선순위: Cloud 세 값(`CHROMA_API_KEY`·`CHROMA_TENANT`·`CHROMA_DATABASE`) → `CHROMA_HOST`(서버) → `CHROMA_PATH`(로컬 폴더). 일부만 넣으면 멈추고, 실행 로그에 API 키는 찍지 않습니다. 개발용과 발표용은 컬렉션 이름으로 나눕니다(`CHROMA_CHUNKS_COLLECTION` 등).
+- **Chroma Cloud의 제한 (실제로 겪고 고친 것)**
+  - 한 번에 넣을 수 있는 건수가 300개라 250개씩 나눠 넣습니다. 서버의 `get_max_batch_size()`는 1,000을 알려 주지만 실제 쿼터와 다릅니다.
+  - `get()`이 한 번에 300개까지만 돌려주므로 id 목록은 나눠서 끝까지 읽습니다. 안 그러면 1,622개 중 300개만 있다고 보고 다시 넣으려 합니다.
+  - `query(ids=[...])`는 근사 검색 후보 밖의 id를 결과에서 뺍니다. 그래서 "항상 넣는 청크"는 `get()`으로 가져오고 거리를 직접 계산합니다 (6-4).
 
 ### 6-4. 검색 함수 (`app/rag/retriever.py`, `app/repositories/document_repository.py`)
 
@@ -153,12 +157,14 @@ artworks  ─(build_artwork_embeddings)────→ TiDB artwork_embeddings �
 | --- | --- | --- |
 | ① 범위 | TiDB에서 범위 문서 id: 그 작품의 해설 + 그 작가와 연결된 생애·연표·비교 문서 | 예: 『야경』 28건 |
 | ② 거리 순위 | Chroma에서 범위 안 가까운 청크 | 5개 |
-| ③ 작품 자리 | 고른 작품 자신의 해설에서 가까운 청크 | 3개 |
-| ④ 비교 자리 | 질문에 "비교·차이·달라·관계" 등이 있으면 범위 안 비교 문서에서 | 1개 |
-| ⑤ 항상 넣음 (`pinned`) | 그 작품을 언급한 연표 사건(`document_artworks`) + 범위 안 `답변 시 주의` 보정문 | 거리와 무관 |
+| ③ 작품 자리 | 고른 작품 자신의 해설에서 | 3개 |
+| ④ 비교 자리 | 질문에 "비교·차이·달라·관계" 등이 있으면 범위 안 비교 문서에서 | 2개 |
+| ⑤ 항상 넣음 (`pinned`) | 그 작품을 언급한 연표 사건(`document_artworks`) + 범위 안 `답변 시 주의` 보정문. `get()`으로 가져와 거리는 직접 계산 | 거리와 무관 |
 | ⑥ 출처 | 제목·출처·라이선스, 덧붙인 절이면 편집 근거(`document_basis_documents`, `basis_external_sources`) | TiDB 조회 |
 
-②~④는 같은 질문 벡터로 Chroma를 몇 번 더 조회하는 것이라 추가 비용이 없습니다. 중복은 제거하고 거리순으로 정렬하며, 질문당 평균 6.1개(최대 10개) 청크를 돌려줍니다. 범위가 비면(없는 작품) 임베딩 API를 부르지 않고 빈 리스트를 돌려줍니다.
+③④ 자리는 **고르게 나눕니다**: 주제마다 1개 → 아직 안 뽑힌 문서마다 1개 → 나머지 거리순. 주제는 한국어 원문과 영문 번역본을 하나로 봅니다(`doc_key`의 `.en` 앞부분). 그래서 『야경』처럼 원문·번역본이 함께 있는 작품도 원문이 자리를 받고, 비교 자리 2개를 테네브리즘 원문·번역본이 나눠 갖지 않고 테네브리즘·키아로스쿠로가 하나씩 받습니다.
+
+②~④는 같은 질문 벡터로 Chroma를 몇 번 더 조회하는 것이라 추가 비용이 없습니다. 중복은 제거하고 거리순으로 정렬하며, 질문당 평균 6.1개(최대 11개) 청크를 돌려줍니다. 범위가 비면(없는 작품) 임베딩 API를 부르지 않고 빈 리스트를 돌려줍니다.
 
 **결과 형식 (기획서 v2 약속 2)**: LangChain `Document` 리스트입니다. `page_content`는 머리말이 붙은 청크 본문이라 프롬프트에 그대로 넣을 수 있습니다. 순서는 거리로 고른 청크(②~④, 오름차순) 다음에 항상 넣는 청크(⑤)입니다.
 
@@ -187,25 +193,32 @@ uv run python -m scripts.eval_retrieval
 
 질문별 결과는 [`eval/retrieval-2026-10-13.json`](eval/retrieval-2026-10-13.json)에 있습니다.
 
-| 질문셋 | 지표 | 개선 전 (순위 5 + 항상 넣음) | 개선 후 (+ 작품·비교 자리) | 목표 |
-| --- | --- | --- | --- | --- |
-| E 평가셋 30문항 (`tests/questions/rag-eval.json`) | 검색 근거 적중률 | 20/23 (87%) | **22/23 (96%)** | 90% 이상 |
-| 인계 문서 9절 27문항 | 기대 문서가 하나 이상 들어온 질문 | 24/25 | **25/25** | — |
+| 질문셋 | 지표 | ① 순위 5 + 항상 넣음 | ② + 작품·비교 자리 | ③ + 자리 고르게 나누기 | 목표 |
+| --- | --- | --- | --- | --- | --- |
+| E 평가셋 30문항 (`tests/questions/rag-eval.json`) | 검색 근거 적중률 | 20/23 (87%) | 22/23 (96%) | **23/23 (100%)** | 90% 이상 |
+| 〃 | 기대 문서가 전부 들어온 질문 | — | 20 | **23** | — |
+| 인계 문서 9절 27문항 | 기대 문서가 하나 이상 들어온 질문 | 24/25 | 25/25 | **25/25** | — |
+| 〃 | 기대 문서가 전부 들어온 질문 | 20 | 20 | **22** | — |
 
-적중률은 기대 `target_doc_keys` 중 하나 이상이 근거에 들어온 비율입니다. 거절을 기대하는 질문은 대상에서 뺐습니다.
+적중률은 기대 `target_doc_keys` 중 하나 이상이 근거에 들어온 비율이고, 거절을 기대하는 질문은 대상에서 뺐습니다. 한국어 원문과 영문 번역본은 같은 근거로 셉니다. ③은 Chroma Cloud에서 잰 값입니다.
+
+**질문셋 수정 (2026-10-13)**: E 평가셋에서 기대값 3건을 고쳤습니다. compare-004에서는 다른 작품의 해설이라 설계상 범위 밖인 `commentary-sunflowers-arles`를 뺐습니다(1887년 해설 안에 아를 해바라기와의 차이가 설명돼 있어 질문은 그대로 답할 수 있음). detail-008·fact-004(야경)과 compare-003(명암)에는 같은 내용의 영문 번역본 키를 추가했습니다.
 
 **규칙별 효과**
 - **항상 넣는 연표 사건 (⑤)**: 9절의 1·2·3·15·16·17번이 기대하는 연표 사건은 거리 순위만으로는 모두 5위 밖이었습니다. 예를 들어 『야경』의 "그때 렘브란트에게 무슨 일이?"는 사스키아의 죽음 사건이 근거로 들어와야 하는데, 이 규칙으로만 들어왔습니다.
 - **작품 자리 (③)**: 세잔 「사과와 오렌지가 있는 정물」의 화면 구성 질문에서 그 작품 해설이 9위에서 근거 안으로 들어왔습니다.
-- **비교 자리 (④)**: "렘브란트와 카라바조의 명암 차이" 질문에서 테네브리즘 문서가 17위에서 근거 안으로 들어왔습니다.
+- **비교 자리 (④)**: "렘브란트와 카라바조의 명암 차이" 질문에서 테네브리즘(17위)과 키아로스쿠로(55위)가 모두 근거 안으로 들어왔습니다. 자리를 고르게 나누기 전에는 테네브리즘 원문·번역본이 두 자리를 다 가져갔습니다.
+- **작품 자리 고르게 나누기**: 『야경』 "인물 배치" 질문에서 자리 3개를 영문 번역 해설이 다 가져가던 것을, 한국어 원문 해설도 한 자리를 받게 바꿨습니다.
 - **보정문 (⑤)**: 「인왕제색도」의 "지금 어디에 소장돼 있어?"에서 `답변 시 주의` 보정문(삼성미술관이 아니라 국립중앙박물관)이 1위로 나왔습니다.
 
-**남은 실패와 원인**
-| 질문 | 결과 | 원인 |
+**남은 부분 적중** (9절, 기대 문서 중 일부만 들어옴)
+| 질문 | 들어온 것 | 빠진 것과 원인 |
 | --- | --- | --- |
-| detail-008 『야경』 인물 배치 | 집계상 실패 | 작품 자리 3개가 같은 작품의 영문 번역 해설(`the-night-watch.en`)로 채워짐. 내용은 같고 기대 키가 한국어 원문이라 실패로 집계됨 |
-| compare-003 명암 차이 | 2개 중 1개 | 키아로스쿠로 문서는 55위. 비교 자리가 1개라 테네브리즘만 들어옴 |
-| compare-004 해바라기 비교 | 2개 중 1개 | 기대 문서 중 아를 해바라기 해설은 다른 작품의 해설이라 **설계상 범위 밖**. 질문셋 수정 필요 (E에게 전달 예정) |
+| 3번 돌아온 탕자 · 가족 | 연표 14 (항상 넣음) | 연표 13은 49위. 그 작품과 연결된 연표가 아니라 항상 넣기 대상이 아님 |
+| 5번 자화상 · 파산 | 연표 8, 생애 | 연표 4는 54위 |
+| 7번 성 마태오 · 로마 탈출 | 생애 | 연표 7은 28위 |
+
+세 질문 모두 근거 문서는 하나 이상 들어와 답할 재료는 있습니다. 작품과 직접 연결되지 않은 연표까지 넣으려면 질문의 사건 키워드를 보고 연표를 고르는 방법이 필요합니다(다음 작업).
 
 **질문 앞에 작품 제목을 붙이는 방법은 쓰지 않았습니다.** 실험해 보니 "왜 파산했어?" 같은 작가 질문에서 그 작품 해설만 상위를 차지해 결과가 나빠졌습니다(9절 기준, 하나도 못 찾은 질문 1 → 2).
 
@@ -224,7 +237,7 @@ uv run python -m scripts.eval_retrieval
 | `backend/scripts/build_artwork_embeddings.py` | 작품 벡터 → TiDB `artwork_embeddings` |
 | `backend/scripts/sync_chroma.py` | TiDB → Chroma 동기화 |
 | `backend/scripts/eval_retrieval.py` | 검색 근거 적중률 평가 |
-| `backend/tests/test_chunking.py` 외 4개 | 청킹·적재·동기화·검색 테스트 (메모리 Chroma 사용, DB·API 불필요) |
+| `backend/tests/test_chunking.py` 외 5개 | 청킹·적재·접속·동기화·검색 테스트 (메모리 Chroma 사용, DB·API 불필요) |
 
 ## 9. 운영
 
@@ -250,9 +263,9 @@ uv run python -m scripts.sync_chroma               # TiDB → Chroma (비용 0�
 
 | 항목 | 내용 | 담당 |
 | --- | --- | --- |
-| Railway Chroma 생성 | 서비스 생성 → `.env`에 `CHROMA_HOST`·`CHROMA_PORT=443`·`CHROMA_SSL=true` → `sync_chroma`. 백엔드 환경변수에 내부망 주소 추가 | B, 배포 담당(E) |
+| 백엔드 환경변수 연결 | Railway 백엔드에 `CHROMA_API_KEY`·`CHROMA_TENANT`·`CHROMA_DATABASE`, `OPENAI_API_KEY` 설정 (값 전달함) | 배포 담당 |
 | 답변 체인과 `/chat` 연결 | `retrieve()` 결과를 체인에 넣고 `metadata`를 `Source`로 옮김. 거절은 프롬프트로 판단 | C |
-| 번역본 중복 | 한국어 원문과 영문 번역이 같은 내용이라 자리를 나눠 먹음 (detail-008). `doc_key` 기준으로 원문을 우선하는 규칙 검토 | B (10/14 튜닝) |
-| 비교 질문 | 비교 자리를 2개로 늘리거나 질문의 작가 이름을 인식하는 방법 검토 (compare-003) | B (10/14 튜닝) |
+| 작품과 연결되지 않은 연표 | 9절 3·5·7번의 두 번째 연표처럼 질문의 사건(파산, 탈출 등)과 맞는 연표가 순위 밖. 사건 키워드로 연표를 고르는 방법 검토 | B |
+| Chroma Cloud 요금제 | 무료 한도 안에서 약 1,800건 사용 중. 데이터가 크게 늘면 사용량 확인 | B |
 | 멀티턴 | 검색은 마지막 질문만 사용. "그 작품"처럼 생략된 질문은 작품 범위 덕분에 근거를 찾지만(멀티턴 2문항 적중), 질문 재작성 여부는 C와 결정 | B·C |
 | 이미지 | 그림을 보지 않는 문서 RAG. 화면 세부 질문은 문서에 있을 때만 답함 | 설계상 한계 |
