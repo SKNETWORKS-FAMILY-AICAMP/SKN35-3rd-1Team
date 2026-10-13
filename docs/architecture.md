@@ -183,6 +183,20 @@ artworks  ─(build_artwork_embeddings)────→ TiDB artwork_embeddings �
 - 작가 이름은 기본으로 넣지 않습니다(`--with-artist` 옵션 있음). 작품 설명 219개 중 153개에 이미 작가 이름이 들어 있어 같은 작가 작품끼리 가까워지는데, 이름까지 넣으면 그 쏠림이 더 커지기 때문입니다. 추천 서비스는 작가당 1개씩 고르므로 화면에서는 쏠림이 드러나지 않습니다.
 - 예: 「별이 빛나는 밤」과 가장 가까운 작품은 정선 「봄날 달밤의 정취」, 고흐 「밤의 카페 테라스」·「밤의 카페」였습니다. 작가를 넘어 "밤 풍경" 주제로 묶입니다.
 
+### 6-6. 질문 분류 · 수퍼바이저 (`app/rag/classifier.py`)
+
+검색 전에 질문을 규칙으로 분류합니다. LLM을 부르지 않아 비용과 지연이 없습니다.
+
+| 분류 | 조건 | 처리 |
+| --- | --- | --- |
+| `rag` (기본) | 고른 작가가 나오거나, "이 그림"처럼 고른 작품을 가리키거나, 관계·영향·비교를 묻거나, 범위 밖 작가라도 고른 작품의 범위 문서에 그 이름이 나옴 | 검색 → 답변 |
+| `other_artist` | 데이터에 있는 다른 작가만 물음 | 그 작가의 작품을 골라 물어보라고 안내 |
+| `refuse` | 미수집 작가(클림트·실레), 다루지 않는 작가(피카소·마네 등), 날씨·오늘 시세·구매 사이트 | LLM 없이 거절 |
+| `recommend_similar` | "이 작품과 비슷한 작품 추천해 줘" | 고른 작품 기준 추천 |
+| `recommend_personal` | "내 취향에 맞는 작품 추천해 줘" | 로그인 사용자 맞춤 추천 (비로그인은 작품 기준으로 대신) |
+
+작가 이름은 `artist_aliases.jsonl`의 별칭으로 알아봅니다. 지명·동명이인(강원도 정선, 테오 반 고흐)은 지우고 찾고, 낱말 일부(마네킹)는 이름으로 보지 않습니다. **애매하면 `rag`로 보내는 것이 원칙**입니다. 예를 들어 세잔 작품에서 "피사로와는 어떤 관계였어?"는 세잔 생애 문서에 답이 있습니다. 관계 표현이 없어도 범위 문서를 확인합니다: 『현대의 올랭피아』에서 "마네의 올랭피아를 패러디한 거야?"는 세잔 문서에 마네가 나와 rag로, 『야경』에서 같은 마네 질문은 렘브란트 문서에 마네가 없어 거절로 갑니다. rag로 간 질문은 답변 프롬프트의 거절 규칙이 한 번 더 거릅니다. 검증 결과, E 평가셋에서 답해야 할 질문을 하나도 막지 않았고 범위 밖 4문항은 모두 막았으며, 9절 27문항은 전부 맞게 분류했습니다.
+
 ## 7. 평가 결과 (검색 단계)
 
 LLM 없이 검색 결과만 평가했습니다. 재현 방법:
@@ -232,12 +246,13 @@ uv run python -m scripts.eval_retrieval
 | `backend/app/clients/embedding_client.py` | OpenAI 임베딩 (`embed_texts`, `embed_query`), 차원 검사 |
 | `backend/app/clients/chroma_client.py` | Chroma 접속, 컬렉션 열기와 모델·거리 함수 검사 |
 | `backend/app/repositories/document_repository.py` | 범위 문서 id, 항상 넣을 청크, 출처·편집 근거 (TiDB) |
+| `backend/app/rag/classifier.py` | 질문 분류 `classify()`, 기본 안내 문구 `refusal_message()` |
 | `backend/app/rag/retriever.py` | 검색 함수 `retrieve()` |
 | `backend/scripts/build_chunks.py` | 청킹 → 임베딩 → TiDB `document_chunks` |
 | `backend/scripts/build_artwork_embeddings.py` | 작품 벡터 → TiDB `artwork_embeddings` |
 | `backend/scripts/sync_chroma.py` | TiDB → Chroma 동기화 |
 | `backend/scripts/eval_retrieval.py` | 검색 근거 적중률 평가 |
-| `backend/tests/test_chunking.py` 외 5개 | 청킹·적재·접속·동기화·검색 테스트 (메모리 Chroma 사용, DB·API 불필요) |
+| `backend/tests/test_chunking.py` 외 6개 | 청킹·적재·접속·동기화·검색·분류 테스트 (메모리 Chroma 사용, DB·API 불필요) |
 
 ## 9. 운영
 

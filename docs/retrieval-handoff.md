@@ -31,6 +31,37 @@ docs = retrieve(db, artwork_id, body.question)   # list[langchain_core.documents
 - 양: 질문당 평균 6개, 최대 11개 청크. 청크 하나는 최대 약 1,200자라, 근거 전체가 최대 1만 자 안팎입니다.
 - 질문 임베딩 API를 1번 부릅니다. `OPENAI_API_KEY`와 Chroma 접속 설정이 필요합니다.
 
+### 질문 분류 (수퍼바이저) — 검색 전에
+
+`/chat`에서 검색하기 전에 질문을 분류하면, 범위 밖 질문은 LLM 없이 바로 거절하고 추천 요청은 추천 기능으로 보낼 수 있습니다 (`app/rag/classifier.py`, 규칙 기반이라 비용·지연 없음).
+
+```python
+from app.rag.classifier import classify_artwork, refusal_message
+
+route = classify_artwork(db, artwork_id, body.question)
+if route.kind in ("refuse", "other_artist"):              # 없는 작품이면 reason == "unknown_artwork" → 404 처리
+    response = ChatResponse(answer=refusal_message(route), refused=True, sources=[])
+elif route.kind == "recommend_similar":
+    cards = recommendation_service.similar(db, artwork_id=artwork_id)
+elif route.kind == "recommend_personal":                   # 비로그인이면 similar() 로 대신
+    cards = recommendation_service.recommend_artworks(db, user_id=user.id) if user else recommendation_service.similar(db, artwork_id=artwork_id)
+else:                                                       # "rag"
+    docs = retrieve(db, artwork_id, body.question)          # 아래 절차대로
+```
+
+| `route.kind` | 언제 | 예 |
+| --- | --- | --- |
+| `rag` | 기본값. 고른 작가가 나오거나, "이 그림"처럼 고른 작품을 가리키거나, 관계·영향·비교를 묻거나, 범위 밖 작가라도 **고른 작품의 범위 문서에 그 이름이 나오면** | "렘브란트와 카라바조는 어떻게 달라?", "그 사람은?", 세잔 『현대의 올랭피아』에서 "마네의 올랭피아를 패러디한 거야?" |
+| `other_artist` | 데이터에 있는 **다른** 작가만 물음 | 『야경』에서 "카라바조는 왜 로마에서 도망쳤어?" |
+| `refuse` | `route.reason`: `uncollected_artist`(클림트·실레), `unknown_artist`(피카소·마네 등), `off_topic`(날씨·오늘 시세·구매 사이트), `unknown_artwork`(없는 작품) | "클림트의 키스는 언제 그렸어?" |
+| `recommend_similar` | 고른 작품 기준 추천 | "이 작품과 비슷한 작품 추천해 줘", "이런 그림 더 보여줘" |
+| `recommend_personal` | 사용자 취향 기준 추천 | "내 취향에 맞는 작품 추천해 줘", "내가 좋아할 만한 그림 있어?" |
+
+- **원칙은 "애매하면 rag"입니다.** 잘못 거절하는 쪽이 더 나쁘기 때문에 확실한 경우만 거절합니다. rag로 간 질문은 답변 프롬프트의 "근거에 없으면 거절" 규칙이 한 번 더 거릅니다 (예: 근거 부족 질문 "사과가 정확히 몇 개야?"는 rag로 감).
+- **헷갈리는 이름**: 모네↔마네, 정선↔강원도 정선·정선군, 카라바조 본명 미켈란젤로 메리시↔미켈란젤로 부오나로티, 단원 김홍도↔단원고·단원구, 빈센트 반 고흐↔테오 반 고흐, 이름이 낱말 일부인 경우(마네킹)를 테스트로 고정했습니다.
+- 검증 (실제 DB): E 평가셋 30문항에서 답해야 할 질문을 하나도 막지 않았고 범위 밖 4문항(scope-001~003, evidence-003)은 모두 막았습니다. 인계 9절 27문항은 전부 맞게 분류했습니다. 테스트는 `tests/test_classifier.py` (52개).
+- `refusal_message(route)`는 기본 안내 문구입니다 (예: "구스타프 클림트는 아직 자료를 수집하지 않은 작가라 답변드리기 어려워요."). 원하는 문구로 바꿔 써도 됩니다.
+
 ### `metadata` → 응답 `Source`
 
 ```python
