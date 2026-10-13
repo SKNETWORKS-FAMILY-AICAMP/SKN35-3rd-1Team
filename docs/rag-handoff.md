@@ -2,7 +2,9 @@
 
 데이터는 DB에 모두 들어가 있습니다. B는 **청킹·임베딩 → 검색 → 답변 생성**만 만들면 됩니다. 이 문서는 위에서부터 순서대로 따라 하면 되도록 썼습니다.
 
-기준: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건 (모두 한국어, 모두 검토 완료)
+기존 적재·평가 기준: 2026-10-12 · 작가 8명 · 작품 219점 · 문서 361건 (모두 한국어, 모두 검토 완료)
+
+2026-10-13 dev 통합: 저장소 산출물은 작가 10명 · 작품 279점 · 문서 423건이며 신규 62건은 검수 대기입니다. 이번 통합에서 운영 적재·임베딩·Chroma 동기화는 하지 않았습니다. 아래 기존 적재·평가 수치는 이전 스냅샷입니다. 현재 분담과 검수 제외 정책은 [통합·분담표](integration-and-task-board-2026-10-13.md)를 참고합니다.
 
 **저장 위치 (10/12 결정)**: 청크와 벡터는 **TiDB에 원본으로 저장**하고(`document_chunks`, `artwork_embeddings`), 같은 내용을 **Chroma에 옮겨 검색은 Chroma로** 합니다. TiDB에 벡터가 있으므로 Chroma가 날아가도 OpenAI를 다시 부르지 않고 그대로 복원할 수 있고, 검색 결과를 TiDB `VEC_COSINE_DISTANCE`와 비교해 볼 수도 있습니다.
 
@@ -75,7 +77,7 @@ docs = load_processed("documents.jsonl")   # list[dict], 361건
 
 ### 작가 별칭 (`artist_aliases.jsonl`)
 
-질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`가 `collected`(데이터 있음) 또는 `planned`(수집 전, 클림트·실레)입니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선). 이 파일은 DB에 넣지 않았으므로 `load_processed("artist_aliases.jsonl")`로 읽습니다.
+질문 속 작가를 알아보는 데 씁니다 ("고흐", "반 고흐", "Van Gogh"는 모두 `vincent-van-gogh`). 기획된 10명 전부가 들어 있고, `status`는 `collected`(승인 문서 있음), `pending_review`(자료는 있으나 승인 문서 없음), `planned`(수집 전)입니다. 현재 클림트·실레는 `pending_review`입니다. 목록에 없는 작가(피카소 등)는 다루지 않는 작가입니다. `confusable`은 이름이 비슷하지만 연결하면 안 되는 이름입니다 (예: 모네 ↔ 마네, 정선 ↔ 강원도 정선). 이 파일은 DB에 넣지 않았으므로 `load_processed("artist_aliases.jsonl")`로 읽습니다.
 
 ## 2. 문서 한 건의 모양
 
@@ -110,7 +112,7 @@ docs = load_processed("documents.jsonl")   # list[dict], 361건
 | `basis_doc_keys` | `document_basis_documents` | 덧붙인 보충·보정문의 근거 문서. 출처 표시에 함께 씀 |
 | `basis_external_sources` | `documents.basis_external_sources` (JSON) | 데이터셋 밖 근거 `[{"source_name", "source_url"}]` |
 | `topic` | `documents.topic` | 생애 문서의 성격 (`연표`, `생애 전체`, `주변 인물` 등) |
-| `needs_review` | `documents.needs_review` | 지금은 361건 모두 `false` (7절) |
+| `needs_review` | `documents.needs_review` | 기존 361건은 `false`, 신규 62건은 `true` (7절) |
 
 ## 3. 청킹
 
@@ -299,7 +301,7 @@ result = chunks.query(
 - 적재는 `doc_key` 기준 갱신이라 `documents.id`가 유지됩니다.
 - **본문이 바뀐 문서는 `load_documents`가 그 문서의 TiDB 청크를 지웁니다.** 그래서 A가 적재한 뒤 B가 `build_chunks` → `sync_chroma` 순서로 한 번 더 돌리면 됩니다. `build_chunks`는 청크가 없어진 문서만 다시 만들고, `sync_chroma`는 지워진 청크 id를 Chroma에서 빼고 새 청크를 넣습니다.
 - 청킹 방식이나 임베딩 모델을 바꾸면 전체를 다시 만들어야 합니다 (`document_chunks`를 비우고 `build_chunks`, Chroma `chunks` 컬렉션을 지우고 `sync_chroma`).
-- `needs_review`: 지금은 361건 모두 `false`입니다. 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 그 문서만 `true`가 되고, A가 검토 후 다시 `false`로 바꿉니다. `true`인 문서를 검색에서 뺄지는 B가 정하면 됩니다. 검토 기록은 `data/mappings/reviews.json`과 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
+- `needs_review`: 기존 361건은 `false`이고 신규 62건은 `true`입니다. 새 작가 문서가 들어오거나 승인된 문서의 본문이 바뀌면 그 문서만 `true`가 되고, A가 검토 후 다시 `false`로 바꿉니다. `true`인 문서는 SQL 검색 범위·고정 근거와 청킹 입력에서 제외합니다. 작품별 Chroma 검색도 승인된 SQL 범위로 제한합니다. 검토 기록은 `data/mappings/reviews.json`과 [`data-review-2026-10-12.md`](data-review-2026-10-12.md)에 있습니다.
 
 ## 8. 알고 있어야 할 약점
 
@@ -332,7 +334,7 @@ result = chunks.query(
 | 11 | 인상, 해돋이 | 인상주의라는 이름이 이 그림에서 나왔어? | `claude-monet/impression-sunrise` |
 | 12 | 귀에 붕대를 감은 자화상 | 고흐 자화상은 왜 귀가 없어? (기획서 데모 질문) | `vincent-van-gogh/commentary-self-portrait-with-bandaged-ear`, `vincent-van-gogh/timeline-06`, `vincent-van-gogh/van-gogh-bio-arles-ear` |
 | 13 | (아무 작품) | 피카소의 대표작은? | 근거 없음. **거절이 정답** |
-| 14 | (아무 작품) | 클림트의 키스는 언제 그렸어? | 근거 없음 (데이터 미수집). **거절이 정답** |
+| 14 | (아무 작품) | 클림트의 키스는 언제 그렸어? | 신규 자료 검수 대기. **검토 중 안내가 정답** |
 | 15 | 다나에 | 다나에의 모델은 누구야? | `rembrandt/danae` (사스키아였다가 헤이르처 디르크스로 고쳐 그림), `rembrandt/timeline-03`, `rembrandt/timeline-06` |
 | 16 | 카드 사기꾼 | 이 그림을 누가 샀어? | `caravaggio/the-cardsharps`, `caravaggio/timeline-02` (델 몬테 추기경) |
 | 17 | 목욕하는 밧세바 | 밧세바의 모델은 누구야? | `rembrandt/bathsheba-at-her-bath`, `rembrandt/timeline-07` (헨드리케 스토펠스) |

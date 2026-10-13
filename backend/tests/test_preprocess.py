@@ -328,7 +328,9 @@ def test_artist_aliases_cover_collected_artists(out):
     assert pp.main() == 0
     rows = {r["slug"]: r for r in pp.load_processed("artist_aliases.jsonl")}
     collected = {a["slug"] for a in pp.load_processed("artists.jsonl")}
-    assert {s for s, r in rows.items() if r["status"] == "collected"} == collected
+    pending = {s for s, r in rows.items() if r["status"] == "pending_review"}
+    assert pending == {"gustav-klimt", "egon-schiele"}
+    assert {s for s, r in rows.items() if r["status"] == "collected"} == collected - pending
     assert all(r["aliases"] for r in rows.values())
 
 

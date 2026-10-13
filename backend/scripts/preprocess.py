@@ -280,7 +280,7 @@ def add_artwork(
     w["image_license"] = w.get("image_license") or s.get("image_license")
     # 카드 설명 우선순위: 사람이 쓴 설명 > 한국어 원문 > 번역본 (번역본은 비어 있을 때만)
     if lang == "ko" and "description" not in manual and (not translated or not w.get("description")):
-        w["description"] = first_sentences(content)
+        w["description"] = content.strip() if s.get("display_full_description") else first_sentences(content)
     w["is_featured"] = bool(w.get("is_featured"))
     cat["artworks"][slug] = w
 
@@ -525,8 +525,18 @@ def normalize_artist_slugs(cat: dict) -> None:
 
 
 def alias_rows(cat: dict) -> list[dict]:
-    """기획된 작가 전부의 별칭. status 는 이번 결과에 작가 데이터가 있는지로 정한다 (손으로 적지 않음)."""
-    return [{"slug": slug, "name": a["name"], "status": "collected" if slug in cat["artists"] else "planned",
+    """Only artists with reviewed material are available to the classifier."""
+    available = set()
+    for doc in cat["documents"]:
+        if doc["needs_review"]:
+            continue
+        available.update(doc["artist_slugs"])
+        work = cat["artworks"].get(doc.get("artwork_slug"))
+        if work:
+            available.add(work["artist_slug"])
+    return [{"slug": slug, "name": a["name"],
+             "status": "collected" if slug in available else
+                       "pending_review" if slug in cat["artists"] else "planned",
              "aliases": a["aliases"], "confusable": a.get("confusable", [])}
             for slug, a in sorted(cat["aliases"].items())]
 

@@ -1,5 +1,5 @@
 # Only what the backend image needs (infra/backend.Dockerfile). Keeps .env,
-# .venv, data and the frontend out of the build context.
+# .venv, raw data and the frontend out of the build context.
 **
 !pyproject.toml
 !uv.lock
@@ -7,3 +7,8 @@
 backend/tests/
 **/__pycache__/
 **/.pytest_cache/
+
+!data/
+!data/processed/
+!data/processed/*.jsonl
+!data/processed/_SUCCESS.json

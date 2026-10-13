@@ -18,6 +18,8 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-dev --no-install-project
 
 COPY backend ./backend
+# The classifier reads the verified alias registry at runtime.
+COPY data/processed ./data/processed
 
 # Imports resolve from backend/ (app, scripts), same as local `uv run`.
 WORKDIR /app/backend

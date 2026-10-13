@@ -1,7 +1,7 @@
 {"slug": "caravaggio", "name": "카라바조", "status": "collected", "aliases": ["카라바조", "카라바지오", "미켈란젤로 메리시 다 카라바조", "미켈란젤로 메리시", "메리시", "Caravaggio", "Michelangelo Merisi da Caravaggio", "Michelangelo Merisi"], "confusable": ["미켈란젤로 부오나로티 (르네상스 조각가, 다른 작가)"]}
 {"slug": "claude-monet", "name": "클로드 모네", "status": "collected", "aliases": ["모네", "클로드 모네", "클로드모네", "끌로드 모네", "오스카클로드 모네", "Monet", "Claude Monet", "Oscar-Claude Monet"], "confusable": ["마네 (에두아르 마네, 다른 작가)"]}
-{"slug": "egon-schiele", "name": "에곤 실레", "status": "planned", "aliases": ["실레", "에곤 실레", "쉴레", "에곤 쉴레", "에곤 시엘레", "Schiele", "Egon Schiele"], "confusable": []}
-{"slug": "gustav-klimt", "name": "구스타프 클림트", "status": "planned", "aliases": ["클림트", "구스타프 클림트", "구스타브 클림트", "Klimt", "Gustav Klimt"], "confusable": []}
+{"slug": "egon-schiele", "name": "에곤 실레", "status": "pending_review", "aliases": ["실레", "에곤 실레", "쉴레", "에곤 쉴레", "에곤 시엘레", "Schiele", "Egon Schiele"], "confusable": []}
+{"slug": "gustav-klimt", "name": "구스타프 클림트", "status": "pending_review", "aliases": ["클림트", "구스타프 클림트", "구스타브 클림트", "Klimt", "Gustav Klimt"], "confusable": []}
 {"slug": "jeong-seon", "name": "정선", "status": "collected", "aliases": ["정선", "겸재", "겸재 정선", "Jeong Seon", "Gyeomjae"], "confusable": ["강원도 정선 (지명, 작가 아님)"]}
 {"slug": "kim-hong-do", "name": "김홍도", "status": "collected", "aliases": ["김홍도", "단원", "단원 김홍도", "Kim Hong-do", "Kim Hongdo", "Danwon"], "confusable": ["단원고·안산 단원구 등 지명 (작가 아님)"]}
 {"slug": "paul-cezanne", "name": "폴 세잔", "status": "collected", "aliases": ["세잔", "폴 세잔", "폴세잔", "세잔느", "폴 세잔느", "Cézanne", "Cezanne", "Paul Cézanne", "Paul Cezanne"], "confusable": []}

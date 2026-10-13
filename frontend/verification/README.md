@@ -105,6 +105,6 @@
 
 ## 모든 팀 브랜치 dev 통합 (2026-10-13)
 
-최신 ERD는 social_accounts·user_preferences를 포함한 17테이블이며 Alembic head는 20261013_0006입니다. 기존의 ‘15테이블/프로필 테이블 없음’ 기록은 통합 전 lsh 시점의 기록입니다. 통합 프론트 81개·백엔드 275개·배포 스크립트 4개 검사, Flutter 분석·Ruff·offline 마이그레이션 SQL 검증을 통과했습니다. 실제 운영 DB 쓰기나 신규 초안 적재는 하지 않았습니다.
+최신 ERD는 social_accounts·user_preferences를 포함한 17테이블이며 Alembic head는 20261013_0006입니다. 기존의 ‘15테이블/프로필 테이블 없음’ 기록은 통합 전 lsh 시점의 기록입니다. 통합 프론트 81개·백엔드 279개·배포 스크립트 4개 검사, Flutter 분석·Ruff·offline 마이그레이션 SQL 검증을 통과했습니다. 실제 운영 DB 쓰기나 신규 초안 적재는 하지 않았습니다.
 
 통합 범위·검증의 한계·남은 디자인 및 프로필 연결 작업은 [통합·분담표](../../docs/integration-and-task-board-2026-10-13.md)를 참고하세요.

@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | rag | 기본값. 고른 작품·작가에 관한 질문 | retrieve() → 답변 체인 |
 | other_artist | 데이터에 있는 **다른** 작가만 묻고, 고른 작가·비교·관계 표현이 없음 | 그 작가 작품을 골라 물어보라고 안내 (route.artists) |
-| refuse | 미수집 작가(클림트·실레), 다루지 않는 작가(피카소 등), 날씨·실시간 시세 같은 범위 밖 질문 | LLM 없이 refused=true |
+| refuse | 검수 대기 작가(클림트·실레) 또는 미수집 작가, 다루지 않는 작가(피카소 등), 날씨·실시간 시세 같은 범위 밖 질문 | LLM 없이 refused=true |
 | recommend_similar | "이 작품과 비슷한 작품 추천해 줘" | recommendation_service.similar() (고른 작품 기준) |
 | recommend_personal | "내 취향에 맞는 작품 추천해 줘" | 로그인 사용자면 recommend_artworks(), 비로그인이면 similar() 로 대신 |
 
@@ -67,7 +67,7 @@ HANGUL = re.compile(r"[가-힣]")
 @dataclass(frozen=True)
 class Route:
     kind: Kind
-    reason: str | None = None  # refuse: "uncollected_artist" | "unknown_artist" | "off_topic" | "unknown_artwork"
+    reason: str | None = None  # refuse: "unreviewed_artist" | "uncollected_artist" | "unknown_artist" | "off_topic" | "unknown_artwork"
     artists: tuple[str, ...] = ()  # 질문에 나온 데이터 안 작가 slug
     names: tuple[str, ...] = ()  # 질문에 나온 범위 밖 작가 이름 (안내 문구용)
     matched: tuple[str, ...] = field(default=(), compare=False)  # 디버깅용: 걸린 규칙
@@ -80,6 +80,7 @@ class _Artist:
     collected: bool
     aliases: tuple[str, ...]
     confusable: tuple[str, ...]
+    pending_review: bool = False
 
 
 def classify_artwork(session, artwork_id: int, question: str) -> Route:
@@ -125,7 +126,8 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
     if named_in_scope and any(named_in_scope(n) for n in planned_aliases + unknown):
         return Route("rag", names=planned + unknown, matched=("named_in_scope",))
     if planned:
-        return Route("refuse", "uncollected_artist", names=planned, matched=("planned",))
+        reason = "unreviewed_artist" if any(a.pending_review and a.name in planned for a in _artists().values()) else "uncollected_artist"
+        return Route("refuse", reason, names=planned, matched=("planned",))
     if unknown:
         return Route("refuse", "unknown_artist", names=unknown[:1], matched=("unknown",))
     return Route("rag", matched=("default",))
@@ -133,6 +135,9 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
 
 def refusal_message(route: Route) -> str:
     """refuse·other_artist 일 때 쓸 수 있는 기본 안내 문구. 답변 담당이 바꿔 써도 된다."""
+    if route.kind == "refuse" and route.reason == "unreviewed_artist":
+        names = _join(route.names)
+        return f"{names} 자료는 아직 검토 중이에요. 검수가 끝난 소장 작품에 관해 물어봐 주세요."
     if route.kind == "refuse" and route.reason == "uncollected_artist":
         names = _join(route.names)
         return f"{names}{_topic(names)} 아직 자료를 수집하지 않은 작가라 답변드리기 어려워요."
@@ -162,7 +167,7 @@ def _topic(word: str) -> str:
 def _find_artists(text: str) -> tuple[str, tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     """질문에 나온 작가를 찾는다.
 
-    돌려주는 값: (헷갈리는 이름·찾은 이름을 지운 글, 수집 작가 slug, 미수집 작가 이름, 미수집 작가가 질문에 쓰인 모양).
+    돌려주는 값: (헷갈리는 이름·찾은 이름을 지운 글, 승인된 작가 slug, 수집 전·검수 대기 작가 이름, 해당 작가가 질문에 쓰인 모양).
 
     긴 별칭부터 찾고 찾은 자리는 지운다. 그래야 "미켈란젤로 메리시"(카라바조)가 "미켈란젤로"로,
     "반 고흐"의 "고흐"가 두 번 잡히지 않는다.
@@ -207,7 +212,7 @@ def _artists() -> dict[str, _Artist]:
 
     return {
         a["slug"]: _Artist(
-            a["slug"], a["name"], a["status"] == "collected", tuple(a["aliases"]), tuple(a.get("confusable") or ())
+            a["slug"], a["name"], a["status"] == "collected", tuple(a["aliases"]), tuple(a.get("confusable") or ()), a["status"] == "pending_review"
         )
         for a in load_processed("artist_aliases.jsonl")
     }

@@ -36,11 +36,12 @@ class DocumentSource:
 
 def scope_document_ids(session: Session, artwork_id: int) -> list[int]:
     """① 그 작품의 해설 + ②③ 그 작가가 연결된 생애·연표·비교 문서. 작품이 없으면 빈 목록."""
-    own = select(Document.id).where(Document.artwork_id == artwork_id)
+    own = select(Document.id).where(Document.artwork_id == artwork_id, Document.needs_review.is_(False))
     by_artist = (
         select(DocumentArtist.document_id)
         .join(Artwork, Artwork.artist_id == DocumentArtist.artist_id)
-        .where(Artwork.id == artwork_id)
+        .join(Document, Document.id == DocumentArtist.document_id)
+        .where(Artwork.id == artwork_id, Document.needs_review.is_(False))
     )
     return sorted(session.scalars(select(union(own, by_artist).subquery().c[0])))
 
@@ -53,7 +54,9 @@ def pinned_chunk_ids(session: Session, artwork_id: int, scope_ids: list[int]) ->
     """
     timeline = select(DocumentChunk.id).join(
         DocumentArtwork, DocumentArtwork.document_id == DocumentChunk.document_id
-    ).where(DocumentArtwork.artwork_id == artwork_id)
+    ).join(Document, Document.id == DocumentChunk.document_id).where(
+        DocumentArtwork.artwork_id == artwork_id, Document.needs_review.is_(False)
+    )
     ids = set(session.scalars(timeline))
     if scope_ids:
         header = func.substring_index(DocumentChunk.content, "\n", 1)

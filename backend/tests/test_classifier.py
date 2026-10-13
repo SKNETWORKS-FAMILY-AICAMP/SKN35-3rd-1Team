@@ -14,8 +14,8 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
 @pytest.mark.parametrize(("artist", "question", "kind", "reason"), [
     # 거절: 다루지 않는 작가 · 미수집 작가 · 실시간/생활 정보
     ("rembrandt", "피카소의 대표작은?", "refuse", "unknown_artist"),
-    ("rembrandt", "클림트의 키스는 언제 그렸어?", "refuse", "uncollected_artist"),
-    ("claude-monet", "에곤 쉴레는 어떤 화가야?", "refuse", "uncollected_artist"),
+    ("rembrandt", "클림트의 키스는 언제 그렸어?", "refuse", "unreviewed_artist"),
+    ("claude-monet", "에곤 쉴레는 어떤 화가야?", "refuse", "unreviewed_artist"),
     ("claude-monet", "마네의 대표작은?", "refuse", "unknown_artist"),  # 모네와 헷갈리는 다른 화가
     ("claude-monet", "오늘 서울 날씨 알려줘", "refuse", "off_topic"),
     ("rembrandt", "이 그림을 가장 싸게 살 수 있는 사이트 찾아줘", "refuse", "off_topic"),
@@ -115,7 +115,13 @@ def test_eval_set_never_refuses_answerable_questions():
 
 
 def test_refusal_messages_use_natural_particles():
-    assert refusal_message(classify("클림트의 키스는?", "rembrandt")).startswith("구스타프 클림트는 아직")
+    assert refusal_message(classify("클림트의 키스는?", "rembrandt")).startswith("구스타프 클림트 자료는 아직")
     assert refusal_message(classify("피카소 대표작?", "rembrandt")).startswith("피카소는 이 미술관")
     assert "작품을 고른 뒤" in refusal_message(classify("고흐는 왜 귀를 잘랐어?", "rembrandt"))
     assert refusal_message(classify("이 그림의 빛은?", "rembrandt")) == ""
+
+
+def test_pending_artist_message_explains_review():
+    route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
+    assert route.reason == "unreviewed_artist"
+    assert "검토 중" in refusal_message(route)
