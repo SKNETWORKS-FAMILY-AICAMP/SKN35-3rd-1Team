@@ -1,95 +1,83 @@
-# 클림트·실레 작품별 원문 자료표
+# 클림트·실레 작품별 미술관 근거 자료표
 
-수집일: 2026-10-12 · 팀 가이드의 `data/raw/<작가 slug>/` 형식
+수집·수정일: 2026-10-13
 
-- 작품 60점: 작가별 30점. 생애 원문은 작가별 한국어·영어 각 1건입니다.
-- 작품 원문은 모두 영어 위키백과의 공개 텍스트입니다. `*.en.md`는 팀의 번역 단계에서 한국어로 변환해야 합니다.
-- `개별 문서`는 해당 작품의 독립 문서, `작품 목록 항목`은 클림트 작품 목록의 표 항목, `작가 페이지 캡션`은 실레 문서 갤러리의 작품별 한 줄입니다. 목록 항목과 짧은 캡션은 검토 대상으로 표시했습니다.
-- 원문 글자 수에는 섹션 제목과 참고문헌이 포함됩니다. 공통 생애 문서의 길이는 개별 작품 길이에 더하지 않았습니다.
-- `sources.json`에 본문·이미지의 주소와 이용 조건, `artwork`에 위키데이터로 확인한 카드 값이 있습니다. 확인되지 않은 값은 `null`입니다.
-- 인용·출처 표시는 각 원문의 위키백과 페이지를 따릅니다. 이미지가 CC BY-SA인 경우 파일 설명 페이지의 저작자·표시 조건도 확인해 표기해야 합니다.
+두 작가의 작품을 각 30점씩 정리했다. 각 작품의 한국어 본문은 소장 기관의 개별 작품 페이지에 근거해 새로 작성한 해설 초안이다. 기관의 문장을 복제하지 않았으며, 모든 본문은 팀 검수 전이므로 `needs_review: true`다.
+
+이전 위키백과 본문과 실레 작품의 한 줄 갤러리 캡션은 자료에서 제거했다. 현재 작품 본문 60건은 모두 500자 이상(실레 536~611자, 클림트 551~629자)이며, 인물 또는 대상·구도·색과 재료·제작 맥락·해석의 한계를 다룬다. `bio.md`도 두 작가 모두 한국어로 있다.
+
+이미지 주소가 있는 항목은 기존에 이용 조건을 확인한 위키미디어 공용 주소만 유지했다. 새로 고른 작품의 이미지 조건을 확인하지 못한 경우 `image_url: null`로 두었다. 본문 출처의 이미지 다운로드 권한과 본문 작성·이용 조건은 별개다.
+
+팀 가이드의 원문 복사 규칙과 달리 이 묶음은 신뢰할 수 있는 미술관 자료를 바탕으로 작성한 한국어 해설 초안이다. 이 차이를 `license` 설명과 `needs_review`에 명시했다. 담당자 검수 후 앱에 게시해야 한다.
+
+전처리 적재 확인: 두 작가 각각 30작품·31문서가 읽혔고 짧은 문서 경고는 없었다. 작품별 본문 최솟값은 536자이며, `sources.json`에서 모든 작품의 소장처 개별 페이지와 연결된다. 현재 `data/mappings/catalog.json`에 `expressionism`, `vienna-secession` 사조가 없어 전체 검증에서 관련 오류 62건이 난다. 팀 가이드에 따라 이 매핑 파일은 수집 단계에서 수정하지 않았다.
 
 ## 구스타프 클림트 (30점)
 
-생애 원문: [한국어](data/raw/gustav-klimt/bio.md) 15,657자 · [영어](data/raw/gustav-klimt/bio.en.md) 38,635자
-
-| 번호 | 작품 | 연도 | 개별 원문 | 글자 수 | 검토 | 원문 파일 | 출처 |
-| ---: | --- | --- | --- | ---: | --- | --- | --- |
-| 1 | 옛 부르크극장의 객석 (`auditorium-of-the-old-burgtheater`) | 1888–1889 | 개별 문서 | 4,958 | - | [열기](data/raw/gustav-klimt/auditorium-of-the-old-burgtheater.en.md) | [원문](https://en.wikipedia.org/wiki/Auditorium_of_the_Old_Burgtheater) |
-| 2 | 팔라스 아테나 (`pallas-athena-klimt`) | 1898 | 개별 문서 | 5,140 | - | [열기](data/raw/gustav-klimt/pallas-athena-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/Pallas_Athena_(Klimt)) |
-| 3 | 피아노를 치는 슈베르트 (`schubert-at-the-piano`) | 1899 | 개별 문서 | 5,444 | - | [열기](data/raw/gustav-klimt/schubert-at-the-piano.en.md) | [원문](https://en.wikipedia.org/wiki/Schubert_at_the_Piano) |
-| 4 | 아터제의 섬 (`island-in-the-attersee`) | 1901–1902 | 개별 문서 | 1,553 | - | [열기](data/raw/gustav-klimt/island-in-the-attersee.en.md) | [원문](https://en.wikipedia.org/wiki/Insel_im_Attersee) |
-| 5 | 유디트 I (`judith-i`) | 1901 | 개별 문서 | 5,665 | - | [열기](data/raw/gustav-klimt/judith-i.en.md) | [원문](https://en.wikipedia.org/wiki/Judith_I) |
-| 6 | 베토벤 프리즈 (`beethoven-frieze`) | 1902 | 개별 문서 | 4,225 | - | [열기](data/raw/gustav-klimt/beethoven-frieze.en.md) | [원문](https://en.wikipedia.org/wiki/Beethoven_Frieze) |
-| 7 | 에밀리 플뢰게의 초상 (`portrait-of-emilie-floge`) | 1902–1908 | 개별 문서 | 5,208 | - | [열기](data/raw/gustav-klimt/portrait-of-emilie-floge.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Emilie_Fl%C3%B6ge) |
-| 8 | 희망 I (`hope-i`) | 1903 | 개별 문서 | 7,159 | - | [열기](data/raw/gustav-klimt/hope-i.en.md) | [원문](https://en.wikipedia.org/wiki/Hope_I) |
-| 9 | 배나무 (`pear-tree-klimt`) | 1903 | 개별 문서 | 4,432 | - | [열기](data/raw/gustav-klimt/pear-tree-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/Pear_Tree_(Klimt)) |
-| 10 | 아델레 블로흐바우어의 초상 I (`portrait-of-adele-bloch-bauer-i`) | 1903–1907 | 개별 문서 | 25,058 | - | [열기](data/raw/gustav-klimt/portrait-of-adele-bloch-bauer-i.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Adele_Bloch-Bauer_I) |
-| 11 | 물뱀 I (`water-serpents-i`) | 1904–1907 | 개별 문서 | 1,836 | - | [열기](data/raw/gustav-klimt/water-serpents-i.en.md) | [원문](https://en.wikipedia.org/wiki/Water_Serpents_I) |
-| 12 | 물뱀 II (`water-serpents-ii`) | 1904–1907 | 개별 문서 | 5,213 | - | [열기](data/raw/gustav-klimt/water-serpents-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Water_Serpents_II) |
-| 13 | 여인의 세 시기 (`the-three-ages-of-woman`) | 1905 | 개별 문서 | 3,936 | - | [열기](data/raw/gustav-klimt/the-three-ages-of-woman.en.md) | [원문](https://en.wikipedia.org/wiki/The_Three_Ages_of_Woman_(Klimt)) |
-| 14 | 프리차 리들러의 초상 (`portrait-of-fritza-riedler`) | 1906 | 작품 목록 항목 | 1,010 | 필요 | [열기](data/raw/gustav-klimt/portrait-of-fritza-riedler.en.md) | [원문](https://en.wikipedia.org/wiki/List_of_paintings_by_Gustav_Klimt) |
-| 15 | 다나에 (`danae-klimt`) | 1907 | 개별 문서 | 1,288 | - | [열기](data/raw/gustav-klimt/danae-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/Dana%C3%AB_(Klimt)) |
-| 16 | 희망 II (`hope-ii`) | 1907–1908 | 개별 문서 | 3,076 | - | [열기](data/raw/gustav-klimt/hope-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Hope_II) |
-| 17 | 키스 (`the-kiss`) | 1907–1908 | 개별 문서 | 6,147 | - | [열기](data/raw/gustav-klimt/the-kiss.en.md) | [원문](https://en.wikipedia.org/wiki/The_Kiss_(Klimt)) |
-| 18 | 죽음과 삶 (`death-and-life`) | 1908–1915 | 개별 문서 | 1,282 | - | [열기](data/raw/gustav-klimt/death-and-life.en.md) | [원문](https://en.wikipedia.org/wiki/Death_and_Life) |
-| 19 | 물가의 성 (`schloss-by-the-water`) | 1908 | 개별 문서 | 1,949 | - | [열기](data/raw/gustav-klimt/schloss-by-the-water.en.md) | [원문](https://en.wikipedia.org/wiki/Schloss_by_the_Water) |
-| 20 | 공원 (`the-park-klimt`) | 1909–1910년경 | 개별 문서 | 4,035 | - | [열기](data/raw/gustav-klimt/the-park-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/The_Park_(Klimt)) |
-| 21 | 생명의 나무 (`the-tree-of-life-stoclet-frieze`) | 1909 | 개별 문서 | 1,108 | - | [열기](data/raw/gustav-klimt/the-tree-of-life-stoclet-frieze.en.md) | [원문](https://en.wikipedia.org/wiki/The_Tree_of_Life%2C_Stoclet_Frieze) |
-| 22 | 아델레 블로흐바우어의 초상 II (`portrait-of-adele-bloch-bauer-ii`) | 1912 | 개별 문서 | 3,456 | - | [열기](data/raw/gustav-klimt/portrait-of-adele-bloch-bauer-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Adele_Bloch-Bauer_II) |
-| 23 | 처녀 (`the-maiden-klimt`) | 1913 | 개별 문서 | 874 | - | [열기](data/raw/gustav-klimt/the-maiden-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/The_Maiden_(Klimt)) |
-| 24 | 엘리자베트 레더러의 초상 (`portrait-of-elisabeth-lederer`) | 1914–1916 | 개별 문서 | 8,622 | - | [열기](data/raw/gustav-klimt/portrait-of-elisabeth-lederer.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Elisabeth_Lederer) |
-| 25 | 사과나무 II (`apple-tree-ii`) | 1916 | 개별 문서 | 3,954 | - | [열기](data/raw/gustav-klimt/apple-tree-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Apple_Tree_II) |
-| 26 | 여인의 초상 (`portrait-of-a-lady-klimt`) | 1916–1917 | 개별 문서 | 2,181 | - | [열기](data/raw/gustav-klimt/portrait-of-a-lady-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_a_Lady_(Klimt)) |
-| 27 | 여자 친구들 (`women-friends-klimt`) | 1916–1917 | 개별 문서 | 5,212 | - | [열기](data/raw/gustav-klimt/women-friends-klimt.en.md) | [원문](https://en.wikipedia.org/wiki/Women_Friends) |
-| 28 | 부채를 든 여인 (`lady-with-a-fan`) | 1917 | 개별 문서 | 3,938 | - | [열기](data/raw/gustav-klimt/lady-with-a-fan.en.md) | [원문](https://en.wikipedia.org/wiki/Lady_with_a_Fan_(Klimt)) |
-| 29 | 프롤라인 리저의 초상 (`portrait-of-fraulein-lieser`) | 1917 | 개별 문서 | 4,952 | - | [열기](data/raw/gustav-klimt/portrait-of-fraulein-lieser.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Fr%C3%A4ulein_Lieser) |
-| 30 | 요한나 슈타우데의 초상 (`portrait-of-johanna-staude`) | 1917–1918 | 개별 문서 | 3,351 | - | [열기](data/raw/gustav-klimt/portrait-of-johanna-staude.en.md) | [원문](https://en.wikipedia.org/wiki/Johanna_Staude) |
+| 번호 | 작품 | 연도 | 해설 파일 | 근거 기관 |
+| ---: | --- | --- | --- | --- |
+| 1 | 숲의 바닥 | 1881/82 | [열기](data/raw/gustav-klimt/forest-floor-klimt.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/31087-forest-floor/) |
+| 2 | 남성 누드 습작 | 1883 | [열기](data/raw/gustav-klimt/male-nude-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/4742/mannlicher-akt) |
+| 3 | 종교 음악의 알레고리 | 1884 | [열기](data/raw/gustav-klimt/allegory-of-sacred-music.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/471/allegorie-der-kirchlichen-musik-entwurf) |
+| 4 | 카를로스를 연기하는 요제프 레빈스키 | 1895 | [열기](data/raw/gustav-klimt/josef-lewinsky-as-carlos.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/6234/josef-lewinsky-als-carlos-in-clavigo) |
+| 5 | 황혼: 벽난로 옆의 여인 | 1897/1898 | [열기](data/raw/gustav-klimt/dusk-lady-at-fireplace.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/4185/dammerung-dame-am-kamin) |
+| 6 | 소냐 크닙스의 초상 | 1897/1898 | [열기](data/raw/gustav-klimt/portrait-of-sonja-knips.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3197/sonja-knips) |
+| 7 | 비가 온 뒤 | 1898 | [열기](data/raw/gustav-klimt/after-the-rain-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/6087/nach-dem-regen) |
+| 8 | 저녁의 과수원 | 1898 | [열기](data/raw/gustav-klimt/orchard-in-the-evening.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/) |
+| 9 | 붉은 스케치북 | 1898 | [열기](data/raw/gustav-klimt/red-sketchbook-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/9997/rotes-skizzenbuch) |
+| 10 | 연못가의 아침 | 1899 | [열기](data/raw/gustav-klimt/a-morning-by-the-pond.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/2148-a-morning-by-the-pond/) |
+| 11 | 임종한 노인 | 1900 | [열기](data/raw/gustav-klimt/old-man-on-deathbed.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett) |
+| 12 | 아터제 호수 위에서 | 1900 | [열기](data/raw/gustav-klimt/on-lake-attersee.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/) |
+| 13 | 베토벤 프리즈 | 1901-1902 | [열기](data/raw/gustav-klimt/beethoven-frieze.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/4737/beethovenfries) |
+| 14 | 유디트 I | 1901 | [열기](data/raw/gustav-klimt/judith-i.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3492/judith) |
+| 15 | 큰 포플러 II: 몰려오는 폭풍 | 1902/03 | [열기](data/raw/gustav-klimt/the-large-poplar-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/2149-the-large-poplar-ii-gathering-storm/) |
+| 16 | 물뱀 I | 1904 (minor amendments in 1907) | [열기](data/raw/gustav-klimt/water-serpents-i.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3828/freundinnen-wasserschlangen-i) |
+| 17 | 해바라기가 있는 시골 정원 | 1906 | [열기](data/raw/gustav-klimt/cottage-garden-with-sunflowers.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen) |
+| 18 | 프리차 리들러의 초상 | 1906 | [열기](data/raw/gustav-klimt/portrait-of-fritza-riedler.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/2177/fritza-riedler) |
+| 19 | 꽃핀 양귀비 | 1907 | [열기](data/raw/gustav-klimt/flowering-poppies.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3917/bluhender-mohn) |
+| 20 | 해바라기 | 1907-1908 | [열기](data/raw/gustav-klimt/sunflower-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/21865/sonnenblume) |
+| 21 | 키스 | c. 1907–1909 | [열기](data/raw/gustav-klimt/the-kiss.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar) |
+| 22 | 두 아이와 어머니 | 1909/1910 | [열기](data/raw/gustav-klimt/mother-with-two-children-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/27315/mutter-mit-zwei-kindern-familie) |
+| 23 | 죽음과 삶 | 1910/11, reworked in 1912/13 and 1915/16 | [열기](data/raw/gustav-klimt/death-and-life.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/629-death-and-life/) |
+| 24 | 아터제의 카머 성 III | c. 1911/1912 | [열기](data/raw/gustav-klimt/schloss-kammer-at-attersee-iii.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3112/schloss-kammer-am-attersee-iii) |
+| 25 | 상오스트리아의 농가 | 1911 | [열기](data/raw/gustav-klimt/upper-austrian-farmhouse.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/380/oberosterreichisches-bauernhaus) |
+| 26 | 카머 성으로 가는 길 | 1912 | [열기](data/raw/gustav-klimt/avenue-to-schloss-kammer.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/8691/allee-zum-schloss-kammer) |
+| 27 | 아말리에 추커칸들의 초상 | 1913/14 (possibly also still in 1917) (unfinished) | [열기](data/raw/gustav-klimt/portrait-of-amalie-zuckerkandl.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl) |
+| 28 | 아담과 이브 | 1916 - 1918 | [열기](data/raw/gustav-klimt/adam-and-eve-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3196/adam-und-eva) |
+| 29 | 흰옷을 입은 여인 | 1917/1918 | [열기](data/raw/gustav-klimt/lady-in-white-klimt.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3080/dame-in-wei) |
+| 30 | 요한나 슈타우데의 초상 | 1917/1918 | [열기](data/raw/gustav-klimt/portrait-of-johanna-staude.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/4302/johanna-staude) |
 
 ## 에곤 실레 (30점)
 
-생애 원문: [한국어](data/raw/egon-schiele/bio.md) 12,396자 · [영어](data/raw/egon-schiele/bio.en.md) 24,522자
-
-| 번호 | 작품 | 연도 | 개별 원문 | 글자 수 | 검토 | 원문 파일 | 출처 |
-| ---: | --- | --- | --- | ---: | --- | --- | --- |
-| 1 | 검은 머리 소녀 (`girl-with-black-hair-1910`) | 1910 | 작가 페이지 캡션 | 30 | 필요 | [열기](data/raw/egon-schiele/girl-with-black-hair-1910.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 2 | 누워 있는 누드 (1910) (`reclining-nude-schiele-1910`) | 1910 | 작가 페이지 캡션 | 24 | 필요 | [열기](data/raw/egon-schiele/reclining-nude-schiele-1910.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 3 | 자화상 (1910) (`schiele-self-portrait-1910`) | 1910 | 작가 페이지 캡션 | 62 | 필요 | [열기](data/raw/egon-schiele/schiele-self-portrait-1910.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 4 | 일그러진 표정의 자화상 (`self-portrait-grimacing-1910`) | 1910 | 작가 페이지 캡션 | 33 | 필요 | [열기](data/raw/egon-schiele/self-portrait-grimacing-1910.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 5 | 줄무늬 셔츠를 입은 자화상 (`self-portrait-striped-shirt-1910`) | 1910 | 작가 페이지 캡션 | 70 | 필요 | [열기](data/raw/egon-schiele/self-portrait-striped-shirt-1910.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 6 | 죽은 도시 III (`dead-city-iii`) | 1911 | 개별 문서 | 4,224 | - | [열기](data/raw/egon-schiele/dead-city-iii.en.md) | [원문](https://en.wikipedia.org/wiki/Dead_City_III) |
-| 7 | 붉은 가터를 한 누드 (`nude-with-red-garters`) | 1911 | 작가 페이지 캡션 | 31 | 필요 | [열기](data/raw/egon-schiele/nude-with-red-garters.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 8 | 검은 항아리와 함께한 자화상 (`self-portrait-black-clay-pot`) | 1911 | 작가 페이지 캡션 | 43 | 필요 | [열기](data/raw/egon-schiele/self-portrait-black-clay-pot.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 9 | 누워 있는 반나체 인물 (`semi-nude-reclining-1911`) | 1911 | 작가 페이지 캡션 | 28 | 필요 | [열기](data/raw/egon-schiele/semi-nude-reclining-1911.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 10 | 발리의 초상 (`portrait-of-wally`) | 1912 | 개별 문서 | 8,780 | - | [열기](data/raw/egon-schiele/portrait-of-wally.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Wally) |
-| 11 | 감옥에서 그린 자화상 (`self-portrait-in-jail-1912`) | 1912 | 작가 페이지 캡션 | 100 | 필요 | [열기](data/raw/egon-schiele/self-portrait-in-jail-1912.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 12 | 갈색 배경의 자화상 (`self-portrait-with-brown-background`) | 1912 | 작가 페이지 캡션 | 45 | 필요 | [열기](data/raw/egon-schiele/self-portrait-with-brown-background.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 13 | 고개를 숙인 자화상 (`self-portrait-with-lowered-head`) | 1912 | 작가 페이지 캡션 | 68 | 필요 | [열기](data/raw/egon-schiele/self-portrait-with-lowered-head.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 14 | 작은 도시 III (`small-town-iii`) | 1912–1913 | 작가 페이지 캡션 | 110 | 필요 | [열기](data/raw/egon-schiele/small-town-iii.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 15 | 황혼의 도시 (`city-in-twilight`) | 1913 | 개별 문서 | 2,283 | - | [열기](data/raw/egon-schiele/city-in-twilight.en.md) | [원문](https://en.wikipedia.org/wiki/D%C3%A4mmernde_Stadt) |
-| 16 | 우정 (`friendship-schiele-1913`) | 1913 | 작가 페이지 캡션 | 20 | 필요 | [열기](data/raw/egon-schiele/friendship-schiele-1913.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 17 | 도나우강의 슈타인 II (`stein-an-der-donau-ii`) | 1913 | 작가 페이지 캡션 | 81 | 필요 | [열기](data/raw/egon-schiele/stein-an-der-donau-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 18 | 다리 (`the-bridge-schiele-1913`) | 1913 | 작가 페이지 캡션 | 57 | 필요 | [열기](data/raw/egon-schiele/the-bridge-schiele-1913.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 19 | 검은 스타킹을 신은 발부르가 노이칠 (`walburga-neuzil-in-black-stockings`) | 1913 | 작가 페이지 캡션 | 44 | 필요 | [열기](data/raw/egon-schiele/walburga-neuzil-in-black-stockings.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 20 | 강가의 집들 (`houses-on-the-river`) | 1914 | 작가 페이지 캡션 | 90 | 필요 | [열기](data/raw/egon-schiele/houses-on-the-river.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 21 | 발리와 함께한 연인 자화상 (`lovers-self-portrait-with-wally`) | 1914–1915년경 | 작가 페이지 캡션 | 53 | 필요 | [열기](data/raw/egon-schiele/lovers-self-portrait-with-wally.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 22 | 팔꿈치를 괴고 앉은 여성 누드 (`seated-female-nude-elbows-propped`) | 1914 | 작가 페이지 캡션 | 48 | 필요 | [열기](data/raw/egon-schiele/seated-female-nude-elbows-propped.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 23 | 죽음과 소녀 (`death-and-the-maiden-schiele`) | 1915 | 개별 문서 | 1,393 | - | [열기](data/raw/egon-schiele/death-and-the-maiden-schiele.en.md) | [원문](https://en.wikipedia.org/wiki/Death_and_the_Maiden_(Schiele)) |
-| 24 | 널지붕을 얹은 집 (`house-with-shingle-roof`) | 1915 | 작가 페이지 캡션 | 75 | 필요 | [열기](data/raw/egon-schiele/house-with-shingle-roof.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 25 | 두 아이와 어머니 II (`mother-with-two-children-ii`) | 1915 | 작가 페이지 캡션 | 56 | 필요 | [열기](data/raw/egon-schiele/mother-with-two-children-ii.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 26 | 에디트 실레의 초상 (`portrait-of-edith-schiele`) | 1915 | 개별 문서 | 533 | - | [열기](data/raw/egon-schiele/portrait-of-edith-schiele.en.md) | [원문](https://en.wikipedia.org/wiki/Portrait_of_Edith_(the_artist%27s_wife)) |
-| 27 | 오래된 방앗간 (`old-mill-schiele-1916`) | 1916 | 작가 페이지 캡션 | 35 | 필요 | [열기](data/raw/egon-schiele/old-mill-schiele-1916.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 28 | 네 그루의 나무 (`four-trees-schiele-1917`) | 1917 | 작가 페이지 캡션 | 84 | 필요 | [열기](data/raw/egon-schiele/four-trees-schiele-1917.en.md) | [원문](https://en.wikipedia.org/wiki/Egon_Schiele) |
-| 29 | 무릎을 굽히고 앉은 여인 (`seated-woman-with-bent-knees`) | 1917 | 개별 문서 | 5,503 | - | [열기](data/raw/egon-schiele/seated-woman-with-bent-knees.en.md) | [원문](https://en.wikipedia.org/wiki/Seated_Woman_with_Bent_Knees) |
-| 30 | 가족 (`the-family-schiele`) | 1918 | 개별 문서 | 2,556 | - | [열기](data/raw/egon-schiele/the-family-schiele.en.md) | [원문](https://en.wikipedia.org/wiki/The_Family_(Schiele)) |
-
-## 검수 요약
-
-| 작가 | 작품 | 200자 미만 | 검토 필요 |
-| --- | ---: | ---: | ---: |
-| `gustav-klimt` | 30 | 0 | 1 |
-| `egon-schiele` | 30 | 23 | 23 |
-
-실레의 짧은 23건은 작품 식별·연도 중심의 캡션입니다. 도슨트 답변 근거로 사용하기 전에 개별 해설 원문을 추가해야 합니다. 영어 원문은 팀의 번역·검수 단계가 끝나기 전까지 한국어 챗봇에 바로 적재할 수 없습니다.
-
-원본은 `data/raw/`에만 기록했습니다. `data/processed/`와 `data/mappings/`는 수정하지 않았습니다.
+| 번호 | 작품 | 연도 | 해설 파일 | 근거 기관 |
+| ---: | --- | --- | --- | --- |
+| 1 | 죽은 어머니 I | 1910 | [열기](data/raw/egon-schiele/dead-mother-i.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/549-dead-mother-i/) |
+| 2 | 앉아 있는 남성 누드 자화상 | 1910 | [열기](data/raw/egon-schiele/seated-male-nude-self-portrait.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/539-seated-male-nude-self-portrait/) |
+| 3 | 죽은 도시 III | 1911 | [열기](data/raw/egon-schiele/dead-city-iii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/534-dead-city-iii-city-on-the-blue-river-iii/) |
+| 4 | 까마귀가 있는 풍경 | 1911 | [열기](data/raw/egon-schiele/landscape-with-ravens.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/46-landscape-with-ravens/) |
+| 5 | 서정시인 | 1911 | [열기](data/raw/egon-schiele/lyricist-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/524-lyricist/) |
+| 6 | 자기를 보는 사람들 II | 1911 | [열기](data/raw/egon-schiele/self-seers-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/525-self-seers-ii-death-and-man/) |
+| 7 | 흔들리는 공기 속의 가을 나무 | 1912 | [열기](data/raw/egon-schiele/autumn-tree-in-stirred-air.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/523-autumn-tree-in-stirred-air-winter-tree/) |
+| 8 | 갈바리아 | 1912 | [열기](data/raw/egon-schiele/calvary-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/554-calvary/) |
+| 9 | 애무: 추기경과 수녀 | 1912 | [열기](data/raw/egon-schiele/caress-cardinal-and-nun.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/529-caress-cardinal-and-nun/) |
+| 10 | 어머니와 아이 | 1912 | [열기](data/raw/egon-schiele/mother-and-child-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/651-mother-and-child/) |
+| 11 | 애도하는 여인 | 1912 | [열기](data/raw/egon-schiele/mourning-woman.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/535-mourning-woman/) |
+| 12 | 발리 노이칠의 초상 | 1912 | [열기](data/raw/egon-schiele/portrait-of-wally.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/) |
+| 13 | 꽈리 열매가 있는 자화상 | 1912 | [열기](data/raw/egon-schiele/self-portrait-with-chinese-lantern-plant.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/528-self-portrait-with-chinese-lantern-plant/) |
+| 14 | 고개를 숙인 자화상 | 1912 | [열기](data/raw/egon-schiele/self-portrait-with-lowered-head.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/536-self-portrait-with-lowered-head/) |
+| 15 | 은둔자들 | 1912 | [열기](data/raw/egon-schiele/the-hermits-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/540-hermits/) |
+| 16 | 지는 해 | 1913 | [열기](data/raw/egon-schiele/setting-sun-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/624-setting-sun/) |
+| 17 | 작은 도시 III | 1913 | [열기](data/raw/egon-schiele/small-town-iii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/1-the-small-town-iii/) |
+| 18 | 도나우강의 슈타인 II | 1913 | [열기](data/raw/egon-schiele/stein-on-the-danube-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/553-stein-on-the-danube-ii/) |
+| 19 | 눈먼 어머니 | 1914 | [열기](data/raw/egon-schiele/blind-mother-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/2-blind-mother/) |
+| 20 | 바닷가의 집들 | 1914 | [열기](data/raw/egon-schiele/houses-by-the-sea.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/526-houses-by-the-sea-row-of-houses/) |
+| 21 | 블타바강의 크루마우 | 1914 | [열기](data/raw/egon-schiele/krumau-on-the-vltava.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/654-krumau-on-the-vltava-the-small-town-iv/) |
+| 22 | 책이 있는 정물: 화가의 책상 | 1914–16 | [열기](data/raw/egon-schiele/still-life-with-books.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/532-still-life-with-books-the-artists-desk/) |
+| 23 | 집들의 초승달 II | 1915 | [열기](data/raw/egon-schiele/crescent-of-houses-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/530-crescent-of-houses-ii-island-town/) |
+| 24 | 죽음과 소녀 | 1915 | [열기](data/raw/egon-schiele/death-and-the-maiden-schiele.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/1968/tod-und-madchen) |
+| 25 | 강가의 집 벽 | 1915 | [열기](data/raw/egon-schiele/house-wall-on-the-river.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/542-house-wall-on-the-river/) |
+| 26 | 널지붕을 얹은 집 | 1915 | [열기](data/raw/egon-schiele/house-with-shingle-roof.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/543-house-with-shingle-roof-old-house-ii/) |
+| 27 | 두 아이와 어머니 II | 1915 | [열기](data/raw/egon-schiele/mother-with-two-children-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/) |
+| 28 | 변용: 눈먼 사람들 II | 1915 | [열기](data/raw/egon-schiele/transfiguration-the-blind-ii.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/541-transfiguration-the-blind-ii/) |
+| 29 | 누워 있는 여인 | 1917 | [열기](data/raw/egon-schiele/reclining-woman-schiele.md) | [레오폴트 미술관](https://onlinecollection.leopoldmuseum.org/en/object/625-reclining-woman/) |
+| 30 | 가족 | 1918 | [열기](data/raw/egon-schiele/the-family-schiele.md) | [벨베데레 미술관](https://sammlung.belvedere.at/objects/3071/kauerndes-menschenpaar-die-familie) |
