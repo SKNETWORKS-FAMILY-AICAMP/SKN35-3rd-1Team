@@ -168,6 +168,47 @@ class SectionTitle extends StatelessWidget {
   );
 }
 
+const _wikimediaThumbnailWidth = '800';
+
+/// Avoid downloading multi-hundred-megabyte Wikimedia originals in artwork cards.
+///
+/// Wikimedia's redirect endpoint chooses an available thumbnail size close to the
+/// requested width and returns a browser-friendly image even when the source is a
+/// TIFF. Non-Wikimedia URLs and local assets are intentionally left unchanged.
+String optimizedArtworkImageUrl(String image) {
+  final uri = Uri.tryParse(image);
+  if (uri == null || !uri.hasAuthority) return image;
+
+  final host = uri.host.toLowerCase();
+  final isCommonsSpecial = host == 'commons.wikimedia.org' &&
+      (uri.path.startsWith('/wiki/Special:FilePath/') ||
+          uri.path.startsWith('/wiki/Special:Redirect/file/'));
+  final isCommonsUpload = host == 'upload.wikimedia.org' &&
+      uri.path.startsWith('/wikipedia/commons/');
+
+  if (isCommonsSpecial) {
+    if (uri.queryParameters.containsKey('width')) return image;
+    return uri.replace(
+      queryParameters: {
+        ...uri.queryParameters,
+        'width': _wikimediaThumbnailWidth,
+      },
+    ).toString();
+  }
+
+  if (isCommonsUpload) {
+    final filename = uri.pathSegments.isEmpty ? '' : uri.pathSegments.last;
+    if (filename.isEmpty) return image;
+    return Uri.https(
+      'commons.wikimedia.org',
+      '/wiki/Special:Redirect/file/$filename',
+      const {'width': _wikimediaThumbnailWidth},
+    ).toString();
+  }
+
+  return image;
+}
+
 class ArtImage extends StatelessWidget {
   const ArtImage(
     this.image, {
@@ -209,7 +250,7 @@ class ArtImage extends StatelessWidget {
     }
     final resolved = image.startsWith('/')
         ? Uri.base.resolve(image).toString()
-        : image;
+        : optimizedArtworkImageUrl(image);
     return asset
         ? Image.asset(
             image,
