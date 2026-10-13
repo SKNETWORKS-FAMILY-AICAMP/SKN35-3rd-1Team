@@ -13,7 +13,6 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  final scroll = ScrollController();
   bool onboardingOpen = false;
   @override
   void didChangeDependencies() {
@@ -40,20 +39,6 @@ class _AppShellState extends State<AppShell> {
   }
 
   @override
-  void didUpdateWidget(covariant AppShell oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.location != widget.location && scroll.hasClients) {
-      scroll.jumpTo(0);
-    }
-  }
-
-  @override
-  void dispose() {
-    scroll.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context);
     return Scaffold(
@@ -68,17 +53,39 @@ class _AppShellState extends State<AppShell> {
                     state.error!,
                     action: ArtButton('다시 불러오기', onTap: state.load),
                   )
-                : SelectionArea(
-                    child: SingleChildScrollView(
-                      controller: scroll,
-                      child: Column(children: [widget.child, const _Footer()]),
-                    ),
+                : Semantics(
+                    container: true,
+                    child: SelectionArea(child: widget.child),
                   ),
           ),
         ],
       ),
     );
   }
+}
+
+// Each route owns its scroll view. Keeping the Navigator inside an unbounded
+// scroll view constrains outgoing routes to the next page's content height.
+class AppPage extends StatefulWidget {
+  const AppPage({super.key, required this.child});
+  final Widget child;
+  @override
+  State<AppPage> createState() => _AppPageState();
+}
+
+class _AppPageState extends State<AppPage> {
+  final scroll = ScrollController(keepScrollOffset: false);
+  @override
+  void dispose() {
+    scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    controller: scroll,
+    child: Column(children: [widget.child, const _Footer()]),
+  );
 }
 
 class Brand extends StatelessWidget {

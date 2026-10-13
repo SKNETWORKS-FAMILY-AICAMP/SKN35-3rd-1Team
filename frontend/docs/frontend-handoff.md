@@ -8,6 +8,8 @@ Flutter 웹에서 최신 서버 계약에 있는 기능을 연결했습니다. �
 
 이번 직접 수정은 `frontend/` 안으로 제한했습니다. Railway 콘솔·서버 환경변수·TiDB 데이터·기존 서버 설정은 변경하지 않았습니다. Google 공급자 설정 결과는 아래 배포 기록에 별도로 기재합니다.
 
+추가 요청에 따라 최신 15테이블 ERD·마이그레이션·API를 대조했습니다. 반복 열람 집계와 작품 수/감상 횟수 구분, 큐레이터 featured 표시, 편집 보강 근거를 반영했습니다. 테이블별 대응과 문서 불일치는 [ERD 연결 점검](erd-mapping.md)을 참고하세요. 온보딩의 나이·성별·설명 스타일 필드는 현재 ERD에 없어 브라우저 저장을 유지합니다.
+
 ## 완료한 프론트 동작
 
 | 화면 | 동작 |
@@ -65,7 +67,7 @@ Flutter 웹에서 최신 서버 계약에 있는 기능을 연결했습니다. �
 - Vercel 빌드 값: `API_BASE_URL` 위 API 주소, `ARTLOG_DEMO=false`, `AUTH_PROVIDER=firebase`.
 - 공개 Firebase 웹 설정은 기존 Vercel 환경변수 사용. 사용자 승인 후 `skn35-3rd-1team`의 Google 공급자를 활성화·저장했고 콘솔의 ‘사용 설정됨’을 확인했습니다. 공개 앱 이름은 ‘아트로그’, 지원 이메일은 승인된 프로젝트 계정입니다. 기존 이메일 공급자도 활성 상태입니다.
 - Vercel에 저장소를 연결하면 Root Directory는 `frontend`. 현재 CLI가 frontend 폴더만 업로드하므로 프로젝트 Root Directory는 `.`입니다. `frontend/vercel.json`의 Flutter 설치·빌드 스크립트가 적용됩니다.
-- 2026-10-13 최종 Vercel 운영 배포 `dpl_EmDXDJM59XGuVaYFz4s7oHRLquJS`가 READY이며 기존 운영 도메인에 연결되었습니다. 원격 release 웹 빌드에서 `catalog=API, auth=firebase`를 확인했습니다. 최신 배포 오류 로그 조회 결과 오류 레코드가 없었습니다.
+- 2026-10-13 ERD 반영 최종 Vercel 운영 배포 `dpl_498qJbZrfSaBdFEXcdgqsWYapfpW`가 READY이며 기존 운영 도메인에 연결되었습니다. 원격 release 웹 빌드에서 `catalog=API, auth=firebase`를 확인했습니다.
 - Git 자동 배포는 아직 연결하지 않았습니다. GitHub에 푸시하는 것과 Vercel 운영 배포는 별개입니다.
 
 ```bash
@@ -83,7 +85,7 @@ vercel deploy --prod --yes --non-interactive --scope seunghee-lees-projects-93a5
 
 ## 검증 결과와 범위
 
-- Flutter 분석: 이슈 없음. Flutter 테스트 **74개 통과**. 배포 스크립트 **4개 통과**.
+- Flutter 분석: 이슈 없음. ERD 반영 후 전체 Flutter 테스트 **81개 통과**. 배포 스크립트 **4개 통과**(스크립트 변경 없음).
 - 기존 다섯 화면: 1440/768/390/320px 레이아웃 검사. 새 대화 내역·추천 이유·근거 라이선스: 1280/320px 검사.
 - 대화 복원 → 후속 질문, 실패 질문 재시도, 초기화 실패 시 기존 대화 유지, 계정 변경 중 늦은 답변/복원/좋아요, 삭제 확인 중 계정 변경을 테스트했습니다.
 - 새 개인 기능은 MockClient·가짜 Firebase 세션으로 검증했습니다. 실제 사용자 비밀번호나 운영 개인 기록은 테스트에 사용하지 않았습니다. 실제 운영 Firebase 로그인과 서버 저장 전체 흐름을 검증했다는 뜻은 아닙니다.
@@ -105,6 +107,6 @@ vercel deploy --prod --yes --non-interactive --scope seunghee-lees-projects-93a5
 
 ## 팀 채팅 전달 문구
 
-프론트 최신 dev 반영 후 추천 작품·추천 작가와 추천 이유, 작품별 대화 복원·초기화, 서재의 대화 내역까지 연결했습니다. 질문은 서버 기준 500자/history 12개로 맞췄고, 출처 원문과 라이선스도 표시합니다. 계정 변경 중 이전 응답이 섞이거나 새 계정으로 재시도되는 경우를 막았고 Flutter 74개·배포 스크립트 4개 테스트 통과했습니다.
+프론트 최신 dev와 ERD 기준으로 추천 작품·추천 작가와 추천 이유, 작품별 대화 복원·초기화, 서재의 대화 내역까지 연결했습니다. 반복 열람 횟수와 서로 다른 작품 수를 구분하고 큐레이터 featured 표시도 반영했습니다. 질문은 서버 기준 500자/history 12개로 맞췄고, 출처 원문·라이선스와 선택형 편집 보강 근거도 표시합니다. 계정 변경 중 이전 응답이 섞이거나 새 계정으로 재시도되는 경우를 막았고 Flutter 81개·배포 스크립트 4개 테스트 통과했습니다.
 
 Google 로그인과 로그인/회원가입 구분, 나이대·성별·설명 스타일을 선택하는 온보딩도 추가했습니다. Firebase Google 공급자 활성화·운영 배포를 마쳤고 실제 Google 인증창 진입까지 확인했습니다. 프로필은 현재 UID별 브라우저 저장이며 서버 저장과 맞춤 말투는 프로필 API 계약 후 연결이 필요합니다. 남은 서버 작업은 실제 도슨트 POST의 검색/답변 생성 연결과 로그인 사용자 `save_exchange` 저장입니다. Railway 담당자께서는 Firebase 프로젝트 ID·서버 인증 정보·AUTH_MODE=firebase와 RAG 환경변수를 확인 부탁드립니다. 실제 Google 로그인 성공, 운영 두 계정 분리와 질문→저장→복원→초기화까지 통합 확인이 필요합니다. 감상 메모는 API가 없어 현재 브라우저에만 저장됩니다. 상세 인계는 frontend/docs/frontend-handoff.md에 정리했습니다.

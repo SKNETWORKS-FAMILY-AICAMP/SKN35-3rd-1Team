@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:go_router/go_router.dart';
 import 'package:artlog_web/api/artlog_api.dart';
 import 'package:artlog_web/auth/auth_session.dart';
 import 'package:artlog_web/config.dart';
@@ -13,6 +14,8 @@ import 'package:artlog_web/docent_conversation.dart';
 import 'package:artlog_web/main.dart';
 import 'package:artlog_web/models.dart';
 import 'package:artlog_web/state.dart';
+import 'package:artlog_web/pages/detail_page.dart';
+import 'package:artlog_web/ui/design.dart' show ArtworkGrid;
 
 const work = {
   'id': 42,
@@ -29,6 +32,10 @@ const source = {
   'doc_type': 'artwork_commentary',
   'source_url': 'https://museum.go.kr/source',
   'license': '공공누리 제1유형',
+  'basis_sources': [
+    {'source_name': '국립중앙박물관 연구자료', 'source_url': 'https://museum.go.kr/basis'},
+    {'source_name': '작품 연구 도록', 'source_url': null},
+  ],
 };
 Json saved(String content) => {
   'id': 1,
@@ -165,6 +172,12 @@ void main() {
       final messages = await api.chatMessages('42');
       expect(messages.single.sources.single.license, '공공누리 제1유형');
       expect(messages.single.sources.single.typeLabel, '작품 해설');
+      expect(
+        messages.single.sources.single.basisSources.first.url,
+        'https://museum.go.kr/basis',
+      );
+      expect(Source.fromJson({'basis_sources': null}).basisSources, isEmpty);
+      expect(Source.fromJson({}).basisSources, isEmpty);
       expect((await api.chats()).single.dateLabel, '2026-10-13 08:30');
       await api.resetChat('42');
       expect(f.requests.map((r) => '${r.method} ${r.url.path}'), [
@@ -179,6 +192,157 @@ void main() {
       api.close();
     },
   );
+
+  test(
+    'ERD calendar keeps distinct artworks separate from repeated views',
+    () async {
+      final f = Fixture()
+        ..override = (r) {
+          if (r.url.path.endsWith('/calendar')) {
+            return Future.value(
+              jsonResponse([
+                {'date': '2026-10-13', 'artwork_count': 1, 'total_views': 3},
+              ]),
+            );
+          }
+          if (r.url.path.contains('/library/days/')) {
+            return Future.value(
+              jsonResponse([
+                {...work, 'view_count': 3, 'is_featured': true},
+              ]),
+            );
+          }
+          return null;
+        };
+      final api = ArtlogApi(
+        baseUrl: 'https://example.org',
+        client: MockClient(f.respond),
+      )..token = 'test';
+      final day = (await api.calendarDays('2026-10')).single;
+      expect(day.artworkCount, 1);
+      expect(day.totalViews, 3);
+      final viewed = (await api.day('2026-10-13')).single;
+      expect(viewed.viewCount, 3);
+      expect(viewed.isFeatured, true);
+      expect(
+        Artwork.fromJson({...work, 'movement_id': null}).movementId,
+        isEmpty,
+      );
+      api.close();
+    },
+  );
+
+  test(
+    'repeat opening records a view after the previous request completes',
+    () async {
+      final f = Fixture(), session = SessionFake();
+      final state = await boot(f, session);
+      final pending = Completer<http.Response>();
+      f.override = (r) => r.url.path.endsWith('/views') ? pending.future : null;
+      final first = state.recordView('42');
+      await pumpEventQueue();
+      await state.recordView('42');
+      expect(f.requests.where((r) => r.url.path.endsWith('/views')).length, 1);
+      pending.complete(http.Response('', 204));
+      await first;
+      f.override = null;
+      await state.recordView('42');
+      expect(f.requests.where((r) => r.url.path.endsWith('/views')).length, 2);
+      state.dispose();
+      await session.events.close();
+    },
+  );
+
+  testWidgets('detail rebuilds do not record views but reopening does', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view.physicalSize = const Size(1280, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final f = Fixture(), session = SessionFake();
+    final state = (await tester.runAsync(() => boot(f, session)))!;
+    await tester.pumpWidget(
+      ArtlogApp(state: state, initialLocation: '/artwork/42'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('발견하기'), findsOneWidget);
+    int views() =>
+        f.requests.where((r) => r.url.path.endsWith('/views')).length;
+    expect(views(), 1);
+    state.notifyListeners();
+    await tester.pumpAndSettle();
+    expect(views(), 1);
+    final router = GoRouter.of(tester.element(find.byType(DetailPage)));
+    router.go('/library');
+    await tester.pumpAndSettle();
+    router.go('/artwork/42');
+    await tester.pumpAndSettle();
+    expect(views(), 2);
+    router.go('/gallery');
+    await tester.pumpAndSettle();
+    router.go('/artwork/42');
+    await tester.pumpAndSettle();
+    expect(views(), 3);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    state.dispose();
+    await session.events.close();
+    semantics.dispose();
+  });
+
+  testWidgets('featured works drive curator hero and keep stable grouping', (
+    tester,
+  ) async {
+    final f = Fixture(), session = SessionFake();
+    f.override = (r) => r.url.path == '/api/artworks'
+        ? Future.value(
+            jsonResponse([
+              work,
+              {...work, 'id': 43, 'title': '특별전', 'is_featured': true},
+              {...work, 'id': 44, 'title': '두 번째 추천', 'is_featured': true},
+            ]),
+          )
+        : null;
+    final state = (await tester.runAsync(() => boot(f, session)))!;
+    await tester.pumpWidget(ArtlogApp(state: state));
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Semantics && w.properties.label == '오늘의 작품 특별전 감상하기',
+      ),
+      findsOneWidget,
+    );
+    final grid = tester
+        .widgetList<ArtworkGrid>(find.byType(ArtworkGrid))
+        .singleWhere((g) => g.works.length == 3);
+    expect(grid.works.map((a) => a.id), ['43', '44', '42']);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    state.dispose();
+    await session.events.close();
+  });
+
+  testWidgets('successful detail retry records the first view', (tester) async {
+    final f = Fixture(), session = SessionFake();
+    final state = (await tester.runAsync(() => boot(f, session)))!;
+    f.override = (r) => r.url.path == '/api/artworks/42'
+        ? Future.value(http.Response('', 503))
+        : null;
+    await tester.pumpWidget(
+      ArtlogApp(state: state, initialLocation: '/artwork/42'),
+    );
+    await tester.pumpAndSettle();
+    expect(f.requests.where((r) => r.url.path.endsWith('/views')), isEmpty);
+    f.override = null;
+    await tester.tap(find.text('다시 불러오기'));
+    await tester.pumpAndSettle();
+    expect(f.requests.where((r) => r.url.path.endsWith('/views')).length, 1);
+    await tester.pumpWidget(const SizedBox());
+    state.dispose();
+    await session.events.close();
+  });
 
   test(
     'question limit is enforced before sending and long history fits server limits',
@@ -386,6 +550,45 @@ void main() {
 
   for (final width in [320.0, 1280.0]) {
     testWidgets(
+      'calendar separates one artwork from three views at ${width.toInt()}px',
+      (tester) async {
+        tester.view.physicalSize = Size(width, 1000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final f = Fixture(), session = SessionFake();
+        f.override = (r) {
+          if (r.url.path.endsWith('/calendar')) {
+            return Future.value(
+              jsonResponse([
+                {'date': seoulDate(), 'artwork_count': 1, 'total_views': 3},
+              ]),
+            );
+          }
+          if (r.url.path.contains('/library/days/')) {
+            return Future.value(
+              jsonResponse([
+                {...work, 'view_count': 3},
+              ]),
+            );
+          }
+          return null;
+        };
+        final state = (await tester.runAsync(() => boot(f, session)))!;
+        await tester.pumpWidget(
+          ArtlogApp(state: state, initialLocation: '/library'),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('1일의 감상 · 총 3회 감상'), findsOneWidget);
+        expect(find.text('이날 3회 감상'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        state.dispose();
+        await session.events.close();
+      },
+    );
+
+    testWidgets(
       'saved chats open restored conversation and licensed sources at ${width.toInt()}px',
       (tester) async {
         tester.view.physicalSize = Size(width, 1000);
@@ -409,6 +612,9 @@ void main() {
         await tester.tap(chip);
         await tester.pumpAndSettle();
         expect(find.text('이용 조건: 공공누리 제1유형'), findsOneWidget);
+        expect(find.text('편집 보강 근거'), findsOneWidget);
+        expect(find.text('국립중앙박물관 연구자료'), findsOneWidget);
+        expect(find.text('작품 연구 도록'), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         state.dispose();

@@ -234,27 +234,17 @@ class ArtlogApi {
   Future<List<Artist>> recommendedArtists() async => items(
     await _request('GET', 'me/recommendations/artists', authenticated: true),
   ).map((j) => Artist.fromJson(object(j))).toList();
-  // CalendarDay: [{date: YYYY-MM-DD, artwork_count: number}].
-  Future<Map<String, int>> calendar(String month) async {
-    final response = await _request(
+  Future<List<CalendarDay>> calendarDays(String month) async => items(
+    await _request(
       'GET',
       'me/library/calendar',
       query: {'month': month},
       authenticated: true,
-    );
-    final result = <String, int>{};
-    for (final item in items(response)) {
-      final j = object(item);
-      final date = text(j['date'], text(j['viewed_on']));
-      if (date.isNotEmpty) {
-        result[date] =
-            (j['artwork_count'] as num?)?.toInt() ??
-            (j['count'] as num?)?.toInt() ??
-            0;
-      }
-    }
-    return result;
-  }
+    ),
+  ).map((j) => CalendarDay.fromJson(object(j))).toList();
+  Future<Map<String, int>> calendar(String month) async => {
+    for (final day in await calendarDays(month)) day.date: day.artworkCount,
+  };
 
   Future<List<Artwork>> day(String date) async => items(
     await _request(

@@ -80,6 +80,8 @@ class Artwork {
     this.imageLicense = '',
     this.asset = false,
     this.reason = '',
+    this.isFeatured = false,
+    this.viewCount = 0,
   });
   final String id,
       slug,
@@ -99,7 +101,8 @@ class Artwork {
       sourceUrl,
       imageLicense,
       reason;
-  final bool asset;
+  final bool asset, isFeatured;
+  final int viewCount;
   factory Artwork.fromJson(Json j) {
     final artist = object(j['artist']);
     return Artwork(
@@ -122,8 +125,32 @@ class Artwork {
       imageLicense: text(j['image_license']),
       asset: j['is_asset'] == true,
       reason: text(j['reason']),
+      isFeatured: j['is_featured'] == true,
+      viewCount: (j['view_count'] as num?)?.toInt() ?? 0,
     );
   }
+}
+
+class CalendarDay {
+  const CalendarDay({
+    required this.date,
+    required this.artworkCount,
+    required this.totalViews,
+  });
+  final String date;
+  final int artworkCount, totalViews;
+  factory CalendarDay.fromJson(Json j) => CalendarDay(
+    date: text(j['date']),
+    artworkCount: (j['artwork_count'] as num?)?.toInt() ?? 0,
+    totalViews: (j['total_views'] as num?)?.toInt() ?? 0,
+  );
+}
+
+class BasisSource {
+  const BasisSource({required this.name, required this.url});
+  final String name, url;
+  factory BasisSource.fromJson(Json j) =>
+      BasisSource(name: text(j['source_name']), url: text(j['source_url']));
 }
 
 class Source {
@@ -134,8 +161,10 @@ class Source {
     required this.url,
     required this.type,
     this.license = '',
+    this.basisSources = const [],
   });
   final String id, title, name, url, type, license;
+  final List<BasisSource> basisSources;
   String get typeLabel => switch (type) {
     'artist_bio' => '작가 이야기',
     'artwork_commentary' => '작품 해설',
@@ -149,6 +178,12 @@ class Source {
     url: text(j['source_url']),
     type: text(j['doc_type']),
     license: text(j['license']),
+    basisSources: j['basis_sources'] is List
+        ? (j['basis_sources'] as List)
+              .map((s) => BasisSource.fromJson(object(s)))
+              .where((s) => s.name.isNotEmpty || s.url.isNotEmpty)
+              .toList()
+        : const [],
   );
 }
 

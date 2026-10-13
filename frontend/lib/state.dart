@@ -113,7 +113,7 @@ class ArtlogState extends ChangeNotifier {
     likes = {};
     follows = {};
     views = {};
-    _recorded.clear();
+    _recordingViews.clear();
     _works.clear();
     _artists.clear();
     libraryError = null;
@@ -176,7 +176,7 @@ class ArtlogState extends ChangeNotifier {
   final Set<String> pendingLikes = {};
   final Set<String> pendingFollows = {};
   Map<String, List<String>> views = {};
-  final Set<String> _recorded = {};
+  final Set<String> _recordingViews = {};
   final Map<String, Artwork> _works = {};
   final Map<String, Artist> _artists = {};
   List<Artwork> get likedWorks =>
@@ -367,8 +367,10 @@ class ArtlogState extends ChangeNotifier {
     if (!authenticated) return;
     final revision = _identityRevision;
     final today = seoulDate();
-    final key = '$today/$id';
-    if (!_recorded.add(key)) return;
+    // Suppress simultaneous calls, but record a later reopening of the work.
+    // The server increments view_count on the same user/day/artwork row.
+    final key = '$revision/$today/$id';
+    if (!_recordingViews.add(key)) return;
     try {
       if (!config.demo) {
         await api.view(id);
@@ -380,8 +382,9 @@ class ArtlogState extends ChangeNotifier {
       notifyListeners();
     } catch (_) {
       if (revision != _identityRevision) return;
-      _recorded.remove(key);
       rethrow;
+    } finally {
+      _recordingViews.remove(key);
     }
   }
 

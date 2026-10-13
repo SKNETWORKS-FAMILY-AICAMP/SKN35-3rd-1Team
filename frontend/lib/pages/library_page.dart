@@ -22,7 +22,10 @@ class _LibraryPageState extends State<LibraryPage> {
       saving = false,
       saved = false;
   int monthRevision = 0, dayRevision = 0;
-  Map<String, int> counts = {};
+  Map<String, CalendarDay> calendarDays = {};
+  Map<String, int> get counts => {
+    for (final day in calendarDays.values) day.date: day.artworkCount,
+  };
   List<Artwork> dayWorks = [];
   final note = TextEditingController();
   @override
@@ -40,7 +43,7 @@ class _LibraryPageState extends State<LibraryPage> {
       identity = key;
       ++monthRevision;
       ++dayRevision;
-      counts = {};
+      calendarDays = {};
       dayWorks = [];
       calendarError = dayError = null;
       loading = dayLoading = saving = saved = false;
@@ -69,7 +72,7 @@ class _LibraryPageState extends State<LibraryPage> {
     ++dayRevision;
     if (!s.authenticated) {
       setState(() {
-        counts = {};
+        calendarDays = {};
         dayWorks = [];
         calendarError = null;
         dayLoading = false;
@@ -80,20 +83,34 @@ class _LibraryPageState extends State<LibraryPage> {
     setState(() {
       loading = true;
       calendarError = null;
-      counts = {};
+      calendarDays = {};
       dayWorks = [];
       dayLoading = false;
     });
     try {
       final result = s.config.demo
-          ? demoRecords(s).map((k, v) => MapEntry(k, v.length))
-          : await s.api.calendar(dateKey(month).substring(0, 7));
+          ? demoRecords(s).map(
+              (k, v) => MapEntry(
+                k,
+                CalendarDay(
+                  date: k,
+                  artworkCount: v.length,
+                  totalViews: v.length,
+                ),
+              ),
+            )
+          : {
+              for (final day in await s.api.calendarDays(
+                dateKey(month).substring(0, 7),
+              ))
+                day.date: day,
+            };
       if (!mounted ||
           revision != monthRevision ||
           identity != currentIdentity) {
         return;
       }
-      setState(() => counts = result);
+      setState(() => calendarDays = result);
       await loadDay(selected);
     } catch (e) {
       if (mounted && revision == monthRevision) {
@@ -177,6 +194,9 @@ class _LibraryPageState extends State<LibraryPage> {
               .toSet()
               .length
         : null;
+    final totalViews = calendarDays.values
+        .where((day) => day.date.startsWith(monthPrefix))
+        .fold<int>(0, (total, day) => total + day.totalViews);
     return PageWidth(
       vertical: 42,
       child: Column(
@@ -378,7 +398,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     children: [
                       Text('${month.year}년 ${month.month}월', style: serif(26)),
                       Text(
-                        '$visited일의 감상 · 그림을 만난 날을 눌러보세요.',
+                        '$visited일의 감상 · 총 $totalViews회 감상',
                         style: sans(11, color: muted),
                       ),
                     ],
@@ -727,6 +747,11 @@ class _LibraryPageState extends State<LibraryPage> {
                         children: [
                           Text(a.title, style: sans(12)),
                           Text(s.artistName(a), style: sans(10, color: muted)),
+                          if (!s.config.demo && a.viewCount > 0)
+                            Text(
+                              '이날 ${a.viewCount}회 감상',
+                              style: sans(10, color: muted),
+                            ),
                         ],
                       ),
                     ),

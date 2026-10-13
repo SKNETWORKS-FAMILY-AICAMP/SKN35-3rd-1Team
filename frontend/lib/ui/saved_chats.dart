@@ -49,7 +49,9 @@ class _SavedChatsState extends State<SavedChats> {
             ArtlogState.message(snapshot.error!),
             action: ArtButton(
               '대화 목록 다시 불러오기',
-              onTap: () => setState(() => future = s.api.chats()),
+              onTap: () => setState(() {
+                future = s.api.chats();
+              }),
             ),
           );
         }
@@ -66,7 +68,9 @@ class _SavedChatsState extends State<SavedChats> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
-                onPressed: () => setState(() => future = s.api.chats()),
+                onPressed: () => setState(() {
+                  future = s.api.chats();
+                }),
                 icon: const Icon(Icons.refresh, size: 16),
                 label: const Text('대화 목록 새로고침'),
               ),

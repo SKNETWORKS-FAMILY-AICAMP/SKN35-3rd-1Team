@@ -790,12 +790,15 @@ class ArtworkGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
+      if (c.maxWidth <= 0) return const SizedBox.shrink();
       final columns =
           (c.maxWidth > 1000
                   ? 4
                   : c.maxWidth > 680
                   ? 3
-                  : 2)
+                  : c.maxWidth >= 280
+                  ? 2
+                  : 1)
               .clamp(1, maxColumns);
       final gap = compact(context) ? 15.0 : 25.0;
       final width = (c.maxWidth - gap * (columns - 1)) / columns;

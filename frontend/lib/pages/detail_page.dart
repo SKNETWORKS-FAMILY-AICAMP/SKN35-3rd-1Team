@@ -26,16 +26,23 @@ class _DetailPageState extends State<DetailPage> {
     final next = '${s.userKey}/${s.authenticated}';
     if (identity != next) {
       identity = next;
-      unawaited(
-        future!
-            .then((art) async {
-              if (mounted && identity == next) await s.recordView(art.id);
-            })
-            .catchError((Object e) {
-              if (mounted && identity == next) showError(context, e);
-            }),
-      );
+      _recordViewWhenLoaded(future!);
     }
+  }
+
+  void _recordViewWhenLoaded(Future<Artwork> work) {
+    final s = ArtlogScope.of(context), currentIdentity = identity;
+    unawaited(
+      work
+          .then((art) async {
+            if (mounted && identity == currentIdentity) {
+              await s.recordView(art.id);
+            }
+          })
+          .catchError((Object e) {
+            if (mounted && identity == currentIdentity) showError(context, e);
+          }),
+    );
   }
 
   Future<Artwork> _load() async {
@@ -56,7 +63,12 @@ class _DetailPageState extends State<DetailPage> {
             ArtlogState.message(snapshot.error!),
             action: ArtButton(
               '다시 불러오기',
-              onTap: () => setState(() => future = _load()),
+              onTap: () {
+                setState(() {
+                  future = _load();
+                });
+                _recordViewWhenLoaded(future!);
+              },
             ),
           );
         }
@@ -337,7 +349,9 @@ class _DetailPageState extends State<DetailPage> {
                     action: ArtButton(
                       '추천 다시 보기',
                       outline: true,
-                      onTap: () => setState(() => related = s.similar(art)),
+                      onTap: () => setState(() {
+                        related = s.similar(art);
+                      }),
                     ),
                   );
                 }

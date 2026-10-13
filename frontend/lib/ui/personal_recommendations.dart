@@ -57,7 +57,9 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
               if (snapshot.hasError) {
                 return _error(
                   snapshot.error!,
-                  () => setState(() => works = s.api.recommendedArtworks()),
+                  () => setState(() {
+                    works = s.api.recommendedArtworks();
+                  }),
                 );
               }
               if (snapshot.data?.isEmpty ?? true) {
@@ -79,7 +81,9 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
               if (snapshot.hasError) {
                 return _error(
                   snapshot.error!,
-                  () => setState(() => artists = s.api.recommendedArtists()),
+                  () => setState(() {
+                    artists = s.api.recommendedArtists();
+                  }),
                 );
               }
               if (snapshot.data?.isEmpty ?? true) {
