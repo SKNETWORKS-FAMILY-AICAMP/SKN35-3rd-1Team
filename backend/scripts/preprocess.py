@@ -240,6 +240,10 @@ def read_markdown(folder: Path, cat: dict, mapping: dict) -> None:
             "artist_slugs": s.get("artist_slugs") or [], "artwork_slug": s.get("artwork_slug"),
             "source_url": s["source_url"], "source_name": source_name, "license": s.get("license"),
             "lang": lang, "topic": s.get("topic"), "related_artwork_slugs": s.get("related_artwork_slugs") or [],
+            "basis_external_sources": [
+                {"source_name": "관련 작품 소장처 자료", "source_url": url}
+                for url in s.get("related_source_urls", [])
+            ],
             "needs_review": needs_review,
         })
     cat["artists"][slug] = {k: artist.get(k) for k in ARTIST_FIELDS}
@@ -280,7 +284,7 @@ def add_artwork(
     w["image_license"] = w.get("image_license") or s.get("image_license")
     # 카드 설명 우선순위: 사람이 쓴 설명 > 한국어 원문 > 번역본 (번역본은 비어 있을 때만)
     if lang == "ko" and "description" not in manual and (not translated or not w.get("description")):
-        w["description"] = first_sentences(content)
+        w["description"] = content.strip() if s.get("display_full_description") else first_sentences(content)
     w["is_featured"] = bool(w.get("is_featured"))
     cat["artworks"][slug] = w
 
@@ -525,8 +529,18 @@ def normalize_artist_slugs(cat: dict) -> None:
 
 
 def alias_rows(cat: dict) -> list[dict]:
-    """기획된 작가 전부의 별칭. status 는 이번 결과에 작가 데이터가 있는지로 정한다 (손으로 적지 않음)."""
-    return [{"slug": slug, "name": a["name"], "status": "collected" if slug in cat["artists"] else "planned",
+    """Only artists with reviewed material are available to the classifier."""
+    available = set()
+    for doc in cat["documents"]:
+        if doc["needs_review"]:
+            continue
+        available.update(doc["artist_slugs"])
+        work = cat["artworks"].get(doc.get("artwork_slug"))
+        if work:
+            available.add(work["artist_slug"])
+    return [{"slug": slug, "name": a["name"],
+             "status": "collected" if slug in available else
+                       "pending_review" if slug in cat["artists"] else "planned",
              "aliases": a["aliases"], "confusable": a.get("confusable", [])}
             for slug, a in sorted(cat["aliases"].items())]
 
@@ -570,8 +584,8 @@ def read_document_corrections() -> dict:
 def initialize_editorial_metadata(cat: dict) -> None:
     """편집 보강이 없는 문서도 같은 출력 스키마를 갖게 한다."""
     for d in cat["documents"]:
-        d["basis_doc_keys"] = []
-        d["basis_external_sources"] = []
+        d.setdefault("basis_doc_keys", [])
+        d.setdefault("basis_external_sources", [])
 
 
 def merge_editorial_basis(d: dict, entry: dict) -> None:
