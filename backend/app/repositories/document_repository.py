@@ -90,3 +90,11 @@ def document_sources(session: Session, document_ids: set[int]) -> dict[int, Docu
 def artwork_artist_slug(session: Session, artwork_id: int) -> str | None:
     """질문 분류(app.rag.classifier)에 넘길 '고른 작품의 작가' slug. 없는 작품이면 None."""
     return session.scalar(select(Artist.slug).join(Artwork, Artwork.artist_id == Artist.id).where(Artwork.id == artwork_id))
+
+
+def name_in_scope(session: Session, scope_ids: list[int], name: str) -> bool:
+    """이름이 범위 문서 본문에 나오는지. 질문 분류가 범위 밖 작가로 거절하기 전에 확인한다."""
+    if not scope_ids:
+        return False
+    hit = select(Document.id).where(Document.id.in_(scope_ids), Document.content.contains(name, autoescape=True))
+    return session.scalar(hit.limit(1)) is not None
