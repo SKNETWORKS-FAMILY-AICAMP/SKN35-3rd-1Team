@@ -166,3 +166,8 @@ def test_translation_pair_counts_as_one_topic_for_comparison_seats(collection, f
     docs = retriever.retrieve(None, 7, "두 화가의 명암 차이는?", 1, collection=collection, embed=lambda q: [1.0, 0.0, 0.0])
     ids = {d.metadata["document_id"] for d in docs}
     assert {80, 82} <= ids and 81 not in ids  # 테네브리즘 원문 + 키아로스쿠로, 번역본은 자리를 못 받음
+
+
+def test_same_artwork_document_outside_reviewed_scope_is_excluded(collection, fake_repo):
+    add(collection, 99, 99, [1.0, 0.0, 0.0], artwork_id=7)
+    assert 99 not in {d.metadata["document_id"] for d in search(collection)}

@@ -233,7 +233,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
             ArtlogState.message(snapshot.error!),
             action: ArtButton(
               '다시 불러오기',
-              onTap: () => setState(() => future = load()),
+              onTap: () => setState(() {
+                future = load();
+              }),
             ),
           );
         }

@@ -81,23 +81,47 @@ class _ArtlogAppState extends State<ArtlogApp> {
           builder: (context, state, child) =>
               AppShell(location: state.uri.path, child: child),
           routes: [
-            GoRoute(path: '/gallery', builder: (_, _) => const GalleryPage()),
+            GoRoute(
+              path: '/gallery',
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: const GalleryPage(),
+              ),
+            ),
             GoRoute(
               path: '/artwork/:id',
-              builder: (_, state) => DetailPage(
-                key: ValueKey(state.pathParameters['id']),
-                id: state.pathParameters['id']!,
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: DetailPage(
+                  key: ValueKey(state.pathParameters['id']),
+                  id: state.pathParameters['id']!,
+                ),
               ),
             ),
-            GoRoute(path: '/artists', builder: (_, _) => const ArtistsPage()),
+            GoRoute(
+              path: '/artists',
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: const ArtistsPage(),
+              ),
+            ),
             GoRoute(
               path: '/artist/:id',
-              builder: (_, state) => ArtistDetailPage(
-                key: ValueKey(state.pathParameters['id']),
-                id: state.pathParameters['id']!,
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: ArtistDetailPage(
+                  key: ValueKey(state.pathParameters['id']),
+                  id: state.pathParameters['id']!,
+                ),
               ),
             ),
-            GoRoute(path: '/library', builder: (_, _) => const LibraryPage()),
+            GoRoute(
+              path: '/library',
+              builder: (_, state) => AppPage(
+                key: ValueKey(state.uri.path),
+                child: const LibraryPage(),
+              ),
+            ),
           ],
         ),
       ],

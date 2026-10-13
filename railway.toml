@@ -3,7 +3,7 @@
 builder = "DOCKERFILE"
 dockerfilePath = "infra/backend.Dockerfile"
 # Frontend-only or docs-only pushes do not redeploy the API.
-watchPatterns = ["backend/**", "pyproject.toml", "uv.lock", "infra/backend.Dockerfile"]
+watchPatterns = ["backend/**", "pyproject.toml", "uv.lock", "infra/backend.Dockerfile", "data/processed/**"]
 
 [deploy]
 healthcheckPath = "/api/health"

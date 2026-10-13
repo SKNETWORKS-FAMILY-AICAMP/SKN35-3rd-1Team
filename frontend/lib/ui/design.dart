@@ -180,20 +180,24 @@ String optimizedArtworkImageUrl(String image) {
   if (uri == null || !uri.hasAuthority) return image;
 
   final host = uri.host.toLowerCase();
-  final isCommonsSpecial = host == 'commons.wikimedia.org' &&
+  final isCommonsSpecial =
+      host == 'commons.wikimedia.org' &&
       (uri.path.startsWith('/wiki/Special:FilePath/') ||
           uri.path.startsWith('/wiki/Special:Redirect/file/'));
-  final isCommonsUpload = host == 'upload.wikimedia.org' &&
+  final isCommonsUpload =
+      host == 'upload.wikimedia.org' &&
       uri.path.startsWith('/wikipedia/commons/');
 
   if (isCommonsSpecial) {
     if (uri.queryParameters.containsKey('width')) return image;
-    return uri.replace(
-      queryParameters: {
-        ...uri.queryParameters,
-        'width': _wikimediaThumbnailWidth,
-      },
-    ).toString();
+    return uri
+        .replace(
+          queryParameters: {
+            ...uri.queryParameters,
+            'width': _wikimediaThumbnailWidth,
+          },
+        )
+        .toString();
   }
 
   if (isCommonsUpload) {
@@ -222,14 +226,31 @@ class ArtImage extends StatelessWidget {
   final BoxFit fit;
   final String? label;
   final double? width, height;
-  Widget failure() => ColoredBox(
-    color: const Color(0xffe8e7df),
-    child: Center(
-      child: Semantics(
-        label: '제공되는 작품 이미지 없음',
-        child: const Icon(Icons.image_outlined, color: sage, size: 30),
-      ),
-    ),
+  Widget failure() => LayoutBuilder(
+    builder: (context, constraints) {
+      final small = constraints.maxWidth < 90 || constraints.maxHeight < 80;
+      return Semantics(
+        label: image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
+        child: ColoredBox(
+          color: const Color(0xffe8e7df),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.image_outlined, color: sage, size: small ? 18 : 30),
+                if (!small) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
+                    style: sans(11, color: muted),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    },
   );
   @override
   Widget build(BuildContext context) {
@@ -344,11 +365,16 @@ Future<void> openSource(BuildContext context, String value) async {
 Future<bool> ensureLogin(BuildContext context) async {
   final state = ArtlogScope.of(context);
   if (state.authenticated) return true;
-  return await showDialog<bool>(
-        context: context,
-        builder: (_) => LoginDialog(state: state),
-      ) ??
-      false;
+  state.setAuthUiOpen(true);
+  try {
+    return await showDialog<bool>(
+          context: context,
+          builder: (_) => LoginDialog(state: state),
+        ) ??
+        false;
+  } finally {
+    state.setAuthUiOpen(false);
+  }
 }
 
 Future<void> likeArtwork(BuildContext context, Artwork art) async {
@@ -408,6 +434,35 @@ class _LoginDialogState extends State<LoginDialog> {
     }
   }
 
+  void changeMode(bool value) {
+    if (busy || signup == value) return;
+    setState(() {
+      signup = value;
+      error = notice = null;
+      password.clear();
+      form.currentState?.reset();
+    });
+  }
+
+  Future<void> google() async {
+    if (busy) return;
+    setState(() {
+      busy = true;
+      error = notice = null;
+    });
+    try {
+      await widget.state.loginWithGoogle();
+      if (mounted) Navigator.pop(context, true);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          error = ArtlogState.message(e);
+          busy = false;
+        });
+      }
+    }
+  }
+
   Future<void> reset() async {
     if (busy) return;
     if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email.text.trim())) {
@@ -454,7 +509,36 @@ class _LoginDialogState extends State<LoginDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('마음에 든 그림과 감상을 모아보세요.', style: sans(12, color: muted)),
+                if (firebase) ...[
+                  SegmentedButton<bool>(
+                    segments: const [
+                      ButtonSegment(value: false, label: Text('로그인')),
+                      ButtonSegment(value: true, label: Text('회원가입')),
+                    ],
+                    selected: {signup},
+                    onSelectionChanged: busy
+                        ? null
+                        : (value) => changeMode(value.single),
+                  ),
+                  const SizedBox(height: 18),
+                  OutlinedButton(
+                    onPressed: busy || !widget.state.canAuthenticate
+                        ? null
+                        : google,
+                    child: const Text('Google로 계속하기'),
+                  ),
+                  const SizedBox(height: 7),
+                  Text(
+                    'Google로 처음 이용하면 새 계정이 만들어져요.',
+                    style: sans(10, color: muted),
+                  ),
+                  const SizedBox(height: 15),
+                  const Divider(),
+                ],
+                Text(
+                  signup ? '이메일로 새 계정을 만들어요.' : '이미 가입한 이메일로 로그인해 주세요.',
+                  style: sans(12, color: muted),
+                ),
                 if (firebase && widget.state.config.demo) ...[
                   const SizedBox(height: 10),
                   Text(
@@ -508,7 +592,7 @@ class _LoginDialogState extends State<LoginDialog> {
                       : null,
                   onFieldSubmitted: (_) => submit(),
                 ),
-                if (firebase) ...[
+                if (firebase && !signup) ...[
                   const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerRight,
@@ -537,14 +621,7 @@ class _LoginDialogState extends State<LoginDialog> {
                   ),
                 if (firebase)
                   TextButton(
-                    onPressed: busy
-                        ? null
-                        : () => setState(() {
-                            signup = !signup;
-                            error = null;
-                            notice = null;
-                            form.currentState?.reset();
-                          }),
+                    onPressed: busy ? null : () => changeMode(!signup),
                     child: Text(signup ? '이미 계정이 있어요 · 로그인' : '처음 오셨나요? 회원가입'),
                   ),
               ],
@@ -700,6 +777,10 @@ class _ArtworkCardState extends State<ArtworkCard> {
           s.artistEnglish(a),
           style: english(15, color: const Color(0xff929b85)),
         ),
+        if (a.reason.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(a.reason, style: sans(11, color: green)),
+        ],
       ],
     );
   }
@@ -712,12 +793,15 @@ class ArtworkGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
+      if (c.maxWidth <= 0) return const SizedBox.shrink();
       final columns =
           (c.maxWidth > 1000
                   ? 4
                   : c.maxWidth > 680
                   ? 3
-                  : 2)
+                  : c.maxWidth >= 280
+                  ? 2
+                  : 1)
               .clamp(1, maxColumns);
       final gap = compact(context) ? 15.0 : 25.0;
       final width = (c.maxWidth - gap * (columns - 1)) / columns;

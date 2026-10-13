@@ -5,6 +5,7 @@
 ## 들어갈 파일
 
 - `chunking.py`: 문서를 청크로 자르는 규칙 (길이, 겹침)
+- `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend_similar` / `recommend_personal`로 분류 (규칙 기반 수퍼바이저, `/chat`에서는 `classify_artwork()`)
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
 - `chain.py`: 검색 결과와 질문, 이전 대화를 LLM에 넘겨 답변 생성
@@ -36,11 +37,13 @@
 - 그 작품의 해설 문서 (`documents.artwork_id`)
 - 그 작품 작가의 생애 문서와 그 작가가 포함된 비교 문서 (`document_artists`)
 
+needs_review=false인 문서만 범위·연표 고정 근거에 포함합니다. 작품별 추가 검색도 이 승인 범위와 교집합을 취합니다. 분류 별칭은 collected/pending_review/planned로 나뉘며 검수 대기 작가는 검토 중 안내를 제공합니다. Docker 런타임에도 data/processed의 별칭과 _SUCCESS.json이 필요합니다.
+
 범위에 드는 문서 id를 TiDB에서 구하고, Chroma에서 `where={"document_id": {"$in": ...}}`로 그 안에서만 검색합니다.
 
 ## 규칙
 
-- **문서 밖 답변 금지**: 검색 결과가 없거나 거리가 기준보다 멀면 "자료에 없다"고 답하고 `refused`를 참으로 돌려줍니다. 기준값은 테스트 질문셋으로 정합니다.
+- **문서 밖 답변 금지**: 검색 결과가 없거나 질문에 답할 근거가 없으면 "자료에 없다"고 답하고 `refused`를 참으로 돌려줍니다. 거리 임계값으로 거절하지 않습니다.
 - **출처는 검색 결과에서만**: LLM이 만들어 낸 링크를 쓰지 않고, 검색된 청크의 `source_url`만 출처로 내보냅니다.
 - **SQL은 repository에**: `retriever`는 `repositories/document_repository.py`의 함수를 호출합니다. 벡터 검색은 Chroma(`clients/chroma_client.py`)가 합니다.
 - **임베딩은 clients로**: 질문 임베딩은 `clients/embedding_client.py`를 사용합니다. 문서와 같은 모델이어야 합니다.

@@ -1,5 +1,7 @@
 # Firebase Authentication · Vercel
 
+최신 프론트 연결·검증과 Railway 담당자 인계는 [2026-10-13 인수인계](frontend-handoff.md)를 참고하세요. 아래 2026-10-12 배포·서버 검증 기록은 당시 결과입니다.
+
 ## 프로젝트
 
 - Firebase: `skn35-3rd-1team`, 웹앱 `Artlog Web`.
@@ -8,7 +10,7 @@
 
 ## Firebase 설정
 
-2026-10-12 팀 Firebase 콘솔에서 Authentication을 초기화하고 이메일/비밀번호 공급자를 활성화했습니다. 다른 프로젝트를 새로 연결하는 경우에도 Authentication의 **시작하기**와 이메일/비밀번호 활성화가 필요합니다. Google·전화·익명 로그인과 Firestore는 사용하지 않습니다. 비밀번호 재설정 메일은 Firebase가 발송합니다.
+2026-10-12 팀 Firebase 콘솔에서 Authentication을 초기화하고 이메일/비밀번호 공급자를 활성화했습니다. 다른 프로젝트를 새로 연결하는 경우에도 Authentication의 **시작하기**와 이메일/비밀번호 활성화가 필요합니다. 당시에는 Google·전화·익명 로그인과 Firestore를 사용하지 않았습니다. 2026-10-13 추가 요청으로 Google SDK 로그인·온보딩을 구현했습니다. 최신 상태는 인수인계를 참고합니다. 비밀번호 재설정 메일은 Firebase가 발송합니다.
 
 승인된 도메인은 `localhost`, `skn35-3rd-1team.firebaseapp.com`, `skn35-3rd-1team.web.app`, `artlog-skn35-1team.vercel.app`입니다. 로컬에서 `127.0.0.1`을 사용할 경우 해당 도메인을 추가하거나 `localhost`를 사용합니다. 미리보기마다 달라지는 도메인을 와일드카드로 열지 말고 필요한 도메인만 등록합니다. 서비스 계정 키·Firebase Admin SDK·백엔드 비밀값은 프론트엔드에 넣지 않습니다.
 
@@ -66,7 +68,7 @@ Firebase 이메일/비밀번호 활성화, 웹앱 등록, 운영 도메인 추�
 운영 번들의 프로젝트 ID·웹앱 ID가 팀 설정과 일치하며, 운영 브라우저에서 존재하지 않는 계정의 로그인 요청 후 한국어 오류 안내가 표시되는 것을 확인했습니다. 해당 브라우저 검사에서 콘솔 오류·경고는 없었습니다. 실제 사용자 계정의 비밀번호나 재설정 메일은 검증에 사용하지 않았습니다.
 
 
-## 실제 API·Firebase 서버 검증 (2026-10-12)
+## 이전 실제 API·Firebase 서버 검증 (2026-10-12)
 
 Vercel Production·Preview·Development의 `API_BASE_URL`을 Railway 주소로, `ARTLOG_DEMO`를 `false`로 변경했습니다. 실제 카탈로그는 사조 4개·작가 8명·작품 219점입니다. 도슨트·유사 작품·맞춤 추천은 아직 서버가 501을 반환합니다. 도슨트는 준비 중 안내를, 유사 작품은 조회 실패 안내를 표시합니다.
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models.dart';
-import '../state.dart';
+import '../docent_conversation.dart';
 import 'design.dart';
 
 class DocentChat extends StatefulWidget {
@@ -12,46 +12,66 @@ class DocentChat extends StatefulWidget {
 
 class _DocentChatState extends State<DocentChat> {
   final input = TextEditingController(), scroll = ScrollController();
-  final List<ChatTurn> messages = [];
-  bool busy = false;
-  String? error, failedQuestion;
-  Future<void> ask(String raw) async {
-    final q = raw.trim();
-    if (q.isEmpty || busy) return;
-    final s = ArtlogScope.of(context);
-    final history = List<ChatTurn>.from(messages);
-    setState(() {
-      messages.add(ChatTurn('user', q));
-      busy = true;
-      error = null;
-      failedQuestion = null;
+  DocentConversation? conversation;
+  String identity = '';
+  List<ChatTurn> get messages => conversation!.messages;
+  bool get busy => !conversation!.canSend;
+  String? get error => conversation!.error;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    conversation ??= DocentConversation(ArtlogScope.of(context), widget.art)
+      ..addListener(_changed);
+    identity = conversation!.identity;
+  }
+
+  void _changed() {
+    if (!mounted) return;
+    if (identity != conversation!.identity) {
+      identity = conversation!.identity;
       input.clear();
-    });
+    }
+    setState(() {});
     bottom();
-    try {
-      final reply = await s.ask(widget.art, q, history);
-      if (!mounted) return;
-      setState(
-        () => messages.add(
-          ChatTurn(
-            'assistant',
-            reply.answer,
-            sources: reply.sources,
-            refused: reply.refused,
+  }
+
+  Future<void> ask(String raw) async {
+    if (raw.trim().isEmpty || busy) return;
+    if (raw.trim().runes.length <= 500) input.clear();
+    await conversation!.ask(raw);
+  }
+
+  Future<void> reset() async {
+    final confirmedIdentity = conversation!.identity;
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('이 작품의 대화를 초기화할까요?'),
+        content: const Text('저장된 질문과 답변이 삭제됩니다. 작품 감상 기록과 좋아요는 유지돼요.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: const Text('취소'),
           ),
-        ),
-      );
+          TextButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: const Text('대화 초기화'),
+          ),
+        ],
+      ),
+    );
+    if (approved != true ||
+        !mounted ||
+        conversation!.identity != confirmedIdentity) {
+      return;
+    }
+    try {
+      await conversation!.reset();
+      if (conversation!.identity == confirmedIdentity) input.clear();
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          error = ArtlogState.message(e);
-          failedQuestion = q;
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() => busy = false);
-        bottom();
+      if (mounted && conversation!.identity == confirmedIdentity) {
+        showError(context, e);
       }
     }
   }
@@ -70,6 +90,7 @@ class _DocentChatState extends State<DocentChat> {
 
   @override
   void dispose() {
+    conversation?.dispose();
     input.dispose();
     scroll.dispose();
     super.dispose();
@@ -115,6 +136,11 @@ class _DocentChatState extends State<DocentChat> {
                   ),
                 ),
                 if (s.config.demo) Text('미리보기', style: sans(10, color: muted)),
+                IconButton(
+                  tooltip: '대화 초기화',
+                  onPressed: busy || messages.isEmpty ? null : reset,
+                  icon: const Icon(Icons.restart_alt, size: 19),
+                ),
               ],
             ),
           ),
@@ -177,6 +203,24 @@ class _DocentChatState extends State<DocentChat> {
                   ],
                 ),
                 const SizedBox(height: 28),
+                if (conversation!.loading) ...[
+                  const LinearProgressIndicator(color: sage, minHeight: 2),
+                  Text('이 작품과 나눈 대화를 불러오고 있어요.', style: sans(11, color: muted)),
+                ],
+                if (conversation!.historyError != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '이전 대화를 불러오지 못했어요. ${conversation!.historyError}',
+                        style: sans(12),
+                      ),
+                      TextButton(
+                        onPressed: conversation!.restore,
+                        child: const Text('대화 다시 불러오기'),
+                      ),
+                    ],
+                  ),
                 for (final m in messages)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 22),
@@ -234,7 +278,7 @@ class _DocentChatState extends State<DocentChat> {
                       ],
                     ),
                   ),
-                if (busy)
+                if (conversation!.busy || conversation!.resetting)
                   const Padding(
                     padding: EdgeInsets.all(18),
                     child: LinearProgressIndicator(color: sage, minHeight: 2),
@@ -247,14 +291,11 @@ class _DocentChatState extends State<DocentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(error!, style: sans(12)),
-                        TextButton(
-                          onPressed: () {
-                            final q = failedQuestion!;
-                            setState(() => messages.removeLast());
-                            ask(q);
-                          },
-                          child: const Text('답변 다시 요청하기'),
-                        ),
+                        if (conversation!.failedQuestion != null)
+                          TextButton(
+                            onPressed: busy ? null : conversation!.retry,
+                            child: const Text('답변 다시 요청하기'),
+                          ),
                       ],
                     ),
                   ),
@@ -292,7 +333,7 @@ class _DocentChatState extends State<DocentChat> {
                       child: TextField(
                         controller: input,
                         enabled: !busy,
-                        maxLength: 1000,
+                        maxLength: 500,
                         maxLines: 2,
                         minLines: 1,
                         style: sans(12),
@@ -354,16 +395,13 @@ class _DocentChatState extends State<DocentChat> {
                         style: sans(14, weight: FontWeight.w600),
                       ),
                       Text(
-                        '${source.name} · ${source.type}',
+                        '${source.name.isEmpty ? '출처 정보 확인 중' : source.name} · ${source.typeLabel}',
                         style: sans(11, color: muted),
                       ),
                       if (source.license.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            '라이선스 · ${source.license}',
-                            style: sans(10, color: muted),
-                          ),
+                        Text(
+                          '이용 조건: ${source.license}',
+                          style: sans(11, color: muted),
                         ),
                       if (source.url.isNotEmpty)
                         TextButton.icon(
@@ -374,7 +412,7 @@ class _DocentChatState extends State<DocentChat> {
                       if (source.basisSources.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         Text(
-                          '편집 근거',
+                          '편집 보강 근거',
                           style: sans(11, weight: FontWeight.w600),
                         ),
                         for (final basis in source.basisSources)
@@ -390,7 +428,7 @@ class _DocentChatState extends State<DocentChat> {
                               : Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
-                                    basis.name.isEmpty ? '근거 자료' : basis.name,
+                                    basis.name,
                                     style: sans(10, color: muted),
                                   ),
                                 ),

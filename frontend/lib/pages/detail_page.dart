@@ -17,21 +17,38 @@ class _DetailPageState extends State<DetailPage> {
   Future<Artwork>? future;
   Future<List<Artwork>>? related;
   bool info = false;
+  String? identity;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     future ??= _load();
+    final s = ArtlogScope.of(context);
+    final next = '${s.userKey}/${s.authenticated}';
+    if (identity != next) {
+      identity = next;
+      _recordViewWhenLoaded(future!);
+    }
+  }
+
+  void _recordViewWhenLoaded(Future<Artwork> work) {
+    final s = ArtlogScope.of(context), currentIdentity = identity;
+    unawaited(
+      work
+          .then((art) async {
+            if (mounted && identity == currentIdentity) {
+              await s.recordView(art.id);
+            }
+          })
+          .catchError((Object e) {
+            if (mounted && identity == currentIdentity) showError(context, e);
+          }),
+    );
   }
 
   Future<Artwork> _load() async {
     final s = ArtlogScope.of(context);
     final art = await s.detail(widget.id);
     related = s.similar(art);
-    unawaited(
-      s.recordView(art.id).catchError((Object e) {
-        if (mounted) showError(context, e);
-      }),
-    );
     return art;
   }
 
@@ -46,7 +63,12 @@ class _DetailPageState extends State<DetailPage> {
             ArtlogState.message(snapshot.error!),
             action: ArtButton(
               '다시 불러오기',
-              onTap: () => setState(() => future = _load()),
+              onTap: () {
+                setState(() {
+                  future = _load();
+                });
+                _recordViewWhenLoaded(future!);
+              },
             ),
           );
         }
@@ -323,10 +345,13 @@ class _DetailPageState extends State<DetailPage> {
                 if (r.hasError) {
                   return EmptyView(
                     '추천 작품을 불러오지 못했어요.',
+                    description: ArtlogState.message(r.error!),
                     action: ArtButton(
                       '추천 다시 보기',
                       outline: true,
-                      onTap: () => setState(() => related = s.similar(art)),
+                      onTap: () => setState(() {
+                        related = s.similar(art);
+                      }),
                     ),
                   );
                 }

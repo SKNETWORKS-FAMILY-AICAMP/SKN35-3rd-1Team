@@ -6,6 +6,8 @@ backend/ 에서 실행::
     uv run python -m scripts.build_chunks --limit 3      # 문서 3건만 처리해 보기
     uv run python -m scripts.build_chunks                # 전체 실행
 
+needs_review=false인 승인 문서만 처리한다. 검수 대기 문서의 기존 청크는 이 스크립트가 삭제하지 않지만, 검색 계층에서 제외한다.
+
 여러 번 돌려도 안전하다. 문서마다 지금 규칙으로 자른 청크와 DB 의 청크를 비교해서,
 본문이나 청킹 규칙이 바뀌었거나 다른 임베딩 모델로 만든 문서만 청크를 지우고 다시 만든다.
 나머지는 건너뛰므로 API 비용은 바뀐 문서에만 든다. 삭제된 문서의 청크는 FK CASCADE 로 함께 지워진다.
@@ -91,7 +93,8 @@ def write(
 
 def load(session: Session) -> tuple[list[dict], dict[int, list[tuple[int, str, str]]]]:
     rows = session.execute(
-        select(Document.id, Document.doc_key, Document.title, Document.content).order_by(Document.doc_key)
+        select(Document.id, Document.doc_key, Document.title, Document.content)
+        .where(Document.needs_review.is_(False)).order_by(Document.doc_key)
     )
     docs = [{"id": r.id, "doc_key": r.doc_key, "title": r.title, "content": r.content} for r in rows]
     existing: dict[int, list[tuple[int, str, str]]] = defaultdict(list)

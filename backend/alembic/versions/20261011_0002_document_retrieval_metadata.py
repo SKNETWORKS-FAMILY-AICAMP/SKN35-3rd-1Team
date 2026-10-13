@@ -10,9 +10,8 @@ Revises: 20261011_0001
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import mysql
-
 from alembic import op
+from sqlalchemy.dialects import mysql
 
 revision: str = "20261011_0002"
 down_revision: str | None = "20261011_0001"
