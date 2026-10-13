@@ -13,6 +13,7 @@ from app.models.base import TABLE_OPTIONS, Base
 if TYPE_CHECKING:
     from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
     from app.models.chat import ChatSession
+    from app.models.user_profile import SocialAccount, UserPreference
 
 
 class User(Base):
@@ -51,4 +52,13 @@ class User(Base):
     chat_sessions: Mapped[list[ChatSession]] = relationship(
         back_populates="user",
         passive_deletes=True,
+    )
+    social_accounts: Mapped[list[SocialAccount]] = relationship(
+        back_populates="user",
+        passive_deletes=True,
+    )
+    preferences: Mapped[UserPreference | None] = relationship(
+        back_populates="user",
+        passive_deletes=True,
+        uselist=False,
     )

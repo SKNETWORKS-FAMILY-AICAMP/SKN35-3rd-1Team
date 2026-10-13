@@ -4,7 +4,7 @@ Oct 9, 2026 · @고태민
 
 ## 1. 권장 구조
 
-TiDB Cloud Starter 클러스터 하나에 테이블 15개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·추천 캐시는 MVP에서 뺍니다. 채팅 기록(`chat_sessions`, `chat_messages`)은 2026-10-12에 추가했습니다.
+TiDB Cloud Starter 클러스터 하나에 테이블 17개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·추천 캐시는 MVP에서 뺍니다. 채팅 기록(`chat_sessions`, `chat_messages`)은 2026-10-12에, 외부 계정 연결과 선택형 개인화 설정(`social_accounts`, `user_preferences`)은 2026-10-13에 추가했습니다.
 
 ### 핵심 결정
 
@@ -25,6 +25,8 @@ TiDB Cloud Starter 클러스터 하나에 테이블 15개를 두고 사용자 �
 | 테이블 | 역할 | 쓰이는 기능 |
 | --- | --- | --- |
 | `users` | 회원 계정. 로그인은 Firebase Auth, 서버는 `firebase_uid`로 사용자를 찾음 | 로그인, 4·7·8·9번 |
+| `social_accounts` | 사용자와 외부 로그인 식별자 연결(사용자 1:N) | 향후 Google·Naver 계정 연결 |
+| `user_preferences` | 선택 입력 개인화 설정(사용자 1:0..1) | 향후 도슨트 말투·설명 수준 조정 |
 | `art_movements` | 사조 목록 | 1번 사조별 조회 |
 | `artists` | 작가 정보 | 1·6·7번 |
 | `artworks` | 작품 정보와 이미지 URL | 1·2번 |
@@ -66,10 +68,12 @@ TiDB Cloud Starter 클러스터 하나에 테이블 15개를 두고 사용자 �
 
 ## 2. ERD
 
-사용자 활동 3개(좋아요·팔로우·열람)는 모두 `users`와 카탈로그를 잇는 연결 테이블이고, 문서 계열 3개는 `artworks`·`artists`에 매달립니다. 아래 코드는 Mermaid 11.4.1로 렌더링해 문법을 확인했습니다.
+사용자 활동 3개(좋아요·팔로우·열람)는 모두 `users`와 카탈로그를 잇는 연결 테이블이고, `social_accounts`와 `user_preferences`는 사용자 식별과 선택형 개인화를 분리합니다. 최신 원본은 `00_erd.mmd`, 확대용 그림은 `00_erd.svg`이며 SQLAlchemy 모델에서 자동 생성합니다.
 
 ```mermaid
 erDiagram
+    users ||--o{ social_accounts : "로그인 계정"
+    users ||--o| user_preferences : "개인화 설정"
     users ||--o{ artwork_likes : "좋아요"
     artworks ||--o{ artwork_likes : "좋아요 받음"
     users ||--o{ artist_follows : "팔로우"
@@ -98,6 +102,21 @@ erDiagram
         varchar email UK
         varchar nickname
         datetime created_at
+        datetime updated_at
+    }
+    social_accounts {
+        bigint id PK
+        bigint user_id FK
+        varchar provider "provider_user_id 와 묶어 UNIQUE"
+        varchar provider_user_id
+        datetime created_at
+    }
+    user_preferences {
+        bigint user_id PK, FK
+        smallint birth_year
+        varchar gender
+        varchar tone
+        varchar explanation_level
         datetime updated_at
     }
     art_movements {
@@ -226,6 +245,8 @@ erDiagram
 
 | 관계 | 카디널리티 | 구현 | 부모 삭제 시 |
 | --- | --- | --- | --- |
+| 사용자 → 외부 계정 | 1:N | `social_accounts.user_id`, UNIQUE `(provider, provider_user_id)` | CASCADE |
+| 사용자 → 개인화 설정 | 1:0..1 | `user_preferences.user_id`가 PK이자 FK | CASCADE |
 | 작가 → 작품 | 1:N | `artworks.artist_id` (NOT NULL) | RESTRICT. 작품이 남은 작가는 삭제 불가 |
 | 사조 → 작가, 사조 → 작품 | 1:N (선택) | `movement_id` (NULL 허용) | SET NULL |
 | 사용자 ↔ 작품 (좋아요) | N:M | `artwork_likes`, PK `(user_id, artwork_id)` | CASCADE |
@@ -234,6 +255,8 @@ erDiagram
 | 작품 → 작품 벡터 | 1:0..1 | `artwork_embeddings.artwork_id`가 PK이자 FK | CASCADE |
 | 작품 → 해설 문서 | 1:N | `documents.artwork_id` | CASCADE |
 | 문서 ↔ 작가 | N:M | `document_artists` | CASCADE |
+| 문서 ↔ 언급 작품 | N:M | `document_artworks` | CASCADE |
+| 편집 문서 ↔ 근거 문서 | N:M 자기 참조 | `document_basis_documents` | CASCADE |
 | 문서 → 청크 | 1:N | `document_chunks.document_id` | CASCADE |
 | 사용자 ↔ 작품 (대화) | N:M | `chat_sessions`, UNIQUE `(user_id, artwork_id)` | CASCADE |
 | 대화 → 메시지 | 1:N | `chat_messages.session_id` | CASCADE |
@@ -254,6 +277,31 @@ erDiagram
 | nickname | VARCHAR(50) |  | NO |  |
 | created\_at | DATETIME |  | NO | 기본값 CURRENT\_TIMESTAMP |
 | updated\_at | DATETIME |  | NO | 수정 시 자동 갱신 |
+
+현재 로그인은 기존대로 `firebase_uid`를 사용합니다. 새 계정 테이블은 향후 복수 SNS 계정을 한 서비스 사용자에 연결하기 위한 확장 구조이며, 이메일이 같다는 이유만으로 계정을 자동 병합하지 않습니다.
+
+### social\_accounts
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| id | BIGINT AUTO\_INCREMENT | PK | NO |  |
+| user\_id | BIGINT | FK → users.id, INDEX | NO | 서비스 사용자 |
+| provider | VARCHAR(30) | UNIQUE(provider, provider\_user\_id) | NO | 현재 백필 값은 `firebase`; 향후 google, naver 등 |
+| provider\_user\_id | VARCHAR(255) | UNIQUE(provider, provider\_user\_id) | NO | 공급자가 보장한 외부 식별자 |
+| created\_at | DATETIME |  | NO | 기본값 CURRENT\_TIMESTAMP |
+
+### user\_preferences
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| user\_id | BIGINT | PK, FK → users.id | NO | 사용자당 최대 1행 |
+| birth\_year | SMALLINT |  | YES | 선택 입력 |
+| gender | VARCHAR(30) |  | YES | 선택 입력 |
+| tone | VARCHAR(30) |  | YES | 사용자가 선택한 답변 말투 |
+| explanation\_level | VARCHAR(30) |  | YES | 사용자가 선택한 설명 수준 |
+| updated\_at | DATETIME |  | NO | 수정 시 자동 갱신 |
+
+개인화 행 자체가 없어도 정상 사용자입니다. 말투를 적용할 때는 나이·성별에서 임의로 추론하기보다 사용자가 직접 고른 `tone`과 `explanation_level`을 우선합니다.
 
 ### art\_movements
 
@@ -320,6 +368,7 @@ erDiagram
 | 컬럼 | 타입 | 키 | NULL | 설명 |
 | --- | --- | --- | --- | --- |
 | id | BIGINT AUTO\_INCREMENT | PK | NO |  |
+| doc\_key | VARCHAR(191) | UNIQUE | NO | 재적재 기준 문서 키 |
 | doc\_type | VARCHAR(30) |  | NO | artist\_bio, artwork\_commentary, artist\_comparison |
 | artwork\_id | BIGINT | FK → artworks.id | YES | 작품 해설일 때만 값이 있음 |
 | title | VARCHAR(255) |  | NO | 출처 표시에 쓰는 문서 제목 |
@@ -327,6 +376,10 @@ erDiagram
 | source\_url | VARCHAR(1024) |  | YES | 출처 링크 |
 | source\_name | VARCHAR(255) |  | YES | 출처 이름 (예: 국립현대미술관) |
 | license | VARCHAR(100) |  | YES |  |
+| lang | VARCHAR(8) |  | NO | 기본값 `ko` |
+| topic | VARCHAR(30) |  | YES | 생애 문서의 성격 |
+| needs\_review | TINYINT(1) |  | NO | 검토 전이면 1 |
+| basis\_external\_sources | JSON |  | NO | 편집 보강에 사용한 외부 공식 근거 |
 | created\_at | DATETIME |  | NO |  |
 | updated\_at | DATETIME |  | NO |  |
 
@@ -336,6 +389,20 @@ erDiagram
 | --- | --- | --- | --- | --- |
 | document\_id | BIGINT | PK, FK → documents.id | NO |  |
 | artist\_id | BIGINT | PK, FK → artists.id | NO |  |
+
+### document\_artworks
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| document\_id | BIGINT | PK, FK → documents.id | NO |  |
+| artwork\_id | BIGINT | PK, FK → artworks.id | NO | 연표 등에서 언급한 작품 |
+
+### document\_basis\_documents
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| document\_id | BIGINT | PK, FK → documents.id | NO | 편집·보강된 문서 |
+| basis\_document\_id | BIGINT | PK, FK → documents.id | NO | 보강의 근거가 된 수집 문서 |
 
 ### document\_chunks
 
@@ -545,17 +612,21 @@ INSERT INTO artwork_likes (user_id, artwork_id) VALUES (1, 999999999);
 
 ## 6. SQL 예시
 
-아래 SQL은 TiDB v8.5.8의 실제 파서로 전부 문법 검사를 통과했지만, TiDB 서버에서 실행해 보지는 못했습니다. 작업 환경에서 TiDB 서버를 띄울 수 없었기 때문입니다.
+기준 스키마는 2026-10-13에 TiDB Cloud Serverless v8.5.3의 `3rd_project`에 Alembic `20261013_0006`까지 적용했습니다. 모델의 서비스 테이블 17개가 모두 존재하고, Alembic 관리 테이블을 합치면 실제 테이블은 18개입니다.
 
 | 검증 항목 | 방법 | 결과 |
 | --- | --- | --- |
 | TiDB 문법 (VECTOR, VECTOR INDEX 포함) | TiDB v8.5.8 파서로 SQL 파일 4개 파싱 | 45개 문장 모두 통과 |
-| 테이블·FK·인덱스 생성 | MariaDB 10.11에서 실행 (VECTOR 컬럼만 LONGTEXT로 치환) | 테이블 15개, FK 21개 생성 |
+| 운영 스키마 적용 | TiDB Cloud Serverless v8.5.3, Alembic | 서비스 테이블 17개 + `alembic_version`, 누락 없음 |
+| 신규 관계 확인 | TiDB `information_schema.REFERENTIAL_CONSTRAINTS` | `social_accounts`, `user_preferences` FK 2개 확인 |
+| 기존 사용자 백필 | TiDB 행 수 비교 | 사용자 1명, Firebase 연결 계정 1행, 개인화 설정 0행 |
 | 중복 좋아요, 없는 작품 참조, 연쇄 삭제, 열람 upsert | MariaDB에서 실행 | 의도한 대로 거부·삭제·증가 |
 | 추천·RAG 쿼리의 JOIN·GROUP BY 구조 | MariaDB에서 가짜 거리 함수를 만들어 실행 | 제외 조건과 묶음이 의도대로 동작 |
 | 벡터 거리 계산, 벡터 인덱스 사용 여부, Starter의 FK 동작 | 실행하지 못함 | Starter 클러스터에서 확인 필요 |
 
-### CREATE TABLE (MVP 12개)
+### CREATE TABLE 예시
+
+전체 17개 테이블의 실행 기준은 [`01_schema_mvp.sql`](01_schema_mvp.sql)입니다. 아래 블록은 핵심 관계를 설명하기 위한 축약 예시이며, 운영 반영은 Alembic을 사용합니다.
 
 `VECTOR(1536)`의 1536은 임베딩 모델의 차원 수입니다. text-embedding-3-small은 1536, bge-m3와 multilingual-e5-large는 1024이므로 모델에 맞게 두 군데를 함께 바꾸면 됩니다. 주석이 더 자세한 버전은 첨부 파일 `01_schema_mvp.sql`에 있습니다.
 
@@ -1030,7 +1101,7 @@ Starter 무료 한도도 확인해 두세요. 조직당 행 저장소 5GiB, 컬�
 
 ### 발표용 프로젝트로서의 현실성
 
-구현 가능한 범위입니다. 테이블 12개 중 4개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
+구현 가능한 범위입니다. 서비스 테이블 17개 중 여러 개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
 
 - **데이터 수집과 저작권.** 해설 문서와 작품 이미지의 라이선스를 확인해야 합니다. `license`와 `image_license` 컬럼을 둔 이유입니다.
 - **청킹 품질.** 답변 품질은 인덱스보다 청크를 어떻게 자르느냐에 더 크게 좌우됩니다.

@@ -20,6 +20,8 @@ EXPECTED_TABLES = {
     "artwork_views",
     "chat_sessions",
     "chat_messages",
+    "social_accounts",
+    "user_preferences",
 }
 
 
@@ -66,6 +68,23 @@ def test_users_are_keyed_by_firebase_uid() -> None:
     users = Base.metadata.tables["users"]
     assert users.c.firebase_uid.unique
     assert "password_hash" not in users.c
+
+
+def test_social_accounts_have_provider_identity_unique_constraint() -> None:
+    social_accounts = Base.metadata.tables["social_accounts"]
+    unique_columns = {
+        tuple(column.name for column in constraint.columns)
+        for constraint in social_accounts.constraints
+        if constraint.__class__.__name__ == "UniqueConstraint"
+    }
+    assert ("provider", "provider_user_id") in unique_columns
+
+
+def test_user_preferences_are_one_to_one_with_users() -> None:
+    user_preferences = Base.metadata.tables["user_preferences"]
+    assert [column.name for column in user_preferences.primary_key] == ["user_id"]
+    assert user_preferences.c.birth_year.nullable
+    assert user_preferences.c.gender.nullable
 
 
 def test_every_foreign_key_has_an_on_delete_policy() -> None:
