@@ -6,6 +6,9 @@
 .secrets/
 **/*firebase-adminsdk*.json
 
+# 로컬 Chroma 폴더 (CHROMA_PATH). 원본은 TiDB, sync_chroma 로 다시 만듦
+data/chroma/
+
 # Python
 __pycache__/
 *.py[cod]
