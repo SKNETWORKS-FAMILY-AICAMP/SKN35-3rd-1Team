@@ -108,3 +108,5 @@
 최신 ERD는 social_accounts·user_preferences를 포함한 17테이블이며 Alembic head는 20261013_0006입니다. 기존의 ‘15테이블/프로필 테이블 없음’ 기록은 통합 전 lsh 시점의 기록입니다. 통합 프론트 81개·백엔드 279개·배포 스크립트 4개 검사, Flutter 분석·Ruff·offline 마이그레이션 SQL 검증을 통과했습니다. 실제 운영 DB 쓰기나 신규 초안 적재는 하지 않았습니다.
 
 통합 범위·검증의 한계·남은 디자인 및 프로필 연결 작업은 [통합·분담표](../../docs/integration-and-task-board-2026-10-13.md)를 참고하세요.
+
+2026-10-14 현재 UI: [루브르 참고의 전시형 메인·SNS 피드·개인 서재 분리](editorial/). 반사광과 배경 블러를 제거한 후 114개 Flutter 테스트와 웹 빌드를 확인했습니다. 기존 liquid-glass·prism-glass 캡처는 이전 디자인 기록입니다.

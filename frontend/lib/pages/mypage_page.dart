@@ -8,6 +8,8 @@ import '../diary.dart';
 import '../ui/design.dart';
 import '../ui/profile_preferences.dart';
 import '../ui/collection_workspace.dart';
+import '../ui/diary_feed.dart';
+import '../ui/diary_editor.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -16,58 +18,84 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  String tab = 'collections';
+  String tab = 'posts';
   @override
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
     if (!s.authenticated) {
       return PageWidth(
+        vertical: 40,
         child: EmptyView(
           '나의 취향을 모아두는 공간이에요.',
           action: ArtButton('로그인하고 시작하기', onTap: () => ensureLogin(context)),
         ),
       );
     }
-    final name = s.memberProfile?.nickname;
+    final nickname = s.memberProfile?.nickname;
+    final name = nickname != null && nickname.isNotEmpty ? nickname : '나의 프로필';
+    final profile = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: compact(context) ? 28 : 40,
+          backgroundColor: soft,
+          child: Text(
+            nickname?.isNotEmpty == true ? nickname!.characters.first : 'D',
+            style: english(compact(context) ? 30 : 42),
+          ),
+        ),
+        SizedBox(width: compact(context) ? 18 : 28),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: serif(compact(context) ? 27 : 34)),
+              const SizedBox(height: 8),
+              Text('좋아하는 그림으로 나를 소개합니다.', style: sans(13, color: muted)),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 24,
+                runSpacing: 8,
+                children: [
+                  Text(
+                    '좋아요 ${s.likes.length}',
+                    style: sans(13, weight: FontWeight.w600),
+                  ),
+                  Text(
+                    '관심 작가 ${s.follows.length}',
+                    style: sans(13, weight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
     return PageWidth(
-      vertical: 24,
+      vertical: 40,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GlassSurface(
-            tinted: true,
-            padding: EdgeInsets.all(compact(context) ? 22 : 36),
-            child: Column(
+          LayoutBuilder(
+            builder: (context, c) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('MY GALLERY', style: english(11, color: green)),
-                const SizedBox(height: 15),
-                Text(
-                  '${name != null && name.isNotEmpty ? name : '나'}의 작은 미술관',
-                  style: serif(compact(context) ? 29 : 40),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  '좋아한 그림, 남겨둔 생각.\n나를 닮은 취향이 차곡차곡 쌓이는 곳.',
-                  style: sans(13, color: muted, height: 1.7),
-                ),
+                profile,
                 const SizedBox(height: 22),
                 Wrap(
-                  spacing: 12,
-                  runSpacing: 10,
+                  spacing: 10,
+                  runSpacing: 8,
                   children: [
-                    Chip(
-                      avatar: const Icon(Icons.favorite_border, size: 16),
-                      label: Text('좋아한 그림 ${s.likes.length}점'),
-                    ),
-                    Chip(
-                      avatar: const Icon(Icons.person_outline, size: 16),
-                      label: Text('관심 작가 ${s.follows.length}명'),
-                    ),
                     OutlinedButton.icon(
+                      onPressed: () => context.go('/settings'),
+                      icon: const Icon(Icons.tune, size: 17),
+                      label: const Text('감상 설정'),
+                    ),
+                    TextButton.icon(
                       onPressed: () => context.go('/library'),
-                      icon: const Icon(Icons.calendar_month_outlined, size: 17),
-                      label: const Text('감상 캘린더'),
+                      icon: const Icon(Icons.book_outlined, size: 17),
+                      label: const Text('개인 기록은 내 서재에서'),
                     ),
                     if (s.loginRequired)
                       TextButton(
@@ -79,53 +107,129 @@ class _MyPageState extends State<MyPage> {
               ],
             ),
           ),
-          const SizedBox(height: 26),
-          Wrap(
-            spacing: 7,
-            runSpacing: 8,
-            children: [
-              for (final t in [
-                ('collections', '내 컬렉션', Icons.collections_bookmark_outlined),
-                ('critiques', '내 감상·비평', Icons.edit_note),
-                ('activity', '활동 기록', Icons.history),
-                ('likes', '좋아요한 그림', Icons.favorite_border),
-                ('settings', '설정', Icons.tune),
-              ])
-                GlassChoiceChip(
-                  avatar: Icon(t.$3, size: 17),
-                  label: Text(t.$2),
-                  selected: tab == t.$1,
-                  onSelected: (_) => setState(() => tab = t.$1),
-                ),
-            ],
+          const SizedBox(height: 32),
+          const Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                for (final t in [
+                  ('posts', '공개 감상'),
+                  ('collections', '내 컬렉션'),
+                  ('likes', '좋아요한 그림'),
+                  ('follows', '관심 작가'),
+                  ('activity', '활동 기록'),
+                ])
+                  TextButton(
+                    key: ValueKey('profile-tab-${t.$1}'),
+                    style: editorialButtonStyle(
+                      quiet: tab != t.$1,
+                      tinted: tab == t.$1,
+                    ),
+                    onPressed: () => setState(() => tab = t.$1),
+                    child: Text(
+                      t.$2,
+                      style: sans(
+                        13,
+                        color: tab == t.$1 ? ink : muted,
+                        weight: tab == t.$1 ? FontWeight.w600 : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 16),
           KeyedSubtree(
             key: ValueKey('${s.userKey}/${s.authenticated}/$tab'),
             child: switch (tab) {
+              'posts' => Align(
+                alignment: Alignment.topLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 680),
+                  child: const _MyRecords(critiques: true),
+                ),
+              ),
               'collections' => const CollectionWorkspace(),
-              'critiques' => const _MyRecords(critiques: true),
-              'activity' => const _MyRecords(critiques: false),
               'likes' =>
                 s.likedWorks.isEmpty
                     ? EmptyView(
-                        '마음에 드는 그림에 좋아요를 눌러 보세요.',
+                        '좋아하는 그림을 모아보세요.',
                         action: ArtButton(
                           '그림 발견하기',
                           onTap: () => context.go('/gallery'),
                         ),
                       )
                     : _LikedGallery(
-                        key: ValueKey(s.likes.join(",")),
+                        key: ValueKey(s.likes.join(',')),
                         works: s.likedWorks,
                       ),
-              _ => const _ProfileSettings(),
+              'follows' =>
+                s.followedArtists.isEmpty
+                    ? EmptyView(
+                        '관심 있는 작가를 찾아보세요.',
+                        action: ArtButton(
+                          '작가 둘러보기',
+                          onTap: () => context.go('/artists'),
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          for (final a in s.followedArtists)
+                            ListTile(
+                              leading: SizedBox(
+                                width: 46,
+                                height: 52,
+                                child: ArtImage(s.representativeImage(a)),
+                              ),
+                              title: Text(a.name, style: sans(14)),
+                              subtitle: Text(
+                                a.english,
+                                style: english(17, color: muted),
+                              ),
+                              trailing: const Icon(
+                                Icons.chevron_right,
+                                size: 18,
+                              ),
+                              onTap: () => context.go('/artist/${a.id}'),
+                            ),
+                        ],
+                      ),
+              _ => const _MyRecords(critiques: false),
             },
           ),
         ],
       ),
     );
   }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+  @override
+  Widget build(BuildContext context) => PageWidth(
+    vertical: 36,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          onPressed: () => context.go('/mypage'),
+          icon: const Icon(Icons.arrow_back, size: 17),
+          label: const Text('마이페이지'),
+        ),
+        const SizedBox(height: 20),
+        if (ArtlogScope.of(context).authenticated)
+          const _ProfileSettings()
+        else
+          EmptyView(
+            '로그인 후 감상 설정을 관리할 수 있어요.',
+            action: ArtButton('로그인', onTap: () => ensureLogin(context)),
+          ),
+      ],
+    ),
+  );
 }
 
 class _ProfileSettings extends StatefulWidget {
@@ -187,7 +291,7 @@ class _ProfileSettingsState extends State<_ProfileSettings> {
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
-        child: GlassSurface(
+        child: SurfacePanel(
           padding: EdgeInsets.all(compact(context) ? 18 : 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -315,7 +419,7 @@ class _MyRecordsState extends State<_MyRecords> {
         children: [
           Expanded(
             child: Text(
-              widget.critiques ? '그림 앞에서 남긴 나의 생각' : '취향이 쌓여온 순간들',
+              widget.critiques ? '공개한 감상' : '활동 기록',
               style: serif(24),
             ),
           ),
@@ -329,7 +433,7 @@ class _MyRecordsState extends State<_MyRecords> {
       const SizedBox(height: 10),
       Text(
         widget.critiques
-            ? '다이어리와 같은 기록이에요. 비공개 글은 나만 볼 수 있어요.'
+            ? '피드에 공개한 글을 모았어요. 비공개 글은 내 서재에서 확인하세요.'
             : '최근 활동부터 보여드려요. 감상 기록을 눌러 그날의 다이어리를 열어 보세요.',
         style: sans(12, color: muted),
       ),
@@ -341,55 +445,28 @@ class _MyRecordsState extends State<_MyRecords> {
               : '아직 활동 기록이 없어요.',
           action: ArtButton(
             widget.critiques ? '감상·비평 쓰기' : '작품 둘러보기',
-            onTap: () => context.go(widget.critiques ? '/library' : '/gallery'),
+            onTap: () => widget.critiques
+                ? showDiaryComposer(context)
+                : context.go('/gallery'),
           ),
         ),
-      for (final e in entries)
+      if (widget.critiques &&
+          !loading &&
+          entries.isNotEmpty &&
+          entries.every((e) => !e.isPublic))
         Padding(
-          padding: const EdgeInsets.only(bottom: 14),
-          child: GlassSurface(
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text(e.date, style: english(12, color: muted)),
-                    Chip(
-                      avatar: Icon(
-                        e.isPublic ? Icons.public : Icons.lock_outline,
-                        size: 14,
-                      ),
-                      label: Text(e.isPublic ? '공개' : '나만 보기'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                if (e.artwork != null) Text(e.artwork!.title, style: serif(19)),
-                const SizedBox(height: 8),
-                Text(
-                  e.content,
-                  maxLines: 6,
-                  overflow: TextOverflow.ellipsis,
-                  style: sans(13, height: 1.8),
-                ),
-                const SizedBox(height: 12),
-                TextButton.icon(
-                  onPressed: () => context.go('/library?date=${e.date}'),
-                  icon: const Icon(Icons.edit_outlined, size: 16),
-                  label: const Text('다이어리에서 이어 쓰기'),
-                ),
-              ],
-            ),
+          padding: const EdgeInsets.symmetric(vertical: 28),
+          child: Text(
+            '공개한 감상이 없어요. 비공개 글은 내 서재에 보관되어 있어요.',
+            style: sans(13, color: muted),
           ),
         ),
+      for (final e in entries.where((e) => e.isPublic))
+        DiaryPostCard(key: ValueKey(e.id), entry: e),
       for (final a in activities)
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: GlassSurface(
+          child: SurfacePanel(
             radius: 22,
             padding: const EdgeInsets.all(8),
             child: ListTile(

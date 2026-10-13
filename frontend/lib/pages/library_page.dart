@@ -4,7 +4,6 @@ import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
 import '../ui/saved_chats.dart';
-import '../ui/member_profile_dialog.dart';
 import '../diary.dart';
 import '../ui/diary_editor.dart';
 
@@ -199,75 +198,20 @@ class _LibraryPageState extends State<LibraryPage> {
         visited = counts.entries
             .where((e) => e.key.startsWith(monthPrefix) && e.value > 0)
             .length;
-    final demoUnique = s.config.demo
-        ? demoRecords(s).entries
-              .where((e) => e.key.startsWith(monthPrefix))
-              .expand((e) => e.value)
-              .toSet()
-              .length
-        : null;
     final totalViews = calendarDays.values
         .where((day) => day.date.startsWith(monthPrefix))
         .fold<int>(0, (total, day) => total + day.totalViews);
     return PageWidth(
-      vertical: 42,
+      vertical: 32,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Eyebrow('MY LITTLE MUSEUM'),
-                    const SizedBox(height: 15),
-                    Text(
-                      '마음에 남은 그림들.',
-                      style: serif(compact(context) ? 30 : 39),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      '한 점씩 쌓이는 감상, 조금씩 넓어지는 나의 세계.',
-                      style: sans(13, color: muted),
-                    ),
-                  ],
-                ),
-              ),
-              if (!compact(context))
-                Container(
-                  width: 65,
-                  height: 85,
-                  decoration: glassDecoration(radius: 22, tinted: true),
-                  child: const Icon(
-                    Icons.menu_book_outlined,
-                    color: green,
-                    size: 30,
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          if (s.loginRequired && s.authenticated)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Wrap(
-                spacing: 12,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(s.email, style: sans(11, color: muted)),
-                  if (s.config.firebaseAuth)
-                    TextButton(
-                      onPressed: () => showMemberProfile(context, s),
-                      child: const Text('감상 프로필'),
-                    ),
-                  TextButton(
-                    onPressed: () => logoutUser(context),
-                    child: const Text('로그아웃'),
-                  ),
-                ],
-              ),
-            ),
+          const Eyebrow('PRIVATE JOURNAL'),
+          const SizedBox(height: 10),
+          Text('내 서재', style: serif(compact(context) ? 30 : 38)),
+          const SizedBox(height: 10),
+          Text('그날의 그림과 생각을 기록하는 개인 공간.', style: sans(14, color: muted)),
+          const SizedBox(height: 28),
           if (!s.authenticated)
             EmptyView(
               '감상의 순간을 모아보세요.',
@@ -295,67 +239,18 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-            Container(
-              padding: EdgeInsets.all(compact(context) ? 18 : 26),
-              decoration: glassDecoration(),
-              child: Row(
-                children: [
-                  for (final stat in [
-                    (
-                      demoUnique?.toString() ?? visited.toString(),
-                      demoUnique == null ? '이번 달 감상한 날' : '이번 달 감상한 작품',
-                      demoUnique == null ? '일' : '점',
-                    ),
-                    (s.likes.length.toString(), '마음에 담은 작품', '점'),
-                    (s.follows.length.toString(), '팔로우한 작가', '명'),
-                  ])
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            stat.$2,
-                            style: sans(
-                              compact(context) ? 9 : 11,
-                              color: muted,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: stat.$1,
-                                  style: english(34, color: green),
-                                ),
-                                TextSpan(
-                                  text: ' ${stat.$3}',
-                                  style: sans(10, color: muted),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 22),
             Row(
               children: [
                 for (final t in [
                   ('calendar', '감상 캘린더', Icons.calendar_today_outlined),
                   ('diary', '다이어리', Icons.menu_book_outlined),
-                  ('likes', '좋아요한 작품', Icons.favorite_border),
-                  ('follows', '팔로우한 작가', Icons.people_outline),
                   ('chats', '대화 내역', Icons.forum_outlined),
                 ])
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 3),
                       child: TextButton(
-                        style: crystalButtonStyle(
+                        style: editorialButtonStyle(
                           dark: tab == t.$1,
                           quiet: tab != t.$1,
                           minimumSize: const Size(0, 48),
@@ -502,9 +397,9 @@ class _LibraryPageState extends State<LibraryPage> {
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(flex: 7, child: calendar),
+                              Expanded(flex: 6, child: calendar),
                               const SizedBox(width: 28),
-                              Expanded(flex: 3, child: journal),
+                              Expanded(flex: 5, child: journal),
                             ],
                           )
                         : Column(
@@ -522,60 +417,6 @@ class _LibraryPageState extends State<LibraryPage> {
                 padding: EdgeInsets.only(top: 25),
                 child: SavedChats(),
               ),
-            if (tab == 'likes')
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: s.likes.isEmpty
-                    ? EmptyView(
-                        '어떤 그림을 담아볼까요?',
-                        description: '작품의 하트를 누르면 이곳에 모아둘게요.',
-                        action: ArtButton(
-                          '마음에 드는 그림 찾기',
-                          onTap: () => context.go('/gallery'),
-                        ),
-                      )
-                    : ArtworkGrid(s.likedWorks),
-              ),
-            if (tab == 'follows')
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: s.follows.isEmpty
-                    ? EmptyView(
-                        '다음 이야기가 궁금한 작가를 만나보세요.',
-                        action: ArtButton(
-                          '작가 만나러 가기',
-                          onTap: () => context.go('/artists'),
-                        ),
-                      )
-                    : Wrap(
-                        spacing: 25,
-                        runSpacing: 20,
-                        children: s.followedArtists
-                            .map(
-                              (a) => SizedBox(
-                                width: compact(context) ? double.infinity : 280,
-                                child: ListTile(
-                                  leading: SizedBox(
-                                    width: 45,
-                                    height: 55,
-                                    child: ArtImage(s.representativeImage(a)),
-                                  ),
-                                  title: Text(a.name, style: sans(13)),
-                                  subtitle: Text(
-                                    a.english,
-                                    style: english(16, color: muted),
-                                  ),
-                                  trailing: const Icon(
-                                    Icons.north_east,
-                                    size: 17,
-                                  ),
-                                  onTap: () => context.go('/artist/${a.id}'),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-              ),
           ],
         ],
       ),
@@ -586,11 +427,11 @@ class _LibraryPageState extends State<LibraryPage> {
     builder: (context, c) {
       final days = DateTime(month.year, month.month + 1, 0).day,
           start = month.weekday % 7;
-      final width = (c.maxWidth - 12) / 7,
+      final width = (c.maxWidth - 2) / 7,
           height = compact(context) ? 78.0 : 112.0;
       return Container(
-        padding: const EdgeInsets.all(6),
-        decoration: glassDecoration(radius: 28),
+        padding: const EdgeInsets.all(1),
+        decoration: surfaceDecoration(radius: 8),
         child: Column(
           children: [
             Row(
@@ -631,10 +472,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     builder: (context) {
                       final d = index - start + 1;
                       if (d < 1 || d > days) {
-                        return SizedBox(
-                          width: (c.maxWidth - 14) / 7,
-                          height: height,
-                        );
+                        return SizedBox(width: width, height: height);
                       }
                       final date = dateKey(
                             DateTime(month.year, month.month, d),
@@ -652,22 +490,16 @@ class _LibraryPageState extends State<LibraryPage> {
                         child: InkWell(
                           onTap: () => loadDay(date),
                           child: Container(
-                            width: (c.maxWidth - 14) / 7 - 4,
-                            height: height - 4,
-                            margin: const EdgeInsets.all(2),
+                            width: width,
+                            height: height,
                             padding: EdgeInsets.all(width < 60 ? 4 : 8),
-                            decoration:
-                                glassDecoration(
-                                  radius: 14,
-                                  tinted: selected == date,
-                                ).copyWith(
-                                  border: Border.all(
-                                    color: selected == date
-                                        ? green.withValues(alpha: .65)
-                                        : Colors.white,
-                                    width: selected == date ? 1.3 : 1,
-                                  ),
-                                ),
+                            decoration: BoxDecoration(
+                              color: selected == date ? soft : pearl,
+                              border: Border.all(
+                                color: selected == date ? green : line,
+                                width: selected == date ? 1.2 : .4,
+                              ),
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -796,14 +628,14 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget _journal(ArtlogState s) => Container(
     width: double.infinity,
     padding: const EdgeInsets.all(23),
-    decoration: glassDecoration(tinted: true),
+    decoration: surfaceDecoration(tinted: true),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Eyebrow('A DAY WITH ART'),
+        const Eyebrow('DAILY NOTE'),
         const SizedBox(height: 12),
         Text(
-          '${int.parse(selected.substring(5, 7))}월 ${int.parse(selected.substring(8))}일의 그림',
+          '${int.parse(selected.substring(5, 7))}월 ${int.parse(selected.substring(8))}일의 기록',
           style: serif(23),
         ),
         const SizedBox(height: 14),
@@ -820,7 +652,7 @@ class _LibraryPageState extends State<LibraryPage> {
           const Icon(Icons.menu_book_outlined, color: sage),
           const SizedBox(height: 14),
           Text(
-            '아직 꺼내볼 그림이 없어요.\n오늘의 한 점을 만나러 가볼까요?',
+            '이날 감상한 작품이 없어요.\n작품 없이도 생각을 기록할 수 있어요.',
             style: sans(12, color: muted),
           ),
           TextButton(

@@ -64,11 +64,96 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
 
   @override
   Widget build(BuildContext context) {
-    final s = ArtlogScope.of(context), small = compact(context);
-    final height = MediaQuery.sizeOf(
-      context,
-    ).height.clamp(540.0, double.infinity);
+    if (widget.works.isEmpty) return const SizedBox.shrink();
+    final s = ArtlogScope.of(context);
+    final mobile = MediaQuery.sizeOf(context).width < 850;
+    final height = (MediaQuery.sizeOf(context).height - 128).clamp(
+      540.0,
+      1000.0,
+    );
     final current = widget.works[selected.clamp(0, widget.works.length - 1)];
+    final actions = Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: [
+        ArtButton(
+          '작품 감상하기',
+          light: true,
+          onTap: () => context.go('/artwork/${current.id}'),
+        ),
+        TextButton(
+          style: editorialButtonStyle(dark: true, quiet: true).copyWith(
+            side: const WidgetStatePropertyAll(
+              BorderSide(color: Color(0xff72786c)),
+            ),
+          ),
+          onPressed: widget.onExplore,
+          child: const Text('작품 둘러보기'),
+        ),
+      ],
+    );
+    final description = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Eyebrow('THE DAILY SELECTION', color: Color(0xffc1c5bc)),
+        const SizedBox(height: 12),
+        Text('오늘, 이 그림', style: sans(12, color: const Color(0xffc1c5bc))),
+        const SizedBox(height: 5),
+        Text(
+          current.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: serif(mobile ? 30 : 42, color: Colors.white, height: 1.3),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          '${s.artistName(current)} · ${current.year}',
+          style: sans(13, color: const Color(0xffc1c5bc)),
+        ),
+      ],
+    );
+    final information = Container(
+      color: ink,
+      padding: EdgeInsets.all(mobile ? 24 : 32),
+      child: mobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [description, const SizedBox(height: 20), actions],
+            )
+          : Row(
+              children: [
+                Expanded(child: description),
+                const SizedBox(width: 32),
+                SizedBox(
+                  width: 180,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ArtButton(
+                        '작품 감상하기',
+                        light: true,
+                        onTap: () => context.go('/artwork/${current.id}'),
+                      ),
+                      const SizedBox(height: 12),
+                      OutlinedButton(
+                        style: editorialButtonStyle(dark: true, quiet: true)
+                            .copyWith(
+                              side: const WidgetStatePropertyAll(
+                                BorderSide(color: Color(0xff72786c)),
+                              ),
+                            ),
+                        onPressed: widget.onExplore,
+                        child: const Text('작품 둘러보기'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
     return SizedBox(
       key: const ValueKey('daily-fullscreen-hero'),
       height: height,
@@ -89,184 +174,53 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
               ),
             ),
           ),
-          const IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0, .36, .65, 1],
-                  colors: [
-                    Color(0x55101e30),
-                    Color(0x05101e30),
-                    Color(0x55101e30),
-                    Color(0xf0101e30),
-                  ],
-                ),
+          Positioned(
+            top: 20,
+            right: mobile ? 16 : 40,
+            child: Container(
+              color: ink,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${(selected + 1).toString().padLeft(2, '0')} / ${widget.works.length.toString().padLeft(2, '0')}',
+                    style: sans(12, color: Colors.white),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    tooltip: '이전 오늘의 그림',
+                    style: editorialButtonStyle(dark: true, quiet: true),
+                    onPressed: widget.works.length > 1
+                        ? () => go(
+                            (selected - 1 + widget.works.length) %
+                                widget.works.length,
+                          )
+                        : null,
+                    icon: const Icon(Icons.arrow_back, size: 18),
+                  ),
+                  IconButton(
+                    tooltip: '다음 오늘의 그림',
+                    style: editorialButtonStyle(dark: true, quiet: true),
+                    onPressed: widget.works.length > 1
+                        ? () => go((selected + 1) % widget.works.length)
+                        : null,
+                    icon: const Icon(Icons.arrow_forward, size: 18),
+                  ),
+                ],
               ),
             ),
           ),
           Positioned(
-            left: small ? 22 : 56,
-            right: small ? 22 : 56,
-            bottom: small ? 32 : 44,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Eyebrow('TODAY, THROUGH ART', color: Colors.white),
-                const SizedBox(height: 14),
-                Text(
-                  '오늘, 이 그림',
-                  style: sans(13, color: Colors.white.withValues(alpha: .85)),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  current.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: serif(
-                    small ? 38 : 72,
-                    color: Colors.white,
-                    height: 1.22,
+            bottom: 0,
+            right: mobile ? 0 : 40,
+            left: mobile ? 0 : null,
+            child: mobile
+                ? information
+                : SizedBox(
+                    width: MediaQuery.sizeOf(context).width * .68,
+                    child: information,
                   ),
-                ),
-                const SizedBox(height: 14),
-                Text(
-                  '${s.artistName(current)} · ${current.year}',
-                  style: sans(small ? 12 : 15, color: Colors.white),
-                ),
-                const SizedBox(height: 24),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: [
-                    ArtButton(
-                      '작품 감상하기',
-                      light: true,
-                      onTap: () => context.go('/artwork/${current.id}'),
-                    ),
-                    TextButton(
-                      onPressed: widget.onExplore,
-                      style: crystalButtonStyle(
-                        dark: true,
-                        minimumSize: const Size(44, 48),
-                      ),
-                      child: const Text('작품 컬렉션 ↓'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    GlassSurface(
-                      dark: true,
-                      radius: 100,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            tooltip: '이전 오늘의 그림',
-                            style: crystalButtonStyle(
-                              dark: true,
-                              quiet: true,
-                              minimumSize: const Size(44, 44),
-                              padding: const EdgeInsets.all(11),
-                            ),
-                            onPressed: widget.works.length > 1
-                                ? () => go(
-                                    (selected - 1 + widget.works.length) %
-                                        widget.works.length,
-                                  )
-                                : null,
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              size: 19,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              '${(selected + 1).toString().padLeft(2, '0')} / ${widget.works.length.toString().padLeft(2, '0')}',
-                              style: const TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            tooltip: '다음 오늘의 그림',
-                            style: crystalButtonStyle(
-                              dark: true,
-                              quiet: true,
-                              minimumSize: const Size(44, 44),
-                              padding: const EdgeInsets.all(11),
-                            ),
-                            onPressed: widget.works.length > 1
-                                ? () => go((selected + 1) % widget.works.length)
-                                : null,
-                            icon: const Icon(
-                              Icons.arrow_forward,
-                              size: 19,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    if (small && MediaQuery.sizeOf(context).width >= 360)
-                      Text(
-                        '오늘의 ${widget.works.length}점',
-                        style: sans(11, color: Colors.white),
-                      ),
-                    if (!small)
-                      for (var i = 0; i < widget.works.length; i++)
-                        Semantics(
-                          selected: i == selected,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: SizedBox(
-                              width: small ? 32 : 58,
-                              height: small ? 44 : 58,
-                              child: Tooltip(
-                                message:
-                                    '오늘의 그림 ${i + 1}: ${widget.works[i].title}',
-                                child: InkWell(
-                                  onTap: () => go(i),
-                                  borderRadius: BorderRadius.circular(14),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: i == selected
-                                            ? Colors.white
-                                            : const Color(0x55ffffff),
-                                        width: i == selected ? 2 : 1,
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: ArtImage(widget.works[i].image),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ],
-                ),
-              ],
-            ),
           ),
         ],
       ),

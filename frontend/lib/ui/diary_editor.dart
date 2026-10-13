@@ -3,6 +3,8 @@ import '../diary.dart';
 import '../api/artlog_api.dart';
 import '../models.dart';
 import 'design.dart';
+import 'collection_workspace.dart' show AccountGuard;
+import '../state.dart';
 
 /// Owns typing state so each keystroke does not rebuild the calendar or images.
 class DiaryEditor extends StatefulWidget {
@@ -56,7 +58,7 @@ class DiaryEditorState extends State<DiaryEditor> {
     if (!dirty) return true;
     return await showDialog<bool>(
           context: context,
-          builder: (c) => GlassAlertDialog(
+          builder: (c) => SurfaceDialog(
             title: const Text('작성 중인 감상평이 있어요'),
             content: const Text('저장하지 않은 변경을 지우고 이동할까요?'),
             actions: [
@@ -105,7 +107,7 @@ class DiaryEditorState extends State<DiaryEditor> {
   Future<void> remove() async {
     final yes = await showDialog<bool>(
       context: context,
-      builder: (c) => GlassAlertDialog(
+      builder: (c) => SurfaceDialog(
         title: const Text('감상평을 삭제할까요?'),
         content: const Text('다이어리와 공개 피드에서 함께 삭제돼요.'),
         actions: [
@@ -158,7 +160,7 @@ class DiaryEditorState extends State<DiaryEditor> {
           if (widget.legacyNote.isNotEmpty && widget.entry == null)
             Text(
               '이 브라우저의 기존 메모를 가져왔어요. 저장하면 다이어리에 등록돼요.',
-              style: sans(10, color: muted),
+              style: sans(12, color: muted),
             ),
           TextField(
             key: const ValueKey('diary-content'),
@@ -167,7 +169,7 @@ class DiaryEditorState extends State<DiaryEditor> {
             minLines: 4,
             maxLines: 8,
             maxLength: 2000,
-            style: sans(12),
+            style: sans(14),
             onChanged: (_) => setState(() {
               dirty = true;
               saved = false;
@@ -210,7 +212,7 @@ class DiaryEditorState extends State<DiaryEditor> {
               isPublic
                   ? '저장하면 닉네임·감상평·선택한 작품이 피드에 보여요.'
                   : '저장한 감상평은 내 다이어리에서만 보여요.',
-              style: sans(10, color: muted),
+              style: sans(12, color: muted),
             ),
             secondary: Icon(
               isPublic ? Icons.public : Icons.lock_outline,
@@ -227,11 +229,11 @@ class DiaryEditorState extends State<DiaryEditor> {
                   }),
           ),
           if (dirty)
-            Text('변경한 공개 범위는 저장 후 적용돼요.', style: sans(10, color: muted)),
+            Text('변경한 공개 범위는 저장 후 적용돼요.', style: sans(12, color: muted)),
           if (s.config.demo)
             Text(
               '체험 모드에서는 이 브라우저에 저장되며 다른 사용자에게 전송되지 않아요.',
-              style: sans(10, color: muted),
+              style: sans(12, color: muted),
             ),
           const SizedBox(height: 12),
           Wrap(
@@ -259,4 +261,123 @@ class DiaryEditorState extends State<DiaryEditor> {
       ),
     );
   }
+}
+
+Future<void> showDiaryComposer(BuildContext context) async {
+  if (!await ensureLogin(context) || !context.mounted) return;
+  final state = ArtlogScope.of(context);
+  final saved = await showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AccountGuard(
+      state: state,
+      child: _DiaryComposer(state: state),
+    ),
+  );
+  if (saved == true && context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('감상을 저장했어요. 공개한 글은 피드에 표시됩니다.')),
+    );
+  }
+}
+
+class _DiaryComposer extends StatefulWidget {
+  const _DiaryComposer({required this.state});
+  final ArtlogState state;
+  @override
+  State<_DiaryComposer> createState() => _DiaryComposerState();
+}
+
+class _DiaryComposerState extends State<_DiaryComposer> {
+  final editor = GlobalKey<DiaryEditorState>();
+  final today = seoulDate();
+  late Future<List<DiaryEntry>> entries;
+  @override
+  void initState() {
+    super.initState();
+    entries = widget.state.diaryMonth(today.substring(0, 7));
+  }
+
+  bool closing = false;
+  Future<void> close() async {
+    if (closing) return;
+    closing = true;
+    try {
+      if ((await editor.currentState?.confirmDiscard() ?? true) && mounted) {
+        Navigator.pop(context);
+      }
+    } finally {
+      closing = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PopScope<bool>(
+    canPop: false,
+    onPopInvokedWithResult: (didPop, _) {
+      if (!didPop) close();
+    },
+    child: SurfaceDialog(
+      title: Row(
+        children: [
+          Expanded(child: Text('감상 남기기', style: serif(24))),
+          IconButton(
+            tooltip: '작성 창 닫기',
+            icon: const Icon(Icons.close, size: 20),
+            onPressed: close,
+          ),
+        ],
+      ),
+      content: SizedBox(
+        width: 540,
+        child: SingleChildScrollView(
+          child: FutureBuilder<List<DiaryEntry>>(
+            future: entries,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return EmptyView(
+                  ArtlogState.message(snapshot.error!),
+                  action: ArtButton(
+                    '다시 불러오기',
+                    onTap: () => setState(
+                      () => entries = widget.state.diaryMonth(
+                        today.substring(0, 7),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              if (!snapshot.hasData) {
+                return const Padding(
+                  padding: EdgeInsets.all(40),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final entry = snapshot.data!
+                  .where((e) => e.date == today)
+                  .firstOrNull;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$today · 오늘의 기록은 내 서재에도 함께 저장됩니다.',
+                    style: sans(12, color: muted),
+                  ),
+                  const SizedBox(height: 20),
+                  DiaryEditor(
+                    key: editor,
+                    date: today,
+                    entry: entry,
+                    works: widget.state.artworks,
+                    onSaved: (_) => Navigator.pop(context, true),
+                    onDeleted: () => Navigator.pop(context, true),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    ),
+  );
 }

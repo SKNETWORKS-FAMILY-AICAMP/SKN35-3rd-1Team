@@ -41,39 +41,33 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context);
-    final immersive = widget.location == '/gallery';
-    final headerHeight = MediaQuery.sizeOf(context).width < 850 ? 140.0 : 100.0;
+    final mobile = MediaQuery.sizeOf(context).width < 850;
     return Scaffold(
-      body: AuroraBackdrop(
-        child: Stack(
+      backgroundColor: paper,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
           children: [
-            Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.only(top: immersive ? 0 : headerHeight),
-                child: state.loading
-                    ? const Center(
-                        child: CircularProgressIndicator(color: green),
-                      )
-                    : state.error != null
-                    ? EmptyView(
-                        state.error!,
-                        action: ArtButton('다시 불러오기', onTap: state.load),
-                      )
-                    : Semantics(
-                        container: true,
-                        child: SelectionArea(child: widget.child),
-                      ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: _Header(location: widget.location),
+            _Header(location: widget.location),
+            Expanded(
+              child: state.loading
+                  ? const Center(child: CircularProgressIndicator(color: green))
+                  : state.error != null
+                  ? EmptyView(
+                      state.error!,
+                      action: ArtButton('다시 불러오기', onTap: state.load),
+                    )
+                  : Semantics(
+                      container: true,
+                      child: SelectionArea(child: widget.child),
+                    ),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: mobile
+          ? _MobileNavigation(location: widget.location)
+          : null,
     );
   }
 }
@@ -103,8 +97,9 @@ class _AppPageState extends State<AppPage> {
 }
 
 class Brand extends StatelessWidget {
-  const Brand({super.key, this.small = false});
+  const Brand({super.key, this.small = false, this.color = ink});
   final bool small;
+  final Color color;
   @override
   Widget build(BuildContext context) => FittedBox(
     fit: BoxFit.scaleDown,
@@ -114,29 +109,28 @@ class Brand extends StatelessWidget {
       children: [
         CustomPaint(
           size: Size(small ? 22 : 28, small ? 27 : 32),
-          painter: _BrandMark(),
+          painter: _BrandMark(color),
         ),
         const SizedBox(width: 10),
         Text(
           'Docentalk',
           style: english(
             small ? 30 : 36,
+            color: color,
           ).copyWith(fontWeight: FontWeight.w600, letterSpacing: -1.2),
         ),
-        if (MediaQuery.sizeOf(context).width >= 1100) ...[
-          const SizedBox(width: 13),
-          Text('AI ART DOCENT', style: english(9, color: muted)),
-        ],
       ],
     ),
   );
 }
 
 class _BrandMark extends CustomPainter {
+  _BrandMark(this.color);
+  final Color color;
   @override
   void paint(Canvas canvas, Size size) {
     final p = Paint()
-      ..color = green
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.3
       ..strokeJoin = StrokeJoin.round;
@@ -151,176 +145,220 @@ class _BrandMark extends CustomPainter {
       ..close();
     canvas.drawPath(path, p);
     for (final x in [11.0, 17.0]) {
-      canvas.drawCircle(Offset(x, 14), 1.4, Paint()..color = green);
+      canvas.drawCircle(Offset(x, 14), 1.4, Paint()..color = color);
     }
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _BrandMark oldDelegate) =>
+      oldDelegate.color != color;
+}
+
+String _activeRoute(String location) => location == '/settings'
+    ? '/mypage'
+    : location.startsWith('/artwork')
+    ? '/gallery'
+    : location.startsWith('/artist')
+    ? '/artists'
+    : location;
+
+Future<void> _openAccount(BuildContext context) async {
+  final state = ArtlogScope.of(context);
+  if (!state.authenticated &&
+      (!await ensureLogin(context) || !context.mounted)) {
+    return;
+  }
+  if (context.mounted) context.go('/mypage');
 }
 
 class _Header extends StatelessWidget {
   const _Header({required this.location});
   final String location;
-  void account(BuildContext context, ArtlogState state) async {
-    if (!state.authenticated) {
-      if (!await ensureLogin(context) || !context.mounted) return;
-    }
-    if (context.mounted) context.go('/mypage');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final state = ArtlogScope.of(context),
-        mobile = MediaQuery.sizeOf(context).width < 850;
-    final active = location.startsWith('/artwork')
-        ? '/gallery'
-        : location.startsWith('/artist')
-        ? '/artists'
-        : location;
-    final nav = Row(
-      mainAxisSize: mobile ? MainAxisSize.max : MainAxisSize.min,
-      children: [
-        for (final item in [
-          ('/gallery', '발견하기'),
-          ('/artists', mobile ? '작가' : '작가 이야기'),
-          ('/community', '감상 피드'),
-          ('/library', '내 서재'),
-        ])
-          Flexible(
-            fit: mobile ? FlexFit.tight : FlexFit.loose,
+    final mobile = MediaQuery.sizeOf(context).width < 850;
+    final active = _activeRoute(location);
+    final white = editorialButtonStyle(dark: true, quiet: true);
+    return ColoredBox(
+      color: ink,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            key: const ValueKey('primary-header'),
+            height: mobile ? 64 : 80,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: TextButton(
-                onPressed: () => context.go(item.$1),
-                style:
-                    crystalButtonStyle(
-                      dark: active == item.$1,
-                      quiet: active != item.$1,
-                    ).copyWith(
-                      minimumSize: WidgetStatePropertyAll(
-                        Size(mobile ? 0 : 84, 44),
-                      ),
-                      padding: WidgetStatePropertyAll(
-                        EdgeInsets.symmetric(horizontal: mobile ? 8 : 14),
-                      ),
-                    ),
-                child: Text(
-                  item.$2,
-                  style: sans(
-                    mobile ? 11 : 12,
-                    color: active == item.$1 ? Colors.white : muted,
-                    weight: active == item.$1
-                        ? FontWeight.w700
-                        : FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-    final tools = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (state.config.demo && !mobile)
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text('미리보기', style: sans(10, color: muted)),
-          ),
-        IconButton(
-          tooltip: '작품 검색',
-          onPressed: () =>
-              showSearch(context: context, delegate: _ArtSearch(state)),
-          icon: const Icon(Icons.search, size: 20),
-        ),
-        IconButton(
-          style: crystalButtonStyle(
-            dark: location == '/mypage',
-            quiet: location != '/mypage',
-          ),
-          tooltip: !state.loginRequired
-              ? '마이페이지'
-              : state.authenticated
-              ? '마이페이지'
-              : '로그인',
-          onPressed: () => account(context, state),
-          icon: Icon(
-            !state.loginRequired
-                ? Icons.menu_book_outlined
-                : Icons.person_outline,
-            size: 20,
-          ),
-        ),
-      ],
-    );
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: mobile ? 12 : 24,
-          vertical: 12,
-        ),
-        child: GlassSurface(
-          blur: true,
-          radius: mobile ? 28 : 100,
-          padding: EdgeInsets.symmetric(
-            horizontal: mobile ? 12 : 22,
-            vertical: 8,
-          ),
-          child: mobile
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Semantics(
-                                label: 'Docentalk 홈',
-                                button: true,
-                                child: InkWell(
-                                  onTap: () => context.go('/gallery'),
-                                  child: const Brand(small: true),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        tools,
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    nav,
-                  ],
-                )
-              : SizedBox(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      Semantics(
+              padding: EdgeInsets.symmetric(horizontal: mobile ? 12 : 40),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      width: mobile ? 180 : 230,
+                      child: Semantics(
                         label: 'Docentalk 홈',
                         button: true,
                         child: InkWell(
                           onTap: () => context.go('/gallery'),
-                          child: const Brand(),
+                          child: Brand(small: mobile, color: Colors.white),
                         ),
                       ),
-                      const Spacer(),
-                      nav,
-                      const Spacer(),
-                      tools,
-                    ],
+                    ),
                   ),
-                ),
-        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      tooltip: '작품 검색',
+                      style: white,
+                      onPressed: () => showSearch(
+                        context: context,
+                        delegate: _ArtSearch(ArtlogScope.of(context)),
+                      ),
+                      icon: const Icon(Icons.search, size: 21),
+                    ),
+                  ),
+                  if (!mobile)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        key: const ValueKey('navigation-/mypage'),
+                        style: white,
+                        onPressed: () => _openAccount(context),
+                        icon: const Icon(Icons.person_outline, size: 18),
+                        label: const Text('마이페이지'),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (!mobile)
+            Container(
+              height: 48,
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Color(0xff3d403b))),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (final item in [
+                    ('/gallery', '발견하기'),
+                    ('/artists', '작가'),
+                    ('/community', '감상 피드'),
+                    ('/library', '내 서재'),
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: DecoratedBox(
+                        position: DecorationPosition.foreground,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: active == item.$1
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        child: TextButton(
+                          key: ValueKey('navigation-${item.$1}'),
+                          style: white,
+                          onPressed: () => context.go(item.$1),
+                          child: Text(
+                            item.$2,
+                            style: sans(
+                              14,
+                              color: Colors.white,
+                              weight: active == item.$1
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }
+}
+
+class _MobileNavigation extends StatelessWidget {
+  const _MobileNavigation({required this.location});
+  final String location;
+  @override
+  Widget build(BuildContext context) => Container(
+    key: const ValueKey('mobile-navigation'),
+    decoration: const BoxDecoration(
+      color: pearl,
+      border: Border(top: BorderSide(color: line)),
+    ),
+    child: SafeArea(
+      top: false,
+      child: SizedBox(
+        height: 64,
+        child: Row(
+          children: [
+            for (final item in [
+              ('/gallery', '발견', Icons.grid_view_outlined),
+              ('/community', '피드', Icons.dynamic_feed_outlined),
+              ('/library', '내 서재', Icons.book_outlined),
+              ('/mypage', '마이페이지', Icons.person_outline),
+            ])
+              Expanded(
+                child: Semantics(
+                  selected: _activeRoute(location) == item.$1,
+                  child: TextButton(
+                    key: ValueKey('navigation-${item.$1}'),
+                    onPressed: () => item.$1 == '/mypage'
+                        ? _openAccount(context)
+                        : context.go(item.$1),
+                    style: editorialButtonStyle(
+                      quiet: true,
+                      minimumSize: const Size(0, 64),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 2,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          item.$3,
+                          size: 21,
+                          color: _activeRoute(location) == item.$1
+                              ? ink
+                              : muted,
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          item.$2,
+                          style: sans(
+                            10,
+                            color: _activeRoute(location) == item.$1
+                                ? ink
+                                : muted,
+                            weight: _activeRoute(location) == item.$1
+                                ? FontWeight.w700
+                                : FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class _ArtSearch extends SearchDelegate<void> {
@@ -371,53 +409,67 @@ class _ArtSearch extends SearchDelegate<void> {
 class _Footer extends StatelessWidget {
   const _Footer();
   @override
-  Widget build(BuildContext context) => PageWidth(
-    vertical: 30,
-    child: Container(
-      padding: const EdgeInsets.only(top: 26),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: line)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 35,
-            runSpacing: 16,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Brand(small: true),
-              Text('한 점의 그림이, 당신의 하루에 머물기를.', style: sans(10, color: muted)),
-              TextButton(
-                onPressed: () => showAboutDialog(
-                  context: context,
-                  applicationName: 'Docentalk',
-                  applicationVersion: '1.0.0',
-                  applicationLegalese: '작품 이미지의 출처와 이용 조건은 작품 상세에서 확인할 수 있습니다.',
-                  children: [
-                    Text(
-                      ArtlogScope.of(context).config.demo
-                          ? '미리보기의 좋아요·팔로우·감상 기록은 현재 브라우저에 저장됩니다. 도슨트는 준비된 감상 안내를 제공합니다.'
-                          : '작품과 도슨트 답변의 출처를 함께 살펴보고 감상을 기록하세요.',
-                      style: sans(12),
-                    ),
-                  ],
-                ),
-                child: Text('Docentalk에 대하여 ↗', style: sans(11)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Text(
-            '© 2026 DOCENTALK. A LITTLE ART, EVERY DAY.',
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 9,
-              letterSpacing: 1,
-              color: muted,
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 64),
+    child: ColoredBox(
+      color: ink,
+      child: PageWidth(
+        vertical: 40,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Brand(color: Colors.white),
+            const SizedBox(height: 16),
+            Text(
+              '그림을 만나고, 이야기를 나누고, 나의 시선을 기록합니다.',
+              style: sans(13, color: const Color(0xffc1c5bc)),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              children: [
+                for (final item in [
+                  ('/gallery', '작품 발견하기'),
+                  ('/artists', '작가'),
+                  ('/community', '감상 피드'),
+                  ('/library', '내 서재'),
+                ])
+                  TextButton(
+                    style: editorialButtonStyle(dark: true, quiet: true),
+                    onPressed: () => context.go(item.$1),
+                    child: Text(item.$2),
+                  ),
+                TextButton(
+                  style: editorialButtonStyle(dark: true, quiet: true),
+                  onPressed: () => showAboutDialog(
+                    context: context,
+                    applicationName: 'Docentalk',
+                    applicationVersion: '1.0.0',
+                    applicationLegalese:
+                        '작품 이미지의 출처와 이용 조건은 작품 상세에서 확인할 수 있습니다.',
+                    children: [
+                      Text(
+                        ArtlogScope.of(context).config.demo
+                            ? '미리보기의 좋아요·팔로우·감상 기록은 현재 브라우저에 저장됩니다.'
+                            : 'AI 도슨트와 작품을 살펴보고 감상의 순간을 기록하세요.',
+                        style: sans(13),
+                      ),
+                    ],
+                  ),
+                  child: const Text('Docentalk에 대하여 ↗'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 28),
+            const Divider(color: Color(0xff4b4e47)),
+            const SizedBox(height: 18),
+            Text(
+              '© 2026 DOCENTALK',
+              style: sans(10, color: const Color(0xffb3b8ae)),
+            ),
+          ],
+        ),
       ),
     ),
   );

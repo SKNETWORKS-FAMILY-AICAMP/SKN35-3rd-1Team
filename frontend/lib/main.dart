@@ -57,6 +57,13 @@ Future<void> main() async {
   unawaited(state.load());
 }
 
+// Direct page changes avoid compositing the artwork behind incoming reading pages.
+NoTransitionPage<void> _contentPage(GoRouterState state, Widget child) =>
+    NoTransitionPage<void>(
+      key: state.pageKey,
+      child: AppPage(key: ValueKey(state.uri.path), child: child),
+    );
+
 class ArtlogApp extends StatefulWidget {
   const ArtlogApp({
     super.key,
@@ -86,16 +93,14 @@ class _ArtlogAppState extends State<ArtlogApp> {
           routes: [
             GoRoute(
               path: '/gallery',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const GalleryPage(),
-              ),
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const GalleryPage()),
             ),
             GoRoute(
               path: '/artwork/:id',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: DetailPage(
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                DetailPage(
                   key: ValueKey(state.pathParameters['id']),
                   id: state.pathParameters['id']!,
                 ),
@@ -103,16 +108,14 @@ class _ArtlogAppState extends State<ArtlogApp> {
             ),
             GoRoute(
               path: '/artists',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const ArtistsPage(),
-              ),
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const ArtistsPage()),
             ),
             GoRoute(
               path: '/artist/:id',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: ArtistDetailPage(
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                ArtistDetailPage(
                   key: ValueKey(state.pathParameters['id']),
                   id: state.pathParameters['id']!,
                 ),
@@ -120,21 +123,23 @@ class _ArtlogAppState extends State<ArtlogApp> {
             ),
             GoRoute(
               path: '/community',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const CommunityPage(),
-              ),
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const CommunityPage()),
             ),
             GoRoute(
               path: '/mypage',
-              builder: (_, state) =>
-                  AppPage(key: ValueKey(state.uri.path), child: const MyPage()),
+              pageBuilder: (_, state) => _contentPage(state, const MyPage()),
+            ),
+            GoRoute(
+              path: '/settings',
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const SettingsPage()),
             ),
             GoRoute(
               path: '/library',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: LibraryPage(
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                LibraryPage(
                   artworkId: state.uri.queryParameters['artwork_id'],
                   initialDate: state.uri.queryParameters['date'],
                 ),
@@ -169,7 +174,7 @@ class _ArtlogAppState extends State<ArtlogApp> {
       locale: const Locale('ko'),
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [Locale('ko'), Locale('en')],
-      theme: artlogTheme(),
+      theme: docentalkTheme(),
     ),
   );
 }

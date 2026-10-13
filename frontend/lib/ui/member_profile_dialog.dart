@@ -84,7 +84,7 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: closing,
-    child: GlassAlertDialog(
+    child: SurfaceDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       title: Text(editing ? '감상 프로필' : '나만의 감상 취향을 알려주세요', style: serif(22)),
       content: SizedBox(

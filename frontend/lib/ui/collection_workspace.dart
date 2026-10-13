@@ -31,7 +31,16 @@ class _AccountGuardState extends State<AccountGuard> {
     }
     closing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Navigator.pop(context);
+      if (!mounted) return;
+      final route = ModalRoute.of(context);
+      if (route == null) return;
+      final navigator = Navigator.of(context);
+      if (route.isCurrent) {
+        navigator.pop();
+      } else {
+        // A discard/confirmation dialog may cover this account's form.
+        navigator.removeRoute(route);
+      }
     });
   }
 
@@ -100,7 +109,7 @@ class _CollectionEditorState extends State<_CollectionEditor> {
   }
 
   @override
-  Widget build(BuildContext context) => GlassAlertDialog(
+  Widget build(BuildContext context) => SurfaceDialog(
     title: Text(
       widget.collection == null ? '새 컬렉션 만들기' : '컬렉션 편집',
       style: serif(22),
@@ -239,7 +248,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       context: context,
       builder: (_) => AccountGuard(
         state: s,
-        child: GlassAlertDialog(
+        child: SurfaceDialog(
           title: Text('컬렉션을 삭제할까요?', style: serif(21)),
           content: Text(
             '‘${c.name}’의 묶음이 삭제돼요. 좋아요와 다이어리 기록은 그대로 남아요.',
@@ -275,83 +284,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      GlassSurface(
-        tinted: true,
-        padding: EdgeInsets.all(compact(context) ? 22 : 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.auto_awesome_outlined, color: green, size: 20),
-                const SizedBox(width: 10),
-                Expanded(child: Text('내 취향을 읽는 AI', style: serif(23))),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Text(
-              taste?.summary ??
-                  '좋아하는 그림을 모으면, 내가 어떤 작품에 마음을 두고 있는지 짧은 소개로 풀어드려요.',
-              style: sans(14, height: 1.9),
-            ),
-            if (taste?.stale == true)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  '새로 담은 작품이 있어요. 소개를 업데이트해 보세요.',
-                  style: sans(12, color: green),
-                ),
-              ),
-            if (taste?.evidence.isNotEmpty == true) ...[
-              const SizedBox(height: 14),
-              Text(
-                '소개에 사용되는 작품 ${taste!.evidence.length}점 · 좋아요와 컬렉션 기준',
-                style: sans(11, color: muted),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: [
-                  for (final a in taste!.evidence.take(4))
-                    GlassActionChip(
-                      label: Text(a.title, overflow: TextOverflow.ellipsis),
-                      onPressed: () => context.go('/artwork/${a.id}'),
-                    ),
-                ],
-              ),
-            ],
-            if (tasteError != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  tasteError!,
-                  style: sans(12, color: Colors.red.shade800),
-                ),
-              ),
-            const SizedBox(height: 18),
-            ArtButton(
-              generating
-                  ? '취향을 읽고 있어요…'
-                  : taste?.summary == null
-                  ? '내 취향 소개 만들기'
-                  : '취향 소개 업데이트',
-              onTap: generating || loading || taste?.evidence.isEmpty != false
-                  ? null
-                  : generate,
-            ),
-            if (ArtlogScope.of(context).config.demo)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  '미리보기에서는 실제 AI를 호출하지 않아요.',
-                  style: sans(11, color: muted),
-                ),
-              ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 30),
       Wrap(
         alignment: WrapAlignment.spaceBetween,
         spacing: 16,
@@ -383,7 +315,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       if (error != null)
         EmptyView(error!, action: ArtButton('다시 불러오기', onTap: load)),
       if (!loading && error == null && rows.isEmpty)
-        GlassSurface(
+        SurfacePanel(
           padding: const EdgeInsets.all(28),
           child: Column(
             children: [
@@ -417,13 +349,13 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                 for (final group in rows)
                   SizedBox(
                     width: width,
-                    child: GlassSurface(
+                    child: SurfacePanel(
                       padding: const EdgeInsets.all(14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(4),
                             onTap: () async {
                               await showModalBottomSheet<void>(
                                 context: context,
@@ -443,7 +375,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(18),
+                                  borderRadius: BorderRadius.circular(4),
                                   child: SizedBox(
                                     height: 145,
                                     child: group.previews.isEmpty
@@ -532,8 +464,102 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
             );
           },
         ),
-      const SizedBox(height: 26),
-      CollectionAssistant(groups: rows, onChanged: load),
+      const SizedBox(height: 30),
+      const Divider(),
+      ExpansionTile(
+        title: Text('AI 취향 소개', style: sans(14, weight: FontWeight.w500)),
+        subtitle: Text('좋아한 그림에서 나의 취향을 읽어요', style: sans(12, color: muted)),
+        maintainState: true,
+        children: [
+          SurfacePanel(
+            tinted: true,
+            padding: EdgeInsets.all(compact(context) ? 22 : 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.auto_awesome_outlined,
+                      color: green,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text('내 취향을 읽는 AI', style: serif(23))),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  taste?.summary ??
+                      '좋아하는 그림을 모으면, 내가 어떤 작품에 마음을 두고 있는지 짧은 소개로 풀어드려요.',
+                  style: sans(14, height: 1.9),
+                ),
+                if (taste?.stale == true)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      '새로 담은 작품이 있어요. 소개를 업데이트해 보세요.',
+                      style: sans(12, color: green),
+                    ),
+                  ),
+                if (taste?.evidence.isNotEmpty == true) ...[
+                  const SizedBox(height: 14),
+                  Text(
+                    '소개에 사용되는 작품 ${taste!.evidence.length}점 · 좋아요와 컬렉션 기준',
+                    style: sans(11, color: muted),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final a in taste!.evidence.take(4))
+                        SourceChip(
+                          label: Text(a.title, overflow: TextOverflow.ellipsis),
+                          onPressed: () => context.go('/artwork/${a.id}'),
+                        ),
+                    ],
+                  ),
+                ],
+                if (tasteError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      tasteError!,
+                      style: sans(12, color: Colors.red.shade800),
+                    ),
+                  ),
+                const SizedBox(height: 18),
+                ArtButton(
+                  generating
+                      ? '취향을 읽고 있어요…'
+                      : taste?.summary == null
+                      ? '내 취향 소개 만들기'
+                      : '취향 소개 업데이트',
+                  onTap:
+                      generating || loading || taste?.evidence.isEmpty != false
+                      ? null
+                      : generate,
+                ),
+                if (ArtlogScope.of(context).config.demo)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      '미리보기에서는 실제 AI를 호출하지 않아요.',
+                      style: sans(11, color: muted),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      ExpansionTile(
+        title: Text('대화로 컬렉션 정리', style: sans(14, weight: FontWeight.w500)),
+        subtitle: Text('작품을 찾아 담거나 새 컬렉션을 만들어요', style: sans(12, color: muted)),
+        maintainState: true,
+        children: [CollectionAssistant(groups: rows, onChanged: load)],
+      ),
     ],
   );
 }
@@ -828,7 +854,7 @@ class _CollectionAssistantState extends State<CollectionAssistant> {
   }
 
   @override
-  Widget build(BuildContext context) => GlassSurface(
+  Widget build(BuildContext context) => SurfacePanel(
     padding: EdgeInsets.all(compact(context) ? 18 : 28),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -863,7 +889,7 @@ class _CollectionAssistantState extends State<CollectionAssistant> {
         for (final r in replies)
           Padding(
             padding: const EdgeInsets.only(bottom: 14),
-            child: GlassSurface(
+            child: SurfacePanel(
               tinted: true,
               radius: 20,
               padding: const EdgeInsets.all(18),
@@ -967,7 +993,7 @@ class _ArtworkCollectionPickerState extends State<_ArtworkCollectionPicker> {
   }
 
   @override
-  Widget build(BuildContext context) => GlassAlertDialog(
+  Widget build(BuildContext context) => SurfaceDialog(
     title: Text('이 그림을 어디에 담을까요?', style: serif(21)),
     content: SizedBox(
       width: 420,

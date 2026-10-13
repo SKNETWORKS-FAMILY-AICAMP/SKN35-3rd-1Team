@@ -19,6 +19,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<Artwork>? future;
   Future<List<Artwork>>? related;
   bool info = false;
+  final chatKey = GlobalKey();
   String? identity;
   @override
   void didChangeDependencies() {
@@ -88,7 +89,7 @@ class _DetailPageState extends State<DetailPage> {
           children: [
             SizedBox(
               height: compact(context) ? 340 : 440,
-              child: GlassSurface(
+              child: SurfacePanel(
                 tinted: true,
                 radius: 32,
                 child: Stack(
@@ -134,7 +135,7 @@ class _DetailPageState extends State<DetailPage> {
                                   right: 15,
                                   child: IconButton(
                                     tooltip: '확대 화면 닫기',
-                                    style: crystalButtonStyle(
+                                    style: editorialButtonStyle(
                                       dark: true,
                                       quiet: true,
                                     ),
@@ -158,7 +159,7 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                         icon: const Icon(Icons.open_in_full, size: 15),
-                        label: Text('크게 보기', style: sans(10)),
+                        label: Text('크게 보기', style: sans(12)),
                       ),
                     ),
                   ],
@@ -315,7 +316,39 @@ class _DetailPageState extends State<DetailPage> {
                 style: sans(11, color: muted),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                ArtButton(
+                  '감상 남기기',
+                  icon: Icons.edit_outlined,
+                  onTap: () => context.go('/library?artwork_id=${art.id}'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => pickCollectionForArtwork(context, s, art),
+                  icon: const Icon(Icons.bookmark_border, size: 18),
+                  label: const Text('컬렉션에 저장'),
+                ),
+                if (compact(context))
+                  TextButton(
+                    onPressed: () {
+                      if (chatKey.currentContext != null) {
+                        Scrollable.ensureVisible(
+                          chatKey.currentContext!,
+                          alignment: .03,
+                          duration: MediaQuery.disableAnimationsOf(context)
+                              ? Duration.zero
+                              : const Duration(milliseconds: 250),
+                        );
+                      }
+                    },
+                    child: const Text('도슨트와 대화 ↓'),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 24),
             LayoutBuilder(
               builder: (context, c) => c.maxWidth > 800
                   ? Row(
@@ -323,34 +356,24 @@ class _DetailPageState extends State<DetailPage> {
                       children: [
                         Expanded(child: left),
                         const SizedBox(width: 38),
-                        Expanded(child: DocentChat(art, key: ValueKey(art.id))),
+                        Expanded(
+                          child: KeyedSubtree(
+                            key: chatKey,
+                            child: DocentChat(art, key: ValueKey(art.id)),
+                          ),
+                        ),
                       ],
                     )
                   : Column(
                       children: [
                         left,
                         const SizedBox(height: 32),
-                        DocentChat(art, key: ValueKey(art.id)),
+                        KeyedSubtree(
+                          key: chatKey,
+                          child: DocentChat(art, key: ValueKey(art.id)),
+                        ),
                       ],
                     ),
-            ),
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 14),
-              child: ArtButton(
-                '내 컬렉션에 담기',
-                outline: true,
-                onTap: () => pickCollectionForArtwork(
-                  context,
-                  ArtlogScope.of(context),
-                  art,
-                ),
-              ),
-            ),
-            ArtButton(
-              '이 작품의 감상평 남기기',
-              icon: Icons.edit_outlined,
-              onTap: () => context.go('/library?artwork_id=${art.id}'),
             ),
             const SizedBox(height: 28),
             DiaryFeedView(artworkId: art.id),
@@ -359,7 +382,7 @@ class _DetailPageState extends State<DetailPage> {
             const SizedBox(height: 25),
             SectionTitle(
               eyebrow: 'CONTINUE YOUR JOURNEY',
-              title: '다음 그림으로 이어지는 이야기',
+              title: '함께 보면 좋은 작품',
               subtitle: s.config.demo
                   ? '작가와 사조를 따라 골라본 미리보기 작품이에요.'
                   : '이 작품과 함께 살펴볼 만한 그림이에요.',

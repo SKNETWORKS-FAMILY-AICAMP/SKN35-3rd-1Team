@@ -121,7 +121,7 @@ class _ProfilePreferencesState extends State<ProfilePreferences> {
         for (var i = 0; i < priorities.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: GlassSurface(
+            child: SurfacePanel(
               radius: 20,
               padding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
               child: Row(
@@ -199,7 +199,7 @@ class _ProfilePreferencesState extends State<ProfilePreferences> {
                     }
                   : null,
               style:
-                  crystalButtonStyle(
+                  editorialButtonStyle(
                     tinted: style == option.$1,
                     radius: 22,
                     padding: const EdgeInsets.all(18),

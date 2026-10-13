@@ -55,7 +55,7 @@ void main() {
         await tester.pumpWidget(ArtlogApp(state: state));
         await tester.pumpAndSettle();
         final hero = find.byKey(const ValueKey('daily-fullscreen-hero'));
-        expect(tester.getSize(hero), Size(width, 900));
+        expect(tester.getSize(hero), Size(width, 900 - 128));
         expect(
           tester
               .widget<DailyArtworkHero>(find.byType(DailyArtworkHero))
@@ -74,6 +74,37 @@ void main() {
       },
     );
   }
+
+  testWidgets(
+    'hero caption fits below the museum navigation at a 720px desktop height',
+    (tester) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      SharedPreferences.setMockInitialValues({});
+      final state = ArtlogState(
+        const AppConfig(demo: true),
+        ArtlogApi(baseUrl: 'https://example.org'),
+        await SharedPreferences.getInstance(),
+      );
+      await tester.runAsync(state.load);
+      await tester.pumpWidget(ArtlogApp(state: state));
+      await tester.pumpAndSettle();
+      final hero = find.byType(DailyArtworkHero);
+      final art = tester.widget<DailyArtworkHero>(hero).works.first;
+      expect(tester.getSize(hero).height, 592);
+      expect(
+        tester
+            .getBottomRight(find.text('${state.artistName(art)} · ${art.year}'))
+            .dy,
+        lessThanOrEqualTo(720),
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      state.dispose();
+    },
+  );
 
   testWidgets(
     'journal previews three works and opens remaining works in a bounded sheet',
@@ -138,19 +169,16 @@ void main() {
     },
   );
 
-  testWidgets(
-    'glass becomes opaque and avoids backdrop blur for high contrast',
-    (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: MediaQuery(
-            data: MediaQueryData(highContrast: true),
-            child: GlassSurface(blur: true, child: Text('읽기 쉬운 메뉴')),
-          ),
+  testWidgets('surfaces remain opaque with high contrast', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(highContrast: true),
+          child: SurfacePanel(child: Text('읽기 쉬운 메뉴')),
         ),
-      );
-      expect(find.byType(BackdropFilter), findsNothing);
-      expect(find.text('읽기 쉬운 메뉴'), findsOneWidget);
-    },
-  );
+      ),
+    );
+    expect(find.byType(BackdropFilter), findsNothing);
+    expect(find.text('읽기 쉬운 메뉴'), findsOneWidget);
+  });
 }

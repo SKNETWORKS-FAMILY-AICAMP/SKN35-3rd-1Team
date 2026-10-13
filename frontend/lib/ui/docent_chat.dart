@@ -46,7 +46,7 @@ class _DocentChatState extends State<DocentChat> {
     final confirmedIdentity = conversation!.identity;
     final approved = await showDialog<bool>(
       context: context,
-      builder: (c) => GlassAlertDialog(
+      builder: (c) => SurfaceDialog(
         title: const Text('이 작품의 대화를 초기화할까요?'),
         content: const Text('저장된 질문과 답변이 삭제됩니다. 작품 감상 기록과 좋아요는 유지돼요.'),
         actions: [
@@ -100,11 +100,12 @@ class _DocentChatState extends State<DocentChat> {
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
     return SizedBox(
-      height: compact(context) ? 720 : 790,
-      child: GlassSurface(
-        tinted: true,
-        radius: 32,
-        interactive: false,
+      height:
+          (MediaQuery.sizeOf(context).height -
+                  (MediaQuery.sizeOf(context).width < 850 ? 160 : 280))
+              .clamp(420.0, 720.0),
+      child: SurfacePanel(
+        radius: 12,
         child: Column(
           children: [
             Padding(
@@ -116,10 +117,10 @@ class _DocentChatState extends State<DocentChat> {
                     height: 36,
                     decoration: BoxDecoration(
                       color: green,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.auto_awesome_outlined,
+                      Icons.chat_bubble_outline,
                       color: Colors.white,
                       size: 20,
                     ),
@@ -130,18 +131,15 @@ class _DocentChatState extends State<DocentChat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '나의 도슨트',
+                          'AI 도슨트',
                           style: sans(14, weight: FontWeight.w600),
                         ),
-                        Text(
-                          '작품 속 이야기를 함께 발견해요.',
-                          style: sans(10, color: muted),
-                        ),
+                        Text('작품에 관해 물어보세요.', style: sans(11, color: muted)),
                       ],
                     ),
                   ),
                   if (s.config.demo)
-                    Text('미리보기', style: sans(10, color: muted)),
+                    Text('미리보기', style: sans(11, color: muted)),
                   IconButton(
                     tooltip: '대화 초기화',
                     onPressed: busy || messages.isEmpty ? null : reset,
@@ -153,7 +151,7 @@ class _DocentChatState extends State<DocentChat> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(11),
-              decoration: glassDecoration(radius: 20, tinted: true),
+              decoration: surfaceDecoration(radius: 20, tinted: true),
               child: Row(
                 children: [
                   Container(
@@ -161,7 +159,7 @@ class _DocentChatState extends State<DocentChat> {
                       horizontal: 7,
                       vertical: 3,
                     ),
-                    decoration: glassDecoration(radius: 9, tinted: true),
+                    decoration: surfaceDecoration(radius: 9, tinted: true),
                     child: Text('함께 보는 그림', style: sans(9, color: green)),
                   ),
                   const SizedBox(width: 10),
@@ -181,35 +179,15 @@ class _DocentChatState extends State<DocentChat> {
                 controller: scroll,
                 padding: const EdgeInsets.all(24),
                 children: [
-                  const SizedBox(height: 12),
-                  const Eyebrow('A CONVERSATION WITH ART'),
-                  const SizedBox(height: 18),
-                  Text('그림 앞에서,\n무엇이 궁금한가요?', style: serif(26, color: green)),
-                  const SizedBox(height: 15),
-                  Text(
-                    '작품의 작은 디테일부터 작가의 이야기까지.\n떠오르는 질문을 편하게 건네보세요.',
-                    style: sans(13, color: muted, height: 1.9),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.verified_outlined,
-                        size: 14,
-                        color: sage,
-                      ),
-                      const SizedBox(width: 7),
-                      Expanded(
-                        child: Text(
-                          s.config.demo
-                              ? '준비된 감상 안내와 원문 링크를 체험해요.'
-                              : '답변에 사용된 자료의 출처를 함께 확인해요.',
-                          style: sans(10, color: muted),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 28),
+                  if (messages.isEmpty) ...[
+                    Text('무엇이 궁금한가요?', style: serif(22)),
+                    const SizedBox(height: 8),
+                    Text(
+                      '작품의 작은 디테일부터 작가의 이야기까지.',
+                      style: sans(13, color: muted),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                   if (conversation!.loading) ...[
                     const LinearProgressIndicator(color: sage, minHeight: 2),
                     Text(
@@ -241,12 +219,12 @@ class _DocentChatState extends State<DocentChat> {
                         children: [
                           Text(
                             m.role == 'user' ? '나' : '✳  Docentalk 도슨트',
-                            style: sans(10, color: muted),
+                            style: sans(11, color: muted),
                           ),
                           const SizedBox(height: 7),
                           Container(
                             padding: const EdgeInsets.all(15),
-                            decoration: glassDecoration(
+                            decoration: surfaceDecoration(
                               radius: 22,
                               tinted: m.role == 'user',
                             ),
@@ -266,14 +244,14 @@ class _DocentChatState extends State<DocentChat> {
                               runSpacing: 7,
                               children: [
                                 for (var i = 0; i < m.sources.length; i++)
-                                  GlassActionChip(
+                                  SourceChip(
                                     avatar: const Icon(
                                       Icons.article_outlined,
                                       size: 13,
                                     ),
                                     label: Text(
                                       '${i + 1} · ${m.sources[i].name.isEmpty ? m.sources[i].title : m.sources[i].name}',
-                                      style: sans(10, color: muted),
+                                      style: sans(11, color: muted),
                                     ),
                                     onPressed: () =>
                                         _showSources(context, m.sources),
@@ -324,8 +302,8 @@ class _DocentChatState extends State<DocentChat> {
                         '언제 그린 작품인가요?',
                         '작가에 대해 알려주세요',
                       ])
-                        GlassActionChip(
-                          label: Text(q, style: sans(10, color: muted)),
+                        SourceChip(
+                          label: Text(q, style: sans(11, color: muted)),
                           onPressed: busy ? null : () => ask(q),
                         ),
                     ],
@@ -354,7 +332,7 @@ class _DocentChatState extends State<DocentChat> {
                       const SizedBox(width: 7),
                       IconButton.filled(
                         tooltip: '질문 보내기',
-                        style: crystalButtonStyle(dark: true),
+                        style: editorialButtonStyle(dark: true),
                         onPressed: busy ? null : () => ask(input.text),
                         icon: const Icon(Icons.arrow_upward, size: 20),
                       ),
@@ -379,7 +357,7 @@ class _DocentChatState extends State<DocentChat> {
 
   void _showSources(BuildContext context, List<Source> sources) => showDialog(
     context: context,
-    builder: (c) => GlassAlertDialog(
+    builder: (c) => SurfaceDialog(
       backgroundColor: paper,
       title: Text('답변의 근거 자료', style: serif(22)),
       content: SizedBox(
@@ -434,7 +412,7 @@ class _DocentChatState extends State<DocentChat> {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(
                                     basis.name,
-                                    style: sans(10, color: muted),
+                                    style: sans(11, color: muted),
                                   ),
                                 ),
                       ],

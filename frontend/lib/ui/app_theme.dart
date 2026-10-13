@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'design.dart';
 
-ThemeData artlogTheme() => ThemeData(
+ThemeData docentalkTheme() => ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: paper,
   fontFamily: 'NotoSansKR',
-  colorScheme: ColorScheme.fromSeed(seedColor: green, surface: paper).copyWith(
-    primary: green,
-    secondary: const Color(0xff807596),
-    onSurface: ink,
-    outline: line,
-  ),
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: green,
+    surface: paper,
+  ).copyWith(primary: green, secondary: green, onSurface: ink, outline: line),
   dividerColor: line,
   textTheme: ThemeData.light().textTheme.apply(
     fontFamily: 'NotoSansKR',
@@ -19,84 +17,84 @@ ThemeData artlogTheme() => ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: const Color(0xc4ffffff),
-    hoverColor: const Color(0xf2ffffff),
+    fillColor: const Color(0xffffffff),
+    hoverColor: const Color(0xfff8f7f4),
     labelStyle: sans(12, color: muted),
     hintStyle: sans(12, color: muted),
     floatingLabelStyle: sans(11, color: green, weight: FontWeight.w600),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(color: line),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(color: Color(0xffd2dde0)),
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(color: line),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(color: green, width: 1.5),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(color: line),
     ),
     contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
   ),
   filledButtonTheme: FilledButtonThemeData(
-    style: crystalButtonStyle(dark: true),
+    style: editorialButtonStyle(dark: true),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
-    style: crystalButtonStyle(dark: true),
+    style: editorialButtonStyle(dark: true),
   ),
-  outlinedButtonTheme: OutlinedButtonThemeData(style: crystalButtonStyle()),
+  outlinedButtonTheme: OutlinedButtonThemeData(style: editorialButtonStyle()),
   textButtonTheme: TextButtonThemeData(
-    style: crystalButtonStyle(
+    style: editorialButtonStyle(
       quiet: true,
       minimumSize: const Size(44, 44),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     ),
   ),
   iconButtonTheme: IconButtonThemeData(
-    style: crystalButtonStyle(
+    style: editorialButtonStyle(
       minimumSize: const Size(44, 44),
       padding: const EdgeInsets.all(11),
     ),
   ),
   segmentedButtonTheme: SegmentedButtonThemeData(
-    style: crystalButtonStyle(quiet: true).copyWith(
+    style: editorialButtonStyle(quiet: true).copyWith(
       foregroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.selected) ? green : muted,
       ),
     ),
   ),
   chipTheme: ChipThemeData(
-    backgroundColor: const Color(0xa8ffffff),
+    backgroundColor: const Color(0xfff8f7f4),
     selectedColor: ink,
-    disabledColor: const Color(0x66ffffff),
-    side: const BorderSide(color: Colors.white),
-    shape: const StadiumBorder(),
+    disabledColor: const Color(0xffeeefe9),
+    side: const BorderSide(color: line),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
     labelStyle: sans(11),
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
     elevation: 0,
     pressElevation: 0,
   ),
   cardTheme: CardThemeData(
-    color: const Color(0xd9ffffff),
+    color: const Color(0xffffffff),
     surfaceTintColor: Colors.transparent,
     elevation: 0,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(28),
-      side: const BorderSide(color: Colors.white),
+      borderRadius: BorderRadius.circular(12),
+      side: const BorderSide(color: line),
     ),
   ),
   dialogTheme: DialogThemeData(
     backgroundColor: pearl,
     surfaceTintColor: Colors.transparent,
-    elevation: 12,
+    elevation: 2,
     shadowColor: const Color(0x30233540),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(32),
-      side: const BorderSide(color: Colors.white),
+      borderRadius: BorderRadius.circular(12),
+      side: const BorderSide(color: line),
     ),
     titleTextStyle: serif(22),
     contentTextStyle: sans(13),
@@ -105,22 +103,22 @@ ThemeData artlogTheme() => ThemeData(
   bottomSheetTheme: const BottomSheetThemeData(
     backgroundColor: pearl,
     surfaceTintColor: Colors.transparent,
-    elevation: 16,
+    elevation: 2,
     shadowColor: Color(0x30233540),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-      side: BorderSide(color: Colors.white),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      side: BorderSide(color: line),
     ),
   ),
   popupMenuTheme: PopupMenuThemeData(
     color: pearl,
     surfaceTintColor: Colors.transparent,
-    elevation: 8,
+    elevation: 2,
     shadowColor: const Color(0x20233540),
     textStyle: sans(12),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-      side: const BorderSide(color: Colors.white),
+      borderRadius: BorderRadius.circular(8),
+      side: const BorderSide(color: line),
     ),
   ),
   dropdownMenuTheme: DropdownMenuThemeData(
@@ -130,7 +128,7 @@ ThemeData artlogTheme() => ThemeData(
       surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
       elevation: const WidgetStatePropertyAll(8),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
   ),
@@ -155,14 +153,14 @@ ThemeData artlogTheme() => ThemeData(
     surfaceTintColor: Colors.transparent,
     headerBackgroundColor: const Color(0xffe8efef),
     headerForegroundColor: ink,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
   snackBarTheme: SnackBarThemeData(
     behavior: SnackBarBehavior.floating,
     backgroundColor: ink,
     contentTextStyle: sans(12, color: Colors.white),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       side: const BorderSide(color: Color(0x55ffffff)),
     ),
     elevation: 4,
@@ -177,7 +175,7 @@ ThemeData artlogTheme() => ThemeData(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
   ),
   listTileTheme: ListTileThemeData(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     selectedTileColor: const Color(0xffe4eeee),
     iconColor: green,
   ),

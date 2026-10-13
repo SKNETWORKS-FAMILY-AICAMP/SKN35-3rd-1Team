@@ -624,15 +624,19 @@ class ArtlogState extends ChangeNotifier {
     if (!config.demo) {
       return api.diaryFeed(cursor: cursor, artworkId: artworkId);
     }
-    return DiaryFeed(
-      _demoDiary()
-          .where(
-            (e) =>
-                e.isPublic && (artworkId == null || e.artwork?.id == artworkId),
-          )
-          .toList(),
-      null,
-    );
+    final entries =
+        _demoDiary()
+            .where(
+              (e) =>
+                  e.isPublic &&
+                  (artworkId == null || e.artwork?.id == artworkId),
+            )
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
+    final start = (int.tryParse(cursor ?? '') ?? 0).clamp(0, entries.length);
+    final page = entries.skip(start).take(12).toList();
+    final next = start + page.length;
+    return DiaryFeed(page, next < entries.length ? '$next' : null);
   }
 
   static String message(Object e) => e is ApiException

@@ -198,8 +198,8 @@ void main() {
       final s = (await tester.runAsync(() => demo()))!;
       await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/mypage'));
       await tester.pumpAndSettle();
-      expect(find.text('나의 작은 미술관'), findsOneWidget);
-      await tester.tap(find.widgetWithText(ChoiceChip, '설정'));
+      expect(find.text('나의 프로필'), findsOneWidget);
+      await tester.tap(find.text('감상 설정'));
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const ValueKey('profile-birth-date')),
@@ -238,6 +238,8 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     final s = (await tester.runAsync(() => demo()))!;
     await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/mypage'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('내 컬렉션'));
     await tester.pumpAndSettle();
     final create = find.text('새 컬렉션');
     await tester.ensureVisible(create);

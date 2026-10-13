@@ -23,174 +23,113 @@ class _ArtistsPageState extends State<ArtistsPage> {
         )
         .toList();
     return PageWidth(
-      vertical: 45,
+      vertical: 40,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Eyebrow('THE ARTISTS'),
-          const SizedBox(height: 17),
-          Text('그림을 남긴 사람들.', style: serif(compact(context) ? 32 : 40)),
-          const SizedBox(height: 14),
-          Text(
-            '시대도, 시선도 다른 ${s.artists.length}명의 거장.\n마음이 닿는 작가의 세계로 들어가 보세요.',
-            style: sans(13, color: muted),
-          ),
-          const SizedBox(height: 15),
-          Text(
-            'Meet the minds behind the masterpieces.',
-            style: english(21, color: sage),
-          ),
-          const SizedBox(height: 30),
-          const Divider(),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${artists.length}명의 작가',
-                  style: sans(12, color: muted),
-                ),
+          const SizedBox(height: 12),
+          Text('작가', style: serif(36)),
+          const SizedBox(height: 10),
+          Text('그림 너머의 삶과 시선을 만납니다.', style: sans(14, color: muted)),
+          const SizedBox(height: 28),
+          SizedBox(
+            width: 420,
+            child: TextField(
+              onChanged: (v) => setState(() => query = v),
+              style: sans(14),
+              decoration: const InputDecoration(
+                hintText: '작가 또는 사조 검색',
+                prefixIcon: Icon(Icons.search, size: 20),
               ),
-              SizedBox(
-                width: compact(context) ? 180 : 250,
-                child: TextField(
-                  onChanged: (v) => setState(() => query = v),
-                  style: sans(12),
-                  decoration: InputDecoration(
-                    hintText: '작가 또는 사조 검색',
-                    hintStyle: sans(11, color: muted),
-                    prefixIcon: const Icon(Icons.search, size: 18),
-                    filled: false,
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 28),
           if (artists.isEmpty)
             const EmptyView('검색된 작가가 없어요.', description: '다른 이름이나 사조로 찾아보세요.')
           else
             LayoutBuilder(
               builder: (context, c) {
-                final cols = c.maxWidth > 1000
+                final cols = c.maxWidth >= 1000
                     ? 4
-                    : c.maxWidth > 680
+                    : c.maxWidth >= 650
                     ? 3
                     : 2;
-                final gap = compact(context) ? 17.0 : 25.0;
+                final gap = compact(context) ? 16.0 : 28.0;
                 final width = (c.maxWidth - (cols - 1) * gap) / cols;
                 return Wrap(
                   spacing: gap,
-                  runSpacing: 34,
-                  children: artists
-                      .map(
-                        (a) => SizedBox(
-                          width: width,
-                          child: GlassSurface(
-                            padding: const EdgeInsets.all(14),
-                            child: Column(
+                  runSpacing: 32,
+                  children: [
+                    for (final a in artists)
+                      SizedBox(
+                        width: width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () => context.go('/artist/${a.id}'),
+                              child: AspectRatio(
+                                aspectRatio: .9,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: ArtImage(
+                                    s.representativeImage(a),
+                                    label: '${a.name}의 작품 일부',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(18),
+                                Expanded(
                                   child: InkWell(
                                     onTap: () => context.go('/artist/${a.id}'),
-                                    child: SizedBox(
-                                      height: compact(context) ? 210 : 300,
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          ArtImage(
-                                            s.representativeImage(a),
-                                            label: '${a.name}의 작품 일부',
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          a.name,
+                                          style: sans(
+                                            14,
+                                            weight: FontWeight.w600,
                                           ),
-                                          Positioned(
-                                            top: 14,
-                                            left: 14,
-                                            child: Container(
-                                              color: paper.withValues(
-                                                alpha: 0.9,
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 9,
-                                                    vertical: 5,
-                                                  ),
-                                              child: Text(
-                                                s.artistMovement(a),
-                                                style: sans(9, color: green),
-                                              ),
-                                            ),
-                                          ),
-                                          const Positioned(
-                                            bottom: 15,
-                                            right: 15,
-                                            child: Icon(
-                                              Icons.north_east,
-                                              color: Colors.white,
-                                              size: 23,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        Text(
+                                          a.english,
+                                          style: english(17, color: muted),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 13),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () =>
-                                            context.go('/artist/${a.id}'),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              a.name,
-                                              style: serif(
-                                                compact(context) ? 17 : 20,
-                                              ),
-                                            ),
-                                            Text(
-                                              a.english,
-                                              style: english(18, color: muted),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      tooltip:
-                                          '${a.name} ${s.follows.contains(a.id) ? '팔로우 취소' : '팔로우'}',
-                                      onPressed: s.pendingFollows.contains(a.id)
-                                          ? null
-                                          : () => followArtist(context, a),
-                                      icon: Icon(
-                                        s.follows.contains(a.id)
-                                            ? Icons.check_circle_outline
-                                            : Icons.add_circle_outline,
-                                        size: 23,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 9),
-                                Text(
-                                  a.summary,
-                                  style: sans(11, color: muted),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                IconButton(
+                                  tooltip:
+                                      '${a.name} ${s.follows.contains(a.id) ? '팔로우 취소' : '팔로우'}',
+                                  onPressed: s.pendingFollows.contains(a.id)
+                                      ? null
+                                      : () => followArtist(context, a),
+                                  icon: Icon(
+                                    s.follows.contains(a.id)
+                                        ? Icons.check
+                                        : Icons.add,
+                                    size: 18,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
+                            const SizedBox(height: 4),
+                            Text(
+                              s.artistMovement(a),
+                              style: sans(11, color: muted),
+                            ),
+                          ],
                         ),
-                      )
-                      .toList(),
+                      ),
+                  ],
                 );
               },
             ),
@@ -253,11 +192,10 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         }
         final (artist, works) = snapshot.data!;
         final s = ArtlogScope.of(context);
-        final image = GlassSurface(
-          padding: const EdgeInsets.all(12),
-          radius: 32,
+        final image = Padding(
+          padding: EdgeInsets.zero,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(4),
             child: ArtImage(
               artist.portrait.isNotEmpty
                   ? artist.portrait

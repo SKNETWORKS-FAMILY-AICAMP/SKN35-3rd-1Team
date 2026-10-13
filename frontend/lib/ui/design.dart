@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../state.dart';
 import '../models.dart';
 
-import 'glass.dart';
-export 'glass.dart';
+import 'surfaces.dart';
+export 'surfaces.dart';
 
 TextStyle sans(
   double size, {
@@ -99,10 +99,10 @@ class ArtButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FilledButton(
     onPressed: onTap,
-    style: crystalButtonStyle(
+    style: editorialButtonStyle(
       dark: !outline && !light,
-      minimumSize: const Size(44, 50),
-      padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 14),
+      minimumSize: const Size(44, 48),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -113,7 +113,7 @@ class ArtButton extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: sans(
-              12,
+              13,
               color: onTap == null
                   ? muted
                   : outline || light
@@ -124,17 +124,7 @@ class ArtButton extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 14),
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: (outline || light ? ink : Colors.white).withValues(
-              alpha: .09,
-            ),
-          ),
-          child: Icon(icon, size: 14),
-        ),
+        Icon(icon, size: 17),
       ],
     ),
   );
@@ -529,7 +519,7 @@ class _LoginDialogState extends State<LoginDialog> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: !busy,
-    child: GlassAlertDialog(
+    child: SurfaceDialog(
       backgroundColor: paper,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       title: Text(signup ? '나만의 미술관 시작하기' : '나만의 미술관에 로그인', style: serif(21)),
@@ -702,9 +692,8 @@ class _ArtworkCardState extends State<ArtworkCard> {
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context), a = widget.art;
     final liked = s.likes.contains(a.id);
-    return GlassSurface(
-      radius: 28,
-      padding: const EdgeInsets.all(12),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -714,7 +703,7 @@ class _ArtworkCardState extends State<ArtworkCard> {
               onEnter: (_) => setState(() => hover = true),
               onExit: (_) => setState(() => hover = false),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(4),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -731,26 +720,6 @@ class _ArtworkCardState extends State<ArtworkCard> {
                           child: ArtImage(
                             a.image,
                             label: '${s.artistName(a)}, ${a.title}',
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 12,
-                      bottom: 12,
-                      child: IgnorePointer(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 9,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: paper.withValues(alpha: 0.94),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            s.movementName(a),
-                            style: sans(10, color: green),
                           ),
                         ),
                       ),
@@ -814,7 +783,7 @@ class _ArtworkCardState extends State<ArtworkCard> {
             ],
           ),
           const SizedBox(height: 3),
-          Text(s.artistName(a), style: sans(11, color: muted)),
+          Text(s.artistName(a), style: sans(12, color: muted)),
           const SizedBox(height: 2),
           Text(
             s.artistEnglish(a),

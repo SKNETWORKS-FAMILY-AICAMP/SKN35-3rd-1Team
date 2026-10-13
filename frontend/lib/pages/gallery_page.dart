@@ -34,8 +34,6 @@ class _GalleryPageState extends State<GalleryPage> {
         ),
       );
     }
-    final hero =
-        s.artworks.where((a) => a.isFeatured).firstOrNull ?? s.artworks.first;
     final filters = byArtist
         ? s.artists.map((a) => (a.id, a.name)).toList()
         : s.movements.map((m) => (m.id, m.name)).toList();
@@ -85,13 +83,13 @@ class _GalleryPageState extends State<GalleryPage> {
               SectionTitle(
                 key: collectionKey,
                 eyebrow: 'THE COLLECTION',
-                title: '어떤 그림에 마음이 머무나요?',
-                subtitle: '마음이 가는 작품을 고르고, 그 안의 이야기를 들어보세요.',
+                title: '소장 작품',
+                subtitle: '작가와 사조를 따라, 다음 그림을 찾아보세요.',
                 trailing: Column(
                   children: [
                     Text(
                       '${s.artworks.length}',
-                      style: english(38, color: muted),
+                      style: english(28, color: muted),
                     ),
                     const Eyebrow('ARTWORKS'),
                   ],
@@ -150,9 +148,8 @@ class _GalleryPageState extends State<GalleryPage> {
                       ),
                     ),
                   );
-                  return GlassSurface(
-                    radius: 26,
-                    padding: const EdgeInsets.all(8),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: c.maxWidth > 620
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,7 +168,7 @@ class _GalleryPageState extends State<GalleryPage> {
                 runSpacing: 9,
                 children: [
                   for (final f in [('', '전체'), ...filters])
-                    GlassChoiceChip(
+                    FilterPill(
                       label: Text(
                         f.$2,
                         style: sans(
@@ -243,65 +240,38 @@ class _GalleryPageState extends State<GalleryPage> {
           ),
         ),
         PageWidth(
-          vertical: 65,
-          child: GlassSurface(
-            dark: true,
-            radius: 34,
-            padding: EdgeInsets.all(compact(context) ? 28 : 45),
-            child: LayoutBuilder(
-              builder: (context, c) => Row(
-                children: [
-                  if (c.maxWidth > 700) ...[
-                    Transform.rotate(
-                      angle: -0.06,
-                      child: Container(
-                        padding: const EdgeInsets.all(9),
-                        color: const Color(0xffe8effa),
-                        child: ArtImage(
-                          s.artworks
-                                  .where((a) => s.artistName(a).contains('모네'))
-                                  .firstOrNull
-                                  ?.image ??
-                              hero.image,
-                          width: 220,
-                          height: 230,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 55),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Eyebrow(
-                          '✳  YOUR PERSONAL DOCENT',
-                          color: Color(0xffd4e2f7),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          '그림 앞에서 생긴 물음표,\n이야기가 되는 순간.',
-                          style: serif(
-                            compact(context) ? 23 : 28,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          '작품을 고르고 도슨트에게 물어보세요.\n답변의 출처까지, 함께 살펴볼 수 있어요.',
-                          style: sans(12, color: const Color(0xffd4e2f7)),
-                        ),
-                        const SizedBox(height: 25),
-                        ArtButton(
-                          '도슨트와 대화해 보기',
-                          light: true,
-                          onTap: () => context.go('/artwork/${hero.id}'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          vertical: 56,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 28),
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(color: line),
+                bottom: BorderSide(color: line),
               ),
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 24,
+              runSpacing: 18,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('그림을 보는 다른 시선', style: serif(24)),
+                    const SizedBox(height: 6),
+                    Text(
+                      '다른 감상가의 이야기를 만나고, 나의 생각도 남겨보세요.',
+                      style: sans(13, color: muted),
+                    ),
+                  ],
+                ),
+                ArtButton(
+                  '감상 피드 둘러보기',
+                  outline: true,
+                  onTap: () => context.go('/community'),
+                ),
+              ],
             ),
           ),
         ),
@@ -386,7 +356,7 @@ class _GalleryPageState extends State<GalleryPage> {
       9999;
   Widget _tab(String label, bool active, VoidCallback action) => TextButton(
     onPressed: action,
-    style: crystalButtonStyle(
+    style: editorialButtonStyle(
       dark: active,
       quiet: !active,
       minimumSize: const Size(44, 46),

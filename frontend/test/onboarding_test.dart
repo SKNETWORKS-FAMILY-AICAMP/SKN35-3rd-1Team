@@ -166,7 +166,9 @@ void main() {
         expect(s.memberProfile!.gender, isNull);
         expect(s.memberProfile!.explanationStyle, 'easy');
         expect(find.text('나만의 감상 취향을 알려주세요'), findsNothing);
-        expect(find.text('감상 프로필'), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('navigation-/mypage')));
+        await tester.pumpAndSettle();
+        expect(find.text('감상 설정'), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         s.dispose();
