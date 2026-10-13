@@ -74,11 +74,16 @@ for d in docs:                                   # 답변에 실제로 쓴 청�
 | --- | --- | --- |
 | `OPENAI_API_KEY` | (비밀값) | 질문 임베딩, 답변 생성 |
 | `EMBEDDING_MODEL` | `text-embedding-3-small` | 적재할 때와 같아야 함 |
-| `CHROMA_HOST` | `<chroma 서비스>.railway.internal` | 같은 Railway 프로젝트의 내부 주소 |
-| `CHROMA_PORT` / `CHROMA_SSL` | `8000` / `false` | 내부망은 HTTP |
 | `CHROMA_CHUNKS_COLLECTION` / `CHROMA_ARTWORKS_COLLECTION` | `chunks` / `artworks` | 발표용 이름. 개발용은 `chunks_dev` 등으로 나눔 |
 
-Chroma 서비스 쪽: 이미지 `chromadb/chroma:1.5.9`(클라이언트 버전과 맞춤), 볼륨 `/data`, 포트 8000. Chroma 1.x는 자체 인증이 없으니 공개 도메인은 `sync_chroma`를 돌릴 때만 열어 두세요. 내부망 접속이 안 되면 Chroma 서비스 환경변수에 `CHROMA_HOST=::`가 필요할 수 있습니다 (Railway 내부망은 IPv6).
+Chroma 접속은 아래 두 방식 중 **하나만** 넣습니다. 세 Cloud 값이 모두 있으면 Cloud가 우선입니다 (`app/clients/chroma_client.py`).
+
+| 방식 | 변수 | 값 |
+| --- | --- | --- |
+| **Chroma Cloud** (trychroma.com) | `CHROMA_API_KEY` / `CHROMA_TENANT` / `CHROMA_DATABASE` | 발급받은 API 키(비밀값) / 테넌트 ID / DB 이름 |
+| Railway에 직접 띄운 Chroma | `CHROMA_HOST` / `CHROMA_PORT` / `CHROMA_SSL` | `<chroma 서비스>.railway.internal` / `8000` / `false` (내부망은 HTTP) |
+
+Railway에 직접 띄울 때 Chroma 서비스 쪽: 이미지 `chromadb/chroma:1.5.9`(클라이언트 버전과 맞춤), 볼륨 `/data`, 포트 8000. Chroma 1.x는 자체 인증이 없으니 공개 도메인은 `sync_chroma`를 돌릴 때만 열어 두세요. 내부망 접속이 안 되면 Chroma 서비스 환경변수에 `CHROMA_HOST=::`가 필요할 수 있습니다 (Railway 내부망은 IPv6).
 
 ### 평가
 

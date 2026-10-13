@@ -83,3 +83,11 @@ def test_collection_made_with_other_model_is_rejected(monkeypatch):
     monkeypatch.setattr(chroma_client, "model_name", lambda: "new-model")
     with pytest.raises(RuntimeError, match="--reset"):
         chroma_client._collection(client, name)
+
+
+def test_ids_are_read_page_by_page(collection, monkeypatch):
+    """Chroma Cloud 는 get() 한 번에 300개까지만 돌려준다. 한 쪽보다 많아도 전부 읽어야 다시 넣지 않는다."""
+    monkeypatch.setattr(sc, "BATCH", 2)
+    sc.sync_chunks(collection, set(range(1, 8)), fetcher([]))
+    assert sc.chroma_ids(collection) == set(range(1, 8))
+    assert sc.sync_chunks(collection, set(range(1, 8)), fetcher([])) == sc.Result()

@@ -76,6 +76,10 @@ class Settings(BaseSettings):
 
     # Chroma: 검색용 사본 (원본은 TiDB). CHROMA_HOST 가 있으면 서버(HttpClient), 없으면 CHROMA_PATH 폴더(PersistentClient).
     # Railway 공개 도메인은 CHROMA_PORT=443, CHROMA_SSL=true. 같은 프로젝트 내부망은 <서비스>.railway.internal:8000.
+    # Chroma Cloud: 세 값이 모두 있으면 CloudClient 로 붙고 CHROMA_HOST·CHROMA_PATH 는 무시한다.
+    chroma_api_key: SecretStr | None = Field(default=None, validation_alias="CHROMA_API_KEY")
+    chroma_tenant: str | None = Field(default=None, validation_alias="CHROMA_TENANT")
+    chroma_database: str | None = Field(default=None, validation_alias="CHROMA_DATABASE")
     chroma_host: str | None = Field(default=None, validation_alias="CHROMA_HOST")
     chroma_port: int = Field(default=8000, validation_alias="CHROMA_PORT")
     chroma_ssl: bool = Field(default=False, validation_alias="CHROMA_SSL")

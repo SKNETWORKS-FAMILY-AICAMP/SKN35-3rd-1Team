@@ -27,7 +27,9 @@ from sqlalchemy.orm import Session, undefer
 from app.clients import chroma_client
 from app.models import Artwork, ArtworkEmbedding, Document, DocumentChunk
 
-BATCH = 500  # Chroma 한 번 호출에 넣는 건수 (서버 상한 5,461보다 작게)
+# Chroma 한 번 호출에 넣는 건수. Chroma Cloud 는 요청당 300건 한도가 있어 그보다 작게 둔다
+# (서버의 get_max_batch_size() 는 1,000 을 알려 주지만 실제 쿼터는 300 이라 믿을 수 없음).
+BATCH = 250
 TIDB_FETCH = 200  # TiDB 에서 벡터를 한 번에 읽는 행 수 (행마다 벡터 약 6KB)
 
 
@@ -53,7 +55,7 @@ def sync_chunks(
     dry_run: bool = False,
 ) -> Result:
     """id 집합 차이로 추가·삭제한다. fetch 는 TiDB 에서 해당 id 의 청크를 읽는다 (테스트에서는 가짜 함수)."""
-    in_chroma = {int(i) for i in collection.get(include=[])["ids"]}
+    in_chroma = chroma_ids(collection)
     gone = sorted(in_chroma - tidb_ids)
     new = sorted(tidb_ids - in_chroma)
     result = Result(added=len(new), deleted=len(gone))
@@ -68,7 +70,7 @@ def sync_chunks(
 
 def sync_artworks(collection: Collection, records: list[Record], dry_run: bool = False) -> Result:
     """전부 upsert 하고, TiDB 에 없는 작품은 지운다."""
-    in_chroma = {int(i) for i in collection.get(include=[])["ids"]}
+    in_chroma = chroma_ids(collection)
     gone = sorted(in_chroma - {r.id for r in records})
     result = Result(upserted=len(records), deleted=len(gone))
     if dry_run:
@@ -78,6 +80,14 @@ def sync_artworks(collection: Collection, records: list[Record], dry_run: bool =
     for batch in batched(records, BATCH):
         collection.upsert(**_payload(batch))
     return result
+
+
+def chroma_ids(collection: Collection) -> set[int]:
+    """컬렉션의 id 전부. Chroma Cloud 는 get() 한 번에 300개까지만 돌려주므로 나눠서 끝까지 읽는다."""
+    ids: set[int] = set()
+    while page := collection.get(include=[], limit=BATCH, offset=len(ids))["ids"]:
+        ids |= {int(i) for i in page}
+    return ids
 
 
 def _payload(records: Iterable[Record]) -> dict:
@@ -149,8 +159,7 @@ def main(argv: list[str] | None = None) -> int:
     settings = get_settings()
     chroma = chroma_client.client()
     chroma.heartbeat()  # 접속이 안 되면 여기서 바로 실패
-    where = settings.chroma_host or settings.chroma_path
-    print(f"Chroma {where} · 컬렉션 {settings.chroma_chunks_collection}, {settings.chroma_artworks_collection}")
+    print(f"{chroma_client.describe()} · 컬렉션 {settings.chroma_chunks_collection}, {settings.chroma_artworks_collection}")
     if args.reset and not args.dry_run:
         for name in (settings.chroma_chunks_collection, settings.chroma_artworks_collection):
             if name in {c.name for c in chroma.list_collections()}:

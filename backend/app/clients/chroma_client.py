@@ -20,13 +20,34 @@ DISTANCE = "cosine"  # Chroma 기본값은 l2. 이미 만든 컬렉션의 거리
 
 @lru_cache
 def client() -> ClientAPI:
+    """접속 우선순위: Chroma Cloud(API 키) > 서버(CHROMA_HOST) > 로컬 폴더(CHROMA_PATH)."""
     settings = get_settings()
+    cloud = (settings.chroma_api_key, settings.chroma_tenant, settings.chroma_database)
+    if any(cloud):
+        if not all(cloud):
+            raise RuntimeError("Chroma Cloud 는 CHROMA_API_KEY, CHROMA_TENANT, CHROMA_DATABASE 세 값이 모두 필요합니다.")
+        return chromadb.CloudClient(
+            tenant=settings.chroma_tenant,
+            database=settings.chroma_database,
+            api_key=settings.chroma_api_key.get_secret_value(),
+        )
     if settings.chroma_host:
         return chromadb.HttpClient(host=settings.chroma_host, port=settings.chroma_port, ssl=settings.chroma_ssl)
     if settings.chroma_path:
         path = Path(settings.chroma_path)
         return chromadb.PersistentClient(path=str(path if path.is_absolute() else PROJECT_ROOT / path))
-    raise RuntimeError(".env 에 CHROMA_HOST(서버) 또는 CHROMA_PATH(로컬 폴더)가 없습니다.")
+    raise RuntimeError(
+        ".env 에 Chroma 접속 정보가 없습니다. CHROMA_API_KEY·CHROMA_TENANT·CHROMA_DATABASE(Chroma Cloud), "
+        "CHROMA_HOST(서버), CHROMA_PATH(로컬 폴더) 중 하나를 넣으세요."
+    )
+
+
+def describe() -> str:
+    """어디에 붙었는지 사람이 읽을 수 있게 (비밀값 제외)."""
+    s = get_settings()
+    if s.chroma_api_key:
+        return f"Chroma Cloud {s.chroma_tenant}/{s.chroma_database}"
+    return f"Chroma {s.chroma_host}:{s.chroma_port}" if s.chroma_host else f"Chroma 로컬 {s.chroma_path}"
 
 
 def chunks_collection(chroma: ClientAPI | None = None) -> Collection:
