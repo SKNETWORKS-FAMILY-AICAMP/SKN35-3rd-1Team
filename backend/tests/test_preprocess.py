@@ -386,8 +386,8 @@ def test_approved_artist_documents_and_images(out):
     assert all(not d["needs_review"] for d in docs)
     works = [w for w in pp.load_processed("artworks.jsonl") if w["artist_slug"] in new_slugs]
     assert len(works) == 60
-    assert sum(w["image_url"] is None for w in works) == 17
-    assert sum(w["image_url"] is not None for w in works) == 43
+    assert sum(w["image_url"] is None for w in works) == 10
+    assert sum(w["image_url"] is not None for w in works) == 50
     assert {m["slug"] for m in pp.load_processed("movements.jsonl")} >= {
         "expressionism", "vienna-secession",
     }

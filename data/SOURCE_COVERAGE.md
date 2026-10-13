@@ -18,7 +18,7 @@
 - [레오폴트 온라인 컬렉션 법적 고지](https://onlinecollection.leopoldmuseum.org/en/legal-notice/): 게시된 글과 이미지는 저작권 보호 대상이고, 복제·출판을 금지한다고 안내한다. 사후 70년이 지난 작가의 작품 이미지는 사적 목적으로 다운로드할 수 있지만, 출판·복제 허가는 별도라고 명시한다. [이미지 권리 안내](https://www.leopoldmuseum.org/en/collection/image-rights)에서도 사진 이용 신청을 안내한다.
 - 이 저장소의 한국어 설명은 팀이 작성한 문장이라는 뜻이며, 위 기관의 원문이나 사진을 앱에 재게시할 권리를 얻었다는 뜻은 아니다. 출처 URL은 참고 근거다. 이미지 사용은 작품별 `image_url`·`image_license`를 별도로 확인해야 한다. 권리 검토 전인 이미지는 `null`로 남겨 두었다.
 
-전처리 검증 결과: 사조 6개, 작가 10명, 작품 279점, 문서 429건으로 정상 생성됐다. 실레와 클림트는 각 30작품·34문서이며, 작품별 `description` 60건 모두 500자 이상이고 감상 포인트 60건이 별도 절로 포함됐다. Wikimedia Commons의 작품 동일성과 Public Domain 표기를 파일별로 재확인해 이미지 표시 URL은 43건(실레 21건, 클림트 22건), 제공하지 않는 이미지 URL은 `null` 17건이다. 두 작가의 공개 도메인 초상 URL도 추가했다. 개별 이미지 권리 검수와 문서 승인 상태는 [2026-10-13 사전 검수 기록](docs/data-review-klimt-schiele-2026-10-13.md) 및 [68건 장부](data/mappings/review_audit_klimt_schiele.json)를 따른다. 로컬 파일의 갱신만으로 배포된 DB나 앱 화면이 자동 갱신되지는 않는다.
+전처리 검증 결과: 사조 6개, 작가 10명, 작품 279점, 문서 429건으로 정상 생성됐다. 실레와 클림트는 각 30작품·34문서이며, 작품별 `description` 60건 모두 500자 이상이고 감상 포인트 60건이 별도 절로 포함됐다. Wikimedia Commons의 작품 동일성과 Public Domain 표기를 파일별로 재확인해 이미지 표시 URL은 50건(실레 24건, 클림트 26건), 제공하지 않는 이미지 URL은 `null` 10건이다. 두 작가의 공개 도메인 초상 URL도 추가했다. 개별 이미지 권리 검수와 문서 승인 상태는 [2026-10-13 사전 검수 기록](docs/data-review-klimt-schiele-2026-10-13.md) 및 [68건 장부](data/mappings/review_audit_klimt_schiele.json)를 따른다. 로컬 파일의 갱신만으로 배포된 DB나 앱 화면이 자동 갱신되지는 않는다.
 
 ## 구스타프 클림트 (30점)
 

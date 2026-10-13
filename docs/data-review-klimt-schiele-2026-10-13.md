@@ -14,12 +14,12 @@
 
 ## 이미지·이용 조건
 
-현재 60점 중 `image_url` 43건(실레 21건, 클림트 22건), `NULL` 17건이다. 표시 후보 43건은 개별 Wikimedia Commons 파일 페이지의 작품 동일성과 Public Domain 표기를 확인했다. 두 작가 카드에도 공개 도메인 초상 URL을 추가했다. 이 표기는 관할권별 재이용 검토를 대체하지 않는다. 기관 사이트의 텍스트와 이미지도 각각 [벨베데레 법적 고지](https://www.belvedere.at/en/legal-notice), [레오폴트 법적 고지](https://onlinecollection.leopoldmuseum.org/en/legal-notice/)를 따른다.
+현재 60점 중 `image_url` 50건(실레 24건, 클림트 26건), `NULL` 10건이다. 표시 후보 50건은 개별 Wikimedia Commons 파일 페이지의 작품 동일성과 Public Domain 표기를 확인했다. 두 작가 카드에도 공개 도메인 초상 URL을 추가했다. 이 표기는 관할권별 재이용 검토를 대체하지 않는다. 기관 사이트의 텍스트와 이미지도 각각 [벨베데레 법적 고지](https://www.belvedere.at/en/legal-notice), [레오폴트 법적 고지](https://onlinecollection.leopoldmuseum.org/en/legal-notice/)를 따른다.
 
 - 《작은 도시 III》에 연결돼 있던 [Commons 파일](https://commons.wikimedia.org/wiki/File:Egon_Schiele_015.jpg)은 실제로 《작은 도시 II》였으므로 `image_url`과 `image_source_url`을 비웠다.
 - 《죽음과 소녀》, 《프리차 리들러의 초상》, 《요한나 슈타우데의 초상》, 《베토벤 프리즈》, 《물뱀 I》에는 별도의 Public Domain 대체 파일을 확인해 교체했다. 《가족》과 《두 아이와 어머니 II》는 확인된 파일이 각각 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)이고 현재 UI에 저작자·라이선스 링크·변경 여부 표시가 없으므로 `image_url`을 계속 비워 둔다.
 
-정확한 작품과 Public Domain 재현물을 함께 확인하지 못한 17점은 전처리된 `artworks.jsonl`에서도 `image_url: null`이다. 기관 수장품 사진을 `source_url`에서 직접 가져와 표시하는 방식은 사용하지 않는다.
+정확한 작품과 Public Domain 재현물을 함께 확인하지 못한 10점은 전처리된 `artworks.jsonl`에서도 `image_url: null`이다. 기관 수장품 사진을 `source_url`에서 직접 가져와 표시하는 방식은 사용하지 않는다.
 
 ## 승인 전후 검색 제외 검증
 
