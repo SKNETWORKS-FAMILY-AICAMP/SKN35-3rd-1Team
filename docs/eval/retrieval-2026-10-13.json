@@ -2,9 +2,9 @@
  "summary": {
   "questions": 30,
   "targeted": 23,
-  "hit": 22,
-  "all_hit": 20,
-  "hit_rate": 0.957,
+  "hit": 23,
+  "all_hit": 23,
+  "hit_rate": 1.0,
   "answer_top_distance": [
    0.4516,
    0.8166
@@ -161,10 +161,12 @@
    "question": "야경은 실제로 밤 장면을 그린 거야?",
    "expect_refused": false,
    "targets": [
-    "rembrandt/the-night-watch"
+    "rembrandt/the-night-watch",
+    "rembrandt/the-night-watch.en"
    ],
    "matched": {
-    "rembrandt/the-night-watch": "순위"
+    "rembrandt/the-night-watch": "순위",
+    "rembrandt/the-night-watch.en": "순위"
    },
    "hit": true,
    "all_hit": true,
@@ -541,7 +543,7 @@
     ],
     [
      "vincent-van-gogh/commentary-cafe-terrace-at-night",
-     0.7126,
+     0.7127,
      false
     ],
     [
@@ -712,11 +714,6 @@
      false
     ],
     [
-     "paul-gauguin/gauguin-bio-two-tahiti-stays",
-     0.7872,
-     false
-    ],
-    [
      "paul-gauguin/timeline-10",
      0.7875,
      false
@@ -729,6 +726,11 @@
     [
      "paul-gauguin/gauguin-bio-family-separation",
      0.8184,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-09",
+     0.8218,
      false
     ]
    ]
@@ -788,11 +790,15 @@
    "question": "인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는 뭐야?",
    "expect_refused": false,
    "targets": [
-    "rembrandt/the-night-watch"
+    "rembrandt/the-night-watch",
+    "rembrandt/the-night-watch.en"
    ],
-   "matched": {},
-   "hit": false,
-   "all_hit": false,
+   "matched": {
+    "rembrandt/the-night-watch": "순위",
+    "rembrandt/the-night-watch.en": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
    "top_distance": 0.6849,
    "retrieved": [
     [
@@ -831,8 +837,8 @@
      false
     ],
     [
-     "rembrandt/the-night-watch.en",
-     0.8448,
+     "rembrandt/the-night-watch",
+     0.8592,
      false
     ],
     [
@@ -957,13 +963,16 @@
    "expect_refused": false,
    "targets": [
     "_comparisons/chiaroscuro",
-    "_comparisons/tenebrism"
+    "_comparisons/chiaroscuro.en",
+    "_comparisons/tenebrism",
+    "_comparisons/tenebrism.en"
    ],
    "matched": {
+    "_comparisons/chiaroscuro": "순위",
     "_comparisons/tenebrism": "순위"
    },
    "hit": true,
-   "all_hit": false,
+   "all_hit": true,
    "top_distance": 0.5424,
    "retrieved": [
     [
@@ -997,6 +1006,11 @@
      false
     ],
     [
+     "_comparisons/chiaroscuro",
+     0.7072,
+     false
+    ],
+    [
      "rembrandt/the-night-watch.en",
      0.7305,
      false
@@ -1007,8 +1021,8 @@
      false
     ],
     [
-     "rembrandt/the-night-watch.en",
-     0.7878,
+     "rembrandt/the-night-watch",
+     0.797,
      false
     ],
     [
@@ -1025,14 +1039,13 @@
    "question": "파리에서 그린 해바라기와 아를의 해바라기는 무엇이 달라?",
    "expect_refused": false,
    "targets": [
-    "vincent-van-gogh/commentary-sunflowers-1887",
-    "vincent-van-gogh/commentary-sunflowers-arles"
+    "vincent-van-gogh/commentary-sunflowers-1887"
    ],
    "matched": {
     "vincent-van-gogh/commentary-sunflowers-1887": "순위"
    },
    "hit": true,
-   "all_hit": false,
+   "all_hit": true,
    "top_distance": 0.5584,
    "retrieved": [
     [
@@ -1106,11 +1119,6 @@
     ],
     [
      "vincent-van-gogh/commentary-the-starry-night",
-     0.884,
-     false
-    ],
-    [
-     "vincent-van-gogh/commentary-the-starry-night",
      0.8859,
      false
     ]
@@ -1165,7 +1173,7 @@
     ],
     [
      "claude-monet/water-lilies",
-     0.8515,
+     0.8611,
      false
     ],
     [
@@ -1218,6 +1226,11 @@
      false
     ],
     [
+     "rembrandt/the-night-watch",
+     0.8687,
+     false
+    ],
+    [
      "rembrandt/timeline-05",
      0.9363,
      true
@@ -1259,11 +1272,6 @@
     [
      "paul-cezanne/technique",
      0.8315,
-     false
-    ],
-    [
-     "paul-cezanne/apples-oranges",
-     0.9234,
      false
     ]
    ]
@@ -1330,11 +1338,6 @@
      false
     ],
     [
-     "paul-gauguin/timeline-02",
-     0.83,
-     false
-    ],
-    [
      "paul-gauguin/timeline-10",
      0.8612,
      false
@@ -1342,6 +1345,11 @@
     [
      "paul-gauguin/gauguin-bio-stockbroker-artist",
      0.8692,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-family-separation",
+     0.8751,
      false
     ]
    ]

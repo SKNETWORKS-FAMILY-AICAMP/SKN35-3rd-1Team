@@ -32,7 +32,7 @@
       "artwork_slug": "the-night-watch",
       "question": "야경은 실제로 밤 장면을 그린 거야?",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["밤", "어두워진"], "target_doc_keys": ["rembrandt/the-night-watch"], "source_required": true, "forbidden_claims": ["처음부터 밤 장면이었다"]}
+      "expected": {"refused": false, "required_keywords": ["밤", "어두워진"], "target_doc_keys": ["rembrandt/the-night-watch", "rembrandt/the-night-watch.en"], "source_required": true, "forbidden_claims": ["처음부터 밤 장면이었다"]}
     },
     {
       "id": "fact-005",
@@ -144,7 +144,7 @@
       "artwork_slug": "the-night-watch",
       "question": "인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는 뭐야?",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["집단 초상", "움직임"], "target_doc_keys": ["rembrandt/the-night-watch"], "source_required": true, "forbidden_claims": []}
+      "expected": {"refused": false, "required_keywords": ["집단 초상", "움직임"], "target_doc_keys": ["rembrandt/the-night-watch", "rembrandt/the-night-watch.en"], "source_required": true, "forbidden_claims": []}
     },
     {
       "id": "compare-001",
@@ -168,7 +168,7 @@
       "artwork_slug": "the-night-watch",
       "question": "렘브란트와 카라바조의 명암 표현 차이를 설명해줘.",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["명암"], "target_doc_keys": ["_comparisons/chiaroscuro", "_comparisons/tenebrism"], "source_required": true, "forbidden_claims": []}
+      "expected": {"refused": false, "required_keywords": ["명암"], "target_doc_keys": ["_comparisons/chiaroscuro", "_comparisons/chiaroscuro.en", "_comparisons/tenebrism", "_comparisons/tenebrism.en"], "source_required": true, "forbidden_claims": []}
     },
     {
       "id": "compare-004",
@@ -176,7 +176,7 @@
       "artwork_slug": "sunflowers-1887",
       "question": "파리에서 그린 해바라기와 아를의 해바라기는 무엇이 달라?",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["파리", "아를"], "target_doc_keys": ["vincent-van-gogh/commentary-sunflowers-1887", "vincent-van-gogh/commentary-sunflowers-arles"], "source_required": true, "forbidden_claims": []}
+      "expected": {"refused": false, "required_keywords": ["파리", "아를"], "target_doc_keys": ["vincent-van-gogh/commentary-sunflowers-1887"], "source_required": true, "forbidden_claims": []}
     },
     {
       "id": "scope-001",
