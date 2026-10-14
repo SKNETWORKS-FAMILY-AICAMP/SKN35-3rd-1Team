@@ -58,7 +58,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(find.text('Docentalk에 대하여 ↗'), findsOneWidget);
+        expect(find.textContaining('© 2026 DOCENTALK'), findsOneWidget);
         await tester.pumpWidget(const SizedBox());
         state.dispose();
       });

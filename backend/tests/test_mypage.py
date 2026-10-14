@@ -114,18 +114,19 @@ def group(c, name="나의 전시"):
     return response.json()["id"]
 
 
-def test_profile_roundtrip_order_birthdate_and_account_isolation(client):
+def test_profile_roundtrip_birthdate_style_and_account_isolation(client):
     defaults = client.get("/api/me/profile")
     assert defaults.headers["Cache-Control"] == "private, no-store"
     assert defaults.json()["onboarding_completed"] is False
+    assert "explanation_priorities" not in defaults.json()
     body = {
         "birth_date": "2001-02-03",
-        "explanation_priorities": ["artist_life", "technique", "background"],
         "conversation_style": "professional",
     }
     saved = client.put("/api/me/profile", json=body).json()
     assert saved["onboarding_completed"] is True
     assert all(saved[k] == v for k, v in body.items())
+    assert "explanation_priorities" not in saved
     assert (
         client.get("/api/me/profile", headers={"Authorization": "Bearer b"}).json()[
             "birth_date"
@@ -165,8 +166,7 @@ def test_nickname_change_is_optional_own_and_shown_in_feed(client):
         {"birth_date": "2099-01-01"},
         {"birth_date": "2026-02-30"},
         {"birth_date": "1899-01-01"},
-        {"explanation_priorities": ["technique"] * 3},
-        {"explanation_priorities": ["background", "artist_life"]},
+        {"explanation_priorities": ["background", "technique", "artist_life"]},
         {"conversation_style": "invented"},
         {"user_id": 2},
     ],

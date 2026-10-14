@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
@@ -16,7 +15,7 @@ class ArtworksPage extends StatefulWidget {
 
 class _ArtworksPageState extends State<ArtworksPage> {
   late bool artistsView = widget.initialView == 'artists';
-  String movement = '', artist = '', query = '';
+  String movement = '', query = '';
   int visible = 12;
   final search = TextEditingController();
 
@@ -56,9 +55,6 @@ class _ArtworksPageState extends State<ArtworksPage> {
               artistIdsFromWorks.contains(a.id),
         )
         .toList();
-    final selectedArtist = artist.isEmpty
-        ? null
-        : artists.where((a) => a.id == artist).firstOrNull;
     return PageWidth(
       vertical: 40,
       child: Column(
@@ -96,21 +92,15 @@ class _ArtworksPageState extends State<ArtworksPage> {
           const SizedBox(height: 20),
           _ViewToggle(artists: artistsView, onChanged: _setView),
           const SizedBox(height: 18),
-          _Tabs(
-            key: ValueKey('tabs-$artistsView'),
-            items: artistsView
-                ? [('', '전체'), for (final a in artists) (a.id, a.name)]
-                : [('', '전체'), for (final m in s.movements) (m.id, m.name)],
-            selected: artistsView ? artist : movement,
-            onSelected: (id) => setState(() {
-              if (artistsView) {
-                artist = id;
-              } else {
+          if (!artistsView)
+            _Tabs(
+              items: [('', '전체'), for (final m in s.movements) (m.id, m.name)],
+              selected: movement,
+              onSelected: (id) => setState(() {
                 movement = id;
-              }
-              visible = 12;
-            }),
-          ),
+                visible = 12;
+              }),
+            ),
           const SizedBox(height: 24),
           if (!artistsView) ...[
             Text('총 ${works.length}점의 작품', style: sans(12, color: muted)),
@@ -127,21 +117,16 @@ class _ArtworksPageState extends State<ArtworksPage> {
                 padding: const EdgeInsets.only(top: 32),
                 child: Center(
                   child: ArtButton(
-                    '그림 더 보기  ${works.length - visible}',
+                    '더보기',
+                    key: const ValueKey('artworks-more'),
+                    icon: Icons.add,
                     outline: true,
                     onTap: () => setState(() => visible += 12),
                   ),
                 ),
               ),
-          ] else if (selectedArtist == null)
-            ArtistGrid(artists)
-          else
-            _ArtistSection(
-              artist: selectedArtist,
-              works: s.artworks
-                  .where((a) => a.artistId == selectedArtist.id)
-                  .toList(),
-            ),
+          ] else
+            ArtistGrid(artists),
         ],
       ),
     );
@@ -172,11 +157,13 @@ class _ViewToggle extends StatelessWidget {
                 dark: artists == item.$1,
                 quiet: artists != item.$1,
                 minimumSize: const Size(120, 40),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
               ),
               child: Text(
                 item.$2,
                 style: sans(
                   13,
+                  height: 1.2,
                   color: artists == item.$1 ? Colors.white : muted,
                   weight: artists == item.$1
                       ? FontWeight.w600
@@ -192,7 +179,6 @@ class _ViewToggle extends StatelessWidget {
 
 class _Tabs extends StatelessWidget {
   const _Tabs({
-    super.key,
     required this.items,
     required this.selected,
     required this.onSelected,
@@ -201,7 +187,8 @@ class _Tabs extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onSelected;
   @override
-  Widget build(BuildContext context) => DecoratedBox(
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
     decoration: const BoxDecoration(
       border: Border(bottom: BorderSide(color: line)),
     ),
@@ -225,12 +212,13 @@ class _Tabs extends StatelessWidget {
                 onPressed: () => onSelected(item.$1),
                 style: editorialButtonStyle(
                   quiet: true,
+                  radius: 0,
                   minimumSize: const Size(44, 46),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 14,
                     vertical: 12,
                   ),
-                ),
+                ).copyWith(side: const WidgetStatePropertyAll(BorderSide.none)),
                 child: Text(
                   item.$2,
                   style: sans(
@@ -247,80 +235,4 @@ class _Tabs extends StatelessWidget {
       ),
     ),
   );
-}
-
-class _ArtistSection extends StatelessWidget {
-  const _ArtistSection({required this.artist, required this.works});
-  final Artist artist;
-  final List<Artwork> works;
-  @override
-  Widget build(BuildContext context) {
-    final s = ArtlogScope.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: ArtImage(
-                s.representativeImage(artist),
-                width: compact(context) ? 72 : 110,
-                height: compact(context) ? 90 : 136,
-                label: '${artist.name}의 작품 일부',
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Eyebrow(s.artistMovement(artist)),
-                  const SizedBox(height: 6),
-                  Text(artist.name, style: serif(26)),
-                  Text(
-                    '${artist.english}  ${artist.years}',
-                    style: english(19, color: muted),
-                  ),
-                  if (artist.summary.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Text(
-                      artist.summary,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: sans(13, color: muted),
-                    ),
-                  ],
-                  const SizedBox(height: 14),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 8,
-                    children: [
-                      LikeButton(
-                        liked: s.follows.contains(artist.id),
-                        subject: artist.name,
-                        onPressed: s.pendingFollows.contains(artist.id)
-                            ? null
-                            : () => likeArtist(context, artist),
-                      ),
-                      TextButton(
-                        onPressed: () => context.go('/artist/${artist.id}'),
-                        child: const Text('작가 페이지 보기 →'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        if (works.isEmpty)
-          const EmptyView('작품을 준비하고 있어요.')
-        else
-          ArtworkGrid(works),
-      ],
-    );
-  }
 }

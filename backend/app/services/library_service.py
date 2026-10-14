@@ -34,9 +34,17 @@ def record_view(
 def calendar(db: Session, *, user_id: int, month: str) -> list[CalendarDay]:
     start, end = timeutil.month_range(month)
     rows = activity_repository.calendar(db, user_id=user_id, start=start, end=end)
+    latest = activity_repository.latest_view_by_day(
+        db, user_id=user_id, start=start, end=end
+    )
     return [
         CalendarDay(
-            date=r.viewed_on, artwork_count=r.artwork_count, total_views=r.total_views
+            date=r.viewed_on,
+            artwork_count=r.artwork_count,
+            total_views=r.total_views,
+            artwork=catalog_service.to_artwork_card(*latest[r.viewed_on])
+            if r.viewed_on in latest
+            else None,
         )
         for r in rows
     ]

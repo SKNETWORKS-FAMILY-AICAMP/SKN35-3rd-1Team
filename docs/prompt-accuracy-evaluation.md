@@ -4,15 +4,15 @@
 
 - 기본 질문셋은 [`rag-eval.json`](../backend/tests/questions/rag-eval.json) 30문항이다. 검색 적중, 범위 밖 거절, 일반 답변, 멀티턴을 기존 [`test-plan.md`](test-plan.md)의 지표로 평가한다.
 - 추가 질문셋은 [`prompt-accuracy.json`](../backend/tests/questions/prompt-accuracy.json) 9문항이다. 근거 부족 유보, 일부 답변, 동명 작품 판본, 보정문, 팀 감상 포인트, 출처 ID, 원문 장문 복제, 이전 답변 정정을 집중 확인한다. 각 `pass_conditions`와 `failure_signals`는 **의미 판정 기준**이며 문자열 일치 검사가 아니다.
-- 정적 검증은 질문셋의 형식, 대상 `doc_key`·작품 연결·승인 상태·필수 문구, 프롬프트 문자열, 내부 JSON 파서만 확인한다. 실제 모델의 사실성, 유보 판단, 문장 복제 여부를 증명하지 않는다. 답변 생성 API가 연결되기 전에는 품질 점수와 통과 판정을 기록하지 않는다.
+- 정적 검증은 질문셋의 형식, 대상 `doc_key`·작품 연결·승인 상태·필수 문구, 프롬프트 문자열, 내부 JSON 파서만 확인한다. 실제 모델의 사실성, 유보 판단, 문장 복제 여부를 증명하지 않는다. 답변 생성 API는 연결되어 있지만, 실제 서비스 접속과 사람의 의미 판정 전에는 품질 점수와 통과 판정을 기록하지 않는다.
 
 ## 실행 순서
 
-1. `backend`의 테스트 환경에서 `pytest tests/test_evaluation_fixtures.py tests/test_prompts.py`를 실행한다. 로컬 승인 데이터 스냅샷과 사례 정의가 어긋나면 실제 평가를 시작하지 않는다.
+1. `backend`의 테스트 환경에서 `pytest tests/test_evaluation_fixtures.py tests/test_prompts.py`를 실행한다. 로컬 승인 데이터 스냅샷과 사례 정의가 어긋나면 실제 평가를 시작하지 않는다. TiDB·Chroma·임베딩·OpenAI 자격 정보를 설정한 뒤 `python -m scripts.eval_docent --out ../docs/eval-runs/2026-10-14`처럼 39문항의 실제 답변과 자동 계약 검사를 기록한다.
 2. 한 회차에서 프롬프트 버전과 **실제 시스템 프롬프트 원문**, 모델 ID, 생성 설정(temperature 등), 설명 스타일, 데이터 `_SUCCESS.json`, 검색 설정(top-k·거리 기준·고정 근거 규칙)을 고정한다. 30문항과 9문항 모두 같은 설정으로 실행한다. 설정을 바꾸면 새 회차로 기록한다.
 3. 각 사례에서 선택 작품 ID/slug, 질문, 대화 이력을 그대로 전달한다. 검색 결과의 `document_id`, `doc_key`, `chunk_id`, `chunk_index`, 거리, `pinned`, `annotation`, 청크 본문, `basis_sources`를 호출 순서대로 보존한다. `required_context`가 **모델에 전달된 내용**에 모두 있고 대상 작품과 승인 문서가 맞는지 먼저 확인한다. 로컬 전체 문서에 있다는 사실만으로 검색 성공으로 보지 않는다.
 4. 실제 검색이 필요한 종단 간 실행과, 동일한 승인 문서 청크를 고정해 주입하는 프롬프트 분리 실행을 구별한다. 분리 실행의 청크도 원문·ID·메타데이터를 기록하고 임의의 사실을 추가하지 않는다. 검색 누락은 `retrieval_fail`, 입력 구성 오류는 `setup_invalid`로 남긴다. 이 경우 프롬프트 통과율 분모에서 빼되 누락 건수와 원인을 숨기지 않는다.
-5. 모델의 원시 출력, `parse_grounded_draft` 통과 여부, 공개 `ChatResponse`, 서버가 조립한 `sources`를 저장한다. 출력 파싱 실패 또는 재시도도 모두 기록한다. 재시도 결과만 남기지 않는다. 사람은 실제 전달된 청크를 보며 아래 기준을 판정한다.
+5. 평가 실행기는 모델 입력·출력, 공개 `ChatResponse`, 검색 메타데이터와 청크, 기본 자동 검사 결과를 `cases.jsonl`에 저장한다. 오류가 난 사례는 오류 종류를 기록한다. 사람은 실제 전달된 청크를 보며 아래 기준을 판정한다. 재시도를 도입한다면 각 시도를 별도 행으로 기록한다.
 
 ## 9문항 채점 기준
 

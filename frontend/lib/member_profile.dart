@@ -6,7 +6,6 @@ class MemberProfile {
     this.gender,
     this.explanationStyle = 'standard',
     this.birthDate,
-    this.priorities = const ['background', 'technique', 'artist_life'],
     this.onboardingCompleted = true,
     this.nickname = '',
   });
@@ -29,20 +28,13 @@ class MemberProfile {
     'standard': '편안하고 쉬운 대화',
     'deep': '전문용어 적극 사용',
   };
-  static const priorityLabels = <String, String>{
-    'technique': '회화 기법',
-    'background': '작품의 배경 이야기',
-    'artist_life': '작가의 생애',
-  };
   final String? ageRange, gender, birthDate;
   final String explanationStyle, nickname;
-  final List<String> priorities;
   final bool onboardingCompleted;
   String get conversationStyle =>
       explanationStyle == 'deep' ? 'professional' : 'easy';
   Json toServerJson() => {
     'birth_date': birthDate,
-    'explanation_priorities': priorities,
     'conversation_style': conversationStyle,
     'onboarding_completed': onboardingCompleted,
   };
@@ -56,7 +48,6 @@ class MemberProfile {
   };
   factory MemberProfile.fromServer(Json j) => MemberProfile(
     birthDate: j['birth_date'] as String?,
-    priorities: items(j['explanation_priorities']).map(text).toList(),
     explanationStyle: j['conversation_style'] == 'professional'
         ? 'deep'
         : 'easy',
@@ -78,16 +69,10 @@ class MemberProfile {
       );
     }
     final p = MemberProfile.fromServer(j);
-    if (p.priorities.length != 3 ||
-        p.priorities.toSet().length != 3 ||
-        p.priorities.any((v) => !priorityLabels.containsKey(v))) {
-      throw const FormatException('설명 순서를 확인해 주세요.');
-    }
     return MemberProfile(
       ageRange: j['age_range'] as String?,
       gender: j['gender'] as String?,
       birthDate: p.birthDate,
-      priorities: p.priorities,
       explanationStyle: j['explanation_style'] as String,
       onboardingCompleted: p.onboardingCompleted,
       nickname: p.nickname,

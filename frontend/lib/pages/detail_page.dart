@@ -88,15 +88,13 @@ class _DetailPageState extends State<DetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: compact(context) ? 340 : 440,
-              child: SurfacePanel(
-                tinted: true,
-                radius: 32,
+              height: compact(context) ? 380 : 500,
+              child: GoldFrame(
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(4),
                       child: ArtImage(
                         art.image,
                         fit: BoxFit.contain,
@@ -182,7 +180,9 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                LikeButton(
+                HoverLikeButton(
+                  key: const ValueKey('detail-artwork-like'),
+                  label: '작품 좋아요',
                   liked: s.likes.contains(art.id),
                   subject: art.title,
                   onPressed: s.pendingLikes.contains(art.id)
@@ -215,7 +215,11 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                   ),
-                  LikeButton(
+                  HoverLikeButton(
+                    key: const ValueKey('detail-artist-like'),
+                    label: '작가 좋아요',
+                    icon: Icons.person,
+                    outlineIcon: Icons.person_outline,
                     liked: s.follows.contains(artist.id),
                     subject: artist.name,
                     onPressed: s.pendingFollows.contains(artist.id)
@@ -307,11 +311,6 @@ class _DetailPageState extends State<DetailPage> {
               spacing: 10,
               runSpacing: 10,
               children: [
-                ArtButton(
-                  '감상 남기기',
-                  icon: Icons.edit_outlined,
-                  onTap: () => context.go('/library?artwork_id=${art.id}'),
-                ),
                 OutlinedButton.icon(
                   onPressed: () => pickCollectionForArtwork(context, s, art),
                   icon: const Icon(Icons.bookmark_border, size: 18),

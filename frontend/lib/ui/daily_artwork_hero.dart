@@ -218,37 +218,66 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
                   ),
                 ),
                 Positioned(
-                  top: 20,
+                  top: mobile ? 16 : 28,
                   right: mobile ? 16 : 40,
                   child: Container(
-                    color: museumBlack,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    key: const ValueKey('hero-slider-navigation'),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xa6080808),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: const Color(0x33ffffff)),
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          '${(selected + 1).toString().padLeft(2, '0')} / ${widget.works.length.toString().padLeft(2, '0')}',
-                          style: sans(12, color: Colors.white),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
+                        _ArrowButton(
                           tooltip: '이전 오늘의 그림',
-                          style: editorialButtonStyle(dark: true, quiet: true),
+                          icon: Icons.chevron_left,
                           onPressed: widget.works.length > 1
                               ? () => go(
                                   (selected - 1 + widget.works.length) %
                                       widget.works.length,
                                 )
                               : null,
-                          icon: const Icon(Icons.arrow_back, size: 18),
                         ),
-                        IconButton(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (var i = 0; i < widget.works.length; i++)
+                                AnimatedContainer(
+                                  key: ValueKey(
+                                    'hero-dot-$i${i == selected ? '-active' : ''}',
+                                  ),
+                                  duration: reduced
+                                      ? Duration.zero
+                                      : const Duration(milliseconds: 200),
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  width: i == selected ? 18 : 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: i == selected
+                                        ? Colors.white
+                                        : const Color(0x66ffffff),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        _ArrowButton(
                           tooltip: '다음 오늘의 그림',
-                          style: editorialButtonStyle(dark: true, quiet: true),
+                          icon: Icons.chevron_right,
                           onPressed: widget.works.length > 1
                               ? () => go((selected + 1) % widget.works.length)
                               : null,
-                          icon: const Icon(Icons.arrow_forward, size: 18),
                         ),
                       ],
                     ),
@@ -297,4 +326,30 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
       ),
     );
   }
+}
+
+class _ArrowButton extends StatelessWidget {
+  const _ArrowButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+  });
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+  @override
+  Widget build(BuildContext context) => IconButton(
+    tooltip: tooltip,
+    onPressed: onPressed,
+    style: IconButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
+      fixedSize: const Size(36, 36),
+      minimumSize: const Size(36, 36),
+      padding: EdgeInsets.zero,
+      shape: const CircleBorder(),
+      side: BorderSide.none,
+    ),
+    icon: Icon(icon, size: 22),
+  );
 }

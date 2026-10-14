@@ -46,17 +46,18 @@ void main() {
       await tester.pumpWidget(ArtlogApp(state: state));
       await tester.pumpAndSettle();
       final originalWidth = tester.getSize(panel).width;
-      expect(tester.getSize(header).height, 80);
+      expect(tester.getSize(header).height, 72);
 
-      // A horizontal artwork change must not collapse the outer navigation.
+      // A horizontal artwork change must not move the outer navigation.
       await tester.tap(find.byTooltip('다음 오늘의 그림'));
       await tester.pumpAndSettle();
-      expect(find.text('02 / 03'), findsOneWidget);
-      expect(tester.getSize(header).height, 80);
+      expect(find.byKey(const ValueKey('hero-dot-1-active')), findsOneWidget);
+      expect(tester.getSize(header).height, 72);
 
+      // The one-row header keeps its height while the page scrolls.
       outer(tester).jumpTo(260);
       await tester.pumpAndSettle();
-      expect(tester.getSize(header).height, 48);
+      expect(tester.getSize(header).height, 72);
       expect(tester.getSize(panel).width, greaterThan(originalWidth));
       expect(
         tester.widget<Transform>(parallax).transform.storage[13],
@@ -66,7 +67,7 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('navigation-/artworks')));
       await tester.pumpAndSettle();
-      expect(tester.getSize(header).height, 80);
+      expect(tester.getSize(header).height, 72);
       expect(outer(tester).offset, 0);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
@@ -120,7 +121,7 @@ void main() {
       await tester.pumpAndSettle();
       outer(tester).jumpTo(900);
       await tester.pumpAndSettle();
-      expect(tester.getSize(header).height, 64);
+      expect(tester.getSize(header).height, 60);
       expect(tester.widget<Transform>(parallax).transform.storage[13], 0);
       await tester.tap(find.byTooltip('맨 위로'));
       await tester.pumpAndSettle();
@@ -163,7 +164,7 @@ void main() {
         }
         outer(tester).jumpTo(900);
         await tester.pumpAndSettle();
-        expect(tester.getSize(header).height, 80);
+        expect(tester.getSize(header).height, 72);
         expect(tester.getSize(panel).width, initialWidth);
         expect(tester.widget<Transform>(parallax).transform.storage[13], 0);
         await tester.tap(find.byTooltip('맨 위로'));

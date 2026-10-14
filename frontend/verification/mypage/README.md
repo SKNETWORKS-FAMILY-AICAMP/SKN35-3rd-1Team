@@ -18,7 +18,7 @@
 | --- | --- |
 | overview-desktop.jpg | 마이페이지, 다섯 탭, AI 소개 근거 |
 | collection-artwork.jpg | 컬렉션 안 작품 검색·담기 결과 |
-| settings-desktop.jpg | 설명 순서 변경·전문용어 스타일 |
+| settings-desktop.jpg | 이전 3단계 설정 화면 기록. 현재는 설명 순서 선택을 제거하고 생년월일·대화 스타일만 표시 |
 | overview-mobile.jpg | 390×844 마이페이지 |
 | settings-mobile.jpg | 모바일 설정 진입 |
 

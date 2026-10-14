@@ -55,7 +55,7 @@
 | DELETE | `/api/artists/{artist_id}/follow` | `204` | 필요 | 팔로우 취소. 팔로우가 없어도 `204` |
 | GET | `/api/me/follows` | `ArtistCard[]` | 필요 | 팔로우한 작가 |
 | POST | `/api/artworks/{artwork_id}/views` | `204` | 필요 | 열람 기록. 같은 날 다시 보면 `view_count`만 증가 |
-| GET | `/api/me/library/calendar?month=YYYY-MM` | `CalendarDay[]` | 필요 | 월별 감상 기록. 본 날만 날짜순 |
+| GET | `/api/me/library/calendar?month=YYYY-MM` | `CalendarDay[]` | 필요 | 월별 감상 기록. 본 날만 날짜순. `artwork`는 그날 마지막으로 본 작품(캘린더 썸네일) |
 | GET | `/api/me/library/days/{YYYY-MM-DD}` | `ViewedArtwork[]` | 필요 | 그날 본 작품, 마지막으로 본 순 |
 | GET | `/api/me/recommendations/artworks` | `RecommendedArtwork[]` | 필요 | 좋아요 기반 맞춤 작품 3개, 작가당 1개. 좋아요가 없으면 최근 열람 → 팔로우한 작가 작품 → 큐레이션 작품 무작위(사용자·날짜별로 고정, 새로고침해도 같은 결과). 이미지 없는 작품은 나오지 않음 |
 | GET | `/api/me/recommendations/artists` | `RecommendedArtist[]` | 필요 | 추천 작가 3명. 유사도 합산 순위 상위 3명, 팔로우한 작가 제외(좋아요한 작품의 작가는 포함) |
@@ -230,7 +230,7 @@ POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `
 | GET / POST | `/api/me/taste` | 저장한 AI 취향 소개 조회 / 근거 변경 시 생성 |
 | POST | `/api/me/collections/chat` | 컬렉션 요청 분석·제안. 이 요청만으로 DB를 변경하지 않음 |
 
-ProfileWrite: `{nickname: string | null, birth_date: "YYYY-MM-DD" | null, explanation_priorities: ["background","technique","artist_life"], conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘, 세 우선순위는 정확히 한 번씩 담은 순열입니다. 생일은 선택 사항이며 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. nickname은 공개 감상 피드에 작성자 이름으로 표시되는 값입니다. 앞뒤 공백을 지운 뒤 2~20자여야 하고, 생략하거나 null이면 지금 이름을 유지합니다(전체 교체 규칙의 예외). 중복은 허용합니다. 처음 값은 로그인할 때 Google 이름이나 이메일 @ 앞부분으로 정해지므로, 공개 전에 바꿀 수 있게 안내합니다. GET 응답에는 항상 nickname이 들어 있습니다. 성별과 이전 나이대는 새 요청에 포함하지 않습니다.
+ProfileWrite: `{nickname: string | null, birth_date: "YYYY-MM-DD" | null, conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘이며 선택 사항이고, 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. nickname은 공개 감상 피드에 작성자 이름으로 표시되는 값입니다. 앞뒤 공백을 지운 뒤 2~20자여야 하고, 생략하거나 null이면 지금 이름을 유지합니다(전체 교체 규칙의 예외). 중복은 허용합니다. 처음 값은 로그인할 때 Google 이름이나 이메일 @ 앞부분으로 정해지므로, 공개 전에 바꿀 수 있게 안내합니다. GET 응답에는 항상 nickname이 들어 있습니다. 성별과 이전 나이대, 설명 주제 우선순위는 새 요청에 포함하지 않습니다. 이전에 저장된 `explanation_priorities` DB 컬럼은 읽거나 갱신하지 않습니다.
 
 CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionOut은 `{id, name, description, artwork_count, previews: ArtworkCard[]}`입니다. 컬렉션은 기본 비공개이며 별도 공개 API는 없습니다. 한 컬렉션에는 최대 500점을 담습니다. 묶음을 삭제해도 좋아요·다이어리와 카탈로그 작품은 유지합니다.
 
@@ -244,9 +244,9 @@ CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `
 
 `/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
 
-## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.1)
+## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.3)
 
-`POST /api/artworks/{id}/chat`는 기존 분류·승인 문서 검색을 답변 생성과 연결합니다. 기본 쉬운 말투 또는 전문용어 스타일, 설명 순서는 서버 사용자 설정에서 읽습니다. 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 인용한 chunk ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.
+`POST /api/artworks/{id}/chat`와 `/chat/stream`은 동일한 상세 도슨트 시스템 프롬프트와 승인 문서 검색을 답변 생성에 연결합니다. 채팅 탭의 `explanation_style`(`easy`·`standard`·`deep`)이 있으면 계정에 저장된 말투보다 우선합니다. 탭 선택이 없을 때만 계정의 쉬운 말투 또는 전문 용어 설정을 읽습니다. 설명 주제는 사용자 질문에 따르고, 해설·분석 질문의 기본 설명 범위와 용어 수준은 선택한 스타일에 따릅니다. `deep`은 관련 근거가 충분할 때 표현 방식·효과·의미·맥락을 더 폭넓고 깊게 연결하며, 사용자의 명시적인 분량 요청을 우선합니다. 저장된 주제 우선순위와 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 모델이 반환한 문서 ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.
 
 ## 감상가 프로필·팔로우 API (20261014_0009)
 

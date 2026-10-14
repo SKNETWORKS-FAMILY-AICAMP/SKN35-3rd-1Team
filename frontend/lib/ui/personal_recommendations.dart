@@ -18,10 +18,10 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final s = ArtlogScope.of(context);
-    final likes = s.likes.toList()..sort();
-    final follows = s.follows.toList()..sort();
-    final next =
-        '${s.userKey}/${s.authenticated}/${likes.join(',')}/${follows.join(',')}';
+    // Only an account change refetches. A like on this page must not swap the
+    // section for a spinner (it looked like the whole page reloading); new
+    // likes are reflected the next time the page opens.
+    final next = '${s.userKey}/${s.authenticated}';
     if (signature != next) {
       signature = next;
       if (s.authenticated) {
@@ -38,48 +38,50 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
     // Signed-out visitors do not see this section at all.
     if (!s.authenticated) return const SizedBox.shrink();
     final inverse = widget.inverse;
-    return PageWidth(
-      vertical: 35,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionTitle(
-            inverse: inverse,
-            eyebrow: 'CURATED FOR YOU',
-            title: '취향이 이어지는 다음 그림',
-            subtitle: '마음에 담은 작품과 감상 기록을 따라 골랐어요.',
-          ),
-          const SizedBox(height: 24),
-          FutureBuilder<List<Artwork>>(
-            key: ValueKey('works/$signature'),
-            future: works,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _loading();
-              }
-              if (snapshot.hasError) {
-                return _error(
-                  snapshot.error!,
-                  () => setState(() {
-                    works = s.personalArtworks(force: true);
-                  }),
+    return Padding(
+      padding: const EdgeInsets.only(top: sectionGap),
+      child: PageWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SectionTitle(
+              inverse: inverse,
+              eyebrow: 'CURATED FOR YOU',
+              title: '취향이 이어지는 다음 그림',
+              subtitle: '마음에 담은 작품과 감상 기록을 따라 골랐어요.',
+            ),
+            const SizedBox(height: 24),
+            FutureBuilder<List<Artwork>>(
+              key: ValueKey('works/$signature'),
+              future: works,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return _loading();
+                }
+                if (snapshot.hasError) {
+                  return _error(
+                    snapshot.error!,
+                    () => setState(() {
+                      works = s.personalArtworks(force: true);
+                    }),
+                  );
+                }
+                if (snapshot.data?.isEmpty ?? true) {
+                  return EmptyView(
+                    '마음에 드는 그림에 좋아요를 눌러 보세요.',
+                    description: '좋아요와 감상 기록을 따라 다음 그림을 골라 드려요.',
+                    inverse: inverse,
+                  );
+                }
+                return ArtworkGrid(
+                  snapshot.data!.take(3).toList(),
+                  maxColumns: 3,
+                  museum: inverse,
                 );
-              }
-              if (snapshot.data?.isEmpty ?? true) {
-                return EmptyView(
-                  '마음에 드는 그림에 좋아요를 눌러 보세요.',
-                  description: '좋아요와 감상 기록을 따라 다음 그림을 골라 드려요.',
-                  inverse: inverse,
-                );
-              }
-              return ArtworkGrid(
-                snapshot.data!.take(3).toList(),
-                maxColumns: 3,
-                museum: inverse,
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

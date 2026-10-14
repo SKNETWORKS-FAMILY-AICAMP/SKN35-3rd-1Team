@@ -67,15 +67,45 @@ extension SocialState on ArtlogState {
     return diaryFeed(cursor: cursor);
   }
 
+  /// Loads my public id and following list once per account.
+  Future<void> loadFollowing() {
+    if (!authenticated) return Future.value();
+    return _followingLoad ??= () async {
+      final revision = _identityRevision;
+      try {
+        final me = await mySocial();
+        final rows = config.demo
+            ? const <MemberCard>[]
+            : await api.memberList(me.id, followers: false);
+        if (revision != _identityRevision) return;
+        myPublicId = me.id;
+        followingMembers = rows.map((m) => m.id).toSet();
+        notifyListeners();
+      } catch (_) {
+        if (revision == _identityRevision) _followingLoad = null;
+      }
+    }();
+  }
+
   Future<void> followMember(String id, bool enable) async {
     _requireMember();
     if (config.demo) {
       throw const ApiException('미리보기에서는 다른 감상가를 팔로우할 수 없어요.');
     }
+    if (!pendingMemberFollows.add(id)) return;
     final revision = _identityRevision;
-    await api.followMember(id, enable);
-    _checkMember(revision);
-    _socialChanged();
+    notifyListeners();
+    try {
+      await api.followMember(id, enable);
+      _checkMember(revision);
+      enable ? followingMembers.add(id) : followingMembers.remove(id);
+      _socialChanged();
+    } finally {
+      if (revision == _identityRevision) {
+        pendingMemberFollows.remove(id);
+        notifyListeners();
+      }
+    }
   }
 
   Future<List<MemberCard>> memberList(

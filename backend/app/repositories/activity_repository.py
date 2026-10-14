@@ -144,3 +144,25 @@ def viewed_on_day(db: Session, *, user_id: int, day: date) -> list[ViewedRow]:
         .order_by(ArtworkView.last_viewed_at.desc(), Artwork.id.desc())
     )
     return [ViewedRow(*row) for row in db.execute(stmt)]
+
+
+def latest_view_by_day(
+    db: Session, *, user_id: int, start: date, end: date
+) -> dict[date, tuple[Artwork, str]]:
+    """The most recently viewed artwork for each day in ``[start, end)``."""
+
+    stmt = (
+        select(ArtworkView.viewed_on, Artwork, Artist.name)
+        .join(Artwork, Artwork.id == ArtworkView.artwork_id)
+        .join(Artist, Artist.id == Artwork.artist_id)
+        .where(
+            ArtworkView.user_id == user_id,
+            ArtworkView.viewed_on >= start,
+            ArtworkView.viewed_on < end,
+        )
+        .order_by(ArtworkView.last_viewed_at.desc(), Artwork.id.desc())
+    )
+    latest: dict[date, tuple[Artwork, str]] = {}
+    for day, artwork, artist_name in db.execute(stmt):
+        latest.setdefault(day, (artwork, artist_name))
+    return latest
