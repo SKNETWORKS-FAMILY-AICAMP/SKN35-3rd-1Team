@@ -6,11 +6,13 @@ from app.api.routes import (
     artists,
     artworks,
     chat,
+    diary,
     follows,
     health,
     library,
     likes,
     movements,
+    mypage,
     recommendations,
 )
 
@@ -21,9 +23,11 @@ for module in (
     artists,
     artworks,
     chat,
+    diary,
     likes,
     follows,
     library,
     recommendations,
+    mypage,
 ):
     api_router.include_router(module.router)

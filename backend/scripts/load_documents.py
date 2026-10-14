@@ -66,9 +66,12 @@ def load(session: Session) -> tuple[Counter, dict[str, int]]:
             stats["유지"] += 1
     session.flush()
 
-    if changed_content:
+    # 검수 전 문서는 예전에 만든 벡터도 즉시 제거한다. 본문 변경이 없는 승인 취소도 포함한다.
+    pending_ids = set(session.scalars(select(Document.id).where(Document.needs_review.is_(True))))
+    invalidate_ids = pending_ids | set(changed_content)
+    if invalidate_ids:
         stats["청크 삭제"] = session.execute(
-            delete(DocumentChunk).where(DocumentChunk.document_id.in_(changed_content))).rowcount
+            delete(DocumentChunk).where(DocumentChunk.document_id.in_(invalidate_ids))).rowcount
 
     doc_ids = dict(session.execute(select(Document.doc_key, Document.id)).all())
     loaded = [doc_ids[r["doc_key"]] for r in rows]

@@ -5,12 +5,17 @@ erDiagram
     art_movements ||--o{ artworks : "movement_id"
     artists ||--o{ artworks : "artist_id"
     artworks ||--o| artwork_embeddings : "artwork_id"
-    users ||--o{ artwork_likes : "user_id"
+    users ||--o{ diary_entries : "user_id"
+    artworks ||--o{ diary_entries : "artwork_id"
+    users ||--o{ collections : "user_id"
+    artworks ||--o{ collection_items : "artwork_id"
+    collections ||--o{ collection_items : "collection_id"
     artworks ||--o{ artwork_likes : "artwork_id"
-    artists ||--o{ artist_follows : "artist_id"
+    users ||--o{ artwork_likes : "user_id"
     users ||--o{ artist_follows : "user_id"
-    users ||--o{ artwork_views : "user_id"
+    artists ||--o{ artist_follows : "artist_id"
     artworks ||--o{ artwork_views : "artwork_id"
+    users ||--o{ artwork_views : "user_id"
     users ||--o{ chat_sessions : "user_id"
     artworks ||--o{ chat_sessions : "artwork_id"
     chat_sessions ||--o{ chat_messages : "session_id"
@@ -19,8 +24,8 @@ erDiagram
     artists ||--o{ document_artists : "artist_id"
     documents ||--o{ document_artworks : "document_id"
     artworks ||--o{ document_artworks : "artwork_id"
-    documents ||--o{ document_basis_documents : "basis_document_id"
     documents ||--o{ document_basis_documents : "document_id"
+    documents ||--o{ document_basis_documents : "basis_document_id"
     documents ||--o{ document_chunks : "document_id"
 
     users {
@@ -40,6 +45,13 @@ erDiagram
     }
     user_preferences {
         bigint user_id PK,FK
+        date birth_date
+        json explanation_priorities
+        varchar conversation_style
+        tinyint onboarding_completed
+        text taste_summary
+        varchar taste_fingerprint
+        datetime taste_generated_at
         smallint birth_year
         varchar gender
         varchar tone
@@ -93,6 +105,29 @@ erDiagram
         vector embedding
         varchar embedding_model
         datetime updated_at
+    }
+    diary_entries {
+        bigint id PK
+        bigint user_id FK
+        date entry_date
+        bigint artwork_id FK
+        text content
+        tinyint is_public
+        datetime created_at
+        datetime updated_at
+    }
+    collections {
+        bigint id PK
+        bigint user_id FK
+        varchar name
+        text description
+        datetime created_at
+        datetime updated_at
+    }
+    collection_items {
+        bigint collection_id PK,FK
+        bigint artwork_id PK,FK
+        datetime created_at
     }
     artwork_likes {
         bigint user_id PK,FK

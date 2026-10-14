@@ -1,0 +1,1058 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../models.dart';
+import '../mypage.dart';
+import '../state.dart';
+import 'design.dart';
+
+class AccountGuard extends StatefulWidget {
+  const AccountGuard({super.key, required this.state, required this.child});
+  final ArtlogState state;
+  final Widget child;
+  @override
+  State<AccountGuard> createState() => _AccountGuardState();
+}
+
+class _AccountGuardState extends State<AccountGuard> {
+  late final String identity;
+  bool closing = false;
+  @override
+  void initState() {
+    super.initState();
+    identity = widget.state.userKey;
+    widget.state.addListener(check);
+  }
+
+  void check() {
+    if (!mounted ||
+        closing ||
+        (widget.state.authenticated && widget.state.userKey == identity)) {
+      return;
+    }
+    closing = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final route = ModalRoute.of(context);
+      if (route == null) return;
+      final navigator = Navigator.of(context);
+      if (route.isCurrent) {
+        navigator.pop();
+      } else {
+        // A discard/confirmation dialog may cover this account's form.
+        navigator.removeRoute(route);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.state.removeListener(check);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+Future<ArtCollection?> editCollection(
+  BuildContext context,
+  ArtlogState s, {
+  ArtCollection? collection,
+}) async => showDialog<ArtCollection>(
+  context: context,
+  builder: (_) => AccountGuard(
+    state: s,
+    child: _CollectionEditor(state: s, collection: collection),
+  ),
+);
+
+class _CollectionEditor extends StatefulWidget {
+  const _CollectionEditor({required this.state, this.collection});
+  final ArtlogState state;
+  final ArtCollection? collection;
+  @override
+  State<_CollectionEditor> createState() => _CollectionEditorState();
+}
+
+class _CollectionEditorState extends State<_CollectionEditor> {
+  late final name = TextEditingController(text: widget.collection?.name ?? '');
+  late final description = TextEditingController(
+    text: widget.collection?.description ?? '',
+  );
+  bool busy = false;
+  String? error;
+  @override
+  void dispose() {
+    name.dispose();
+    description.dispose();
+    super.dispose();
+  }
+
+  Future<void> save() async {
+    if (busy) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      final c = await widget.state.saveCollection(
+        name.text,
+        description.text,
+        id: widget.collection?.id,
+      );
+      if (mounted) Navigator.pop(context, c);
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SurfaceDialog(
+    title: Text(
+      widget.collection == null ? '새 컬렉션 만들기' : '컬렉션 편집',
+      style: serif(22),
+    ),
+    content: SizedBox(
+      width: 420,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('나만 볼 수 있는 작은 전시를 만들어 보세요.', style: sans(12, color: muted)),
+            const SizedBox(height: 20),
+            TextField(
+              controller: name,
+              enabled: !busy,
+              maxLength: 80,
+              decoration: const InputDecoration(
+                labelText: '컬렉션 이름',
+                hintText: '예: 비 오는 날의 풍경',
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: description,
+              enabled: !busy,
+              maxLength: 500,
+              minLines: 2,
+              maxLines: 4,
+              decoration: const InputDecoration(labelText: '취향 한 줄 (선택)'),
+            ),
+            if (error != null)
+              Text(error!, style: sans(12, color: Colors.red.shade800)),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: busy ? null : () => Navigator.pop(context),
+        child: const Text('취소'),
+      ),
+      ArtButton(busy ? '저장 중…' : '컬렉션 저장', onTap: busy ? null : save),
+    ],
+  );
+}
+
+class CollectionWorkspace extends StatefulWidget {
+  const CollectionWorkspace({super.key});
+  @override
+  State<CollectionWorkspace> createState() => _CollectionWorkspaceState();
+}
+
+class _CollectionWorkspaceState extends State<CollectionWorkspace> {
+  List<ArtCollection> rows = [];
+  TasteIntro? taste;
+  bool started = false, loading = true, generating = false;
+  String? error, tasteError;
+  int serial = 0;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!started) {
+      started = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) load();
+      });
+    }
+  }
+
+  Future<void> load() async {
+    final s = ArtlogScope.of(context),
+        identity = ArtlogScope.of(context).userKey,
+        request = ++serial;
+    setState(() {
+      loading = true;
+      error = null;
+    });
+    final tasteRequest = s.taste().then<TasteIntro?>((t) => t).catchError((
+      Object e,
+    ) {
+      if (mounted && request == serial && s.userKey == identity) {
+        setState(() => tasteError = ArtlogState.message(e));
+      }
+      return null;
+    });
+    try {
+      final result = await s.collections(force: true);
+      final intro = await tasteRequest;
+      if (mounted && request == serial && s.userKey == identity) {
+        setState(() {
+          rows = result;
+          taste = intro;
+        });
+      }
+    } catch (e) {
+      await tasteRequest;
+      if (mounted && request == serial && s.userKey == identity) {
+        setState(() => error = ArtlogState.message(e));
+      }
+    } finally {
+      if (mounted && request == serial) setState(() => loading = false);
+    }
+  }
+
+  Future<void> generate() async {
+    if (generating) return;
+    final s = ArtlogScope.of(context),
+        identity = ArtlogScope.of(context).userKey;
+    setState(() {
+      generating = true;
+      tasteError = null;
+    });
+    try {
+      final intro = await s.taste(generate: true);
+      if (mounted && s.userKey == identity) setState(() => taste = intro);
+    } catch (e) {
+      if (mounted && s.userKey == identity) {
+        setState(() => tasteError = ArtlogState.message(e));
+      }
+    } finally {
+      if (mounted) setState(() => generating = false);
+    }
+  }
+
+  Future<void> create() async {
+    if (await editCollection(context, ArtlogScope.of(context)) != null &&
+        mounted) {
+      await load();
+    }
+  }
+
+  Future<void> remove(ArtCollection c) async {
+    final s = ArtlogScope.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (_) => AccountGuard(
+        state: s,
+        child: SurfaceDialog(
+          title: Text('컬렉션을 삭제할까요?', style: serif(21)),
+          content: Text(
+            '‘${c.name}’의 묶음이 삭제돼요. 좋아요와 다이어리 기록은 그대로 남아요.',
+            style: sans(13),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('삭제'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (yes != true || !mounted) return;
+    try {
+      await s.deleteCollection(c.id);
+      if (mounted) await load();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(ArtlogState.message(e))));
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        spacing: 16,
+        runSpacing: 12,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text('나만의 컬렉션', style: serif(26)),
+          Wrap(
+            spacing: 10,
+            children: [
+              IconButton(
+                tooltip: '컬렉션 새로고침',
+                onPressed: loading ? null : load,
+                icon: const Icon(Icons.refresh),
+              ),
+              ArtButton('새 컬렉션', onTap: loading ? null : create),
+            ],
+          ),
+        ],
+      ),
+      const SizedBox(height: 18),
+      if (loading)
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      if (error != null)
+        EmptyView(error!, action: ArtButton('다시 불러오기', onTap: load)),
+      if (!loading && error == null && rows.isEmpty)
+        SurfacePanel(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            children: [
+              const Icon(
+                Icons.collections_bookmark_outlined,
+                size: 38,
+                color: sage,
+              ),
+              const SizedBox(height: 14),
+              Text('내가 고른 그림으로 작은 전시를', style: serif(22)),
+              const SizedBox(height: 8),
+              Text('주제나 기분에 따라 그림을 모아 보세요.', style: sans(12, color: muted)),
+              const SizedBox(height: 20),
+              ArtButton('첫 컬렉션 만들기', onTap: create),
+            ],
+          ),
+        ),
+      if (rows.isNotEmpty)
+        LayoutBuilder(
+          builder: (context, c) {
+            final columns = c.maxWidth >= 900
+                ? 3
+                : c.maxWidth >= 540
+                ? 2
+                : 1;
+            final width = (c.maxWidth - 16 * (columns - 1)) / columns;
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                for (final group in rows)
+                  SizedBox(
+                    width: width,
+                    child: SurfacePanel(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            borderRadius: BorderRadius.circular(4),
+                            onTap: () async {
+                              await showModalBottomSheet<void>(
+                                context: context,
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                builder: (_) => AccountGuard(
+                                  state: ArtlogScope.of(context),
+                                  child: _CollectionDetail(
+                                    state: ArtlogScope.of(context),
+                                    group: group,
+                                  ),
+                                ),
+                              );
+                              if (mounted) await load();
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: SizedBox(
+                                    height: 145,
+                                    child: group.previews.isEmpty
+                                        ? Container(
+                                            color: const Color(0xffe5eded),
+                                            child: const Center(
+                                              child: Icon(
+                                                Icons
+                                                    .add_photo_alternate_outlined,
+                                                size: 35,
+                                                color: sage,
+                                              ),
+                                            ),
+                                          )
+                                        : Row(
+                                            children: [
+                                              for (final a in group.previews)
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                          right: 2,
+                                                        ),
+                                                    child: ArtImage(
+                                                      a.image,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(group.name, style: serif(20)),
+                                const SizedBox(height: 5),
+                                Text(
+                                  '${group.count}점 · 나만 보기',
+                                  style: sans(11, color: muted),
+                                ),
+                                if (group.description.isNotEmpty) ...[
+                                  const SizedBox(height: 9),
+                                  Text(
+                                    group.description,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: sans(12, color: muted),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: () async {
+                                  if (await editCollection(
+                                            context,
+                                            ArtlogScope.of(context),
+                                            collection: group,
+                                          ) !=
+                                          null &&
+                                      mounted) {
+                                    await load();
+                                  }
+                                },
+                                child: const Text('편집'),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                tooltip: '${group.name} 컬렉션 삭제',
+                                onPressed: () => remove(group),
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  size: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      const SizedBox(height: 30),
+      const Divider(),
+      ExpansionTile(
+        title: Text('AI 취향 소개', style: sans(14, weight: FontWeight.w500)),
+        subtitle: Text('좋아한 그림에서 나의 취향을 읽어요', style: sans(12, color: muted)),
+        maintainState: true,
+        children: [
+          SurfacePanel(
+            tinted: true,
+            padding: EdgeInsets.all(compact(context) ? 22 : 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.auto_awesome_outlined,
+                      color: green,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text('내 취향을 읽는 AI', style: serif(23))),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  taste?.summary ??
+                      '좋아하는 그림을 모으면, 내가 어떤 작품에 마음을 두고 있는지 짧은 소개로 풀어드려요.',
+                  style: sans(14, height: 1.9),
+                ),
+                if (taste?.stale == true)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      '새로 담은 작품이 있어요. 소개를 업데이트해 보세요.',
+                      style: sans(12, color: green),
+                    ),
+                  ),
+                if (taste?.evidence.isNotEmpty == true) ...[
+                  const SizedBox(height: 14),
+                  Text(
+                    '소개에 사용되는 작품 ${taste!.evidence.length}점 · 좋아요와 컬렉션 기준',
+                    style: sans(11, color: muted),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final a in taste!.evidence.take(4))
+                        SourceChip(
+                          label: Text(a.title, overflow: TextOverflow.ellipsis),
+                          onPressed: () => context.go('/artwork/${a.id}'),
+                        ),
+                    ],
+                  ),
+                ],
+                if (tasteError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      tasteError!,
+                      style: sans(12, color: Colors.red.shade800),
+                    ),
+                  ),
+                const SizedBox(height: 18),
+                ArtButton(
+                  generating
+                      ? '취향을 읽고 있어요…'
+                      : taste?.summary == null
+                      ? '내 취향 소개 만들기'
+                      : '취향 소개 업데이트',
+                  onTap:
+                      generating || loading || taste?.evidence.isEmpty != false
+                      ? null
+                      : generate,
+                ),
+                if (ArtlogScope.of(context).config.demo)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      '미리보기에서는 실제 AI를 호출하지 않아요.',
+                      style: sans(11, color: muted),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      ExpansionTile(
+        title: Text('대화로 컬렉션 정리', style: sans(14, weight: FontWeight.w500)),
+        subtitle: Text('작품을 찾아 담거나 새 컬렉션을 만들어요', style: sans(12, color: muted)),
+        maintainState: true,
+        children: [CollectionAssistant(groups: rows, onChanged: load)],
+      ),
+    ],
+  );
+}
+
+class _CollectionDetail extends StatefulWidget {
+  const _CollectionDetail({required this.state, required this.group});
+  final ArtlogState state;
+  final ArtCollection group;
+  @override
+  State<_CollectionDetail> createState() => _CollectionDetailState();
+}
+
+class _CollectionDetailState extends State<_CollectionDetail> {
+  final search = TextEditingController();
+  List<Artwork> works = [];
+  String? cursor, error;
+  bool loading = false, started = false;
+  final Set<String> busy = {};
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) load();
+    });
+  }
+
+  @override
+  void dispose() {
+    search.dispose();
+    super.dispose();
+  }
+
+  Future<void> load({bool reset = false}) async {
+    if (loading) return;
+    setState(() {
+      loading = true;
+      error = null;
+      if (reset) {
+        works = [];
+        cursor = null;
+      }
+    });
+    try {
+      final p = await widget.state.collectionItems(
+        widget.group.id,
+        cursor: cursor,
+      );
+      if (mounted) {
+        setState(() {
+          works.addAll(p.items);
+          cursor = p.cursor;
+          started = true;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
+  Future<void> collect(Artwork a, {bool remove = false}) async {
+    if (busy.contains(a.id)) return;
+    setState(() => busy.add(a.id));
+    try {
+      await widget.state.collect(widget.group.id, a.id, remove: remove);
+      if (mounted) {
+        await load(reset: true);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(remove ? '컬렉션에서 꺼냈어요.' : '컬렉션에 담았어요.')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => busy.remove(a.id));
+    }
+  }
+
+  Widget tile(Artwork a, {bool result = false}) => ListTile(
+    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(
+        width: 54,
+        height: 60,
+        child: ArtImage(a.image, fit: BoxFit.cover),
+      ),
+    ),
+    title: Text(a.title, style: sans(13)),
+    subtitle: Text(widget.state.artistName(a), style: sans(11, color: muted)),
+    onTap: () {
+      final router = GoRouter.of(context);
+      Navigator.pop(context);
+      router.go('/artwork/${a.id}');
+    },
+    trailing: busy.contains(a.id)
+        ? const SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+        : IconButton(
+            tooltip: result ? '${a.title} 담기' : '${a.title} 컬렉션에서 꺼내기',
+            onPressed: loading ? null : () => collect(a, remove: !result),
+            icon: Icon(
+              result ? Icons.add_circle_outline : Icons.remove_circle_outline,
+              size: 23,
+            ),
+          ),
+  );
+  @override
+  Widget build(BuildContext context) {
+    final q = search.text.trim().toLowerCase();
+    final results = q.isEmpty
+        ? <Artwork>[]
+        : widget.state.artworks
+              .where(
+                (a) => '${a.title} ${widget.state.artistName(a)}'
+                    .toLowerCase()
+                    .contains(q),
+              )
+              .take(8)
+              .toList();
+    return FractionallySizedBox(
+      heightFactor: .85,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 760),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            22,
+            20,
+            22,
+            20 + MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(widget.group.name, style: serif(24))),
+                  IconButton(
+                    tooltip: '컬렉션 닫기',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: search,
+                onChanged: (_) => setState(() {}),
+                decoration: const InputDecoration(
+                  labelText: '담고 싶은 작품 찾기',
+                  hintText: '작품명 또는 작가',
+                  prefixIcon: Icon(Icons.search),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Expanded(
+                child: ListView(
+                  children: [
+                    if (error != null)
+                      EmptyView(
+                        error!,
+                        action: ArtButton(
+                          '다시 시도',
+                          onTap: () => load(reset: true),
+                        ),
+                      ),
+                    if (q.isNotEmpty) ...[
+                      Text('검색 결과 · 최대 8점', style: sans(11, color: muted)),
+                      if (results.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.all(24),
+                          child: Text('일치하는 작품이 없어요.'),
+                        ),
+                      for (final a in results) tile(a, result: true),
+                      const Divider(),
+                    ],
+                    Text(
+                      '컬렉션에 담긴 그림',
+                      style: sans(12, weight: FontWeight.w700),
+                    ),
+                    if (started && works.isEmpty && !loading)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 25),
+                        child: Text('위에서 작품을 검색해 첫 그림을 담아 보세요.'),
+                      ),
+                    for (final a in works) tile(a),
+                    if (loading)
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    if (cursor != null && !loading)
+                      ArtButton('그림 더 보기', outline: true, onTap: load),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CollectionAssistant extends StatefulWidget {
+  const CollectionAssistant({
+    super.key,
+    required this.groups,
+    required this.onChanged,
+  });
+  final List<ArtCollection> groups;
+  final Future<void> Function() onChanged;
+  @override
+  State<CollectionAssistant> createState() => _CollectionAssistantState();
+}
+
+class _CollectionAssistantState extends State<CollectionAssistant> {
+  final input = TextEditingController();
+  String? selected, error;
+  bool busy = false;
+  List<CollectionReply> replies = [];
+  final Set<CollectionProposal> consumed = {};
+  @override
+  void dispose() {
+    input.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant CollectionAssistant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (selected != null && !widget.groups.any((c) => c.id == selected)) {
+      selected = null;
+    }
+  }
+
+  Future<void> send() async {
+    if (busy || input.text.trim().isEmpty) return;
+    final s = ArtlogScope.of(context),
+        identity = ArtlogScope.of(context).userKey;
+    final message = input.text.trim();
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      final reply = await s.collectionChat(message, collectionId: selected);
+      if (mounted && identity == s.userKey) {
+        setState(() {
+          replies = [
+            ...replies.skip(replies.length > 5 ? replies.length - 5 : 0),
+            reply,
+          ];
+          input.clear();
+        });
+      }
+    } catch (e) {
+      if (mounted && identity == s.userKey) {
+        setState(() => error = ArtlogState.message(e));
+      }
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> apply(CollectionProposal p) async {
+    if (busy || consumed.contains(p)) return;
+    final s = ArtlogScope.of(context),
+        identity = ArtlogScope.of(context).userKey;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      await s.applyCollectionProposal(p);
+      if (!mounted || identity != s.userKey) return;
+      setState(() => consumed.add(p));
+      await widget.onChanged();
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SurfacePanel(
+    padding: EdgeInsets.all(compact(context) ? 18 : 28),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('말로 만드는 나의 전시', style: serif(24)),
+        const SizedBox(height: 10),
+        Text(
+          '“고요한 풍경 컬렉션 만들어줘”\n“별이 빛나는 밤을 고요한 풍경에 담아줘”',
+          style: sans(12, color: muted, height: 1.9),
+        ),
+        const SizedBox(height: 16),
+        DropdownButtonFormField<String>(
+          key: ValueKey(
+            '${widget.groups.map((c) => c.id).join(',')}/$selected',
+          ),
+          initialValue: widget.groups.any((c) => c.id == selected)
+              ? selected
+              : null,
+          isExpanded: true,
+          decoration: const InputDecoration(labelText: '담을 컬렉션 (선택)'),
+          items: [
+            const DropdownMenuItem(value: null, child: Text('대화에서 직접 이름 말하기')),
+            for (final c in widget.groups)
+              DropdownMenuItem(
+                value: c.id,
+                child: Text(c.name, overflow: TextOverflow.ellipsis),
+              ),
+          ],
+          onChanged: busy ? null : (v) => setState(() => selected = v),
+        ),
+        const SizedBox(height: 16),
+        for (final r in replies)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: SurfacePanel(
+              tinted: true,
+              radius: 20,
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(r.answer, style: sans(13)),
+                  if (r.proposal != null) ...[
+                    const SizedBox(height: 12),
+                    ArtButton(
+                      consumed.contains(r.proposal)
+                          ? '완료했어요'
+                          : r.proposal!.action == 'create'
+                          ? '이 컬렉션 만들기'
+                          : '이 작품 담기',
+                      onTap: busy || consumed.contains(r.proposal)
+                          ? null
+                          : () => apply(r.proposal!),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        TextField(
+          controller: input,
+          enabled: !busy,
+          minLines: 1,
+          maxLines: 3,
+          maxLength: 500,
+          decoration: const InputDecoration(
+            labelText: '컬렉션에 어떤 그림을 담을까요?',
+            hintText: '원하는 컬렉션이나 작품을 말해 주세요.',
+          ),
+          onSubmitted: (_) => send(),
+        ),
+        const SizedBox(height: 10),
+        if (error != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(error!, style: sans(12, color: Colors.red.shade800)),
+          ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ArtButton(
+            busy ? '확인하고 있어요…' : '요청 보내기',
+            onTap: busy ? null : send,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<void> pickCollectionForArtwork(
+  BuildContext context,
+  ArtlogState s,
+  Artwork art,
+) async {
+  if (!await ensureLogin(context) || !context.mounted) return;
+  await showDialog<void>(
+    context: context,
+    builder: (_) => AccountGuard(
+      state: s,
+      child: _ArtworkCollectionPicker(state: s, art: art),
+    ),
+  );
+}
+
+class _ArtworkCollectionPicker extends StatefulWidget {
+  const _ArtworkCollectionPicker({required this.state, required this.art});
+  final ArtlogState state;
+  final Artwork art;
+  @override
+  State<_ArtworkCollectionPicker> createState() =>
+      _ArtworkCollectionPickerState();
+}
+
+class _ArtworkCollectionPickerState extends State<_ArtworkCollectionPicker> {
+  late Future<List<ArtCollection>> future = widget.state.collections(
+    force: true,
+  );
+  bool busy = false;
+  String? error;
+  Future<void> add(String id) async {
+    if (busy) return;
+    setState(() => busy = true);
+    try {
+      await widget.state.collect(id, widget.art.id);
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('내 컬렉션에 담았어요.')));
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = ArtlogState.message(e));
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SurfaceDialog(
+    title: Text('이 그림을 어디에 담을까요?', style: serif(21)),
+    content: SizedBox(
+      width: 420,
+      height: 300,
+      child: FutureBuilder<List<ArtCollection>>(
+        future: future,
+        builder: (context, snap) {
+          if (snap.hasError) {
+            return EmptyView(
+              ArtlogState.message(snap.error!),
+              action: ArtButton(
+                '다시 불러오기',
+                onTap: () => setState(
+                  () => future = widget.state.collections(force: true),
+                ),
+              ),
+            );
+          }
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView(
+            children: [
+              Text(widget.art.title, style: sans(12, color: muted)),
+              if (error != null)
+                Text(error!, style: sans(12, color: Colors.red.shade800)),
+              for (final c in snap.data!)
+                ListTile(
+                  title: Text(c.name),
+                  subtitle: Text('${c.count}점'),
+                  trailing: const Icon(Icons.add_circle_outline),
+                  onTap: busy ? null : () => add(c.id),
+                ),
+              if (snap.data!.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text('컬렉션을 먼저 만들어 보세요.'),
+                ),
+            ],
+          );
+        },
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: busy ? null : () => Navigator.pop(context),
+        child: const Text('닫기'),
+      ),
+      ArtButton(
+        '새 컬렉션',
+        onTap: busy
+            ? null
+            : () async {
+                final c = await editCollection(context, widget.state);
+                if (c != null && mounted) {
+                  await add(c.id);
+                }
+              },
+      ),
+    ],
+  );
+}

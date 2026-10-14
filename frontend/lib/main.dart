@@ -13,11 +13,14 @@ import 'auth/firebase_session.dart';
 import 'config.dart';
 import 'state.dart';
 import 'ui/design.dart';
+import 'ui/app_theme.dart';
 import 'ui/shell.dart';
 import 'pages/gallery_page.dart';
 import 'pages/detail_page.dart';
 import 'pages/artists_page.dart';
 import 'pages/library_page.dart';
+import 'pages/community_page.dart';
+import 'pages/mypage_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +57,13 @@ Future<void> main() async {
   unawaited(state.load());
 }
 
+// Direct page changes avoid compositing the artwork behind incoming reading pages.
+NoTransitionPage<void> _contentPage(GoRouterState state, Widget child) =>
+    NoTransitionPage<void>(
+      key: state.pageKey,
+      child: AppPage(key: ValueKey(state.uri.path), child: child),
+    );
+
 class ArtlogApp extends StatefulWidget {
   const ArtlogApp({
     super.key,
@@ -83,16 +93,14 @@ class _ArtlogAppState extends State<ArtlogApp> {
           routes: [
             GoRoute(
               path: '/gallery',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const GalleryPage(),
-              ),
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const GalleryPage()),
             ),
             GoRoute(
               path: '/artwork/:id',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: DetailPage(
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                DetailPage(
                   key: ValueKey(state.pathParameters['id']),
                   id: state.pathParameters['id']!,
                 ),
@@ -100,26 +108,41 @@ class _ArtlogAppState extends State<ArtlogApp> {
             ),
             GoRoute(
               path: '/artists',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const ArtistsPage(),
-              ),
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const ArtistsPage()),
             ),
             GoRoute(
               path: '/artist/:id',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: ArtistDetailPage(
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                ArtistDetailPage(
                   key: ValueKey(state.pathParameters['id']),
                   id: state.pathParameters['id']!,
                 ),
               ),
             ),
             GoRoute(
+              path: '/community',
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const CommunityPage()),
+            ),
+            GoRoute(
+              path: '/mypage',
+              pageBuilder: (_, state) => _contentPage(state, const MyPage()),
+            ),
+            GoRoute(
+              path: '/settings',
+              pageBuilder: (_, state) =>
+                  _contentPage(state, const SettingsPage()),
+            ),
+            GoRoute(
               path: '/library',
-              builder: (_, state) => AppPage(
-                key: ValueKey(state.uri.path),
-                child: const LibraryPage(),
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                LibraryPage(
+                  artworkId: state.uri.queryParameters['artwork_id'],
+                  initialDate: state.uri.queryParameters['date'],
+                ),
               ),
             ),
           ],
@@ -145,43 +168,13 @@ class _ArtlogAppState extends State<ArtlogApp> {
   Widget build(BuildContext context) => ArtlogScope(
     state: widget.state,
     child: MaterialApp.router(
-      title: '아트로그 · 일상에 한 점',
+      title: 'Docentalk · 일상에 한 점',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       locale: const Locale('ko'),
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: const [Locale('ko'), Locale('en')],
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: paper,
-        fontFamily: 'NotoSansKR',
-        colorScheme: ColorScheme.fromSeed(seedColor: green, surface: paper),
-        dividerColor: line,
-        textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'NotoSansKR',
-          bodyColor: ink,
-          displayColor: ink,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.6),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: line),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: line),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 14,
-          ),
-        ),
-        iconButtonTheme: IconButtonThemeData(
-          style: IconButton.styleFrom(foregroundColor: green),
-        ),
-      ),
+      theme: docentalkTheme(),
     ),
   );
 }

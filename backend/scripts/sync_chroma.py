@@ -101,7 +101,10 @@ def _payload(records: Iterable[Record]) -> dict:
 
 
 def chunk_ids(session: Session) -> set[int]:
-    return set(session.scalars(select(DocumentChunk.id)))
+    return set(session.scalars(
+        select(DocumentChunk.id).join(Document, Document.id == DocumentChunk.document_id)
+        .where(Document.needs_review.is_(False))
+    ))
 
 
 def fetch_chunks(session: Session, ids: list[int]) -> Iterator[Record]:
@@ -109,7 +112,7 @@ def fetch_chunks(session: Session, ids: list[int]) -> Iterator[Record]:
         rows = session.execute(
             select(DocumentChunk, Document.doc_key, Document.doc_type, Document.artwork_id)
             .join(Document, Document.id == DocumentChunk.document_id)
-            .where(DocumentChunk.id.in_(part))
+            .where(DocumentChunk.id.in_(part), Document.needs_review.is_(False))
             .options(undefer(DocumentChunk.embedding))  # embedding 은 deferred 컬럼
             .order_by(DocumentChunk.id)
         )

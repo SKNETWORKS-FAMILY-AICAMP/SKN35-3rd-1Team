@@ -4,6 +4,8 @@ from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
 from app.models.base import EMBEDDING_DIMENSION, Base
 from app.models.catalog import Artist, ArtMovement, Artwork
 from app.models.chat import ChatMessage, ChatRole, ChatSession
+from app.models.collection import Collection, CollectionItem
+from app.models.diary import DiaryEntry
 from app.models.document import (
     Document,
     DocumentArtist,
@@ -29,6 +31,9 @@ __all__ = [
     "ChatMessage",
     "ChatRole",
     "ChatSession",
+    "Collection",
+    "CollectionItem",
+    "DiaryEntry",
     "Document",
     "DocumentArtist",
     "DocumentArtwork",

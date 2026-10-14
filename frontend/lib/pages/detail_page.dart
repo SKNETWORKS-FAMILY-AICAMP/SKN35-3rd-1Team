@@ -5,6 +5,8 @@ import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
 import '../ui/docent_chat.dart';
+import '../ui/diary_feed.dart';
+import '../ui/collection_workspace.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.id});
@@ -17,6 +19,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<Artwork>? future;
   Future<List<Artwork>>? related;
   bool info = false;
+  final chatKey = GlobalKey();
   String? identity;
   @override
   void didChangeDependencies() {
@@ -84,79 +87,83 @@ class _DetailPageState extends State<DetailPage> {
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: compact(context) ? 340 : 440,
-              decoration: BoxDecoration(
-                color: const Color(0xffeeeee5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(25),
-                    child: ArtImage(
-                      art.image,
-                      fit: BoxFit.contain,
-                      label: art.title,
-                    ),
-                  ),
-                  Positioned(
-                    right: 12,
-                    bottom: 12,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        backgroundColor: paper.withValues(alpha: 0.9),
+              child: SurfacePanel(
+                tinted: true,
+                radius: 32,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(25),
+                      child: ArtImage(
+                        art.image,
+                        fit: BoxFit.contain,
+                        label: art.title,
                       ),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (c) => Dialog.fullscreen(
-                          backgroundColor: const Color(0xff17241c),
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: InteractiveViewer(
-                                  minScale: 0.8,
-                                  maxScale: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(40),
-                                    child: ArtImage(
-                                      art.image,
-                                      fit: BoxFit.contain,
-                                      label: art.title,
+                    ),
+                    Positioned(
+                      right: 12,
+                      bottom: 12,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: paper.withValues(alpha: 0.9),
+                        ),
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (c) => Dialog.fullscreen(
+                            backgroundColor: const Color(0xff141e25),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: InteractiveViewer(
+                                    minScale: 0.8,
+                                    maxScale: 5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(40),
+                                      child: ArtImage(
+                                        art.image,
+                                        fit: BoxFit.contain,
+                                        label: art.title,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 15,
-                                right: 15,
-                                child: IconButton(
-                                  tooltip: '확대 화면 닫기',
-                                  onPressed: () => Navigator.pop(c),
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
+                                Positioned(
+                                  top: 15,
+                                  right: 15,
+                                  child: IconButton(
+                                    tooltip: '확대 화면 닫기',
+                                    style: editorialButtonStyle(
+                                      dark: true,
+                                      quiet: true,
+                                    ),
+                                    onPressed: () => Navigator.pop(c),
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 15,
-                                left: 20,
-                                child: Text(
-                                  '${s.artistName(art)} · ${art.title}',
-                                  style: sans(12, color: Colors.white),
+                                Positioned(
+                                  bottom: 15,
+                                  left: 20,
+                                  child: Text(
+                                    '${s.artistName(art)} · ${art.title}',
+                                    style: sans(12, color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
+                        icon: const Icon(Icons.open_in_full, size: 15),
+                        label: Text('크게 보기', style: sans(12)),
                       ),
-                      icon: const Icon(Icons.open_in_full, size: 15),
-                      label: Text('크게 보기', style: sans(10)),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 25),
@@ -309,7 +316,39 @@ class _DetailPageState extends State<DetailPage> {
                 style: sans(11, color: muted),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                ArtButton(
+                  '감상 남기기',
+                  icon: Icons.edit_outlined,
+                  onTap: () => context.go('/library?artwork_id=${art.id}'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => pickCollectionForArtwork(context, s, art),
+                  icon: const Icon(Icons.bookmark_border, size: 18),
+                  label: const Text('컬렉션에 저장'),
+                ),
+                if (compact(context))
+                  TextButton(
+                    onPressed: () {
+                      if (chatKey.currentContext != null) {
+                        Scrollable.ensureVisible(
+                          chatKey.currentContext!,
+                          alignment: .03,
+                          duration: MediaQuery.disableAnimationsOf(context)
+                              ? Duration.zero
+                              : const Duration(milliseconds: 250),
+                        );
+                      }
+                    },
+                    child: const Text('도슨트와 대화 ↓'),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 24),
             LayoutBuilder(
               builder: (context, c) => c.maxWidth > 800
                   ? Row(
@@ -317,23 +356,33 @@ class _DetailPageState extends State<DetailPage> {
                       children: [
                         Expanded(child: left),
                         const SizedBox(width: 38),
-                        Expanded(child: DocentChat(art, key: ValueKey(art.id))),
+                        Expanded(
+                          child: KeyedSubtree(
+                            key: chatKey,
+                            child: DocentChat(art, key: ValueKey(art.id)),
+                          ),
+                        ),
                       ],
                     )
                   : Column(
                       children: [
                         left,
                         const SizedBox(height: 32),
-                        DocentChat(art, key: ValueKey(art.id)),
+                        KeyedSubtree(
+                          key: chatKey,
+                          child: DocentChat(art, key: ValueKey(art.id)),
+                        ),
                       ],
                     ),
             ),
+            const SizedBox(height: 28),
+            DiaryFeedView(artworkId: art.id),
             const SizedBox(height: 55),
             const Divider(),
             const SizedBox(height: 25),
             SectionTitle(
               eyebrow: 'CONTINUE YOUR JOURNEY',
-              title: '다음 그림으로 이어지는 이야기',
+              title: '함께 보면 좋은 작품',
               subtitle: s.config.demo
                   ? '작가와 사조를 따라 골라본 미리보기 작품이에요.'
                   : '이 작품과 함께 살펴볼 만한 그림이에요.',

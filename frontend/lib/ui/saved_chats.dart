@@ -78,7 +78,7 @@ class _SavedChatsState extends State<SavedChats> {
             for (final chat in snapshot.data!)
               Card(
                 elevation: 0,
-                color: const Color(0xffeef0e7),
+                color: const Color(0xffe8eeee),
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(14),
                   leading: SizedBox(

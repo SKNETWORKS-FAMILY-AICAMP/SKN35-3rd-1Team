@@ -16,6 +16,7 @@ import 'package:artlog_web/models.dart';
 import 'package:artlog_web/state.dart';
 import 'package:artlog_web/pages/detail_page.dart';
 import 'package:artlog_web/ui/design.dart' show ArtworkGrid;
+import 'package:artlog_web/ui/daily_artwork_hero.dart';
 
 const work = {
   'id': 42,
@@ -308,12 +309,9 @@ void main() {
     final state = (await tester.runAsync(() => boot(f, session)))!;
     await tester.pumpWidget(ArtlogApp(state: state));
     await tester.pumpAndSettle();
-    expect(
-      find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == '오늘의 작품 특별전 감상하기',
-      ),
-      findsOneWidget,
-    );
+    final hero = tester.widget<DailyArtworkHero>(find.byType(DailyArtworkHero));
+    expect(hero.works.map((a) => a.id), ['43', '44', '42']);
+    expect(find.byKey(const ValueKey('daily-fullscreen-hero')), findsOneWidget);
     final grid = tester
         .widgetList<ArtworkGrid>(find.byType(ArtworkGrid))
         .singleWhere((g) => g.works.length == 3);

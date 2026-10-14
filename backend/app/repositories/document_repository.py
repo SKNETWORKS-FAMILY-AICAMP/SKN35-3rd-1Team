@@ -39,8 +39,8 @@ def scope_document_ids(session: Session, artwork_id: int) -> list[int]:
     own = select(Document.id).where(Document.artwork_id == artwork_id, Document.needs_review.is_(False))
     by_artist = (
         select(DocumentArtist.document_id)
-        .join(Artwork, Artwork.artist_id == DocumentArtist.artist_id)
         .join(Document, Document.id == DocumentArtist.document_id)
+        .join(Artwork, Artwork.artist_id == DocumentArtist.artist_id)
         .where(Artwork.id == artwork_id, Document.needs_review.is_(False))
     )
     return sorted(session.scalars(select(union(own, by_artist).subquery().c[0])))
@@ -71,12 +71,12 @@ def pinned_chunk_ids(session: Session, artwork_id: int, scope_ids: list[int]) ->
 def document_sources(session: Session, document_ids: set[int]) -> dict[int, DocumentSource]:
     if not document_ids:
         return {}
-    docs = session.scalars(select(Document).where(Document.id.in_(document_ids))).all()
+    docs = session.scalars(select(Document).where(Document.id.in_(document_ids), Document.needs_review.is_(False))).all()
     basis: dict[int, list[dict[str, str | None]]] = {d.id: list(d.basis_external_sources or []) for d in docs}
     rows = session.execute(
         select(DocumentBasis.document_id, Document.source_name, Document.source_url)
         .join(Document, Document.id == DocumentBasis.basis_document_id)
-        .where(DocumentBasis.document_id.in_(document_ids))
+        .where(DocumentBasis.document_id.in_(basis), Document.needs_review.is_(False))
         .order_by(DocumentBasis.document_id, Document.doc_key)
     )
     for doc_id, name, url in rows:

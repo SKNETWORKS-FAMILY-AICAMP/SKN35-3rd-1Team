@@ -82,6 +82,7 @@ class Artwork {
     this.reason = '',
     this.isFeatured = false,
     this.viewCount = 0,
+    this.imageAspectRatio,
   });
   final String id,
       slug,
@@ -103,6 +104,7 @@ class Artwork {
       reason;
   final bool asset, isFeatured;
   final int viewCount;
+  final double? imageAspectRatio;
   factory Artwork.fromJson(Json j) {
     final artist = object(j['artist']);
     return Artwork(
@@ -127,6 +129,7 @@ class Artwork {
       reason: text(j['reason']),
       isFeatured: j['is_featured'] == true,
       viewCount: (j['view_count'] as num?)?.toInt() ?? 0,
+      imageAspectRatio: (j['image_aspect_ratio'] as num?)?.toDouble(),
     );
   }
 }

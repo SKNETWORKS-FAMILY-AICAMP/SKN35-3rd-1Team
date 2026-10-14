@@ -1,5 +1,8 @@
 # 통합 dev ERD와 프론트 연결 점검
 
+> 2026-10-14 현재: Alembic head 0008, 서비스 모델·ERD 20테이블입니다. user_preferences의 birth_date·explanation_priorities·conversation_style·onboarding_completed·AI 소개 캐시, diary_entries, collections, collection_items를 API에 연결했습니다. 프로필 서버 저장과 도슨트 개인화를 구현했고, 나이대를 생년월일로 추정하지 않습니다. 아래 17테이블/501 표기는 이전 통합 스냅샷이며 [최신 인수인계](../../docs/mypage-and-collections-2026-10-14.md)를 참고합니다.
+
+
 최종 갱신: 2026-10-13 · 기준: 모든 팀 브랜치를 병합한 dev
 
 ## 확인 기준

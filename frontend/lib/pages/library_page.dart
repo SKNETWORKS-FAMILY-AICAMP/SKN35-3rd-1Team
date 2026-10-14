@@ -4,36 +4,40 @@ import '../models.dart';
 import '../state.dart';
 import '../ui/design.dart';
 import '../ui/saved_chats.dart';
-import '../ui/member_profile_dialog.dart';
+import '../diary.dart';
+import '../ui/diary_editor.dart';
 
 class LibraryPage extends StatefulWidget {
-  const LibraryPage({super.key});
+  const LibraryPage({super.key, this.artworkId, this.initialDate});
+  final String? artworkId, initialDate;
   @override
   State<LibraryPage> createState() => _LibraryPageState();
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  late DateTime month = DateTime.parse('${seoulDate().substring(0, 7)}-01');
-  String selected = seoulDate(), tab = 'calendar';
-  String? identity, calendarError, dayError;
-  bool sample = false,
-      loading = false,
-      dayLoading = false,
-      saving = false,
-      saved = false;
+  String get initialDay {
+    final d = DateTime.tryParse(widget.initialDate ?? '');
+    return d != null &&
+            dateKey(d) == widget.initialDate &&
+            d.year >= 1900 &&
+            d.year < 9999
+        ? widget.initialDate!
+        : seoulDate();
+  }
+
+  late DateTime month = DateTime.parse('${initialDay.substring(0, 7)}-01');
+  late String selected = initialDay;
+  String tab = 'calendar';
+  String? identity, calendarError, dayError, diaryError;
+  Map<String, DiaryEntry> diaryEntries = {};
+  GlobalKey<DiaryEditorState> editorKey = GlobalKey<DiaryEditorState>();
+  bool sample = false, loading = false, dayLoading = false;
   int monthRevision = 0, dayRevision = 0;
   Map<String, CalendarDay> calendarDays = {};
   Map<String, int> get counts => {
     for (final day in calendarDays.values) day.date: day.artworkCount,
   };
   List<Artwork> dayWorks = [];
-  final note = TextEditingController();
-  @override
-  void dispose() {
-    note.dispose();
-    super.dispose();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -46,9 +50,12 @@ class _LibraryPageState extends State<LibraryPage> {
       calendarDays = {};
       dayWorks = [];
       calendarError = dayError = null;
-      loading = dayLoading = saving = saved = false;
+      loading = dayLoading = false;
+      diaryEntries = {};
+      diaryError = null;
+      editorKey = GlobalKey<DiaryEditorState>();
       sample = false;
-      note.clear();
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && identity == key) loadMonth();
       });
@@ -76,7 +83,6 @@ class _LibraryPageState extends State<LibraryPage> {
         dayWorks = [];
         calendarError = null;
         dayLoading = false;
-        note.clear();
       });
       return;
     }
@@ -88,6 +94,13 @@ class _LibraryPageState extends State<LibraryPage> {
       dayLoading = false;
     });
     try {
+      String? nextDiaryError;
+      final diaryRequest = s
+          .diaryMonth(dateKey(month).substring(0, 7))
+          .catchError((Object e) {
+            nextDiaryError = ArtlogState.message(e);
+            return <DiaryEntry>[];
+          });
       final result = s.config.demo
           ? demoRecords(s).map(
               (k, v) => MapEntry(
@@ -110,7 +123,17 @@ class _LibraryPageState extends State<LibraryPage> {
           identity != currentIdentity) {
         return;
       }
-      setState(() => calendarDays = result);
+      final entries = await diaryRequest;
+      if (!mounted ||
+          revision != monthRevision ||
+          identity != currentIdentity) {
+        return;
+      }
+      setState(() {
+        calendarDays = result;
+        diaryEntries = {for (final e in entries) e.date: e};
+        diaryError = nextDiaryError;
+      });
       await loadDay(selected);
     } catch (e) {
       if (mounted && revision == monthRevision) {
@@ -122,6 +145,11 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   Future<void> loadDay(String date) async {
+    if (date != selected &&
+        !(await editorKey.currentState?.confirmDiscard() ?? true)) {
+      return;
+    }
+    if (!mounted) return;
     final s = ArtlogScope.of(context), revision = ++dayRevision;
     final currentIdentity = identity;
     if (!s.authenticated) return;
@@ -129,8 +157,7 @@ class _LibraryPageState extends State<LibraryPage> {
       selected = date;
       dayLoading = true;
       dayError = null;
-      saved = false;
-      note.text = s.note(date);
+      editorKey = GlobalKey<DiaryEditorState>();
       dayWorks = [];
     });
     try {
@@ -153,31 +180,15 @@ class _LibraryPageState extends State<LibraryPage> {
     }
   }
 
-  void changeMonth(int delta) {
+  Future<void> changeMonth(int delta) async {
+    if (!(await editorKey.currentState?.confirmDiscard() ?? true) || !mounted) {
+      return;
+    }
     setState(() {
       month = DateTime(month.year, month.month + delta);
       selected = dateKey(month);
     });
     loadMonth();
-  }
-
-  Future<void> save() async {
-    final s = ArtlogScope.of(context);
-    final date = selected;
-    final currentIdentity = identity;
-    setState(() => saving = true);
-    try {
-      await s.saveNote(date, note.text);
-      if (mounted && selected == date && identity == currentIdentity) {
-        setState(() => saved = true);
-      }
-    } catch (e) {
-      if (mounted && identity == currentIdentity) showError(context, e);
-    } finally {
-      if (mounted && identity == currentIdentity) {
-        setState(() => saving = false);
-      }
-    }
   }
 
   @override
@@ -187,75 +198,20 @@ class _LibraryPageState extends State<LibraryPage> {
         visited = counts.entries
             .where((e) => e.key.startsWith(monthPrefix) && e.value > 0)
             .length;
-    final demoUnique = s.config.demo
-        ? demoRecords(s).entries
-              .where((e) => e.key.startsWith(monthPrefix))
-              .expand((e) => e.value)
-              .toSet()
-              .length
-        : null;
     final totalViews = calendarDays.values
         .where((day) => day.date.startsWith(monthPrefix))
         .fold<int>(0, (total, day) => total + day.totalViews);
     return PageWidth(
-      vertical: 42,
+      vertical: 32,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Eyebrow('MY LITTLE MUSEUM'),
-                    const SizedBox(height: 15),
-                    Text(
-                      '마음에 남은 그림들.',
-                      style: serif(compact(context) ? 30 : 39),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      '한 점씩 쌓이는 감상, 조금씩 넓어지는 나의 세계.',
-                      style: sans(13, color: muted),
-                    ),
-                  ],
-                ),
-              ),
-              if (!compact(context))
-                Container(
-                  width: 65,
-                  height: 85,
-                  color: const Color(0xffe6eadc),
-                  child: const Icon(
-                    Icons.menu_book_outlined,
-                    color: green,
-                    size: 30,
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          if (s.loginRequired && s.authenticated)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Wrap(
-                spacing: 12,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(s.email, style: sans(11, color: muted)),
-                  if (s.config.firebaseAuth)
-                    TextButton(
-                      onPressed: () => showMemberProfile(context, s),
-                      child: const Text('감상 프로필'),
-                    ),
-                  TextButton(
-                    onPressed: () => logoutUser(context),
-                    child: const Text('로그아웃'),
-                  ),
-                ],
-              ),
-            ),
+          const Eyebrow('PRIVATE JOURNAL'),
+          const SizedBox(height: 10),
+          Text('내 서재', style: serif(compact(context) ? 30 : 38)),
+          const SizedBox(height: 10),
+          Text('그날의 그림과 생각을 기록하는 개인 공간.', style: sans(14, color: muted)),
+          const SizedBox(height: 28),
           if (!s.authenticated)
             EmptyView(
               '감상의 순간을 모아보세요.',
@@ -283,77 +239,35 @@ class _LibraryPageState extends State<LibraryPage> {
                   ],
                 ),
               ),
-            Container(
-              padding: EdgeInsets.all(compact(context) ? 18 : 26),
-              decoration: BoxDecoration(
-                color: const Color(0xffeef0e7),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                children: [
-                  for (final stat in [
-                    (
-                      demoUnique?.toString() ?? visited.toString(),
-                      demoUnique == null ? '이번 달 감상한 날' : '이번 달 감상한 작품',
-                      demoUnique == null ? '일' : '점',
-                    ),
-                    (s.likes.length.toString(), '마음에 담은 작품', '점'),
-                    (s.follows.length.toString(), '팔로우한 작가', '명'),
-                  ])
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            stat.$2,
-                            style: sans(
-                              compact(context) ? 9 : 11,
-                              color: muted,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: stat.$1,
-                                  style: english(34, color: green),
-                                ),
-                                TextSpan(
-                                  text: ' ${stat.$3}',
-                                  style: sans(10, color: muted),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 22),
             Row(
               children: [
                 for (final t in [
                   ('calendar', '감상 캘린더', Icons.calendar_today_outlined),
-                  ('likes', '좋아요한 작품', Icons.favorite_border),
-                  ('follows', '팔로우한 작가', Icons.people_outline),
+                  ('diary', '다이어리', Icons.menu_book_outlined),
                   ('chats', '대화 내역', Icons.forum_outlined),
                 ])
                   Expanded(
-                    child: InkWell(
-                      onTap: () => setState(() => tab = t.$1),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 17),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: tab == t.$1 ? green : line,
-                              width: tab == t.$1 ? 2 : 1,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: TextButton(
+                        style: editorialButtonStyle(
+                          dark: tab == t.$1,
+                          quiet: tab != t.$1,
+                          minimumSize: const Size(0, 48),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 14,
                           ),
                         ),
+                        onPressed: () async {
+                          if (!(await editorKey.currentState
+                                      ?.confirmDiscard() ??
+                                  true) ||
+                              !mounted) {
+                            return;
+                          }
+                          setState(() => tab = t.$1);
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -361,22 +275,25 @@ class _LibraryPageState extends State<LibraryPage> {
                               Icon(
                                 t.$3,
                                 size: 16,
-                                color: tab == t.$1 ? green : muted,
+                                color: tab == t.$1 ? Colors.white : muted,
                               ),
                               const SizedBox(width: 8),
                             ],
-                            Text(
-                              compact(context)
-                                  ? switch (t.$1) {
-                                      'calendar' => '캘린더',
-                                      'likes' => '좋아요',
-                                      'follows' => '팔로우',
-                                      _ => t.$2,
-                                    }
-                                  : t.$2,
-                              style: sans(
-                                compact(context) ? 10 : 12,
-                                color: tab == t.$1 ? green : muted,
+                            Flexible(
+                              child: Text(
+                                compact(context)
+                                    ? switch (t.$1) {
+                                        'calendar' => '캘린더',
+                                        'likes' => '좋아요',
+                                        'follows' => '팔로우',
+                                        _ => t.$2,
+                                      }
+                                    : t.$2,
+                                style: sans(
+                                  compact(context) ? 10 : 12,
+                                  color: tab == t.$1 ? Colors.white : muted,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -386,7 +303,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
               ],
             ),
-            if (tab == 'calendar') ...[
+            if (tab == 'calendar' || tab == 'diary') ...[
               const SizedBox(height: 28),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
@@ -399,6 +316,10 @@ class _LibraryPageState extends State<LibraryPage> {
                       Text('${month.year}년 ${month.month}월', style: serif(26)),
                       Text(
                         '$visited일의 감상 · 총 $totalViews회 감상',
+                        style: sans(11, color: muted),
+                      ),
+                      Text(
+                        '감상평 ${diaryEntries.length}편',
                         style: sans(11, color: muted),
                       ),
                     ],
@@ -418,7 +339,13 @@ class _LibraryPageState extends State<LibraryPage> {
                           ),
                         ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          if (!(await editorKey.currentState
+                                      ?.confirmDiscard() ??
+                                  true) ||
+                              !mounted) {
+                            return;
+                          }
                           setState(() {
                             selected = seoulDate();
                             month = DateTime.parse(
@@ -459,6 +386,8 @@ class _LibraryPageState extends State<LibraryPage> {
                   calendarError!,
                   action: ArtButton('다시 불러오기', onTap: loadMonth),
                 )
+              else if (tab == 'diary')
+                _diaryList(s)
               else
                 LayoutBuilder(
                   builder: (context, c) {
@@ -468,9 +397,9 @@ class _LibraryPageState extends State<LibraryPage> {
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(flex: 7, child: calendar),
+                              Expanded(flex: 6, child: calendar),
                               const SizedBox(width: 28),
-                              Expanded(flex: 3, child: journal),
+                              Expanded(flex: 5, child: journal),
                             ],
                           )
                         : Column(
@@ -488,60 +417,6 @@ class _LibraryPageState extends State<LibraryPage> {
                 padding: EdgeInsets.only(top: 25),
                 child: SavedChats(),
               ),
-            if (tab == 'likes')
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: s.likes.isEmpty
-                    ? EmptyView(
-                        '어떤 그림을 담아볼까요?',
-                        description: '작품의 하트를 누르면 이곳에 모아둘게요.',
-                        action: ArtButton(
-                          '마음에 드는 그림 찾기',
-                          onTap: () => context.go('/gallery'),
-                        ),
-                      )
-                    : ArtworkGrid(s.likedWorks),
-              ),
-            if (tab == 'follows')
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: s.follows.isEmpty
-                    ? EmptyView(
-                        '다음 이야기가 궁금한 작가를 만나보세요.',
-                        action: ArtButton(
-                          '작가 만나러 가기',
-                          onTap: () => context.go('/artists'),
-                        ),
-                      )
-                    : Wrap(
-                        spacing: 25,
-                        runSpacing: 20,
-                        children: s.followedArtists
-                            .map(
-                              (a) => SizedBox(
-                                width: compact(context) ? double.infinity : 280,
-                                child: ListTile(
-                                  leading: SizedBox(
-                                    width: 45,
-                                    height: 55,
-                                    child: ArtImage(s.representativeImage(a)),
-                                  ),
-                                  title: Text(a.name, style: sans(13)),
-                                  subtitle: Text(
-                                    a.english,
-                                    style: english(16, color: muted),
-                                  ),
-                                  trailing: const Icon(
-                                    Icons.north_east,
-                                    size: 17,
-                                  ),
-                                  onTap: () => context.go('/artist/${a.id}'),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-              ),
           ],
         ],
       ),
@@ -552,12 +427,11 @@ class _LibraryPageState extends State<LibraryPage> {
     builder: (context, c) {
       final days = DateTime(month.year, month.month + 1, 0).day,
           start = month.weekday % 7;
-      final width = c.maxWidth / 7, height = compact(context) ? 78.0 : 112.0;
+      final width = (c.maxWidth - 2) / 7,
+          height = compact(context) ? 78.0 : 112.0;
       return Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: line),
-          borderRadius: BorderRadius.circular(3),
-        ),
+        padding: const EdgeInsets.all(1),
+        decoration: surfaceDecoration(radius: 8),
         child: Column(
           children: [
             Row(
@@ -598,17 +472,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     builder: (context) {
                       final d = index - start + 1;
                       if (d < 1 || d > days) {
-                        return Container(
-                          width: (c.maxWidth - 2) / 7,
-                          height: height,
-                          decoration: const BoxDecoration(
-                            color: Color(0xfff0f1e9),
-                            border: Border(
-                              top: BorderSide(color: line),
-                              right: BorderSide(color: line),
-                            ),
-                          ),
-                        );
+                        return SizedBox(width: width, height: height);
                       }
                       final date = dateKey(
                             DateTime(month.year, month.month, d),
@@ -619,22 +483,21 @@ class _LibraryPageState extends State<LibraryPage> {
                           : <String>[];
                       final art = ids.isEmpty ? null : s.workFor(ids.first);
                       return Semantics(
-                        label: '${month.month}월 $d일, $count점 감상',
+                        label:
+                            '${month.month}월 $d일, $count점 감상${diaryEntries.containsKey(date) ? ', 감상평 있음' : ''}',
                         button: true,
                         selected: selected == date,
                         child: InkWell(
                           onTap: () => loadDay(date),
                           child: Container(
-                            width: (c.maxWidth - 2) / 7,
+                            width: width,
                             height: height,
                             padding: EdgeInsets.all(width < 60 ? 4 : 8),
                             decoration: BoxDecoration(
-                              color: selected == date
-                                  ? const Color(0xffe6ecdc)
-                                  : paper,
+                              color: selected == date ? soft : pearl,
                               border: Border.all(
-                                color: selected == date ? sage : line,
-                                width: selected == date ? 1.3 : 0.3,
+                                color: selected == date ? green : line,
+                                width: selected == date ? 1.2 : .4,
                               ),
                             ),
                             child: Column(
@@ -660,6 +523,14 @@ class _LibraryPageState extends State<LibraryPage> {
                                     ),
                                   ),
                                 ),
+                                if (diaryEntries[date] case final entry?)
+                                  Icon(
+                                    entry.isPublic
+                                        ? Icons.public
+                                        : Icons.lock_outline,
+                                    size: 13,
+                                    color: green,
+                                  ),
                                 if (art != null)
                                   Expanded(
                                     child: Padding(
@@ -694,20 +565,77 @@ class _LibraryPageState extends State<LibraryPage> {
       );
     },
   );
+  void showDayWorks(ArtlogState s) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      constraints: const BoxConstraints(maxWidth: 680),
+      builder: (c) => SizedBox(
+        key: const ValueKey('day-works-sheet'),
+        height: MediaQuery.sizeOf(c).height * .75,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 18, 12, 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('이날 감상한 ${dayWorks.length}점', style: serif(23)),
+                  ),
+                  IconButton(
+                    tooltip: '감상 작품 목록 닫기',
+                    onPressed: () => Navigator.pop(c),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: dayWorks.length,
+                itemBuilder: (c, i) {
+                  final a = dayWorks[i];
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: ArtImage(a.image, width: 48, height: 56),
+                    ),
+                    title: Text(a.title, style: sans(13)),
+                    subtitle: Text(
+                      s.artistName(a),
+                      style: sans(11, color: muted),
+                    ),
+                    trailing: const Icon(Icons.north_east, size: 18),
+                    onTap: () {
+                      Navigator.pop(c);
+                      context.go('/artwork/${a.id}');
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _journal(ArtlogState s) => Container(
     width: double.infinity,
     padding: const EdgeInsets.all(23),
-    decoration: BoxDecoration(
-      color: const Color(0xffeef2e4),
-      borderRadius: BorderRadius.circular(3),
-    ),
+    decoration: surfaceDecoration(tinted: true),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Eyebrow('A DAY WITH ART'),
+        const Eyebrow('DAILY NOTE'),
         const SizedBox(height: 12),
         Text(
-          '${int.parse(selected.substring(5, 7))}월 ${int.parse(selected.substring(8))}일의 그림',
+          '${int.parse(selected.substring(5, 7))}월 ${int.parse(selected.substring(8))}일의 기록',
           style: serif(23),
         ),
         const SizedBox(height: 14),
@@ -724,7 +652,7 @@ class _LibraryPageState extends State<LibraryPage> {
           const Icon(Icons.menu_book_outlined, color: sage),
           const SizedBox(height: 14),
           Text(
-            '아직 꺼내볼 그림이 없어요.\n오늘의 한 점을 만나러 가볼까요?',
+            '이날 감상한 작품이 없어요.\n작품 없이도 생각을 기록할 수 있어요.',
             style: sans(12, color: muted),
           ),
           TextButton(
@@ -732,8 +660,9 @@ class _LibraryPageState extends State<LibraryPage> {
             child: const Text('작품 발견하기 ↗'),
           ),
         ] else ...[
-          for (final a in dayWorks)
+          for (final a in dayWorks.take(3))
             Padding(
+              key: ValueKey('journal-preview-${a.id}'),
               padding: const EdgeInsets.only(bottom: 13),
               child: InkWell(
                 onTap: () => context.go('/artwork/${a.id}'),
@@ -761,34 +690,96 @@ class _LibraryPageState extends State<LibraryPage> {
               ),
             ),
         ],
+        if (dayWorks.length > 3)
+          TextButton.icon(
+            onPressed: () => showDayWorks(s),
+            icon: const Icon(Icons.grid_view_outlined, size: 16),
+            label: Text('전체 ${dayWorks.length}점 보기'),
+          ),
         const SizedBox(height: 20),
         const Divider(),
         const SizedBox(height: 12),
-        Text('마음에 남은 한 줄', style: sans(11, color: muted)),
-        const SizedBox(height: 10),
-        TextField(
-          controller: note,
-          maxLength: 500,
-          maxLines: 4,
-          style: sans(12),
-          onChanged: (_) => setState(() => saved = false),
-          decoration: InputDecoration(
-            hintText: '그림을 보며 떠오른 생각을 남겨보세요.',
-            hintStyle: sans(11, color: muted),
+        if (sample)
+          Text(
+            '예시 기록을 보고 있어요. 실제 날짜를 선택해 감상평을 작성해 주세요.',
+            style: sans(11, color: muted),
+          )
+        else if (loading || dayLoading)
+          Text('다이어리를 불러오고 있어요.', style: sans(11, color: muted))
+        else if (diaryError != null)
+          EmptyView(
+            '다이어리를 불러오지 못했어요.',
+            description: diaryError!,
+            action: ArtButton('다이어리 다시 불러오기', onTap: loadMonth),
+          )
+        else
+          DiaryEditor(
+            key: editorKey,
+            date: selected,
+            entry: diaryEntries[selected],
+            works: [...dayWorks, ?s.workFor(widget.artworkId ?? '')],
+            initialArtworkId: widget.artworkId,
+            legacyNote: s.note(selected),
+            onSaved: (entry) =>
+                setState(() => diaryEntries[entry.date] = entry),
+            onDeleted: () => setState(() => diaryEntries.remove(selected)),
           ),
-        ),
-        Text('한 줄 기록은 이 브라우저에 저장돼요.', style: sans(9, color: muted)),
-        const SizedBox(height: 12),
-        ArtButton(
-          saved
-              ? '기록했어요'
-              : saving
-              ? '기록 중…'
-              : '감상 기록하기',
-          icon: saved ? Icons.check : Icons.edit_outlined,
-          onTap: sample || saving ? null : save,
-        ),
       ],
     ),
   );
+  Widget _diaryList(ArtlogState s) {
+    if (loading) return const SizedBox.shrink();
+    if (diaryError != null) {
+      return EmptyView(
+        diaryError!,
+        action: ArtButton('다시 불러오기', onTap: loadMonth),
+      );
+    }
+    if (diaryEntries.isEmpty) {
+      return EmptyView(
+        '이달의 첫 감상평을 남겨보세요.',
+        description: '그림을 보지 않은 날에도 나만의 다이어리를 쓸 수 있어요.',
+        action: ArtButton(
+          '감상평 쓰기',
+          onTap: () => setState(() => tab = 'calendar'),
+        ),
+      );
+    }
+    final entries = diaryEntries.values.toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+    return Column(
+      children: [
+        for (final entry in entries)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Card(
+              elevation: 0,
+              color: Colors.white,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(18),
+                leading: Icon(
+                  entry.isPublic ? Icons.public : Icons.lock_outline,
+                  color: green,
+                ),
+                title: Text(
+                  entry.date,
+                  style: sans(12, weight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  entry.content,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: sans(12, color: muted),
+                ),
+                trailing: const Icon(Icons.edit_outlined, size: 18),
+                onTap: () {
+                  setState(() => tab = 'calendar');
+                  loadDay(entry.date);
+                },
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }

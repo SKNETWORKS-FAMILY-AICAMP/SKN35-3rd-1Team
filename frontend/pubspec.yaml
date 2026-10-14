@@ -1,5 +1,5 @@
 name: artlog_web
-description: 작품을 발견하고 감상을 기록하는 아트로그 Flutter 웹.
+description: 작품을 발견하고 감상을 기록하는 Docentalk Flutter 웹.
 publish_to: none
 version: 1.0.0+1
 environment:

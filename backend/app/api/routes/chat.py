@@ -6,22 +6,24 @@
 
 from fastapi import APIRouter, status
 
-from app.api.stub import not_implemented
 from app.core.auth import CurrentUser, OptionalUser
 from app.db.session import DbSession
 from app.schemas.chat import ChatMessageOut, ChatRequest, ChatResponse, ChatSummary
-from app.services import chat_service
+from app.services import chat_service, docent_service
 
 router = APIRouter(tags=["chat"])
 
 
 @router.post("/artworks/{artwork_id}/chat")
-def ask(artwork_id: int, body: ChatRequest, user: OptionalUser) -> ChatResponse:
+def ask(artwork_id: int, body: ChatRequest, user: OptionalUser, db: DbSession) -> ChatResponse:
     """작품 도슨트에게 질문. 근거가 없으면 `refused: true`.
 
     RAG 답변이 나오면 로그인 사용자는 `chat_service.save_exchange`로 저장한다.
     """
-    not_implemented()
+    response = docent_service.answer(db, artwork_id, body, user_id=user.id if user else None)
+    if user is not None:
+        chat_service.save_exchange(db, user_id=user.id, artwork_id=artwork_id, question=body.question, response=response)
+    return response
 
 
 @router.get("/artworks/{artwork_id}/chat/messages")

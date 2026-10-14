@@ -8,6 +8,9 @@ import 'api/artlog_api.dart';
 import 'config.dart';
 import 'models.dart';
 import 'member_profile.dart';
+import 'diary.dart';
+import 'mypage.dart';
+part 'state_mypage.dart';
 
 class ArtlogState extends ChangeNotifier {
   ArtlogState(
@@ -44,14 +47,71 @@ class ArtlogState extends ChangeNotifier {
   int _identityRevision = 0;
   bool _disposed = false;
   bool authUiOpen = false;
+  int diaryRevision = 0;
+  final Map<String, Future<dynamic>> _requests = {};
+  final Map<String, DateTime> _requestTimes = {};
+  Future<T> _cached<T>(
+    String key,
+    Future<T> Function() fetch, {
+    Duration ttl = const Duration(minutes: 5),
+    bool force = false,
+  }) {
+    if (!force &&
+        _requests.containsKey(key) &&
+        DateTime.now().difference(_requestTimes[key]!) < ttl) {
+      return _requests[key]! as Future<T>;
+    }
+    if (_requests.length >= 80 && !_requests.containsKey(key)) {
+      final oldest = _requests.keys.first;
+      _requests.remove(oldest);
+      _requestTimes.remove(oldest);
+    }
+    late final Future<T> pending;
+    pending = fetch().catchError((Object error, StackTrace stack) {
+      if (identical(_requests[key], pending)) {
+        _requests.remove(key);
+        _requestTimes.remove(key);
+      }
+      Error.throwWithStackTrace(error, stack);
+    });
+    _requests[key] = pending;
+    _requestTimes[key] = DateTime.now();
+    return pending;
+  }
+
+  String get recommendationKey {
+    final liked = likes.toList()..sort();
+    final followed = follows.toList()..sort();
+    return '$_identityRevision/${liked.join(',')}/${followed.join(',')}';
+  }
+
+  Future<List<Artwork>> personalArtworks({bool force = false}) => _cached(
+    'recommended/works/$recommendationKey',
+    api.recommendedArtworks,
+    ttl: const Duration(seconds: 30),
+    force: force,
+  );
+  Future<List<Artist>> personalArtists({bool force = false}) => _cached(
+    'recommended/artists/$recommendationKey',
+    api.recommendedArtists,
+    ttl: const Duration(seconds: 30),
+    force: force,
+  );
   void setAuthUiOpen(bool value) {
     authUiOpen = value;
     notifyListeners();
   }
 
-  String get _profileKey => 'flutter.profile.firebase.$_uid';
+  MemberProfile? _serverProfile;
+  bool profileLoaded = false;
+  String? profileError;
+  int collectionRevision = 0;
+  String get _profileKey => config.firebaseAuth
+      ? 'flutter.profile.firebase.$_uid'
+      : 'flutter.profile.demo.$userKey';
   MemberProfile? get memberProfile {
-    if (!config.firebaseAuth || !authenticated) return null;
+    if (!authenticated) return null;
+    if (!config.demo) return _serverProfile;
     final raw = prefs.getString(_profileKey);
     if (raw == null) return null;
     try {
@@ -62,15 +122,40 @@ class ArtlogState extends ChangeNotifier {
   }
 
   bool get needsOnboarding =>
-      config.firebaseAuth && authenticated && memberProfile == null;
-  Future<void> saveMemberProfile(MemberProfile profile) async {
-    if (!config.firebaseAuth || !authenticated) {
-      throw const AuthFailure('로그인 후 저장할 수 있어요.');
-    }
+      config.firebaseAuth &&
+      authenticated &&
+      (config.demo
+          ? memberProfile == null
+          : profileLoaded && memberProfile?.onboardingCompleted == false);
+  Future<void> loadProfile() async {
+    if (!authenticated || config.demo) return;
     final revision = _identityRevision;
-    final key = _profileKey;
-    if (!await prefs.setString(key, jsonEncode(profile.toJson()))) {
-      throw const AuthFailure('프로필을 저장하지 못했어요. 다시 시도해 주세요.');
+    try {
+      final result = await api.profile();
+      if (revision != _identityRevision || _disposed) return;
+      _serverProfile = result;
+      profileLoaded = true;
+      profileError = null;
+    } catch (e) {
+      if (revision != _identityRevision || _disposed) return;
+      profileError = message(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> saveMemberProfile(MemberProfile profile) async {
+    if (!authenticated) throw const AuthFailure('로그인 후 저장할 수 있어요.');
+    final revision = _identityRevision;
+    if (config.demo) {
+      if (!await prefs.setString(_profileKey, jsonEncode(profile.toJson()))) {
+        throw const AuthFailure('프로필을 저장하지 못했어요.');
+      }
+    } else {
+      final result = await api.saveProfile(profile);
+      if (revision != _identityRevision) throw const AuthFailure('계정이 바뀌었어요.');
+      _serverProfile = result;
+      profileLoaded = true;
+      profileError = null;
     }
     if (revision != _identityRevision) {
       throw const AuthFailure('계정이 바뀌었어요. 다시 확인해 주세요.');
@@ -117,6 +202,13 @@ class ArtlogState extends ChangeNotifier {
     _works.clear();
     _artists.clear();
     libraryError = null;
+    _requests.clear();
+    _requestTimes.clear();
+    ++diaryRevision;
+    ++collectionRevision;
+    _serverProfile = null;
+    profileLoaded = false;
+    profileError = null;
   }
 
   void _authChanged(AuthUser? user) {
@@ -129,6 +221,7 @@ class ArtlogState extends ChangeNotifier {
       _loadLocalActivity();
     } else if (user != null) {
       unawaited(reloadLibrary());
+      unawaited(loadProfile());
     }
     notifyListeners();
   }
@@ -250,14 +343,14 @@ class ArtlogState extends ChangeNotifier {
       }
       return result;
     }
-    final result = await api.artwork(id);
+    final result = await _cached('detail/$id', () => api.artwork(id));
     _works[id] = result;
     return result;
   }
 
   Future<Artist> artistDetail(String id) async {
     if (!config.demo) {
-      final result = await api.artist(id);
+      final result = await _cached('artist/$id', () => api.artist(id));
       _artists[id] = result;
       return result;
     }
@@ -282,6 +375,7 @@ class ArtlogState extends ChangeNotifier {
     this.email = email;
     notifyListeners();
     await reloadLibrary();
+    await loadProfile();
   }
 
   Future<void> register(String email, String password) async {
@@ -374,6 +468,8 @@ class ArtlogState extends ChangeNotifier {
     try {
       if (!config.demo) {
         await api.view(id);
+        _requests.removeWhere((key, _) => key.startsWith('recommended/'));
+        _requestTimes.removeWhere((key, _) => key.startsWith('recommended/'));
         return;
       }
       final day = views.putIfAbsent(today, () => []);
@@ -389,7 +485,9 @@ class ArtlogState extends ChangeNotifier {
   }
 
   Future<List<Artwork>> similar(Artwork work) async {
-    if (!config.demo) return api.similar(work.id);
+    if (!config.demo) {
+      return _cached('similar/${work.id}', () => api.similar(work.id));
+    }
     final candidates = artworks.where((a) => a.id != work.id).toList();
     candidates.sort(
       (a, b) =>
@@ -442,6 +540,103 @@ class ArtlogState extends ChangeNotifier {
     if (!await prefs.setString(_noteKey(date), value)) {
       throw const ApiException('이 브라우저에 메모를 저장하지 못했어요.');
     }
+  }
+
+  String get _diaryKey => _localKey('diary');
+  List<DiaryEntry> _demoDiary() {
+    if (!authenticated) return [];
+    try {
+      return items(
+        jsonDecode(prefs.getString(_diaryKey) ?? '[]'),
+      ).map((v) => DiaryEntry.fromJson(object(v))).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<List<DiaryEntry>> diaryMonth(String month) async {
+    if (!authenticated) return [];
+    if (!config.demo) return api.diaryMonth(month);
+    return _demoDiary().where((e) => e.date.startsWith(month)).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  Future<DiaryEntry> saveDiary(
+    String date,
+    String content,
+    bool isPublic,
+    String? artworkId,
+  ) async {
+    if (!authenticated) {
+      throw const ApiException('로그인 후 기록할 수 있어요.', status: 401);
+    }
+    final revision = _identityRevision;
+    DiaryEntry result;
+    if (config.demo) {
+      result = DiaryEntry(
+        id: date,
+        date: date,
+        content: content.trim(),
+        isPublic: isPublic,
+        artwork: artworkId == null ? null : workFor(artworkId),
+      );
+      final entries = _demoDiary()..removeWhere((e) => e.date == date);
+      entries.add(result);
+      if (!await prefs.setString(
+        _diaryKey,
+        jsonEncode(entries.map((e) => e.toJson()).toList()),
+      )) {
+        throw const ApiException('감상평을 저장하지 못했어요.');
+      }
+    } else {
+      result = await api.saveDiary(date, content, isPublic, artworkId);
+    }
+    if (revision != _identityRevision) {
+      throw const ApiException('계정이 바뀌었어요. 다시 확인해 주세요.');
+    }
+    await prefs.remove(_noteKey(date));
+    ++diaryRevision;
+    notifyListeners();
+    return result;
+  }
+
+  Future<void> deleteDiary(String date) async {
+    if (!authenticated) throw const ApiException('로그인이 필요해요.', status: 401);
+    final revision = _identityRevision;
+    if (config.demo) {
+      final entries = _demoDiary()..removeWhere((e) => e.date == date);
+      if (!await prefs.setString(
+        _diaryKey,
+        jsonEncode(entries.map((e) => e.toJson()).toList()),
+      )) {
+        throw const ApiException('감상평을 삭제하지 못했어요.');
+      }
+    } else {
+      await api.deleteDiary(date);
+    }
+    if (revision != _identityRevision) return;
+    await prefs.remove(_noteKey(date));
+    ++diaryRevision;
+    notifyListeners();
+  }
+
+  Future<DiaryFeed> diaryFeed({String? cursor, String? artworkId}) async {
+    if (!config.demo) {
+      return api.diaryFeed(cursor: cursor, artworkId: artworkId);
+    }
+    final entries =
+        _demoDiary()
+            .where(
+              (e) =>
+                  e.isPublic &&
+                  (artworkId == null || e.artwork?.id == artworkId),
+            )
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
+    final start = (int.tryParse(cursor ?? '') ?? 0).clamp(0, entries.length);
+    final page = entries.skip(start).take(12).toList();
+    final next = start + page.length;
+    return DiaryFeed(page, next < entries.length ? '$next' : null);
   }
 
   static String message(Object e) => e is ApiException

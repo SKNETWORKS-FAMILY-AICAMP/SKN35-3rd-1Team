@@ -3,7 +3,7 @@
 These tests pin the contract: routing, auth requirements, request validation,
 error format and the generated OpenAPI. The DB session and the services are
 replaced with stubs, so nothing here reads or writes TiDB. Routes that are not
-built yet (``POST /chat``, waiting on RAG) still answer ``501``.
+use mocked model responses so these tests never call paid AI services.
 """
 
 from types import SimpleNamespace
@@ -16,9 +16,11 @@ from app.core.exceptions import NotFoundError
 from app.db.session import get_db
 from app.main import app
 from app.schemas.catalog import ArtistDetail, ArtworkDetail
+from app.schemas.chat import ChatResponse
 from app.services import (
     catalog_service,
     chat_service,
+    docent_service,
     follow_service,
     library_service,
     like_service,
@@ -64,8 +66,8 @@ NO_CONTENT = [
 
 VALID_CHAT = {"question": "이 작품은 언제 그렸나요?", "history": []}
 
-# Implemented routes answer 200/204 with stubbed services; the rest are 501.
-ROUTED = {200, 204, 501}
+# Implemented routes answer 200/204 with stubbed services.
+ROUTED = {200, 204}
 
 ARTIST = ArtistDetail(
     id=1,
@@ -107,6 +109,14 @@ def stub_services(monkeypatch):
     nothing = lambda *args, **kwargs: None
     empty = lambda *args, **kwargs: []
     for module, name, fake in [
+        (
+            docent_service,
+            "answer",
+            lambda *a, **k: ChatResponse(
+                answer="테스트 답변", refused=False, sources=[]
+            ),
+        ),
+        (chat_service, "save_exchange", nothing),
         (catalog_service, "list_movements", empty),
         (catalog_service, "list_artists", empty),
         (catalog_service, "get_artist", lambda *a, **k: ARTIST),
@@ -184,11 +194,11 @@ def test_protected_endpoints_route_when_logged_in(
 
 
 def test_chat_allows_anonymous_questions() -> None:
-    assert client.post("/api/artworks/1/chat", json=VALID_CHAT).status_code == 501
+    assert client.post("/api/artworks/1/chat", json=VALID_CHAT).status_code == 200
 
 
 def test_chat_accepts_logged_in_questions(logged_in) -> None:
-    assert client.post("/api/artworks/1/chat", json=VALID_CHAT).status_code == 501
+    assert client.post("/api/artworks/1/chat", json=VALID_CHAT).status_code == 200
 
 
 @pytest.mark.parametrize(
@@ -264,7 +274,7 @@ def test_chat_rejects_invalid_body(body) -> None:
 def test_chat_history_is_optional() -> None:
     assert (
         client.post("/api/artworks/1/chat", json={"question": "질문"}).status_code
-        == 501
+        == 200
     )
 
 
@@ -378,3 +388,9 @@ def test_responses_never_expose_private_columns(openapi: dict) -> None:
     for name, schema in openapi["components"]["schemas"].items():
         properties = set(schema.get("properties", {}))
         assert not properties & {"firebase_uid", "embedding", "password_hash"}, name
+
+
+def test_route_methods_are_registered_once():
+    keys = [(route.path, frozenset(route.methods)) for route in app.routes
+            if hasattr(route, "methods") and route.path.startswith("/api/")]
+    assert len(keys) == len(set(keys))

@@ -1,8 +1,8 @@
-# 미술관 도슨트 RAG 프로젝트
+# Docentalk · AI 미술관 도슨트
 
-React 프론트엔드, FastAPI 백엔드, TiDB 데이터베이스를 쓰는 팀 프로젝트 템플릿입니다.
+Flutter Web 프론트엔드, FastAPI 백엔드, TiDB 데이터베이스로 작품 감상과 AI 도슨트 대화를 제공하는 팀 프로젝트입니다.
 
-프론트엔드에는 기획서 기반의 인터랙티브 UI 목업 **아트로그**가 구현되어 있습니다. `frontend/`에서 `npm install`, `npm run dev`로 실행합니다. 작품 탐색, 작품 상세와 예시 도슨트 대화, 작가 팔로우, 내 서재 캘린더를 체험할 수 있습니다. 백엔드와 실제 RAG는 아직 연결되지 않았습니다. 화면 구성과 레퍼런스는 [UI 디자인 노트](docs/ui/mockup-design.md)를 참고하세요.
+프론트엔드의 서비스 이름은 **Docentalk**입니다. `frontend/`에서 `flutter pub get`, `flutter run -d chrome`으로 미리보기를 실행합니다. 작품 탐색, 도슨트, 감상 피드와 공개/비공개 다이어리, 서재 캘린더, 마이페이지·컬렉션을 제공합니다. 실제 API 연결과 배포 방법은 [프론트 README](frontend/README.md)를 참고하세요. 초기 React 목업은 참고용으로 보존했습니다.
 
 각 폴더의 `README.md`에는 그 폴더의 역할, 넣을 파일 예시, 지켜야 할 규칙이 적혀 있습니다. 파일명은 전부 예시이므로 팀에서 바꿔도 됩니다.
 
@@ -16,7 +16,7 @@ museum-rag-react-fastapi-tidb/
 │   │   ├── api/routes/      엔드포인트 (요청 검증, 응답 반환)
 │   │   ├── services/        서비스 로직 (좋아요, 내 서재, 추천, 챗봇 흐름)
 │   │   ├── repositories/    TiDB 조회·저장, 벡터 거리 SQL
-│   │   ├── models/          SQLAlchemy 모델 (서비스 테이블 17개)
+│   │   ├── models/          SQLAlchemy 모델 (서비스 테이블 20개)
 │   │   ├── schemas/         Pydantic 요청·응답 스키마
 │   │   ├── rag/             청킹, 검색, 프롬프트, 답변 생성, 출처
 │   │   ├── clients/         임베딩·LLM API 호출
@@ -24,7 +24,7 @@ museum-rag-react-fastapi-tidb/
 │   │   └── db/              엔진, 세션
 │   ├── scripts/             데이터 적재, 임베딩 생성 (필요할 때만 실행)
 │   └── tests/
-├── frontend/                React (Vite + TypeScript)
+├── frontend/                Flutter Web (lib/), 초기 React 목업(src/) 보존
 │   └── src/
 │       ├── pages/           URL 과 연결되는 화면
 │       ├── components/      artwork, artist, chat, recommendation, library, common
@@ -41,7 +41,7 @@ museum-rag-react-fastapi-tidb/
 ## 요청이 지나가는 길
 
 ```text
-React 화면 → frontend/src/api → FastAPI routes → services → repositories → TiDB
+Flutter 화면 → frontend/lib/api → FastAPI routes → services → repositories → TiDB
                                                      └→ rag → repositories → TiDB
                                                           └→ clients → 임베딩·LLM API
 ```
@@ -74,9 +74,9 @@ React 화면 → frontend/src/api → FastAPI routes → services → repositori
 ## 처음 실행하는 순서
 
 1. 저장소 루트에서 `uv sync`로 파이썬 의존성을 설치합니다. `pyproject.toml`과 `uv.lock`은 루트에 있습니다.
-2. 루트의 `.env.example`을 루트에 `.env`로 복사해 값을 채웁니다. 프론트는 `frontend/.env`에 `VITE_API_BASE_URL`을 따로 둡니다 (`frontend/README.md` 참고).
+2. 루트의 `.env.example`을 루트에 `.env`로 복사해 값을 채웁니다. Flutter 프론트는 `--dart-define` 또는 Git 제외 설정 파일로 빌드 값을 전달합니다 (`frontend/README.md` 참고).
 3. 임베딩 모델을 정하고 `EMBEDDING_DIM`과 스키마의 `VECTOR(1536)`을 같은 값으로 맞춥니다.
-4. TiDB에 테이블을 만듭니다. `docs/db/01_schema_mvp.sql`을 실행하거나 Alembic 마이그레이션을 씁니다. 둘 중 하나만 사용합니다.
+4. TiDB에 Alembic 마이그레이션 전체 이력을 적용합니다 (`alembic upgrade head`). `docs/db/01_schema_mvp.sql`은 0006 시점의 참고 스냅샷이며 현재 head는 `20261014_0008`입니다.
 5. `backend/scripts/`의 적재 스크립트를 정해진 순서로 실행합니다.
 6. 백엔드 서버와 프론트 개발 서버를 띄웁니다.
 

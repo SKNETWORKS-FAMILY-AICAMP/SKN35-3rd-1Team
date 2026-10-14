@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    JSON,
     BigInteger,
+    Boolean,
+    Date,
     DateTime,
     ForeignKey,
     SmallInteger,
     String,
+    Text,
     UniqueConstraint,
     text,
 )
@@ -69,6 +73,15 @@ class UserPreference(Base):
         ForeignKey("users.id", ondelete="CASCADE"),
         primary_key=True,
     )
+    birth_date: Mapped[date | None] = mapped_column(Date)
+    explanation_priorities: Mapped[list | None] = mapped_column(JSON)
+    conversation_style: Mapped[str | None] = mapped_column(String(30))
+    onboarding_completed: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default=text("0")
+    )
+    taste_summary: Mapped[str | None] = mapped_column(Text)
+    taste_fingerprint: Mapped[str | None] = mapped_column(String(64))
+    taste_generated_at: Mapped[datetime | None] = mapped_column(DateTime)
     birth_year: Mapped[int | None] = mapped_column(SmallInteger)
     gender: Mapped[str | None] = mapped_column(String(30))
     tone: Mapped[str | None] = mapped_column(String(30))
