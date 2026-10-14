@@ -110,6 +110,14 @@ class Fixture {
       '/api/artists/7' => artist,
       '/api/artworks' => [work],
       '/api/artworks/42' => work,
+      // Connected tests represent existing members. The removed explanation
+      // priority field must not turn a missing profile fixture into onboarding.
+      '/api/me/profile' => {
+        'nickname': '감상가',
+        'birth_date': null,
+        'conversation_style': 'easy',
+        'onboarding_completed': true,
+      },
       '/api/artworks/42/chat/messages' => [saved('이전 감상')],
       '/api/artworks/42/chat' => {
         'answer': '추가 해설',
