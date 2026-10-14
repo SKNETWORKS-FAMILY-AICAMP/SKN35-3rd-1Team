@@ -69,7 +69,7 @@ void main() {
   }
 
   testWidgets(
-    'dark filters keep selected labels legible and paper pages retain their palette',
+    'the exhibition page is dark and paper pages retain their palette',
     (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
       tester.view.devicePixelRatio = 1;
@@ -78,11 +78,10 @@ void main() {
       final state = (await tester.runAsync(boot))!;
       await tester.pumpWidget(ArtlogApp(state: state));
       await tester.pumpAndSettle();
-      final chip = tester.widget<ChoiceChip>(
-        find.widgetWithText(ChoiceChip, '전체'),
+      expect(
+        tester.widget<Scaffold>(find.byType(Scaffold).first).backgroundColor,
+        museumBlack,
       );
-      expect(chip.color!.resolve({WidgetState.selected}), museumText);
-      expect(chip.labelStyle!.color, museumBlack);
       await tester.tap(find.byKey(const ValueKey('navigation-/library')));
       await tester.pumpAndSettle();
       expect(

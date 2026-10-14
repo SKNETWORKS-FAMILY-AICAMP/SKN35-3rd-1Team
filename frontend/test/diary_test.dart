@@ -3,7 +3,7 @@ import 'package:artlog_web/api/artlog_api.dart';
 import 'package:artlog_web/config.dart';
 import 'package:artlog_web/diary.dart';
 import 'package:artlog_web/models.dart';
-import 'package:artlog_web/pages/library_page.dart';
+import 'package:artlog_web/ui/feed_calendar.dart';
 import 'package:artlog_web/state.dart';
 import 'package:artlog_web/ui/design.dart';
 import 'package:artlog_web/ui/diary_editor.dart';
@@ -139,7 +139,9 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final s = await state();
-      await tester.pumpWidget(host(s, const LibraryPage()));
+      await tester.pumpWidget(
+        host(s, const SingleChildScrollView(child: FeedCalendar())),
+      );
       await tester.pumpAndSettle();
       final today = DateTime.parse(seoulDate());
       final label = '${today.month}월 ${today.day}일, 0점 감상';
@@ -206,11 +208,11 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('다른 눈으로 보는 그림'), findsOneWidget);
+      expect(find.textContaining('다른 눈으로 보는 그림'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await s.saveDiary('2026-10-13', '이제 나만 보는 그림', false, null);
       await tester.pumpAndSettle();
-      expect(find.text('다른 눈으로 보는 그림'), findsNothing);
+      expect(find.textContaining('다른 눈으로 보는 그림'), findsNothing);
       await tester.pumpWidget(const SizedBox());
       s.dispose();
     });

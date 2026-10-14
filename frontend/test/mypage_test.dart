@@ -198,7 +198,11 @@ void main() {
       final s = (await tester.runAsync(() => demo()))!;
       await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/mypage'));
       await tester.pumpAndSettle();
-      expect(find.text('나의 프로필'), findsOneWidget);
+      // 마이페이지 opens as a side panel; /mypage itself now lands on 내 피드.
+      expect(find.byKey(const ValueKey('profile-tab-posts')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('navigation-/mypage')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('account-drawer')), findsOneWidget);
       await tester.tap(find.text('감상 설정'));
       await tester.pumpAndSettle();
       await tester.enterText(

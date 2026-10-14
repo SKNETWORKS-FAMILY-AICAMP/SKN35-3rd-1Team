@@ -117,7 +117,7 @@ void main() {
 
   for (final width in [320.0, 1280.0]) {
     testWidgets(
-      'profile and private journal remain separate at ${width.toInt()}px',
+      'my feed lists private impressions with a lock and opens the calendar at ${width.toInt()}px',
       (tester) async {
         tester.view.physicalSize = Size(width, 1100);
         tester.view.devicePixelRatio = 1;
@@ -141,16 +141,17 @@ void main() {
           state.artworks.first.id,
         );
         await tester.pumpWidget(
-          ArtlogApp(state: state, initialLocation: '/mypage'),
+          ArtlogApp(state: state, initialLocation: '/library'),
         );
         await tester.pumpAndSettle();
         expect(find.text('함께 나눌 그림 이야기'), findsOneWidget);
-        expect(find.text('나만 보관할 오늘의 생각'), findsNothing);
+        expect(find.text('나만 보관할 오늘의 생각'), findsOneWidget);
+        expect(find.byIcon(Icons.lock_outline), findsOneWidget);
         expect(find.byType(BackdropFilter), findsNothing);
-        await tester.tap(find.byKey(const ValueKey('navigation-/library')));
-        await tester.pumpAndSettle();
         expect(find.text('감상 설정'), findsNothing);
-        expect(find.text('좋아요한 작품'), findsNothing);
+        expect(find.text('로그아웃'), findsNothing);
+        await tester.tap(find.text('나만 보관할 오늘의 생각'));
+        await tester.pumpAndSettle();
         final field = find.byKey(const ValueKey('diary-content'));
         await tester.ensureVisible(field);
         expect(
@@ -164,49 +165,37 @@ void main() {
     );
 
     testWidgets(
-      'feed composer preserves drafts and publishes to the journal at ${width.toInt()}px',
+      'feed shows only public impressions and links authors to profiles at ${width.toInt()}px',
       (tester) async {
         tester.view.physicalSize = Size(width, 1100);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
         final state = (await tester.runAsync(boot))!;
+        final today = seoulDate();
+        await state.saveDiary(
+          today,
+          '빛의 방향을 따라 바라본 하루',
+          true,
+          state.artworks.first.id,
+        );
+        await state.saveDiary(
+          dateKey(DateTime.parse(today).subtract(const Duration(days: 1))),
+          '혼자 간직할 문장',
+          false,
+          null,
+        );
         await tester.pumpWidget(
           ArtlogApp(state: state, initialLocation: '/community'),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('오늘의 감상을 남겨보세요'));
+        expect(find.text('오늘의 감상을 남겨보세요'), findsNothing);
+        expect(find.textContaining('빛의 방향을 따라 바라본 하루'), findsOneWidget);
+        expect(find.textContaining('혼자 간직할 문장'), findsNothing);
+        await tester.tap(find.byKey(ValueKey('feed-author-$today')));
         await tester.pumpAndSettle();
-        expect(
-          tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
-          isFalse,
-        );
-        await tester.enterText(
-          find.byKey(const ValueKey('diary-content')),
-          '빛의 방향을 따라 바라본 하루',
-        );
-        await tester.tap(find.byTooltip('작성 창 닫기'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('계속 작성'));
-        await tester.pumpAndSettle();
-        expect(
-          tester
-              .widget<TextField>(find.byKey(const ValueKey('diary-content')))
-              .controller!
-              .text,
-          '빛의 방향을 따라 바라본 하루',
-        );
-        await tester.ensureVisible(find.byType(SwitchListTile));
-        await tester.tap(find.byType(SwitchListTile));
-        await tester.pumpAndSettle();
-        await tester.ensureVisible(find.text('감상평 저장'));
-        await tester.tap(find.text('감상평 저장'));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('diary-content')), findsNothing);
-        expect(find.text('빛의 방향을 따라 바라본 하루'), findsOneWidget);
-        final entries = await state.diaryMonth(seoulDate().substring(0, 7));
-        expect(entries.single.isPublic, isTrue);
-        expect(entries.single.content, '빛의 방향을 따라 바라본 하루');
+        expect(find.text('내 피드로'), findsOneWidget);
+        expect(find.byKey(const ValueKey('member-intro')), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         state.dispose();
