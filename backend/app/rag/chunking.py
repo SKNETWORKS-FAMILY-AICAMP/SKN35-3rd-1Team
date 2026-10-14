@@ -111,7 +111,10 @@ def _parse_sections(content: str) -> list[tuple[Path, list[str]]]:
             continue
         flush()
         level = len(m.group(1))
-        if level == 1:  # 모네·세잔 주제 문서의 `# 제목` 은 문서 제목과 같은 말이라 버린다
+        if level == 1:
+            # 모네·세잔 주제 문서의 `# 제목` 은 문서 제목과 같은 말이라 버린다.
+            # 문서 중간에 나오면 새 글이 시작된 것이므로 앞 섹션 경로를 이어받지 않는다.
+            stack.clear()
             continue
         while stack and stack[-1][0] >= level:
             stack.pop()
@@ -158,13 +161,15 @@ def _split_long(line: str) -> list[str]:
 
 
 def _merge_small(pieces: list[_Piece]) -> list[_Piece]:
-    """MIN_CHARS 미만 조각을 다음 조각(마지막이면 앞 조각)에 붙인다. 합친 길이가 HARD_MAX_CHARS 를 넘으면 그대로 둔다."""
+    """MIN_CHARS 미만 조각을 다음 조각(마지막이면 앞 조각)에 붙인다. 합친 청크 본문이 HARD_MAX_CHARS 를 넘으면 그대로 둔다."""
     out: list[_Piece] = []
     carry: _Piece | None = None
     for piece in pieces:
         if carry is not None:
-            if carry.size + piece.size <= HARD_MAX_CHARS:
-                piece = _Piece(carry.parts + piece.parts)
+            # 합친 결과로 잰다. 섹션이 다르면 `[섹션 이름]` 줄과 줄바꿈이 더해진다.
+            merged = _Piece(carry.parts + piece.parts)
+            if merged.size <= HARD_MAX_CHARS:
+                piece = merged
             else:
                 out.append(carry)
             carry = None
@@ -173,8 +178,9 @@ def _merge_small(pieces: list[_Piece]) -> list[_Piece]:
         else:
             out.append(piece)
     if carry is not None:
-        if out and out[-1].size + carry.size <= HARD_MAX_CHARS:
-            out[-1] = _Piece(out[-1].parts + carry.parts)
+        merged = _Piece(out[-1].parts + carry.parts) if out else None
+        if merged is not None and merged.size <= HARD_MAX_CHARS:
+            out[-1] = merged
         else:
             out.append(carry)
     return out

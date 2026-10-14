@@ -58,6 +58,28 @@ def test_small_section_merges_into_next_with_marker():
     assert len(chunks) == 2
 
 
+def test_merge_limit_counts_section_markers_and_newlines():
+    """149자 + 650자는 799자지만 `[배경]`·`[본론]` 표시와 줄바꿈을 더하면 800자를 넘는다."""
+    content = f"## 배경\n{'짧' * 149}\n## 본론\n{'바' * 650}\n## 결론\n{'사' * 650}"
+    chunks = ch.chunk_document(doc(content, title="T"))
+    assert all(len(c.body) <= ch.HARD_MAX_CHARS for c in chunks)
+    assert [c.heading for c in chunks] == ["T > 배경", "T > 본론", "T > 결론"]
+
+
+def test_trailing_small_piece_merge_also_counts_markers():
+    content = f"## 본론\n{'바' * 650}\n## 결론\n{'사' * 650}\n## 덧말\n{'짧' * 149}"
+    chunks = ch.chunk_document(doc(content, title="T"))
+    assert all(len(c.body) <= ch.HARD_MAX_CHARS for c in chunks)
+    assert chunks[-1].heading == "T > 덧말"
+
+
+def test_h1_in_the_middle_resets_section_path():
+    content = f"## 생애\n{'가' * 650}\n# 새로운 제목\n{'나' * 650}"
+    chunks = ch.chunk_document(doc(content, title="T"))
+    assert [c.heading for c in chunks] == ["T > 생애", "T"]
+    assert "[생애]" not in chunks[1].body
+
+
 def test_empty_parent_section_is_kept_only_in_heading():
     content = f"## 망명과 죽음\n### 몰타\n{'아' * 650}\n### 시칠리아\n{'자' * 650}"
     chunks = ch.chunk_document(doc(content, title="카라바조의 생애"))
