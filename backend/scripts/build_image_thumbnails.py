@@ -18,11 +18,11 @@ import json
 import re
 import sys
 import time
-from datetime import date
 from urllib.parse import unquote, urlsplit
 
 import httpx
 
+from app.core import timeutil
 from scripts.check_images import USER_AGENT
 from scripts.preprocess import OUT, ROOT, strip_query
 
@@ -177,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
             "_note": "scripts/build_image_thumbnails.py 가 만든다. 원천 이미지 주소(source)가 "
                      "그대로일 때만 전처리가 Commons API 썸네일(thumb)로 바꾼다.",
             "width": WIDTH,
-            "generated": date.today().isoformat(),
+            "generated": timeutil.local_date(timeutil.utcnow()).isoformat(),
             **result,
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"썼음: {THUMBNAILS.relative_to(ROOT)}")

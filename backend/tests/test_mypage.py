@@ -136,9 +136,31 @@ def test_profile_roundtrip_order_birthdate_and_account_isolation(client):
     assert client.get("/api/me/profile").json()["birth_date"] is None
 
 
+def test_nickname_change_is_optional_own_and_shown_in_feed(client):
+    assert client.get("/api/me/profile").json()["nickname"] == "감상가1"
+    saved = client.put("/api/me/profile", json={"nickname": "  새벽산책  "}).json()
+    assert saved["nickname"] == "새벽산책"
+    # 닉네임을 보내지 않는 기존 화면의 저장은 이름을 바꾸지 않는다
+    client.put("/api/me/profile", json={"conversation_style": "professional"})
+    assert client.get("/api/me/profile").json()["nickname"] == "새벽산책"
+    other = client.get("/api/me/profile", headers={"Authorization": "Bearer b"})
+    assert other.json()["nickname"] == "감상가2"
+
+    day = client.put(
+        "/api/me/diary/2026-10-01", json={"content": "공개 감상", "is_public": True}
+    )
+    assert day.status_code == 200, day.text
+    feed = client.get("/api/diary/feed").json()["items"]
+    assert [item["author_name"] for item in feed] == ["새벽산책"]
+    assert "private-1@example.com" not in str(feed)
+
+
 @pytest.mark.parametrize(
     "body",
     [
+        {"nickname": "가"},
+        {"nickname": "   "},
+        {"nickname": "가" * 21},
         {"birth_date": "2099-01-01"},
         {"birth_date": "2026-02-30"},
         {"birth_date": "1899-01-01"},

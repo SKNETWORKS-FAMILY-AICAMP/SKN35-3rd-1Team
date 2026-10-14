@@ -47,7 +47,7 @@ artworks  ─(build_artwork_embeddings)───→ TiDB artwork_embeddings ─(
 | B가 **읽기만** (TiDB) | `documents`, `artworks`, `artists`, `art_movements`, `document_artists`, `document_artworks`, `document_basis_documents` |
 | B가 **씀** (TiDB, 원본) | `document_chunks`, `artwork_embeddings` |
 | B가 **씀** (Chroma, 검색용 사본) | `chunks` 컬렉션, `artworks` 컬렉션 — `sync_chroma`만 씀 |
-| RAG 범위 아님 (TiDB) | `users`, `artwork_likes`, `artist_follows`, `artwork_views` — 서비스에서는 앱이 채우고, 발표용 시연 데이터는 `scripts/seed_demo_users.py`(미작성, 담당 미정)로 넣을 예정 |
+| RAG 범위 아님 (TiDB) | `users`, `artwork_likes`, `artist_follows`, `artwork_views` — 서비스에서는 앱이 채우고, 발표용 시연 데이터는 `scripts/seed_demo_user.py`로 dev-user 계정에 넣음(2026-10-14 적용) |
 
 연결 고리는 `document_chunks.document_id` → `documents.id`, `artwork_embeddings.artwork_id` → `artworks.id`, 그리고 Chroma id = TiDB 행 id 세 가지입니다. Chroma 검색 결과의 `document_id`로 출처·연표·작가 연결을 TiDB에서 조회합니다.
 

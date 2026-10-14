@@ -110,9 +110,11 @@ def main(argv: list[str] | None = None) -> int:
 
     rows = targets(args.artist)
     headers = {"User-Agent": USER_AGENT}
-    with httpx.Client(headers=headers, follow_redirects=True, timeout=30) as client:
-        with ThreadPoolExecutor(WORKERS) as pool:
-            results = list(pool.map(lambda r: check(client, r), rows))
+    with (
+        httpx.Client(headers=headers, follow_redirects=True, timeout=30) as client,
+        ThreadPoolExecutor(WORKERS) as pool,
+    ):
+        results = list(pool.map(lambda r: check(client, r), rows))
 
     hosts = Counter(urlsplit(r.url).hostname for r in results if r.url)
     problems = [r for r in results if r.problem]
