@@ -44,6 +44,7 @@ REVIEWS = ROOT / "data" / "mappings" / "reviews.json"
 SUPPLEMENTS = ROOT / "data" / "mappings" / "document_supplements.json"
 CORRECTIONS = ROOT / "data" / "mappings" / "document_corrections.json"
 ALIASES = ROOT / "data" / "mappings" / "artist_aliases.json"
+THUMBNAILS = ROOT / "data" / "mappings" / "image_thumbnails.json"
 OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl", "artist_aliases.jsonl")
 
 MIN_CONTENT = 200  # 이보다 짧은 문서는 경고
@@ -502,6 +503,7 @@ def build() -> dict:
     read_comparisons(RAW / "_comparisons", cat)
     initialize_editorial_metadata(cat)
     apply_overrides(cat, mapping)
+    apply_image_thumbnails(cat, read_image_thumbnails())
     apply_document_supplements(cat, read_document_supplements())
     apply_document_corrections(cat, read_document_corrections())
     apply_reviews(cat, read_reviews())
@@ -584,6 +586,33 @@ def apply_overrides(cat: dict, mapping: dict) -> None:
             cat["artworks"][slug].update({k: v for k, v in values.items() if k in ARTWORK_FIELDS})
     for w in cat["artworks"].values():
         w["image_source_url"] = w.get("image_source_url") or commons_page(w.get("image_url"))
+
+
+def read_image_thumbnails() -> dict:
+    if not THUMBNAILS.exists():
+        return {}
+    return json.loads(THUMBNAILS.read_text(encoding="utf-8"))
+
+
+def apply_image_thumbnails(cat: dict, thumbnails: dict) -> None:
+    """위키미디어 원본 이미지 주소를 매핑에 적힌 고정 폭 썸네일 주소로 바꾼다.
+
+    원본 파일은 수십~수백 MB 이고 upload.wikimedia.org 가 429 로 막기 때문이다.
+    매핑의 원래 주소(source)와 지금 주소가 같을 때만 바꾸고, 다르면 원천이 바뀐 것이므로
+    예전 썸네일을 쓰지 않고 경고를 남긴다 (scripts/build_image_thumbnails.py 로 다시 만든다).
+    출처 페이지(image_source_url)는 apply_overrides 에서 원래 주소로 이미 채운 뒤라 그대로 남는다.
+    """
+    for kind, field in (("artworks", "image_url"), ("artists", "portrait_url")):
+        for slug, entry in thumbnails.get(kind, {}).items():
+            row = cat[kind].get(slug)
+            if row is None:
+                warnings.append(f"썸네일 매핑 {kind}/{slug}: 대상이 없음")
+            elif row.get(field) != entry["source"]:
+                warnings.append(f"썸네일 매핑 {kind}/{slug}: 원래 주소가 바뀌어 적용하지 않음 (build_image_thumbnails 다시 실행)")
+            elif kind == "artworks" and not row.get("image_source_url"):
+                warnings.append(f"썸네일 매핑 {kind}/{slug}: 출처 페이지가 없어 적용하지 않음")
+            else:
+                row[field] = entry["thumb"]
 
 
 def read_reviews() -> dict:
