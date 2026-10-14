@@ -360,7 +360,7 @@ class _DiaryComposerState extends State<_DiaryComposer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$today · 오늘의 기록은 내 서재에도 함께 저장됩니다.',
+                    '$today · 오늘의 기록은 내 피드의 감상 캘린더에도 함께 저장됩니다.',
                     style: sans(12, color: muted),
                   ),
                   const SizedBox(height: 20),

@@ -18,7 +18,8 @@ import 'ui/shell.dart';
 import 'pages/gallery_page.dart';
 import 'pages/detail_page.dart';
 import 'pages/artists_page.dart';
-import 'pages/library_page.dart';
+import 'pages/feed_page.dart';
+import 'pages/artworks_page.dart';
 import 'pages/community_page.dart';
 import 'pages/mypage_page.dart';
 import 'pages/collection_page.dart';
@@ -111,9 +112,18 @@ class _ArtlogAppState extends State<ArtlogApp> {
               ),
             ),
             GoRoute(
+              path: '/artworks',
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                ArtworksPage(
+                  key: ValueKey(state.uri.queryParameters['view']),
+                  initialView: state.uri.queryParameters['view'] ?? 'works',
+                ),
+              ),
+            ),
+            GoRoute(
               path: '/artists',
-              pageBuilder: (_, state) =>
-                  _contentPage(state, const ArtistsPage()),
+              redirect: (_, _) => '/artworks?view=artists',
             ),
             GoRoute(
               path: '/artist/:id',
@@ -132,12 +142,18 @@ class _ArtlogAppState extends State<ArtlogApp> {
             ),
             GoRoute(
               path: '/mypage',
+              redirect: (_, state) =>
+                  state.uri.queryParameters['tab'] == 'collections'
+                  ? '/library?tab=collections'
+                  : '/library',
+            ),
+            GoRoute(
+              path: '/user/:id',
               pageBuilder: (_, state) => _contentPage(
                 state,
-                MyPage(
-                  initialTab: state.uri.queryParameters['tab'] == 'collections'
-                      ? 'collections'
-                      : 'posts',
+                MemberPage(
+                  key: ValueKey(state.pathParameters['id']),
+                  id: state.pathParameters['id']!,
                 ),
               ),
             ),
@@ -145,10 +161,12 @@ class _ArtlogAppState extends State<ArtlogApp> {
               path: '/collection/:id',
               pageBuilder: (_, state) => _contentPage(
                 state,
-                CollectionPage(
-                  key: ValueKey(state.pathParameters['id']),
-                  id: state.pathParameters['id']!,
-                ),
+                state.pathParameters['id'] == 'likes'
+                    ? const LikedCollectionPage()
+                    : CollectionPage(
+                        key: ValueKey(state.pathParameters['id']),
+                        id: state.pathParameters['id']!,
+                      ),
               ),
             ),
             GoRoute(
@@ -160,7 +178,14 @@ class _ArtlogAppState extends State<ArtlogApp> {
               path: '/library',
               pageBuilder: (_, state) => _contentPage(
                 state,
-                LibraryPage(
+                MyFeedPage(
+                  key: ValueKey(state.uri.query),
+                  initialTab:
+                      state.uri.queryParameters['tab'] ??
+                      (state.uri.queryParameters['date'] != null ||
+                              state.uri.queryParameters['artwork_id'] != null
+                          ? 'calendar'
+                          : 'posts'),
                   artworkId: state.uri.queryParameters['artwork_id'],
                   initialDate: state.uri.queryParameters['date'],
                 ),
