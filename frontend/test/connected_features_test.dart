@@ -49,6 +49,14 @@ Json saved(String content) => {
 http.Response jsonResponse(Object value) =>
     http.Response.bytes(utf8.encode(jsonEncode(value)), 200);
 
+http.Response sseResponse(String answer, {List<Object> sources = const []}) =>
+    http.Response(
+      'event: token\ndata: ${jsonEncode({'content': answer})}\n\n'
+      'event: done\ndata: ${jsonEncode({'answer': answer, 'refused': false, 'sources': sources})}\n\n',
+      200,
+      headers: {'content-type': 'text/event-stream; charset=utf-8'},
+    );
+
 class SessionFake implements AuthSession {
   AuthUser? current = const AuthUser(uid: 'a', email: 'a@example.invalid');
   final events = StreamController<AuthUser?>.broadcast(sync: true);
@@ -86,6 +94,9 @@ class Fixture {
     final custom = override?.call(r);
     if (custom != null) return custom;
     final path = r.url.path;
+    if (path == '/api/artworks/42/chat/stream') {
+      return sseResponse('추가 해설', sources: [source]);
+    }
     if (r.method == 'DELETE' || r.method == 'PUT' || path.endsWith('/views')) {
       return http.Response('', 204);
     }
@@ -408,7 +419,7 @@ void main() {
       final f = Fixture(), session = SessionFake();
       var posts = 0;
       f.override = (r) =>
-          r.method == 'POST' && r.url.path.endsWith('/chat') && posts++ == 0
+          r.method == 'POST' && r.url.path.endsWith('/chat/stream') && posts++ == 0
           ? Future.value(http.Response('', 503))
           : null;
       final state = await boot(f, session);
@@ -420,7 +431,7 @@ void main() {
       await c.retry();
       expect(c.messages.map((m) => m.role), ['assistant', 'user', 'assistant']);
       final postBodies = f.requests
-          .where((r) => r.url.path.endsWith('/chat') && r.method == 'POST')
+          .where((r) => r.url.path.endsWith('/chat/stream') && r.method == 'POST')
           .map((r) => jsonDecode(r.body))
           .toList();
       expect(postBodies[0]['history'], postBodies[1]['history']);
@@ -439,7 +450,7 @@ void main() {
       final f = Fixture(), session = SessionFake();
       final pending = Completer<http.Response>(), entered = Completer<void>();
       f.override = (r) {
-        if (r.method == 'POST' && r.url.path.endsWith('/chat')) {
+        if (r.method == 'POST' && r.url.path.endsWith('/chat/stream')) {
           entered.complete();
           return pending.future;
         }
@@ -456,9 +467,7 @@ void main() {
       await entered.future;
       session.change('b');
       await pumpEventQueue();
-      pending.complete(
-        jsonResponse({'answer': 'A의 답변', 'refused': false, 'sources': []}),
-      );
+      pending.complete(sseResponse('A의 답변'));
       await asking;
       expect(c.messages.map((m) => m.content), ['B의 감상']);
       expect(c.busy, false);

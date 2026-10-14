@@ -7,11 +7,13 @@ RAG 답변이 선택한 작품과 저장된 문서 범위 안에서만 생성되
 ## 지금 준비된 입력
 
 - RAG 평가 질문 30개: `backend/tests/questions/rag-eval.json`
+- 프롬프트 정확도 집중 사례 9개: `backend/tests/questions/prompt-accuracy.json`
 - 가짜 챗봇 응답: `backend/tests/fixtures/chat-responses.json`
 - 사용자 활동 계약 사례: `backend/tests/contracts/activity-cases.json`
 - 위 파일의 형식 검사: `backend/tests/test_evaluation_fixtures.py`
 
 질문셋은 사실 확인형 10개, 세부 관찰·해석형 8개, 비교형 4개, 범위 밖 3개, 근거 부족형 3개, 멀티턴형 2개로 구성한다.
+추가 9문항은 이 30문항의 지표 분모에 합치지 않는다. 근거 부족 유보, 일부 답변, 동명 작품 판본, 보정문 우선, 팀 감상 포인트의 출처 구별, 출처 ID, 원문 장문 복제, 잘못된 이전 답변의 멀티턴 정정을 사례별로 판정한다. 상세 기준과 실행 기록은 [프롬프트 정확도 평가 절차](prompt-accuracy-evaluation.md)를 따른다.
 
 ## RAG 평가 항목
 
@@ -30,10 +32,10 @@ RAG 답변이 선택한 작품과 저장된 문서 범위 안에서만 생성되
 
 ## 실행 단계
 
-1. `pytest backend/tests/test_evaluation_fixtures.py`로 평가 자료 자체를 검증한다.
+1. `pytest backend/tests/test_evaluation_fixtures.py backend/tests/test_prompts.py`로 두 평가 자료와 프롬프트·내부 응답 계약을 정적으로 검증한다. 이 결과는 실제 LLM 품질 점수가 아니다.
 2. RAG 구현 후 각 질문에 대해 검색된 `doc_key`, 거리, 답변, `refused`, 출처를 저장한다.
 3. 자동 집계로 거절·출처·검색 지표를 계산한다.
-4. 세부 해석형과 멀티턴형은 사람이 근거 문서와 답변을 대조한다.
+4. 세부 해석형과 멀티턴형, 정확도 집중 9문항은 사람이 **실제로 모델에 전달된 청크**와 답변을 대조한다. 필수 근거가 전달되지 않은 사례는 검색 실패로 분리하고 프롬프트 성공률에 포함하지 않는다.
 5. 결과와 실패 원인을 `docs/test-result.md`에 기록한다.
 
 ## 사용자 활동 기능의 핵심 확인 사항
@@ -57,6 +59,7 @@ RAG 답변이 선택한 작품과 저장된 문서 범위 안에서만 생성되
 - 전체 및 유형별 성공률
 - 실패 질문의 검색 문서와 답변
 - 사람이 확인한 오류 유형과 다음 수정 내용
+- 정확도 9문항의 사례별 조건 충족·실패 신호, 원시 출력·재시도, 실제 전달 청크와 공개 출처의 정합성
 
 ## 구현 전 확인할 결정
 

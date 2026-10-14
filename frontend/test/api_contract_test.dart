@@ -166,6 +166,36 @@ void main() {
     },
   );
 
+  test('chat SSE forwards tokens and uses the final response', () async {
+    late http.Request sent;
+    final shown = <String>[];
+    final api = ArtlogApi(
+      baseUrl: 'https://example.org',
+      client: MockClient((request) async {
+        sent = request;
+        return http.Response(
+          'event: token\ndata: {"content":"초안"}\n\n'
+          'event: replace\ndata: {"content":"수정된 초안"}\n\n'
+          'event: done\ndata: {"answer":"최종 답변","refused":false,"sources":[]}\n\n',
+          200,
+          headers: {'content-type': 'text/event-stream; charset=utf-8'},
+        );
+      }),
+    );
+    final reply = await api.chatStream(
+      '42',
+      '언제 그렸나요?',
+      const [],
+      onToken: (text) async { shown.add(text); },
+      onReplace: (text) async { shown.add('replace:$text'); },
+    );
+    expect(sent.url.path, '/api/artworks/42/chat/stream');
+    expect(sent.headers['Accept'], 'text/event-stream');
+    expect(shown, ['초안', 'replace:수정된 초안']);
+    expect(reply.answer, '최종 답변');
+    api.close();
+  });
+
   test(
     'authenticated mutations use PUT/DELETE; views POST; 204 is valid',
     () async {

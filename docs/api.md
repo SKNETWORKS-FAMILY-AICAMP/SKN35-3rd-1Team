@@ -44,6 +44,7 @@
 | GET | `/api/artworks/{artwork_id}` | `ArtworkDetail` | | 작품 상세 |
 | GET | `/api/artworks/{artwork_id}/similar` | `ArtworkCard[]` | | 비슷한 작품 3개, 가까운 순. 작품 벡터가 없으면 빈 배열 |
 | POST | `/api/artworks/{artwork_id}/chat` | `ChatResponse` | 선택 | 도슨트 질문. 로그인 상태면 질문과 답변을 저장 |
+| POST | `/api/artworks/{artwork_id}/chat/stream` | SSE | 선택 | 같은 질문을 실시간으로 전송하고 완료 시 저장 |
 | GET | `/api/artworks/{artwork_id}/chat/messages` | `ChatMessageOut[]` | 필요 | 이 작품과 나눈 내 대화, 오래된 순. 대화가 없으면 빈 배열 |
 | DELETE | `/api/artworks/{artwork_id}/chat` | `204` | 필요 | 이 작품 대화 초기화. 대화가 없어도 `204` |
 | GET | `/api/me/chats` | `ChatSummary[]` | 필요 | 내가 대화한 작품, 최근 대화순 |
@@ -135,6 +136,8 @@
 | `answer` | string | 답변 본문 |
 | `refused` | bool | 근거 문서가 없어 답변을 거절했으면 `true` |
 | `sources` | `Source[]` | 답변 근거. 거절이면 빈 배열일 수 있음 |
+
+스트리밍 경로는 같은 `ChatRequest`를 받습니다. `Accept: text/event-stream`을 보내면 `token` (`{"content":"추가 문자열"}`), `replace` (`{"content":"수정된 전체 문자열"}`), `done` (검증된 `ChatResponse`), `error` (`{"message":"안내 문구"}`) 이벤트를 순서대로 받습니다. `done`의 답변과 출처가 최종 결과이며 로그인 사용자의 대화도 이 시점에 저장됩니다. `history`는 브라우저가 보내며, 로그인 시 Firebase ID 토큰을 `Authorization: Bearer` 헤더에 포함합니다.
 
 `Source`:
 
