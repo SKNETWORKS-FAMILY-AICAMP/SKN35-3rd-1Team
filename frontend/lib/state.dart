@@ -51,6 +51,11 @@ class ArtlogState extends ChangeNotifier {
   bool _disposed = false;
   bool authUiOpen = false;
   int diaryRevision = 0, socialRevision = 0;
+  // My public id and the members I follow, for follow buttons in the feed.
+  String? myPublicId;
+  Set<String> followingMembers = {};
+  final Set<String> pendingMemberFollows = {};
+  Future<void>? _followingLoad;
   // Fixed for this visit so the main banner changes on each new visit only.
   final int heroSeed = Random().nextInt(1 << 30);
   final Map<String, Future<dynamic>> _requests = {};
@@ -212,6 +217,10 @@ class ArtlogState extends ChangeNotifier {
     ++diaryRevision;
     ++collectionRevision;
     ++socialRevision;
+    myPublicId = null;
+    followingMembers = {};
+    pendingMemberFollows.clear();
+    _followingLoad = null;
     _serverProfile = null;
     profileLoaded = false;
     profileError = null;

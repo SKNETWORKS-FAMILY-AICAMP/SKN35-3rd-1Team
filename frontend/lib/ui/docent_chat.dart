@@ -102,8 +102,8 @@ class _DocentChatState extends State<DocentChat> {
     return SizedBox(
       height:
           (MediaQuery.sizeOf(context).height -
-                  (MediaQuery.sizeOf(context).width < 850 ? 160 : 280))
-              .clamp(420.0, 720.0),
+                  (MediaQuery.sizeOf(context).width < 850 ? 120 : 150))
+              .clamp(560.0, 920.0),
       child: SurfacePanel(
         radius: 12,
         child: Column(
@@ -152,36 +152,10 @@ class _DocentChatState extends State<DocentChat> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              padding: const EdgeInsets.fromLTRB(22, 0, 22, 4),
               child: _StyleTabs(
                 value: conversation!.style,
                 onChanged: busy ? null : conversation!.setStyle,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(11),
-              decoration: surfaceDecoration(radius: 20, tinted: true),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 7,
-                      vertical: 3,
-                    ),
-                    decoration: surfaceDecoration(radius: 9, tinted: true),
-                    child: Text('함께 보는 그림', style: sans(9, color: green)),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      widget.art.title,
-                      style: sans(11, color: muted),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
               ),
             ),
             Expanded(
@@ -221,32 +195,63 @@ class _DocentChatState extends State<DocentChat> {
                     ),
                   for (final m in messages)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 22),
+                      padding: EdgeInsets.only(
+                        bottom: m.role == 'user' ? 14 : 22,
+                      ),
                       child: Column(
                         crossAxisAlignment: m.role == 'user'
                             ? CrossAxisAlignment.end
                             : CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            m.role == 'user' ? '나' : '✳  Docentalk 도슨트',
-                            style: sans(11, color: muted),
-                          ),
-                          const SizedBox(height: 7),
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: surfaceDecoration(
-                              radius: 22,
-                              tinted: m.role == 'user',
+                          if (m.role != 'user') ...[
+                            Text(
+                              '✳  Docentalk 도슨트',
+                              style: sans(11, color: muted),
                             ),
-                            child: Text(
-                              m.content,
-                              style: sans(
-                                13,
-                                color: m.refused ? muted : ink,
-                                height: 1.9,
-                              ),
-                            ),
-                          ),
+                            const SizedBox(height: 7),
+                          ],
+                          m.role == 'user'
+                              ? ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 420,
+                                  ),
+                                  child: Container(
+                                    key: const ValueKey('user-bubble'),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 8,
+                                    ),
+                                    decoration: const BoxDecoration(
+                                      color: ink,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16),
+                                        bottomRight: Radius.circular(4),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      m.content,
+                                      style: sans(
+                                        13,
+                                        color: Colors.white,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: surfaceDecoration(radius: 16),
+                                  child: Text(
+                                    m.content,
+                                    style: sans(
+                                      13,
+                                      color: m.refused ? muted : ink,
+                                      height: 1.9,
+                                    ),
+                                  ),
+                                ),
                           if (m.sources.isNotEmpty) ...[
                             const SizedBox(height: 9),
                             Wrap(
@@ -466,45 +471,63 @@ class _StyleTabs extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) => Container(
-    key: const ValueKey('docent-style-tabs'),
-    padding: const EdgeInsets.all(3),
-    decoration: BoxDecoration(
-      color: soft,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Row(
-      children: [
-        for (final s in styles)
-          Expanded(
-            child: Tooltip(
-              message: s.$3,
-              child: Semantics(
-                selected: value == s.$1,
-                button: true,
-                label: '${s.$2} 설명, ${s.$3}',
-                child: TextButton(
-                  key: ValueKey('docent-style-${s.$1}'),
-                  onPressed: onChanged == null ? null : () => onChanged!(s.$1),
-                  style: editorialButtonStyle(
-                    dark: value == s.$1,
-                    quiet: value != s.$1,
-                    minimumSize: const Size(0, 36),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  child: Text(
-                    s.$2,
-                    style: sans(
-                      12,
-                      color: value == s.$1 ? Colors.white : muted,
-                      weight: value == s.$1 ? FontWeight.w600 : FontWeight.w400,
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Container(
+        key: const ValueKey('docent-style-tabs'),
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: soft,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final s in styles)
+              Tooltip(
+                message: s.$3,
+                child: Semantics(
+                  selected: value == s.$1,
+                  button: true,
+                  label: '${s.$2} 설명, ${s.$3}',
+                  child: TextButton(
+                    key: ValueKey('docent-style-${s.$1}'),
+                    onPressed: onChanged == null
+                        ? null
+                        : () => onChanged!(s.$1),
+                    style:
+                        editorialButtonStyle(
+                          dark: value == s.$1,
+                          quiet: value != s.$1,
+                          radius: 999,
+                          minimumSize: const Size(0, 30),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 6,
+                          ),
+                        ).copyWith(
+                          shape: const WidgetStatePropertyAll(StadiumBorder()),
+                        ),
+                    child: Text(
+                      s.$2,
+                      style: sans(
+                        12,
+                        height: 1.2,
+                        color: value == s.$1 ? Colors.white : muted,
+                        weight: value == s.$1
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        ),
+      ),
     ),
   );
 }

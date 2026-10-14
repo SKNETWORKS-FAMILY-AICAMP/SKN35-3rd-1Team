@@ -4,7 +4,6 @@ import '../diary.dart';
 import '../models.dart';
 import '../state.dart';
 import 'design.dart';
-import 'collection_workspace.dart';
 
 class DiaryFeedView extends StatefulWidget {
   const DiaryFeedView({super.key, this.artworkId});
@@ -50,8 +49,17 @@ class _DiaryFeedViewState extends State<DiaryFeedView> {
         artworkId: widget.artworkId,
       );
       if (!mounted || current != revision) return;
+      var page = result.entries;
+      // My own private comment is visible only to me, above the public ones.
+      if (!more && widget.artworkId != null && s.authenticated) {
+        final own = await s.diaryForArtwork(widget.artworkId!);
+        if (!mounted || current != revision) return;
+        if (own != null && !page.any((e) => e.id == own.id)) {
+          page = [own, ...page];
+        }
+      }
       setState(() {
-        entries = more ? [...entries, ...result.entries] : result.entries;
+        entries = more ? [...entries, ...page] : page;
         cursor = result.nextCursor;
       });
     } catch (e) {
@@ -92,10 +100,11 @@ class _DiaryFeedViewState extends State<DiaryFeedView> {
           ),
           const SizedBox(height: 8),
         ],
-        for (final entry in entries)
-          comments
-              ? ImpressionComment(key: ValueKey(entry.id), entry: entry)
-              : DiaryPostCard(key: ValueKey(entry.id), entry: entry),
+        if (comments)
+          for (final entry in entries)
+            ImpressionComment(key: ValueKey(entry.id), entry: entry)
+        else if (entries.isNotEmpty)
+          _Collage(entries),
         if (loading)
           const Padding(
             padding: EdgeInsets.all(24),
@@ -211,6 +220,13 @@ class _ImpressionCommentState extends State<ImpressionComment> {
                       e.date.replaceAll('-', '.'),
                       style: sans(11, color: muted),
                     ),
+                    if (!e.isPublic) ...[
+                      const SizedBox(width: 6),
+                      const Tooltip(
+                        message: '나만 보는 감상',
+                        child: Icon(Icons.lock_outline, size: 13, color: muted),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -250,7 +266,7 @@ class ImpressionComposer extends StatefulWidget {
 
 class _ImpressionComposerState extends State<ImpressionComposer> {
   final input = TextEditingController();
-  bool busy = false;
+  bool busy = false, isPublic = true;
   @override
   void dispose() {
     input.dispose();
@@ -293,7 +309,7 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
       await s.saveDiary(
         today,
         text,
-        true,
+        isPublic,
         widget.artworkId,
         id: existing?.id,
       );
@@ -311,41 +327,162 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
     final name = s.memberProfile?.nickname ?? '';
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    final field = TextField(
+      key: const ValueKey('impression-input'),
+      controller: input,
+      enabled: !busy,
+      maxLength: 2000,
+      minLines: 1,
+      maxLines: 3,
+      style: sans(13),
+      onSubmitted: (_) => submit(),
+      decoration: InputDecoration(
+        hintText: '이 그림에 대한 감상을 남겨 보세요',
+        hintStyle: sans(12, color: muted),
+        counterText: '',
+      ),
+    );
+    final controls = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        AuthorAvatar(name.isEmpty ? '나' : name, radius: 16),
-        const SizedBox(width: 12),
-        Expanded(
-          child: TextField(
-            key: const ValueKey('impression-input'),
-            controller: input,
-            enabled: !busy,
-            maxLength: 2000,
-            minLines: 1,
-            maxLines: 3,
-            style: sans(13),
-            onSubmitted: (_) => submit(),
-            decoration: InputDecoration(
-              hintText: '이 그림에 대한 감상을 남겨 보세요 (공개)',
-              hintStyle: sans(12, color: muted),
-              counterText: '',
+        Tooltip(
+          message: isPublic ? '모두에게 공개' : '나만 보기',
+          child: Semantics(
+            toggled: isPublic,
+            label: '감상 공개',
+            child: InkWell(
+              key: const ValueKey('impression-visibility'),
+              borderRadius: BorderRadius.circular(999),
+              onTap: busy ? null : () => setState(() => isPublic = !isPublic),
+              child: Container(
+                height: 36,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: isPublic ? soft : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: line),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isPublic ? Icons.public : Icons.lock_outline,
+                      size: 15,
+                      color: isPublic ? green : muted,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      isPublic ? '공개' : '비공개',
+                      style: sans(
+                        11,
+                        height: 1.2,
+                        color: isPublic ? green : muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
         const SizedBox(width: 8),
-        TextButton(
+        FilledButton(
           key: const ValueKey('impression-submit'),
           onPressed: busy ? null : submit,
-          child: Text(busy ? '저장 중' : '게시'),
+          style: editorialButtonStyle(
+            dark: true,
+            minimumSize: const Size(64, 36),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          child: Text(
+            busy ? '저장 중' : '게시',
+            style: sans(
+              13,
+              height: 1.2,
+              color: Colors.white,
+              weight: FontWeight.w600,
+            ),
+          ),
         ),
       ],
+    );
+    return LayoutBuilder(
+      builder: (context, c) {
+        final avatar = AuthorAvatar(name.isEmpty ? '나' : name, radius: 16);
+        // Narrow screens put the visibility toggle and button under the field.
+        if (c.maxWidth < 520) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  avatar,
+                  const SizedBox(width: 12),
+                  Expanded(child: field),
+                ],
+              ),
+              const SizedBox(height: 8),
+              controls,
+            ],
+          );
+        }
+        return Row(
+          children: [
+            avatar,
+            const SizedBox(width: 12),
+            Expanded(child: field),
+            const SizedBox(width: 8),
+            controls,
+          ],
+        );
+      },
     );
   }
 }
 
-/// Public entries only, shown like a photo feed. Reactions save the linked
-/// artwork, never an invented post count.
+/// Feed posts in staggered columns, filling the width like a collage.
+class _Collage extends StatelessWidget {
+  const _Collage(this.entries);
+  final List<DiaryEntry> entries;
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) {
+      final w = c.maxWidth;
+      final columns = w >= 1600
+          ? 5
+          : w >= 1200
+          ? 4
+          : w >= 840
+          ? 3
+          : w >= 520
+          ? 2
+          : 1;
+      const gap = 20.0;
+      return Row(
+        key: const ValueKey('feed-collage'),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var col = 0; col < columns; col++) ...[
+            if (col > 0) const SizedBox(width: gap),
+            Expanded(
+              child: Column(
+                children: [
+                  for (var i = col; i < entries.length; i += columns)
+                    DiaryPostCard(
+                      key: ValueKey(entries[i].id),
+                      entry: entries[i],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      );
+    },
+  );
+}
+
+/// One public impression: author line with follow, the artwork, the text.
 class DiaryPostCard extends StatefulWidget {
   const DiaryPostCard({super.key, required this.entry});
   final DiaryEntry entry;
@@ -355,24 +492,45 @@ class DiaryPostCard extends StatefulWidget {
 
 class _DiaryPostCardState extends State<DiaryPostCard> {
   bool expanded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final s = ArtlogScope.of(context);
+    if (s.authenticated && !s.config.demo) s.loadFollowing();
+  }
+
+  Future<void> follow(ArtlogState s, bool enable) async {
+    if (!await ensureLogin(context) || !mounted) return;
+    try {
+      await s.followMember(widget.entry.authorId, enable);
+    } catch (e) {
+      if (mounted) showError(context, e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final e = widget.entry, s = ArtlogScope.of(context), art = e.artwork;
     final long = e.content.characters.length > 140;
+    final mine =
+        e.authorId == s.myPublicId || e.authorId == SocialState.demoMemberId;
+    final following = s.followingMembers.contains(e.authorId);
     return ScrollReveal(
       child: Container(
         key: ValueKey('feed-post-${e.id}'),
-        margin: const EdgeInsets.only(bottom: 28),
+        margin: const EdgeInsets.only(bottom: 20),
         decoration: const BoxDecoration(
           color: pearl,
           border: Border.fromBorderSide(BorderSide(color: line)),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+              padding: const EdgeInsets.fromLTRB(12, 10, 10, 10),
               child: Row(
                 children: [
                   InkWell(
@@ -380,7 +538,7 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
                     onTap: e.authorId.isEmpty
                         ? null
                         : () => openAuthor(context, e),
-                    child: AuthorAvatar(e.author, radius: 17),
+                    child: AuthorAvatar(e.author, radius: 15),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -389,24 +547,37 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
                       onTap: e.authorId.isEmpty
                           ? null
                           : () => openAuthor(context, e),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            e.author,
-                            style: sans(13, weight: FontWeight.w600),
-                          ),
-                          if (art != null)
-                            Text(
-                              '${art.artistName.isEmpty ? s.artistName(art) : art.artistName} · ${art.title}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: sans(11, color: muted),
-                            ),
-                        ],
+                      child: Text(
+                        e.author,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: sans(13, height: 1.3, weight: FontWeight.w600),
                       ),
                     ),
                   ),
+                  if (e.authorId.isNotEmpty && !mine)
+                    TextButton(
+                      key: ValueKey('feed-follow-${e.id}'),
+                      onPressed: s.pendingMemberFollows.contains(e.authorId)
+                          ? null
+                          : () => follow(s, !following),
+                      style: editorialButtonStyle(
+                        quiet: following,
+                        dark: !following,
+                        radius: 999,
+                        minimumSize: const Size(0, 30),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      child: Text(
+                        following ? '팔로잉' : '+ 팔로우',
+                        style: sans(
+                          12,
+                          height: 1.2,
+                          weight: FontWeight.w600,
+                          color: following ? muted : Colors.white,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -414,69 +585,44 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
               InkWell(
                 onTap: () => context.go('/artwork/${art.id}'),
                 child: AspectRatio(
-                  aspectRatio: 1,
+                  aspectRatio: (art.imageAspectRatio ?? .8).clamp(.55, 1.8),
                   child: ColoredBox(
                     color: museumBlack,
                     child: ArtImage(
                       art.image,
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                       label: '${art.title} 작품 보기',
                     ),
                   ),
                 ),
               ),
-            if (art != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(6, 4, 6, 0),
-                child: Row(
-                  children: [
-                    LikeButton(
-                      compactIcon: true,
-                      liked: s.likes.contains(art.id),
-                      subject: art.title,
-                      onPressed: s.pendingLikes.contains(art.id)
-                          ? null
-                          : () => likeArtwork(context, art),
-                    ),
-                    IconButton(
-                      tooltip: '${art.title} 작품의 감상 보기',
-                      onPressed: () => context.go('/artwork/${art.id}'),
-                      icon: const Icon(Icons.mode_comment_outlined, size: 21),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      tooltip: '내 컬렉션에 작품 저장',
-                      onPressed: () =>
-                          pickCollectionForArtwork(context, s, art),
-                      icon: const Icon(Icons.bookmark_border, size: 22),
-                    ),
-                  ],
-                ),
-              ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 6, 16, 4),
-              child: AnimatedSize(
-                duration: reduceMotion(context)
-                    ? Duration.zero
-                    : const Duration(milliseconds: 260),
-                curve: Curves.easeOutCubic,
-                alignment: Alignment.topLeft,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${e.author}  ',
-                        style: sans(13, weight: FontWeight.w600),
-                      ),
-                      TextSpan(
-                        text: long && !expanded
-                            ? '${e.content.characters.take(140)}…'
-                            : e.content,
-                      ),
-                    ],
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (art != null)
+                    Text(
+                      '${art.artistName.isEmpty ? s.artistName(art) : art.artistName} · ${art.title}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(11, color: muted),
+                    ),
+                  const SizedBox(height: 4),
+                  AnimatedSize(
+                    duration: reduceMotion(context)
+                        ? Duration.zero
+                        : const Duration(milliseconds: 260),
+                    curve: Curves.easeOutCubic,
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      long && !expanded
+                          ? '${e.content.characters.take(140)}…'
+                          : e.content,
+                      style: sans(13, height: 1.75),
+                    ),
                   ),
-                  style: sans(13, height: 1.8),
-                ),
+                ],
               ),
             ),
             if (long)
@@ -488,7 +634,7 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
                 ),
               ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 2, 16, 14),
+              padding: const EdgeInsets.fromLTRB(14, 2, 14, 12),
               child: Text(
                 e.date.replaceAll('-', '.'),
                 style: sans(11, color: muted),
