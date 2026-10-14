@@ -71,7 +71,9 @@ async def answer_events(
                 raise HTTPException(503, "AI 연결 설정이 필요해요.")
 
             parser = JsonOutputParser(pydantic_object=docent_service.GroundedAnswer)
-            preferences = await run_in_threadpool(docent_service.instructions, db, user_id)
+            preferences = await run_in_threadpool(
+                docent_service.instructions, db, user_id, body.explanation_style
+            )
             instruction = (
                 "한국어 미술 도슨트입니다. 제공한 자료 안에서만 답하세요. 답할 근거가 없으면 refused=true로 하고 자료에 없다고 말하세요. "
                 "이미지를 직접 보지 않으므로 자료에 없는 화면 세부를 지어내지 마세요. 작품 판본·소장처를 혼동하지 마세요. "

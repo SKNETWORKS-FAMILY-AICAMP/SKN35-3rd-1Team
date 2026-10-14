@@ -83,3 +83,32 @@ def test_no_documents_never_calls_model(setup, monkeypatch):
         docent, "generate", lambda *a: pytest.fail("근거 없이 LLM 호출")
     )
     assert docent.answer(None, 1, ChatRequest(question="설명해 줘")).refused
+
+
+@pytest.mark.parametrize(
+    ("style", "expected"),
+    [("easy", "쉽고 친근하게"), ("standard", "차분하고 편안하게"), ("deep", "깊이 있게")],
+)
+def test_chat_tab_style_overrides_saved_style(setup, monkeypatch, style, expected):
+    observed = {}
+
+    def generate(schema, prompt, data):
+        observed["prompt"] = prompt
+        return docent.GroundedAnswer(
+            answer="자료에 근거한 답변", refused=False, used_chunk_ids=[7]
+        )
+
+    monkeypatch.setattr(docent, "generate", generate)
+    docent.answer(
+        None,
+        1,
+        ChatRequest(question="설명해 줘", explanation_style=style),
+        user_id=1,
+    )
+    assert expected in observed["prompt"]
+    assert "회화 전문용어를 적극 사용" not in observed["prompt"]
+
+
+def test_unknown_chat_style_is_rejected():
+    with pytest.raises(ValueError):
+        ChatRequest(question="설명해 줘", explanation_style="invented")
