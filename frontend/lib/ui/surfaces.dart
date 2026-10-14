@@ -74,12 +74,14 @@ ButtonStyle editorialButtonStyle({
   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
   textStyle: const WidgetStatePropertyAll(
     TextStyle(
-      fontFamily: 'NotoSansKR',
+      fontFamily: 'Pretendard',
       fontSize: 13,
       fontWeight: FontWeight.w500,
-      height: 1.45,
+      height: 1.2,
+      leadingDistribution: TextLeadingDistribution.even,
     ),
   ),
+  iconSize: const WidgetStatePropertyAll(17),
   backgroundColor: WidgetStateProperty.resolveWith(
     (s) => s.contains(WidgetState.disabled)
         ? (quiet ? Colors.transparent : soft)
@@ -106,7 +108,11 @@ ButtonStyle editorialButtonStyle({
         : Colors.transparent,
   ),
   side: WidgetStateProperty.resolveWith(
-    (s) => s.contains(WidgetState.focused)
+    // Keyboard focus only: a mouse click must not leave a rounded ring behind.
+    (s) =>
+        s.contains(WidgetState.focused) &&
+            FocusManager.instance.highlightMode ==
+                FocusHighlightMode.traditional
         ? BorderSide(color: dark ? sage : green, width: 2)
         : BorderSide(color: dark || quiet ? Colors.transparent : line),
   ),
@@ -157,7 +163,7 @@ class FilterPill extends StatelessWidget {
       shadowColor: Colors.transparent,
       selectedShadowColor: Colors.transparent,
       labelStyle: TextStyle(
-        fontFamily: 'NotoSansKR',
+        fontFamily: 'Pretendard',
         fontSize: 12,
         fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
         color: inverse

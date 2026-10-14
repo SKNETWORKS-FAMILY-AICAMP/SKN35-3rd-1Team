@@ -21,7 +21,6 @@ import 'pages/artists_page.dart';
 import 'pages/feed_page.dart';
 import 'pages/artworks_page.dart';
 import 'pages/community_page.dart';
-import 'pages/mypage_page.dart';
 import 'pages/collection_page.dart';
 
 Future<void> main() async {
@@ -169,11 +168,7 @@ class _ArtlogAppState extends State<ArtlogApp> {
                       ),
               ),
             ),
-            GoRoute(
-              path: '/settings',
-              pageBuilder: (_, state) =>
-                  _contentPage(state, const SettingsPage()),
-            ),
+            GoRoute(path: '/settings', redirect: (_, _) => '/library'),
             GoRoute(
               path: '/library',
               pageBuilder: (_, state) => _contentPage(
@@ -182,11 +177,9 @@ class _ArtlogAppState extends State<ArtlogApp> {
                   key: ValueKey(state.uri.query),
                   initialTab:
                       state.uri.queryParameters['tab'] ??
-                      (state.uri.queryParameters['date'] != null ||
-                              state.uri.queryParameters['artwork_id'] != null
+                      (state.uri.queryParameters['date'] != null
                           ? 'calendar'
                           : 'posts'),
-                  artworkId: state.uri.queryParameters['artwork_id'],
                   initialDate: state.uri.queryParameters['date'],
                 ),
               ),

@@ -27,6 +27,15 @@ flutter:
     - assets/fonts/licenses.json
     - public/artworks/
   fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-400.otf
+        - asset: assets/fonts/Pretendard-500.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard-600.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard-700.otf
+          weight: 700
     - family: NotoSansKR
       fonts:
         - asset: assets/fonts/NotoSansKR-400.ttf
