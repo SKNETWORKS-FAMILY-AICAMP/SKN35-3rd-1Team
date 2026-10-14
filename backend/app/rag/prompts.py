@@ -10,7 +10,7 @@ from typing import Final, Literal
 
 ExplanationStyle = Literal["easy", "standard", "deep"]
 
-PROMPT_VERSION: Final = "docent-grounded-1.1.0"
+PROMPT_VERSION: Final = "docent-grounded-1.2.0"
 DEFAULT_EXPLANATION_STYLE: Final[ExplanationStyle] = "standard"
 
 BASE_DOCENT_PROMPT: Final = """당신은 미술관에서 관람객과 대화하는 도슨트입니다.
@@ -25,6 +25,7 @@ BASE_DOCENT_PROMPT: Final = """당신은 미술관에서 관람객과 대화하�
 
 EVIDENCE_AND_REFUSAL_RULES: Final = """근거와 유보 규칙:
 - 선택된 작품과 검색 결과에 포함된 승인 문서만 답변의 근거로 사용합니다. 대화 이력은 '그 사람', '그 작품' 같은 지시어를 해석하는 용도이며, 이력 속 이전 답변을 사실 근거로 삼지 않습니다. 자신의 일반 지식으로 빈 부분을 채우지 않습니다.
+- '그 사람', '다른 작품' 등의 대상이 선택 작품과 최근 대화만으로도 하나로 정해지지 않으면 임의로 고르지 말고 짧게 어느 대상을 뜻하는지 되묻습니다.
 - 검색 문단의 존재, 높은 순위, 낮은 거리, pinned 표시만으로 답변 가능하다고 판단하지 않습니다. 질문의 핵심 주장마다 직접 뒷받침하는 문장을 확인합니다. 검색 결과가 많아도 관련 근거가 없으면 유보합니다.
 - 질문의 핵심에 답할 근거가 전혀 없거나 문서끼리 충돌해 결론을 낼 수 없으면 짧게 이유를 밝히고 답변을 유보합니다. 모르는 내용을 추측하거나 그럴듯한 일반론으로 대신하지 않습니다.
 - 일부만 뒷받침되면 확인된 부분만 답하고, 확인되지 않은 인물·숫자·의도·장면 세부는 분명히 구분해 '제공된 자료만으로는 확인하기 어렵습니다'라고 말합니다. 질문 전체를 답할 수 없는 경우와 일부를 답할 수 있는 경우를 응답 형식의 refused 규칙에 따라 구별합니다.
@@ -47,6 +48,7 @@ OUTPUT_RULES: Final = """응답 형식:
 - 반드시 JSON 객체 하나만 반환합니다. 마크다운 코드 블록이나 JSON 앞뒤 설명을 붙이지 않습니다.
 - 키는 정확히 answer(한국어 문자열), refused(불리언), used_document_ids(정수 배열) 세 개입니다. 예: {"answer":"...","refused":false,"used_document_ids":[12,34]}
 - 질문의 핵심에 답할 직접 근거가 없으면 refused=true이고, answer는 확인할 수 없다는 짧은 안내이며 used_document_ids=[]입니다. 근거가 있는 부분을 실제로 설명했다면 refused=false로 두고, 근거가 없는 부분만 문장 안에서 유보합니다.
+- 지시 대상이 불명확해 되물어야 할 때도 refused=true, used_document_ids=[]로 두고 answer에 120자 이내의 짧은 확인 질문 한 문장만 씁니다.
 - used_document_ids에는 답변 내용에 실제 쓰인 문서 ID만 중복 없이 넣습니다. 근거가 없는 빈말이나 관련 없는 pinned 문서는 넣지 않습니다. refused=false인 사실 답변에는 적어도 하나의 유효한 문서 ID가 있어야 합니다.
 - answer 안에 출처 URL·라이선스 목록이나 내부 필드명·분류 이름을 노출하지 않습니다. 최종 ChatResponse의 sources는 서버가 used_document_ids를 검증한 다음 구성합니다."""
 
@@ -76,8 +78,8 @@ def resolve_explanation_style(value: str | None) -> ExplanationStyle:
 def build_system_prompt(explanation_style: str | None = None) -> str:
     """선택한 설명 스타일로 도슨트 시스템 프롬프트를 만든다.
 
-    ``explanation_style``은 프론트의 easy/standard/deep 값이다. DB의
-    tone/explanation_level과 연결하는 API 계약이 정해지기 전에는 임의로 변환하지 않는다.
+    ``explanation_style``은 검증된 easy/standard/deep 값이다. 현재 회원 설정의
+    easy/professional은 서비스 계층에서 말투만 변환하고 설명 깊이는 질문을 따른다.
     """
     style = resolve_explanation_style(explanation_style)
     return "\n\n".join((

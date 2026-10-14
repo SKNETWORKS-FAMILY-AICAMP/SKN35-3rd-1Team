@@ -63,11 +63,6 @@ void main() {
             jsonEncode({
               'nickname': '나',
               'birth_date': '2000-01-02',
-              'explanation_priorities': [
-                'artist_life',
-                'background',
-                'technique',
-              ],
               'conversation_style': 'professional',
               'onboarding_completed': true,
             }),
@@ -105,7 +100,6 @@ void main() {
     final p = await api.saveProfile(
       const MemberProfile(
         birthDate: '2000-01-02',
-        priorities: ['artist_life', 'background', 'technique'],
         explanationStyle: 'deep',
       ),
     );
@@ -121,6 +115,10 @@ void main() {
     );
     expect(observed[1].url.path, '/api/me/collections/1/items/2');
     expect(jsonDecode(observed[0].body)['user_id'], isNull);
+    expect(
+      jsonDecode(observed[0].body).containsKey('explanation_priorities'),
+      false,
+    );
     expect(jsonDecode(observed[2].body)['collection_id'], 1);
     api.close();
   });
@@ -139,11 +137,6 @@ void main() {
               jsonEncode({
                 'nickname': 'B',
                 'birth_date': null,
-                'explanation_priorities': [
-                  'background',
-                  'technique',
-                  'artist_life',
-                ],
                 'conversation_style': 'easy',
                 'onboarding_completed': true,
               }),
@@ -168,11 +161,6 @@ void main() {
           jsonEncode({
             'nickname': 'A',
             'birth_date': '2000-01-01',
-            'explanation_priorities': [
-              'background',
-              'technique',
-              'artist_life',
-            ],
             'conversation_style': 'easy',
             'onboarding_completed': true,
           }),
@@ -188,7 +176,7 @@ void main() {
     },
   );
   for (final width in [320.0, 1280.0]) {
-    testWidgets('my page settings reorder and save at ${width.toInt()}px', (
+    testWidgets('my page settings save without topic order at ${width.toInt()}px', (
       tester,
     ) async {
       tester.view.physicalSize = Size(width, 1000);
@@ -209,10 +197,7 @@ void main() {
         find.byKey(const ValueKey('profile-birth-date')),
         '2000-02-03',
       );
-      final move = find.byTooltip('작가의 생애 우선순위 올리기');
-      await tester.ensureVisible(move);
-      await tester.tap(move);
-      await tester.pumpAndSettle();
+      expect(find.text('어떤 이야기부터 들을까요?'), findsNothing);
       final professional = find.text('전문용어 적극 사용');
       await tester.ensureVisible(professional);
       await tester.tap(professional);
@@ -222,11 +207,6 @@ void main() {
       await tester.tap(save);
       await tester.pumpAndSettle();
       expect(s.memberProfile!.birthDate, '2000-02-03');
-      expect(s.memberProfile!.priorities, [
-        'background',
-        'artist_life',
-        'technique',
-      ]);
       expect(s.memberProfile!.conversationStyle, 'professional');
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());

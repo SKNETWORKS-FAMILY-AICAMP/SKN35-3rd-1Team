@@ -150,10 +150,10 @@ void main() {
           find.byKey(const ValueKey('profile-birth-date')),
           '2001-02-03',
         );
+        expect(find.text('1 / 2 · 나에 대해'), findsOneWidget);
         await tester.tap(find.text('다음'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('다음'));
-        await tester.pumpAndSettle();
+        expect(find.text('2 / 2 · 대화 스타일'), findsOneWidget);
         final easy = find.text('편안하고 쉬운 대화');
         await tester.ensureVisible(easy);
         await tester.tap(easy);

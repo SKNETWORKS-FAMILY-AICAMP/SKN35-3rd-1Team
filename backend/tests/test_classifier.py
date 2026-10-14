@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from app.rag.classifier import classify, refusal_message
+from app.rag.classifier import Route, classify, refusal_message
 from scripts.preprocess import load_processed
 
 QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
@@ -114,11 +114,26 @@ def test_eval_set_never_refuses_answerable_questions():
     assert {"scope-001", "scope-002", "scope-003", "evidence-003"} <= blocked
 
 
-def test_refusal_messages_use_natural_particles():
-    assert refusal_message(classify("클림트의 키스는?", "rembrandt")).startswith("구스타프 클림트에 관한 질문은")
-    assert refusal_message(classify("피카소 대표작?", "rembrandt")).startswith("피카소는 이 미술관")
-    assert "작품을 고른 뒤" in refusal_message(classify("고흐는 왜 귀를 잘랐어?", "rembrandt"))
+def test_refusal_messages_use_approved_copy():
+    assert refusal_message(classify("클림트의 키스는?", "rembrandt")) == (
+        "구스타프 클림트의 작품을 선택하면 해당 작가에 관해 대화할 수 있어요."
+    )
+    assert refusal_message(classify("피카소 대표작?", "rembrandt")) == (
+        "현재 피카소의 자료는 검토 중에 있어요."
+    )
+    assert "작품을 선택하면" in refusal_message(classify("고흐는 왜 귀를 잘랐어?", "rembrandt"))
     assert refusal_message(classify("이 그림의 빛은?", "rembrandt")) == ""
+
+
+def test_off_topic_uses_approved_message():
+    assert refusal_message(classify("오늘 날씨 알려줘", "rembrandt")) == (
+        "해당 작품과 작가에 대해서만 대화 할 수 있어요."
+    )
+
+
+def test_uncollected_artist_uses_approved_message():
+    route = Route("refuse", "uncollected_artist", names=("새 작가",))
+    assert refusal_message(route) == "새 작가에 관한 자료는 준비 중 입니다."
 
 
 def test_pending_artist_message_explains_review(monkeypatch):
@@ -132,11 +147,11 @@ def test_pending_artist_message_explains_review(monkeypatch):
     monkeypatch.setattr(classifier, "_alias_index", lambda: (("클림트", pending),))
     route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
     assert route.reason == "unreviewed_artist"
-    assert "검토 중" in refusal_message(route)
+    assert refusal_message(route) == "현재 구스타프 클림트 작가의 자료는 검토 중에 있어요."
 
 
 def test_approved_artist_is_routed_as_other_artist():
     route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
     assert route.kind == "other_artist"
     assert route.artists == ("gustav-klimt",)
-    assert "작품을 고른 뒤" in refusal_message(route)
+    assert "작품을 선택하면" in refusal_message(route)

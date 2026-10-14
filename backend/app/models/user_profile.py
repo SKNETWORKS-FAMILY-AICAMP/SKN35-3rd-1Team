@@ -74,6 +74,7 @@ class UserPreference(Base):
         primary_key=True,
     )
     birth_date: Mapped[date | None] = mapped_column(Date)
+    # Kept for existing rows; the profile API and docent no longer use topic order.
     explanation_priorities: Mapped[list | None] = mapped_column(JSON)
     conversation_style: Mapped[str | None] = mapped_column(String(30))
     onboarding_completed: Mapped[bool] = mapped_column(

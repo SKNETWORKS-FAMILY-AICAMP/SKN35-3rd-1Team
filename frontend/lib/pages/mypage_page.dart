@@ -101,7 +101,7 @@ class _ProfileSettingsState extends State<_ProfileSettings> {
               Text(
                 s.config.demo
                     ? '미리보기 설정은 이 브라우저에 저장돼요.'
-                    : '생년월일은 비공개이며 AI에 전달하지 않아요. 이야기 순서와 말투는 맞춤 안내에 사용해요.',
+                    : '생년월일은 비공개이며 AI에 전달하지 않아요. 선택한 대화 스타일을 도슨트 답변에 적용해요.',
                 style: sans(12, color: muted),
               ),
               const SizedBox(height: 28),

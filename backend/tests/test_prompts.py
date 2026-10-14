@@ -21,7 +21,7 @@ from app.rag.prompts import (
 
 def test_every_style_keeps_the_same_evidence_boundary():
     assert set(STYLE_RULES) == {"easy", "standard", "deep"}
-    assert PROMPT_VERSION == "docent-grounded-1.1.0"
+    assert PROMPT_VERSION == "docent-grounded-1.2.0"
     for style in STYLE_RULES:
         prompt = build_system_prompt(style)
         assert prompt.startswith(BASE_DOCENT_PROMPT)

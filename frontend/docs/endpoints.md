@@ -9,7 +9,7 @@
 | GET | `/movements`, `/artists`, `/artworks` | 없음 | 카탈로그·필터·검색 |
 | GET | `/artists/{id}`, `/artworks/{id}` | 없음 | 상세 화면 |
 | GET | `/artworks/{id}/similar` | 없음 | 비슷한 작품. 실제 서버 200·3개 확인 |
-| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 JSON 답변 |
+| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 선택한 말투와 질문 주제를 적용한 근거 기반 JSON 답변 |
 | POST | `/artworks/{id}/chat/stream` | 선택 | 같은 질문의 SSE 스트림. `token`, `replace`, `done`, `error` 이벤트 |
 | GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 저장 대화 복원 |
 | DELETE | `/artworks/{id}/chat` | 필요 | 대화 초기화, 204 |
@@ -57,7 +57,7 @@ ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_view
 
 ## 회원 온보딩
 
-생년월일(선택) → 설명 우선순위 → 대화 스타일의 3단계입니다. 실제 모드에서는 GET/PUT `/api/me/profile`로 계정에 저장하며 완료 여부도 서버가 보관합니다. 이야기 순서와 말투는 도슨트 프롬프트에 적용하고 생년월일은 AI로 보내지 않습니다. 이전 브라우저 프로필의 나이대를 정확한 생년월일로 추정하거나 자동 업로드하지 않습니다. 미리보기에서는 UID별 로컬 저장을 유지합니다.
+생년월일(선택) → 대화 스타일의 2단계입니다. 실제 모드에서는 GET/PUT `/api/me/profile`로 계정에 저장하며 완료 여부도 서버가 보관합니다. 도슨트 프롬프트에는 말투만 적용하고 설명 주제는 사용자의 질문으로 정합니다. 생년월일은 AI로 보내지 않습니다. 이전 브라우저 프로필의 나이대를 정확한 생년월일로 추정하거나 자동 업로드하지 않습니다. 미리보기에서는 UID별 로컬 저장을 유지합니다.
 
 
 ## 감상평·다이어리
