@@ -155,3 +155,26 @@ def test_approved_artist_is_routed_as_other_artist():
     assert route.kind == "other_artist"
     assert route.artists == ("gustav-klimt",)
     assert "작품을 선택하면" in refusal_message(route)
+
+
+@pytest.mark.parametrize(("question", "covered", "kind"), [
+    ("모네와 세잔은 자연을 표현하는 방식이 어떻게 달라?", False, "refuse"),  # 평가 compare-002
+    ("모네와 세잔은 자연을 표현하는 방식이 어떻게 달라?", True, "rag"),  # 두 작가를 다룬 비교 문서가 있으면 답한다
+    ("세잔과는 어떤 관계였어?", False, "rag"),  # 관계·영향은 고른 작가 생애 문서로 답할 수 있다
+    ("이 그림의 빛은 어디서 와?", False, "rag"),
+])
+def test_comparison_needs_a_document_covering_the_other_artist(monkeypatch, question, covered, kind):
+    from app.rag import classifier
+    from app.repositories import document_repository as repo
+
+    asked = []
+    monkeypatch.setattr(repo, "artwork_artist_slug", lambda s, a: "claude-monet")
+    monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [1, 2])
+    monkeypatch.setattr(repo, "comparison_covers", lambda s, ids, slugs: asked.append(slugs) or covered)
+    route = classifier.classify_artwork(None, 1, question)
+    assert route.kind == kind
+    if kind == "refuse":
+        assert asked == [("paul-cezanne",)] and route.reason == "no_comparison_source"
+        assert refusal_message(route) == (
+            "검수된 자료로는 폴 세잔 작가와의 비교를 확인하기 어려워요. 지금 작품과 작가에 대해 물어봐 주세요."
+        )
