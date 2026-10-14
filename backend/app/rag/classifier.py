@@ -60,6 +60,10 @@ UNRELATED_CHAT = re.compile(
     r"나\s?(?:기분\s?나빠|심심해|외로워)|"
     r"뭐\s?해\s?[?？]?\s*(?:나\s?심심해)?)\s*[.!?？]*\s*$"
 )
+BOT_META_CHAT = re.compile(
+    r"^\s*(?:너\s*)?(?:정해진\s*답(?:만)?|랜덤\s*돌려서\s*답|무작위로\s*답)"
+    r"[^.!?？]{0,20}[.!?？]?\s*$"
+)
 MEAL_CHOICE = re.compile(r"(?:뭐|뭘|무엇을)\s?먹(?:을까|을지|어야|을래|지|어)?")
 MEAL_CONTEXT = re.compile(r"아침|점심|저녁|야식|끼니|메뉴|식사")
 FIRST_PERSON = re.compile(r"(?<![가-힣])(?:나|난|나는|내가|저|저는|우리|우리는)(?![가-힣])")
@@ -147,6 +151,8 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
     text = question.strip()
     if UNRELATED_CHAT.fullmatch(text):
         return Route("refuse", "off_topic", matched=("unrelated_chat",))
+    if BOT_META_CHAT.fullmatch(text):
+        return Route("refuse", "off_topic", matched=("bot_meta_chat",))
     if MEAL_CHOICE.search(text) and (
         FIRST_PERSON.search(text)
         or (MEAL_CONTEXT.search(text) and not ART_SCENE.search(text))
