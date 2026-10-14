@@ -21,6 +21,7 @@ import 'pages/artists_page.dart';
 import 'pages/library_page.dart';
 import 'pages/community_page.dart';
 import 'pages/mypage_page.dart';
+import 'pages/collection_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,6 +84,9 @@ class _ArtlogAppState extends State<ArtlogApp> {
   void initState() {
     super.initState();
     if (kIsWeb) semantics = SemanticsBinding.instance.ensureSemantics();
+    // Collection pushes keep the originating profile tab in the back stack,
+    // while the URL still identifies the collection for refresh and sharing.
+    GoRouter.optionURLReflectsImperativeAPIs = true;
     router = GoRouter(
       initialLocation: widget.initialLocation,
       routes: [
@@ -128,7 +132,24 @@ class _ArtlogAppState extends State<ArtlogApp> {
             ),
             GoRoute(
               path: '/mypage',
-              pageBuilder: (_, state) => _contentPage(state, const MyPage()),
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                MyPage(
+                  initialTab: state.uri.queryParameters['tab'] == 'collections'
+                      ? 'collections'
+                      : 'posts',
+                ),
+              ),
+            ),
+            GoRoute(
+              path: '/collection/:id',
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                CollectionPage(
+                  key: ValueKey(state.pathParameters['id']),
+                  id: state.pathParameters['id']!,
+                ),
+              ),
             ),
             GoRoute(
               path: '/settings',

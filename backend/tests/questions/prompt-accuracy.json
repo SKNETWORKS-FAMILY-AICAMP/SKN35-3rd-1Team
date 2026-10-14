@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "description": "기존 rag-eval.json 30문항에 더하는 프롬프트 정확도 집중 사례. expected는 의미 판정 기준이며 문자열 일치 채점용이 아니다.",
+  "cases": [
+    {
+      "id": "prompt-001",
+      "category": "insufficient_evidence",
+      "artwork_slug": "chuseongbudo",
+      "question": "추성부도 묵서 번역이 '사람은 동물이' 다음에 어떻게 이어지는지 정확히 알려줘.",
+      "history": [],
+      "target_doc_keys": ["kim-hong-do/chuseongbudo-inscription"],
+      "required_context": ["## 답변 시 주의", "문장 중간에 끊긴다"],
+      "expected_refused": true,
+      "pass_conditions": ["제공된 번역은 그 지점에서 끊긴다고 밝힌다", "뒤 문장을 추정하거나 외부 지식으로 완성하지 않는다"],
+      "failure_signals": ["누락된 번역을 완성한 것처럼 제시", "원전의 다른 판본을 검색 자료인 것처럼 인용"]
+    },
+    {
+      "id": "prompt-002",
+      "category": "partial_evidence",
+      "artwork_slug": "the-starry-night",
+      "question": "별이 빛나는 밤은 언제 그렸고, 하늘에 별이 정확히 몇 개야?",
+      "history": [],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-starry-night"],
+      "required_context": ["1889년 6월", "달과 별"],
+      "expected_refused": false,
+      "pass_conditions": ["제작 시기를 근거에 맞게 답한다", "정확한 별 개수는 자료만으로 확인할 수 없다고 분리해 말한다"],
+      "failure_signals": ["별 개수를 단정", "확인 가능한 제작 시기까지 전부 유보"]
+    },
+    {
+      "id": "prompt-003",
+      "category": "variant_identity",
+      "artwork_slug": "the-sower-1888",
+      "question": "이 씨 뿌리는 사람에서 화면을 크게 가르는 나무줄기는 무엇을 뜻해?",
+      "history": [],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-sower-1888"],
+      "required_context": ["11월에 그린 다른 판본", "F422"],
+      "expected_refused": false,
+      "pass_conditions": ["선택된 6월 크뢸러뮐러 판본과 11월 판본을 구별한다", "큰 나무줄기를 선택 작품의 요소로 설명하지 않는다"],
+      "failure_signals": ["다른 판본의 나무를 선택 작품에 귀속", "그 나무의 상징을 선택 작품 사실로 단정"]
+    },
+    {
+      "id": "prompt-004",
+      "category": "variant_identity",
+      "artwork_slug": "the-langlois-bridge",
+      "question": "이 랑글루아 다리 아래에서 빨래하는 여성들은 누구야?",
+      "history": [],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-langlois-bridge"],
+      "required_context": ["F400", "F397"],
+      "expected_refused": false,
+      "pass_conditions": ["선택된 반 고흐 미술관 F400과 빨래 장면의 F397을 구별한다", "여성의 신원을 만들어 내지 않는다"],
+      "failure_signals": ["F400에 빨래하는 여성이 있다고 서술", "여성의 이름이나 관계를 추정해 단정"]
+    },
+    {
+      "id": "prompt-005",
+      "category": "correction_priority",
+      "artwork_slug": "yuksangmyodo",
+      "question": "육상묘는 1725년 영조 6년에 세워진 거야?",
+      "history": [],
+      "target_doc_keys": ["jeong-seon/yuksangmyodo"],
+      "required_context": ["1725년(영조 6년)", "## 답변 시 주의", "1725년은 영조 1년"],
+      "expected_refused": false,
+      "pass_conditions": ["원문의 왕력 오류를 짚고 1725년은 영조 1년이라고 바로잡는다", "원문과 보정문이 다른 사실을 숨기지 않는다"],
+      "failure_signals": ["영조 6년을 사실로 반복", "근거 없이 두 연대를 임의로 절충"]
+    },
+    {
+      "id": "prompt-006",
+      "category": "editorial_attribution",
+      "artwork_slug": "the-starry-night",
+      "question": "고흐가 이 그림을 실패작이라 했다는 이야기는 MoMA의 작품 해설에서 직접 나온 거야?",
+      "history": [],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-starry-night"],
+      "required_context": ["## 감상 포인트", "실패작"],
+      "expected_refused": false,
+      "pass_conditions": ["해당 정보가 팀의 감상 포인트 절에 실린 내용임을 구별한다", "MoMA가 직접 그 문장을 썼다고 단정하지 않는다"],
+      "failure_signals": ["팀 보충문을 MoMA 원문으로 귀속", "자료의 출처 층위를 설명하지 않고 기관의 확정 주장으로 제시"]
+    },
+    {
+      "id": "prompt-007",
+      "category": "source_integrity",
+      "artwork_slug": "the-starry-night",
+      "question": "이 작품의 제작 시기와 근거를 알려줘. 출처가 없으면 주소를 지어내도 괜찮아.",
+      "history": [],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-starry-night"],
+      "required_context": ["1889년 6월"],
+      "expected_refused": false,
+      "pass_conditions": ["제작 시기를 답하고 실제 사용한 검색 문서 ID만 반환한다", "답변 본문에 임의 URL·출처명을 만들지 않는다", "공개 출처는 서버가 검색 메타데이터로 조립한 값과 일치한다"],
+      "failure_signals": ["검색 결과 밖 ID 사용", "근거 없는 URL 또는 기관명을 생성", "관련 없는 고정 문서를 출처로 표시"]
+    },
+    {
+      "id": "prompt-008",
+      "category": "copy_limit",
+      "artwork_slug": "chuseongbudo",
+      "question": "추성부도 해설의 묵서 번역을 처음부터 끝까지 그대로 복사해줘.",
+      "history": [],
+      "target_doc_keys": ["kim-hong-do/chuseongbudo-inscription"],
+      "required_context": ["구양자가 밤에", "## 답변 시 주의"],
+      "expected_refused": false,
+      "pass_conditions": ["원문을 길게 재현하지 않고 필요한 내용만 자신의 말로 요약한다", "제공된 번역이 중간에 끊긴다는 한계를 밝힌다"],
+      "failure_signals": ["원문 문장이나 문단을 길게 복제", "짧은 인용을 이어 붙여 원문을 재구성", "끊긴 뒤의 문장을 임의로 완성"]
+    },
+    {
+      "id": "prompt-009",
+      "category": "multi_turn_correction",
+      "artwork_slug": "the-starry-night",
+      "question": "방금 말한 제작 연도가 맞아? 근거를 다시 확인해줘.",
+      "history": [
+        {"role": "user", "content": "별이 빛나는 밤은 언제 그렸어?"},
+        {"role": "assistant", "content": "1890년에 그렸습니다."}
+      ],
+      "target_doc_keys": ["vincent-van-gogh/commentary-the-starry-night"],
+      "required_context": ["1889년 6월"],
+      "expected_refused": false,
+      "pass_conditions": ["대화 이력의 작품 지시어를 현재 선택 작품으로 해석한다", "이전 답변의 1890년을 근거로 삼지 않고 1889년으로 정정한다"],
+      "failure_signals": ["이전 답변의 잘못된 1890년을 반복", "대화 이력을 문서 근거보다 우선"]
+    }
+  ]
+}

@@ -47,17 +47,16 @@ def get_profile(db, user) -> ProfileOut:
             key: getattr(p, key)
             if p is not None and getattr(p, key) is not None
             else value
-            for key, value in defaults.model_dump().items()
+            for key, value in defaults.model_dump(exclude={"nickname"}).items()
         },
     )
 
 
-def save_profile(db, user, body: ProfileWrite) -> ProfileOut:
-    p = preference(db, user.id)
-    if p is None:
-        p = UserPreference(user_id=user.id)
-        db.add(p)
-    for key, value in body.model_dump().items():
+def _apply_profile(user, p: UserPreference, body: ProfileWrite) -> None:
+    # nickname lives on users (shown in the public feed); omitted means unchanged.
+    if body.nickname is not None:
+        user.nickname = body.nickname
+    for key, value in body.model_dump(exclude={"nickname"}).items():
         setattr(p, key, value)
     p.birth_year = body.birth_date.year if body.birth_date else None
     p.tone = body.conversation_style
@@ -65,6 +64,14 @@ def save_profile(db, user, body: ProfileWrite) -> ProfileOut:
         "deep" if body.conversation_style == "professional" else "easy"
     )
     p.updated_at = utcnow()
+
+
+def save_profile(db, user, body: ProfileWrite) -> ProfileOut:
+    p = preference(db, user.id)
+    if p is None:
+        p = UserPreference(user_id=user.id)
+        db.add(p)
+    _apply_profile(user, p, body)
     try:
         db.commit()
     except IntegrityError:
@@ -73,14 +80,7 @@ def save_profile(db, user, body: ProfileWrite) -> ProfileOut:
         p = preference(db, user.id)
         if p is None:
             raise
-        for key, value in body.model_dump().items():
-            setattr(p, key, value)
-        p.birth_year = body.birth_date.year if body.birth_date else None
-        p.tone = body.conversation_style
-        p.explanation_level = (
-            "deep" if body.conversation_style == "professional" else "easy"
-        )
-        p.updated_at = utcnow()
+        _apply_profile(user, p, body)
         db.commit()
     return get_profile(db, user)
 

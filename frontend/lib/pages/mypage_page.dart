@@ -12,13 +12,14 @@ import '../ui/diary_feed.dart';
 import '../ui/diary_editor.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({super.key});
+  const MyPage({super.key, this.initialTab = 'posts'});
+  final String initialTab;
   @override
   State<MyPage> createState() => _MyPageState();
 }
 
 class _MyPageState extends State<MyPage> {
-  String tab = 'posts';
+  late String tab = widget.initialTab;
   @override
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);

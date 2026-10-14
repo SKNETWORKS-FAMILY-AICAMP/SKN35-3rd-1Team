@@ -9,7 +9,8 @@
 | GET | `/movements`, `/artists`, `/artworks` | 없음 | 카탈로그·필터·검색 |
 | GET | `/artists/{id}`, `/artworks/{id}` | 없음 | 상세 화면 |
 | GET | `/artworks/{id}/similar` | 없음 | 비슷한 작품. 실제 서버 200·3개 확인 |
-| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 답변 |
+| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 JSON 답변 |
+| POST | `/artworks/{id}/chat/stream` | 선택 | 같은 질문의 SSE 스트림. `token`, `replace`, `done`, `error` 이벤트 |
 | GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 저장 대화 복원 |
 | DELETE | `/artworks/{id}/chat` | 필요 | 대화 초기화, 204 |
 | GET | `/me/chats` | 필요 | 서재 대화 내역 탭, 작품별 이어보기 |
@@ -22,6 +23,8 @@
 | GET | `/me/library/days/{YYYY-MM-DD}` | 필요 | 선택한 날짜의 감상 작품 |
 | GET | `/me/recommendations/artworks` | 필요 | 로그인 후 발견하기, 작품·추천 이유 |
 | GET | `/me/recommendations/artists` | 필요 | 로그인 후 발견하기, 작가·추천 이유 |
+
+스트리밍 경로가 404·405·501을 반환할 때만 기존 JSON 채팅으로 한 번 전환합니다. 이미 시작된 스트림의 오류·타임아웃·503은 자동 재전송하지 않아 질문 저장과 AI 호출이 중복되지 않도록 합니다. `done`의 답변·출처를 최종 결과로 사용하며, 오류가 나면 임시 답변을 지우고 사용자가 재시도할 수 있습니다. 토큰은 서버가 보낸 덩어리대로 표시해 글자별 인위적인 지연을 만들지 않습니다.
 
 ## 인증·계정 변경
 

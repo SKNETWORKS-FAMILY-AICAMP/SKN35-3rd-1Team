@@ -179,6 +179,182 @@ class ArtlogApi {
     );
   }
 
+  /// Read the project's POST SSE endpoint without buffering the response body.
+  /// `onToken` receives newly generated text; `onReplace` handles a parser
+  /// correction in a provisional LangChain JSON snapshot.
+  Future<ChatReply> chatStream(
+    String id,
+    String question,
+    List<ChatTurn> history, {
+    required Future<void> Function(String) onToken,
+    required Future<void> Function(String) onReplace,
+  }) => _chatStream(
+    id,
+    question,
+    history,
+    onToken: onToken,
+    onReplace: onReplace,
+    revision: _sessionRevision,
+  );
+
+  Future<ChatReply> _chatStream(
+    String id,
+    String question,
+    List<ChatTurn> history, {
+    required Future<void> Function(String) onToken,
+    required Future<void> Function(String) onReplace,
+    required int revision,
+    bool retryAuthentication = true,
+  }) async {
+    if (question.trim().isEmpty || question.runes.length > 500) {
+      throw const ApiException('질문은 1~500자까지 보낼 수 있어요.', status: 422);
+    }
+    void checkSession() {
+      if (revision != _sessionRevision) {
+        throw const ApiException('로그인 상태가 바뀌었어요. 다시 시도해 주세요.', status: 401);
+      }
+    }
+
+    checkSession();
+    final accessToken = tokenProvider == null
+        ? token
+        : await tokenProvider!(false);
+    checkSession();
+    final previous = history.length > 12
+        ? history.sublist(history.length - 12)
+        : history;
+    final request = http.Request(
+      'POST',
+      uri('artworks/${Uri.encodeComponent(id)}/chat/stream'),
+    );
+    request.headers['Accept'] = 'text/event-stream';
+    request.headers['Content-Type'] = 'application/json';
+    if (accessToken != null) {
+      request.headers['Authorization'] = 'Bearer $accessToken';
+    }
+    request.body = jsonEncode({
+      'question': question,
+      'history': previous.map((h) => h.toHistory()).toList(),
+    });
+
+    try {
+      final response = await _client
+          .send(request)
+          .timeout(const Duration(seconds: 45));
+      checkSession();
+      if (response.statusCode == 401 &&
+          tokenProvider != null &&
+          accessToken != null &&
+          retryAuthentication) {
+        await response.stream.drain<void>().timeout(
+          const Duration(seconds: 45),
+        );
+        await tokenProvider!(true);
+        checkSession();
+        return await _chatStream(
+          id,
+          question,
+          history,
+          onToken: onToken,
+          onReplace: onReplace,
+          revision: revision,
+          retryAuthentication: false,
+        );
+      }
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        await response.stream.drain<void>().timeout(
+          const Duration(seconds: 45),
+        );
+        checkSession();
+        // Only an unsupported endpoint can safely fall back. Never replay a
+        // generation that has started or failed midway: it may already be saved.
+        if ({404, 405, 501}.contains(response.statusCode)) {
+          return ChatReply.fromJson(
+            object(
+              await _request(
+                'POST',
+                'artworks/${Uri.encodeComponent(id)}/chat',
+                sessionBound: true,
+                expectedSessionRevision: revision,
+                retryAuthentication: retryAuthentication,
+                body: {
+                  'question': question,
+                  'history': previous.map((h) => h.toHistory()).toList(),
+                },
+              ),
+            ),
+          );
+        }
+        if (response.statusCode == 401) onUnauthorized?.call();
+        throw ApiException(switch (response.statusCode) {
+          401 => '로그인이 만료되었어요. 다시 로그인해 주세요.',
+          404 => '요청한 작품을 찾을 수 없어요.',
+          422 => '질문은 1~500자까지 보낼 수 있어요.',
+          429 => '요청이 잠시 많아요. 조금 뒤 다시 시도해 주세요.',
+          503 => 'AI 서비스를 잠시 이용하기 어려워요.',
+          _ => '답변을 불러오지 못했어요. 다시 시도해 주세요.',
+        }, status: response.statusCode);
+      }
+      if (!(response.headers['content-type']?.contains('text/event-stream') ??
+          false)) {
+        throw const ApiException('서버의 채팅 스트림 형식을 확인해 주세요.');
+      }
+
+      String event = 'message';
+      final data = <String>[];
+      ChatReply? reply;
+      Future<void> dispatch() async {
+        if (data.isEmpty) return;
+        final payload = jsonDecode(data.join('\n'));
+        if (event == 'token' || event == 'replace') {
+          final content = object(payload)['content'];
+          if (content is! String) {
+            throw const FormatException('Invalid chat text');
+          }
+          if (event == 'token') {
+            await onToken(content);
+          } else {
+            await onReplace(content);
+          }
+        } else if (event == 'done') {
+          reply = ChatReply.fromJson(object(payload));
+        } else if (event == 'error') {
+          throw ApiException(
+            object(payload)['message'] as String? ?? 'AI 응답이 중단되었어요.',
+          );
+        }
+      }
+
+      await for (final line
+          in response.stream
+              .transform(utf8.decoder)
+              .transform(const LineSplitter())
+              .timeout(const Duration(seconds: 45))) {
+        checkSession();
+        if (line.isEmpty) {
+          await dispatch();
+          event = 'message';
+          data.clear();
+          if (reply != null) break;
+        } else if (line.startsWith('event:')) {
+          event = line.substring(6).trim();
+        } else if (line.startsWith('data:')) {
+          data.add(line.substring(5).trimLeft());
+        }
+      }
+      if (data.isNotEmpty) await dispatch();
+      checkSession();
+      if (reply == null) throw const ApiException('답변이 완료되기 전에 연결이 끊겼어요.');
+      return reply!;
+    } on TimeoutException {
+      throw const ApiException('응답이 늦어지고 있어요. 다시 시도해 주세요.');
+    } on http.ClientException {
+      throw const ApiException('서버에 연결하지 못했어요. 연결 상태를 확인해 주세요.');
+    } on FormatException {
+      throw const ApiException('서버의 채팅 응답 형식을 확인해 주세요.');
+    }
+  }
+
   Future<List<ChatTurn>> chatMessages(String id) async => items(
     await _request(
       'GET',

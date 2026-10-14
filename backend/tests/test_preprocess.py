@@ -164,8 +164,50 @@ def test_mapping_overrides_apply_to_dataset_format(out):
     assert "사진처럼" in artists["jeong-seon"]["summary"]
     assert "풍속화" in artists["kim-hong-do"]["summary"]
     assert "식민주의적 왜곡" in artists["paul-gauguin"]["summary"]
-    assert "commons.wikimedia.org" in artists["egon-schiele"]["portrait_url"]
-    assert "commons.wikimedia.org" in artists["gustav-klimt"]["portrait_url"]
+    assert "thumb.wikimedia.org" in artists["egon-schiele"]["portrait_url"]
+    assert "thumb.wikimedia.org" in artists["gustav-klimt"]["portrait_url"]
+
+
+def test_apply_image_thumbnails_only_when_source_unchanged():
+    cat = {
+        "artworks": {
+            "same": {"image_url": "https://orig/a.jpg", "image_source_url": "https://page/a"},
+            "moved": {"image_url": "https://orig/new.jpg", "image_source_url": "https://page/b"},
+            "no-page": {"image_url": "https://orig/c.jpg", "image_source_url": None},
+        },
+        "artists": {"painter": {"portrait_url": "https://orig/p.jpg"}},
+    }
+    pp.warnings.clear()
+    pp.apply_image_thumbnails(cat, {
+        "artworks": {
+            "same": {"source": "https://orig/a.jpg", "thumb": "https://thumb/a.jpg"},
+            "moved": {"source": "https://orig/old.jpg", "thumb": "https://thumb/old.jpg"},
+            "no-page": {"source": "https://orig/c.jpg", "thumb": "https://thumb/c.jpg"},
+            "gone": {"source": "https://orig/d.jpg", "thumb": "https://thumb/d.jpg"},
+        },
+        "artists": {"painter": {"source": "https://orig/p.jpg", "thumb": "https://thumb/p.jpg"}},
+    })
+    works = cat["artworks"]
+    assert works["same"] == {"image_url": "https://thumb/a.jpg", "image_source_url": "https://page/a"}
+    assert works["moved"]["image_url"] == "https://orig/new.jpg"
+    assert works["no-page"]["image_url"] == "https://orig/c.jpg"
+    assert cat["artists"]["painter"]["portrait_url"] == "https://thumb/p.jpg"
+    assert len(pp.warnings) == 3
+
+
+def test_wikimedia_images_are_served_as_thumbnails(out):
+    """원본 파일 주소는 수십~수백 MB 이고 429 로 막히므로 산출물에 남기지 않는다."""
+    assert pp.main() == 0
+    assert not [w for w in pp.warnings if "썸네일 매핑" in w]
+    urls = [w["image_url"] for w in pp.load_processed("artworks.jsonl")]
+    urls += [a["portrait_url"] for a in pp.load_processed("artists.jsonl")]
+    originals = [
+        u for u in urls
+        if u and "wikimedia.org" in u and "thumb.wikimedia.org/wikipedia/commons/thumb/" not in u
+    ]
+    kept = json.loads(pp.THUMBNAILS.read_text(encoding="utf-8"))
+    assert kept["width"] == 1280
+    assert originals == ["https://commons.wikimedia.org/wiki/Special:FilePath/Paul-Cezanne.jpg"]
 
 
 @pytest.mark.parametrize("artist_slug", ["vincent-van-gogh", "paul-gauguin"])

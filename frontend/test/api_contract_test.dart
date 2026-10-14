@@ -142,10 +142,7 @@ void main() {
       expect(reply.sources.single.id, '123');
       expect(reply.sources.single.name, '국립중앙박물관');
       expect(reply.sources.single.license, '공공누리 제1유형');
-      expect(
-        reply.sources.single.basisSources.single.name,
-        '국립중앙박물관 연구자료',
-      );
+      expect(reply.sources.single.basisSources.single.name, '국립중앙박물관 연구자료');
       expect(
         reply.sources.single.basisSources.single.url,
         'https://museum.go.kr/basis',
@@ -165,6 +162,153 @@ void main() {
       api.close();
     },
   );
+
+  test('chat SSE forwards tokens and uses the final response', () async {
+    late http.Request sent;
+    final shown = <String>[];
+    final api = ArtlogApi(
+      baseUrl: 'https://example.org',
+      client: MockClient((request) async {
+        sent = request;
+        return http.Response(
+          'event: token\ndata: {"content":"초안"}\n\n'
+          'event: replace\ndata: {"content":"수정된 초안"}\n\n'
+          'event: done\ndata: {"answer":"최종 답변","refused":false,"sources":[]}\n\n',
+          200,
+          headers: {'content-type': 'text/event-stream; charset=utf-8'},
+        );
+      }),
+    );
+    final reply = await api.chatStream(
+      '42',
+      '언제 그렸나요?',
+      const [],
+      onToken: (text) async {
+        shown.add(text);
+      },
+      onReplace: (text) async {
+        shown.add('replace:$text');
+      },
+    );
+    expect(sent.url.path, '/api/artworks/42/chat/stream');
+    expect(sent.headers['Accept'], 'text/event-stream');
+    expect(shown, ['초안', 'replace:수정된 초안']);
+    expect(reply.answer, '최종 답변');
+    api.close();
+  });
+
+  for (final status in [404, 405, 501]) {
+    test('unsupported stream ($status) falls back once to JSON chat', () async {
+      final paths = <String>[];
+      final api = ArtlogApi(
+        baseUrl: 'https://example.org',
+        client: MockClient((r) async {
+          paths.add(r.url.path);
+          if (r.url.path.endsWith('/stream')) return http.Response('', status);
+          return jsonResponse({
+            'answer': '검증된 답변',
+            'refused': false,
+            'sources': [],
+          });
+        }),
+      );
+      final reply = await api.chatStream(
+        '42',
+        '설명해줘',
+        const [],
+        onToken: (_) async {},
+        onReplace: (_) async {},
+      );
+      expect(reply.answer, '검증된 답변');
+      expect(paths, ['/api/artworks/42/chat/stream', '/api/artworks/42/chat']);
+      api.close();
+    });
+  }
+
+  test(
+    'a started stream failure never replays or saves a second question',
+    () async {
+      var requests = 0;
+      final api = ArtlogApi(
+        baseUrl: 'https://example.org',
+        client: MockClient((_) async {
+          requests++;
+          return http.Response(
+            'event: token\ndata: {"content":"초안"}\n\n'
+            'event: error\ndata: {"message":"연결 실패"}\n\n',
+            200,
+            headers: {'content-type': 'text/event-stream; charset=utf-8'},
+          );
+        }),
+      );
+      await expectLater(
+        api.chatStream(
+          '42',
+          '설명해줘',
+          const [],
+          onToken: (_) async {},
+          onReplace: (_) async {},
+        ),
+        throwsA(isA<ApiException>()),
+      );
+      expect(requests, 1);
+      api.close();
+    },
+  );
+
+  test('malformed token text becomes a readable API error', () async {
+    final api = ArtlogApi(
+      baseUrl: 'https://example.org',
+      client: MockClient(
+        (_) async => http.Response(
+          'event: token\ndata: {"content":12}\n\n',
+          200,
+          headers: {'content-type': 'text/event-stream'},
+        ),
+      ),
+    );
+    await expectLater(
+      api.chatStream(
+        '42',
+        '설명해줘',
+        const [],
+        onToken: (_) async {},
+        onReplace: (_) async {},
+      ),
+      throwsA(
+        isA<ApiException>().having((e) => e.message, 'message', contains('형식')),
+      ),
+    );
+    api.close();
+  });
+
+  test('JSON fallback cannot continue under a different account', () async {
+    final response = Completer<http.Response>();
+    var requests = 0;
+    final api = ArtlogApi(
+      baseUrl: 'https://example.org',
+      client: MockClient((_) {
+        requests++;
+        return response.future;
+      }),
+    );
+    final check = expectLater(
+      api.chatStream(
+        '42',
+        '설명해줘',
+        const [],
+        onToken: (_) async {},
+        onReplace: (_) async {},
+      ),
+      throwsA(isA<ApiException>().having((e) => e.status, 'status', 401)),
+    );
+    await Future<void>.delayed(Duration.zero);
+    api.invalidateSession();
+    response.complete(http.Response('', 404));
+    await check;
+    expect(requests, 1);
+    api.close();
+  });
 
   test(
     'authenticated mutations use PUT/DELETE; views POST; 204 is valid',

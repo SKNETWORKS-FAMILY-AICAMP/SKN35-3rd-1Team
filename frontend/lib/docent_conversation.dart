@@ -78,12 +78,40 @@ class DocentConversation extends ChangeNotifier {
     }
     final history = List<ChatTurn>.from(messages);
     messages.add(ChatTurn('user', question));
+    var hasPendingAnswer = false;
     busy = true;
     error = failedQuestion = null;
     notifyListeners();
-    try {
-      final reply = await state.ask(art, question, history);
+
+    Future<void> reveal(String text, {bool replace = false}) async {
       if (!_current(revision)) return;
+      if (replace) {
+        if (hasPendingAnswer) messages.removeLast();
+        messages.add(ChatTurn('assistant', text));
+        hasPendingAnswer = true;
+        notifyListeners();
+        return;
+      }
+      // Render each server delta once; artificial per-character waits delayed
+      // final citations and rebuilt the whole chat dozens of times per second.
+      final current = hasPendingAnswer ? messages.removeLast().content : '';
+      messages.add(ChatTurn('assistant', current + text));
+      hasPendingAnswer = true;
+      notifyListeners();
+    }
+
+    try {
+      final reply = state.config.demo
+          ? await state.ask(art, question, history)
+          : await state.api.chatStream(
+              art.id,
+              question,
+              history,
+              onToken: (token) => reveal(token),
+              onReplace: (text) => reveal(text, replace: true),
+            );
+      if (!_current(revision)) return;
+      if (hasPendingAnswer) messages.removeLast();
       messages.add(
         ChatTurn(
           'assistant',
@@ -94,6 +122,7 @@ class DocentConversation extends ChangeNotifier {
       );
     } catch (e) {
       if (_current(revision)) {
+        if (hasPendingAnswer) messages.removeLast();
         error = ArtlogState.message(e);
         failedQuestion = question;
       }

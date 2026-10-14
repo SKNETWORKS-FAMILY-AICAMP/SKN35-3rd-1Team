@@ -84,6 +84,14 @@ def key_labels(column) -> str:
     return ",".join(labels)
 
 
+def sorted_foreign_keys(table) -> list:
+    """foreign_key_constraints is a set; sort it so re-rendering gives identical files."""
+    return sorted(
+        table.foreign_key_constraints,
+        key=lambda constraint: [column.name for column in constraint.columns],
+    )
+
+
 def is_one_to_one(foreign_key_constraint) -> bool:
     table = foreign_key_constraint.table
     columns = {column.name for column in foreign_key_constraint.columns}
@@ -101,7 +109,7 @@ def mermaid_source() -> str:
     lines = ["erDiagram"]
     for table_name in ordered_table_names():
         table = Base.metadata.tables[table_name]
-        for constraint in table.foreign_key_constraints:
+        for constraint in sorted_foreign_keys(table):
             parent = next(iter(constraint.elements)).column.table.name
             child_cardinality = "o|" if is_one_to_one(constraint) else "o{"
             label = ", ".join(column.name for column in constraint.columns)
@@ -156,7 +164,7 @@ def graphviz_source() -> str:
 
     for table_name in ordered_table_names():
         table = Base.metadata.tables[table_name]
-        for constraint in table.foreign_key_constraints:
+        for constraint in sorted_foreign_keys(table):
             element = next(iter(constraint.elements))
             parent = element.column.table.name
             parent_column = element.column.name

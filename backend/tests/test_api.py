@@ -9,6 +9,7 @@ use mocked model responses so these tests never call paid AI services.
 from types import SimpleNamespace
 
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from app.core.auth import get_current_user, get_optional_user
@@ -21,6 +22,7 @@ from app.services import (
     catalog_service,
     chat_service,
     docent_service,
+    docent_stream,
     follow_service,
     library_service,
     like_service,
@@ -108,6 +110,10 @@ def stub_services(monkeypatch):
     app.dependency_overrides[get_db] = lambda: None
     nothing = lambda *args, **kwargs: None
     empty = lambda *args, **kwargs: []
+    async def streamed(*args, **kwargs):
+        yield "token", "테스트 답변"
+        yield "done", ChatResponse(answer="테스트 답변", refused=False, sources=[])
+
     for module, name, fake in [
         (
             docent_service,
@@ -139,6 +145,7 @@ def stub_services(monkeypatch):
         (recommendation_service, "recommend_artists", empty),
     ]:
         monkeypatch.setattr(module, name, fake)
+    monkeypatch.setattr(docent_stream, "answer_events", streamed)
     yield
     app.dependency_overrides.clear()
 
@@ -199,6 +206,41 @@ def test_chat_allows_anonymous_questions() -> None:
 
 def test_chat_accepts_logged_in_questions(logged_in) -> None:
     assert client.post("/api/artworks/1/chat", json=VALID_CHAT).status_code == 200
+
+
+def test_chat_stream_delivers_sse_and_final_response() -> None:
+    response = client.post(
+        "/api/artworks/1/chat/stream",
+        json=VALID_CHAT,
+        headers={"Accept": "text/event-stream"},
+    )
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+    assert 'event: token\ndata: {"content": "테스트 답변"}' in response.text
+    assert 'event: done\ndata: {"answer": "테스트 답변", "refused": false, "sources": []}' in response.text
+
+
+def test_stream_configuration_error_is_actionable(monkeypatch):
+    async def unavailable(*args, **kwargs):
+        raise HTTPException(503, "작품 자료를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.")
+        yield  # async generator contract
+
+    monkeypatch.setattr(docent_stream, "answer_events", unavailable)
+    response = client.post("/api/artworks/1/chat/stream", json=VALID_CHAT)
+    assert "event: error" in response.text
+    assert "작품 자료를 불러오지 못했어요" in response.text
+    assert "event: done" not in response.text
+
+
+def test_stream_does_not_expose_provider_exception(monkeypatch, caplog):
+    async def failed(*args, **kwargs):
+        raise RuntimeError("private-provider-key")
+        yield
+
+    monkeypatch.setattr(docent_stream, "answer_events", failed)
+    response = client.post("/api/artworks/1/chat/stream", json=VALID_CHAT)
+    assert "event: error" in response.text
+    assert "private-provider-key" not in response.text + caplog.text
 
 
 @pytest.mark.parametrize(
