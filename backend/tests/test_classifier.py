@@ -18,6 +18,15 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
     ("claude-monet", "에곤 쉴레는 어떤 화가야?", "other_artist", None),
     ("claude-monet", "마네의 대표작은?", "refuse", "unknown_artist"),  # 모네와 헷갈리는 다른 화가
     ("claude-monet", "오늘 서울 날씨 알려줘", "refuse", "off_topic"),
+    ("claude-monet", "이거 내 컬렉션에 추가해줘", "refuse", "off_topic"),
+    ("claude-monet", "이 작품을 내 컬렉션에 담아 주세요", "refuse", "off_topic"),
+    ("claude-monet", "이 작품 좋아요 눌러줘", "refuse", "off_topic"),
+    ("claude-monet", "이거 저장해줘", "refuse", "off_topic"),
+    ("claude-monet", "오늘 저녁 추천해줘", "refuse", "off_topic"),
+    ("claude-monet", "점심 메뉴 추천해줘", "refuse", "off_topic"),
+    ("claude-monet", "내 취향에 맞는 영화 추천해줘", "refuse", "off_topic"),
+    ("claude-monet", "내 취향에 맞는 영화 있어?", "refuse", "off_topic"),
+    ("claude-monet", "이 그림은 알겠고 오늘 저녁 추천해줘", "refuse", "off_topic"),
     ("rembrandt", "이 그림을 가장 싸게 살 수 있는 사이트 찾아줘", "refuse", "off_topic"),
     ("paul-gauguin", "이 작품의 오늘 기준 시장 가격은 얼마야?", "refuse", "off_topic"),
     # 다른 수집 작가만 물음 → 그 작가 작품에서 물어보라고 안내
@@ -27,6 +36,7 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
     ("rembrandt", "비슷한 작품 추천해 줘", "recommend_similar", None),
     ("rembrandt", "이 작품과 비슷한 그림 보여줘", "recommend_similar", None),
     ("rembrandt", "이런 그림 더 보여줘", "recommend_similar", None),
+    ("rembrandt", "오늘 저녁에 볼 그림 추천해줘", "recommend_similar", None),
     ("claude-monet", "내 취향에 맞는 작품 추천해 줘", "recommend_personal", None),
     ("claude-monet", "내가 좋아할 만한 그림 있어?", "recommend_personal", None),
     ("claude-monet", "나한테 맞는 작품 골라줘", "recommend_personal", None),
@@ -51,6 +61,8 @@ def test_clear_cases(artist, question, kind, reason):
     ("paul-cezanne", "이 그림은 경매에서 얼마에 팔렸어?"),  # 과거 거래 기록은 문서에 있을 수 있음
     ("rembrandt", "이 그림과 비슷한 시기에 그린 작품은?"),  # '비슷한 시기' 는 추천이 아님
     ("rembrandt", "그 작품에서 빛은 어디서 와?"),
+    ("claude-monet", "이 작품은 어느 미술관 컬렉션에 소장되어 있나요?"),
+    ("claude-monet", "모네가 이 작품을 컬렉션에 추가해 달라고 했나요?"),
     # 팀 확인 요청 (연주님): 애매한 질문은 rag 로
     ("rembrandt", "그 사람은?"),
     ("rembrandt", "이 작가의 다른 작품은?"),
@@ -129,6 +141,14 @@ def test_off_topic_uses_approved_message():
     assert refusal_message(classify("오늘 날씨 알려줘", "rembrandt")) == (
         "해당 작품과 작가에 대해서만 대화 할 수 있어요."
     )
+    action = classify("이거 내 컬렉션에 추가해줘", "claude-monet")
+    assert action.matched == ("app_action",)
+    assert refusal_message(action) == "해당 작품과 작가에 대해서만 대화 할 수 있어요."
+
+
+def test_collection_recommendation_remains_available():
+    assert classify("내 컬렉션에 추가할 만한 작품 추천해줘", "claude-monet").kind == "recommend_similar"
+    assert classify("좋아요 누른 작품이랑 비슷한 거 추천해줘", "claude-monet").kind == "recommend_personal"
 
 
 def test_uncollected_artist_uses_approved_message():

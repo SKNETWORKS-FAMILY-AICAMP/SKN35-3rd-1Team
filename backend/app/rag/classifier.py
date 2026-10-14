@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | rag | 기본값. 고른 작품·작가에 관한 질문 | retrieve() → 답변 체인 |
 | other_artist | 데이터에 있는 **다른** 작가만 묻고, 고른 작가·비교·관계 표현이 없음 | 그 작가 작품을 골라 물어보라고 안내 (route.artists) |
-| refuse | 검수 대기·미수집 작가, 다루지 않는 작가(피카소 등), 날씨·실시간 시세 같은 범위 밖 질문 | LLM 없이 refused=true |
+| refuse | 검수 대기·미수집 작가, 다루지 않는 작가(피카소 등), 날씨·실시간 시세, 컬렉션 추가 같은 앱 기능 실행 요청 | LLM 없이 refused=true |
 | recommend_similar | "이 작품과 비슷한 작품 추천해 줘" | recommendation_service.similar() (고른 작품 기준) |
 | recommend_personal | "내 취향에 맞는 작품 추천해 줘" | 로그인 사용자면 recommend_artworks(), 비로그인이면 similar() 로 대신 |
 
@@ -52,12 +52,31 @@ OFF_TOPIC = re.compile(
     r"(싸게|최저가|구매|구입|살 수 있는|파는|판매하는)[^?]{0,12}(사이트|곳|쇼핑몰|링크)|"
     r"(사이트|쇼핑몰)[^?]{0,8}(찾아|알려)"
 )
+# 작품을 가리켜도 도슨트 답변으로 실행할 수 없는 앱 기능 요청. 질문형 설명이나
+# 작품의 소장 컬렉션에 관한 질문은 이 규칙으로 거절하지 않는다.
+APP_ACTION = re.compile(
+    r"(?:컬렉션|서재|보관함|즐겨찾기)[^.!?\n]{0,35}"
+    r"(?:추가해|담아|넣어|저장해|삭제해|지워|빼)\s*(?:줘|주세요|줄래|주실래요)|"
+    r"(?:좋아요|하트|팔로우|북마크)[^.!?\n]{0,15}"
+    r"(?:눌러|해|취소해)\s*(?:줘|주세요|줄래|주실래요)|"
+    r"(?:이거|이것|이\s*작품|이\s*그림)[^.!?\n]{0,30}"
+    r"(?:저장해|삭제해|공유해|다운로드해)\s*(?:줘|주세요|줄래|주실래요)"
+)
 # 로그인 사용자 취향 기준 추천. 일반 추천보다 먼저 본다.
 RECOMMEND_PERSONAL = re.compile(
     r"취향|내가\s?좋아(할|하는|했던)|나(한테|에게)\s?(맞는|어울리는|맞춤)|맞춤\s?(추천|작품)|내\s?스타일|"
     r"좋아요\s?(한|누른)|내가\s?(본|봤던)\s?(작품|그림)"
 )
 RECOMMEND = re.compile(r"추천|비슷한\s?(작품|그림)|이런\s?(작품|그림)[을를]?\s?더|다른\s?작품[^?]{0,6}(보여|알려)")
+# '추천'만으로 작품 추천을 실행하면 저녁 메뉴·영화 등도 작품 목록으로 답하게 된다.
+# 명시적으로 미술을 가리키는 요청은 허용하되, 다른 대상을 지목한 추천은 범위 밖으로 보낸다.
+ART_RECOMMEND_TARGET = re.compile(
+    r"작품|그림|회화|미술|화가|작가|전시|초상화|자화상|풍경화|정물화|유화|수채화"
+)
+NON_ART_RECOMMEND_TARGET = re.compile(
+    r"아침|점심|저녁|야식|메뉴|음식|요리|식당|카페|영화|드라마|노래|음악|책|"
+    r"게임|옷|신발|가방|선물|여행|숙소|호텔"
+)
 # 이름 뒤에 붙어도 되는 조사 (마네킹·정선군처럼 다른 낱말의 일부는 이름으로 보지 않기 위해)
 PARTICLES = ("의", "가", "이", "는", "은", "를", "을", "와", "과", "랑", "이랑", "하고", "에게", "한테", "께서",
              "도", "만", "처럼", "보다", "로", "으로", "에", "라는", "란", "씨", "가요", "는요", "요", "?", "!")
@@ -106,8 +125,19 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
     named_in_scope: 이름이 고른 작품의 범위 문서에 나오는지 알려 주는 함수. 주면 범위 밖 작가로 거절하기 전에 확인한다.
     """
     text = question.strip()
+    if APP_ACTION.search(text):
+        return Route("refuse", "off_topic", matched=("app_action",))
     if OFF_TOPIC.search(text):
         return Route("refuse", "off_topic", matched=("off_topic",))
+    recommend_match = RECOMMEND.search(text)
+    if recommend_match or RECOMMEND_PERSONAL.search(text):
+        # 혼합 발화에서는 추천 표현 앞의 마지막 대상이 실제 요청 대상에 가깝다.
+        # '이 그림을 보고 저녁 추천'은 거절하고 '저녁에 볼 그림 추천'은 허용한다.
+        target_text = text[:recommend_match.end()] if recommend_match else text
+        art_targets = list(ART_RECOMMEND_TARGET.finditer(target_text))
+        other_targets = list(NON_ART_RECOMMEND_TARGET.finditer(target_text))
+        if other_targets and (not art_targets or other_targets[-1].start() > art_targets[-1].start()):
+            return Route("refuse", "off_topic", matched=("non_art_recommendation",))
     if RECOMMEND_PERSONAL.search(text):
         return Route("recommend_personal", matched=("recommend_personal",))
     if RECOMMEND.search(text):
