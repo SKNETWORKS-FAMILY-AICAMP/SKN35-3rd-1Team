@@ -93,7 +93,7 @@ void main() {
       )..token = 'test';
       await api.saveDiary('2026-10-13', '기록', false, '42');
       expect(requests.single.method, 'POST');
-      expect(requests.single.url.path, '/me/diary');
+      expect(requests.single.url.path, '/api/me/diary');
       expect(jsonDecode(requests.single.body), {
         'entry_date': '2026-10-13',
         'content': '기록',
@@ -103,7 +103,7 @@ void main() {
       expect(requests.single.headers['Authorization'], 'Bearer test');
       await api.saveDiary('2026-10-13', '고친 기록', true, null, id: '7');
       expect(requests.last.method, 'PUT');
-      expect(requests.last.url.path, '/me/diary/7');
+      expect(requests.last.url.path, '/api/me/diary/7');
       expect(jsonDecode(requests.last.body), {
         'content': '고친 기록',
         'is_public': true,
@@ -120,7 +120,7 @@ void main() {
       });
       await api.deleteDiary('7');
       expect(requests.last.method, 'DELETE');
-      expect(requests.last.url.path, '/me/diary/7');
+      expect(requests.last.url.path, '/api/me/diary/7');
       api.close();
     },
   );
