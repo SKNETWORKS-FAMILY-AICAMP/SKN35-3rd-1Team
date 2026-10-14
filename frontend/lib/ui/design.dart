@@ -7,6 +7,7 @@ import '../models.dart';
 
 import 'surfaces.dart';
 import 'motion.dart';
+import 'museum_artwork_images.dart';
 export 'surfaces.dart';
 export 'motion.dart';
 
@@ -201,8 +202,10 @@ class SectionTitle extends StatelessWidget {
 ///
 /// Wikimedia's redirect endpoint chooses an available thumbnail size close to the
 /// requested width and returns a browser-friendly image even when the source is a
-/// TIFF. Non-Wikimedia URLs and local assets are intentionally left unchanged.
+/// TIFF. Known museum originals use the verified local copies; other URLs stay unchanged.
 String optimizedArtworkImageUrl(String image, {int thumbnailWidth = 800}) {
+  final museumCopy = museumArtworkImages[image];
+  if (museumCopy != null) return museumCopy;
   final uri = Uri.tryParse(image);
   if (uri == null || !uri.hasAuthority) return image;
 
