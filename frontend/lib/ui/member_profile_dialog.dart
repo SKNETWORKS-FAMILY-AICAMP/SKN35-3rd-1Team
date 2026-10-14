@@ -99,7 +99,7 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    for (var i = 0; i < 3; i++)
+                    for (var i = 0; i < 2; i++)
                       Expanded(
                         child: Container(
                           height: 4,
@@ -114,7 +114,7 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${step + 1} / 3 · ${['나에 대해', '이야기 순서', '대화 스타일'][step]}',
+                  '${step + 1} / 2 · ${['나에 대해', '대화 스타일'][step]}',
                   style: sans(11, color: muted),
                 ),
                 const SizedBox(height: 24),
@@ -173,13 +173,13 @@ class _MemberProfileDialogState extends State<MemberProfileDialog> {
               ? '저장 중…'
               : editing
               ? '설정 저장'
-              : step == 2
+              : step == 1
               ? '저장하고 시작하기'
               : '다음',
           onTap: busy
               ? null
               : () {
-                  if (!editing && step < 2) {
+                  if (!editing && step < 1) {
                     setState(() => step++);
                   } else {
                     save();

@@ -21,7 +21,7 @@ from app.rag.prompts import (
 
 def test_every_style_keeps_the_same_evidence_boundary():
     assert set(STYLE_RULES) == {"easy", "standard", "deep"}
-    assert PROMPT_VERSION == "docent-grounded-1.1.0"
+    assert PROMPT_VERSION == "docent-grounded-1.3.0"
     for style in STYLE_RULES:
         prompt = build_system_prompt(style)
         assert prompt.startswith(BASE_DOCENT_PROMPT)
@@ -37,9 +37,14 @@ def test_every_style_keeps_the_same_evidence_boundary():
 def test_user_style_changes_only_style_rules():
     prompts = {style: build_system_prompt(style) for style in STYLE_RULES}
     assert len(set(prompts.values())) == 3
-    assert "쉬운 말로" in prompts["easy"]
+    assert "일상어를 먼저" in prompts["easy"]
+    assert "가장 중요한 작품 근거 한두 가지" in prompts["easy"]
     assert "균형 있게" in prompts["standard"]
-    assert "형식적 관찰과 연구자의 해석" in prompts["deep"]
+    assert "표현 방식과 효과의 연결" in prompts["standard"]
+    assert "Standard보다 폭넓고 깊게" in prompts["deep"]
+    assert "기법이 작동하는 방식과 효과" in prompts["deep"]
+    assert "모든 항목을 반드시 채우지 않으며" in prompts["deep"]
+    assert "짧게 답해 달라는 요청은 따릅니다" in prompts["deep"]
 
 
 def test_missing_or_unknown_style_uses_standard_without_injecting_input():

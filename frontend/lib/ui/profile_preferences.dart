@@ -23,7 +23,6 @@ class _ProfilePreferencesState extends State<ProfilePreferences> {
   late final TextEditingController birth = TextEditingController(
     text: widget.initial.birthDate ?? '',
   );
-  late List<String> priorities = List.of(widget.initial.priorities);
   late String style = widget.initial.conversationStyle;
   String? dateError;
   @override
@@ -36,7 +35,6 @@ class _ProfilePreferencesState extends State<ProfilePreferences> {
     widget.onChanged(
       MemberProfile(
         birthDate: birth.text.trim().isEmpty ? null : birth.text.trim(),
-        priorities: List.of(priorities),
         explanationStyle: style == 'professional' ? 'deep' : 'easy',
         onboardingCompleted: true,
       ),
@@ -111,68 +109,6 @@ class _ProfilePreferencesState extends State<ProfilePreferences> {
         const SizedBox(height: 26),
       ],
       if (widget.section == null || widget.section == 1) ...[
-        Text('어떤 이야기부터 들을까요?', style: sans(15, weight: FontWeight.w700)),
-        const SizedBox(height: 8),
-        Text(
-          '위에 있는 항목부터 우선해서 설명해요. 화살표로 순서를 바꿔 보세요.',
-          style: sans(12, color: muted),
-        ),
-        const SizedBox(height: 12),
-        for (var i = 0; i < priorities.length; i++)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: SurfacePanel(
-              radius: 20,
-              padding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: green.withValues(alpha: .1),
-                    child: Text('${i + 1}', style: sans(12, color: green)),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      MemberProfile.priorityLabels[priorities[i]]!,
-                      style: sans(13),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip:
-                        '${MemberProfile.priorityLabels[priorities[i]]} 우선순위 올리기',
-                    onPressed: !widget.enabled || i == 0
-                        ? null
-                        : () {
-                            setState(() {
-                              final v = priorities.removeAt(i);
-                              priorities.insert(i - 1, v);
-                            });
-                            changed();
-                          },
-                    icon: const Icon(Icons.keyboard_arrow_up, size: 20),
-                  ),
-                  IconButton(
-                    tooltip:
-                        '${MemberProfile.priorityLabels[priorities[i]]} 우선순위 내리기',
-                    onPressed: !widget.enabled || i == priorities.length - 1
-                        ? null
-                        : () {
-                            setState(() {
-                              final v = priorities.removeAt(i);
-                              priorities.insert(i + 1, v);
-                            });
-                            changed();
-                          },
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 20),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        const SizedBox(height: 26),
-      ],
-      if (widget.section == null || widget.section == 2) ...[
         Text('어떤 대화가 편한가요?', style: sans(15, weight: FontWeight.w700)),
         const SizedBox(height: 12),
         for (final option in [

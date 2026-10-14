@@ -454,15 +454,15 @@ class _DocentChatState extends State<DocentChat> {
   );
 }
 
-/// Explanation depth for the next answers. Changing it never rewrites old answers.
+/// Wording and explanation depth for the next answers. Old answers stay as written.
 class _StyleTabs extends StatelessWidget {
   const _StyleTabs({required this.value, required this.onChanged});
   final String value;
   final ValueChanged<String>? onChanged;
   static const styles = [
-    ('easy', 'Easy', '쉽고 친근하게'),
-    ('standard', 'Standard', '차분하고 편안하게'),
-    ('deep', 'Deep', '깊이 있게'),
+    ('easy', 'Easy', '쉬운 말로 핵심을 설명'),
+    ('standard', 'Standard', '미술 용어와 표현 효과를 함께 설명'),
+    ('deep', 'Deep', '기법과 관련 맥락까지 폭넓고 깊이 있게 설명'),
   ];
 
   @override

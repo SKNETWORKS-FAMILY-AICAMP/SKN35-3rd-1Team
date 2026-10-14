@@ -1,52 +1,73 @@
-"""Grounded artwork answers with account preferences, never demographic prompts."""
+"""Grounded artwork answers with explicit style preferences and verified citations."""
+
+import json
 
 from chromadb.errors import ChromaError
 from fastapi import HTTPException
 from httpx import HTTPError
+from langchain_core.exceptions import OutputParserException
+from langchain_openai import ChatOpenAI
 from openai import APIError
-from pydantic import BaseModel, Field
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.rag.classifier import classify_artwork, refusal_message
-from app.rag.prompts import STYLE_RULES
 from app.rag.retriever import retrieve
-from app.schemas.chat import ChatResponse, Source
+from app.schemas.chat import ChatResponse
 from app.services import catalog_service, mypage_service, recommendation_service
-from app.services.collection_assistant import generate
-
-PRIORITIES = {
-    "technique": "회화 기법",
-    "background": "작품의 배경 이야기",
-    "artist_life": "작가 생애와 작품의 관계",
-}
-
-
-class GroundedAnswer(BaseModel):
-    answer: str = Field(min_length=1, max_length=4000)
-    refused: bool
-    used_chunk_ids: list[int] = Field(default_factory=list, max_length=40)
+from app.services.docent_grounding import (
+    NO_EVIDENCE_MESSAGE,
+    GroundedAnswer,
+    context,
+    retrieval_question,
+    validate_response,
+)
+from app.services.docent_grounding import instructions as grounding_instructions
 
 
 def instructions(db, user_id, explanation_style=None):
-    p = mypage_service.preference(db, user_id) if user_id else None
-    if explanation_style in STYLE_RULES:
-        # The tab selected in the chat overrides the saved account style.
-        style = STYLE_RULES[explanation_style].replace("\n", " ")
-    elif p and p.conversation_style == "professional":
-        style = "회화 전문용어를 적극 사용하고 개념을 정확하게 설명하세요."
-    else:
-        style = "편안한 일상 언어와 쉬운 예시로 짧게 설명하세요. 필요한 전문용어는 풀어서 설명하세요."
-    priorities = (
-        p.explanation_priorities
-        if p and p.explanation_priorities
-        else ["background", "technique", "artist_life"]
-    )
-    return (
-        style
-        + " 사용자의 질문에 먼저 답하고, 넓은 작품 설명에서는 이 순서를 우선하세요: "
-        + " → ".join(PRIORITIES[k] for k in priorities if k in PRIORITIES)
-        + ". 자료가 없는 항목을 채우려고 지어내지 마세요."
-    )
+    preference = mypage_service.preference(db, user_id) if user_id else None
+    return grounding_instructions(preference, explanation_style)
+
+
+def generate(schema, instruction, data):
+    settings = get_settings()
+    if settings.openai_api_key is None:
+        raise HTTPException(503, "AI 연결 설정이 필요해요.")
+    try:
+        llm = ChatOpenAI(
+            model=settings.assistant_model,
+            api_key=settings.openai_api_key,
+            timeout=25,
+            max_retries=0,
+            temperature=0.3,
+        )
+        return llm.with_structured_output(schema).invoke(
+            [("system", instruction), ("human", json.dumps(data, ensure_ascii=False))]
+        )
+    except (APIError, OutputParserException, ValidationError, TimeoutError):
+        raise HTTPException(503, "AI 응답을 완료하지 못했어요. 다시 시도해 주세요.") from None
+
+
+def _similar_answer(works) -> str:
+    if not works:
+        return "현재 이 작품과 유사한 작품 정보가 아직 준비되지 않았어요."
+    return "이 작품과 비슷한 결을 가진 작품을 더 둘러보세요. " + _titles(works)
+
+
+def _titles(works) -> str:
+    return " · ".join(f"『{work.title}』" for work in works[:3])
+
+
+def _personal_answer(works) -> str:
+    if not works:
+        return "아직 충분한 취향 데이터가 쌓이지 않았어요."
+    items = [
+        f"『{work.title}』 — {work.reason}" if work.reason else f"『{work.title}』"
+        for work in works[:3]
+    ]
+    return "이런 작품은 어떠신가요? " + " · ".join(items)
 
 
 def answer(db: Session, artwork_id, body, user_id=None):
@@ -56,8 +77,14 @@ def answer(db: Session, artwork_id, body, user_id=None):
         return ChatResponse(answer=refusal_message(route), refused=True, sources=[])
     if route.kind in ("recommend_similar", "recommend_personal"):
         if route.kind == "recommend_personal" and user_id is None:
+            works = recommendation_service.similar(db, artwork_id=artwork_id)
+            login_hint = "로그인 후 감상 기록이 쌓이면 더 정교한 추천을 받아볼 수 있어요."
             return ChatResponse(
-                answer="로그인하고 좋아하는 그림을 모으면 취향에 맞는 다음 그림을 추천해 드릴게요.",
+                answer=(
+                    f"{login_hint} 현재 작품과 비슷한 작품을 먼저 만나보세요. {_titles(works)}"
+                    if works
+                    else f"{login_hint} {_similar_answer(works)}"
+                ),
                 refused=False,
                 sources=[],
             )
@@ -67,15 +94,16 @@ def answer(db: Session, artwork_id, body, user_id=None):
             else recommendation_service.similar(db, artwork_id=artwork_id)
         )
         return ChatResponse(
-            answer="함께 감상해 볼 그림이에요: "
-            + " · ".join(w.title for w in works[:3])
-            if works
-            else "아직 추천할 작품이 없어요. 마음에 드는 그림에 좋아요를 눌러 보세요.",
+            answer=(
+                _personal_answer(works)
+                if route.kind == "recommend_personal"
+                else _similar_answer(works)
+            ),
             refused=False,
             sources=[],
         )
     try:
-        docs = retrieve(db, artwork_id, body.question)
+        docs = retrieve(db, artwork_id, retrieval_question(body))[:40]
     except (
         ChromaError,
         APIError,
@@ -86,52 +114,24 @@ def answer(db: Session, artwork_id, body, user_id=None):
         RuntimeError,
     ):
         raise HTTPException(
-            503, "작품 자료를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."
+            503, "작품 자료를 불러오지 못했어요. 잠시 후 다시 시도해 주세요."
         ) from None
     if not docs:
         return ChatResponse(
-            answer="현재 이 작품의 자료에는 질문에 답할 근거가 없어요. 다른 감상 질문을 들려주세요.",
+            answer=NO_EVIDENCE_MESSAGE,
             refused=True,
             sources=[],
         )
-    docs = docs[:40]
     draft = generate(
         GroundedAnswer,
-        "한국어 미술 도슨트입니다. 제공한 자료 안에서만 답하세요. 답할 근거가 없으면 refused=true로 하고 자료에 없다고 말하세요. "
-        "이미지를 직접 보지 않으므로 자료에 없는 화면 세부를 지어내지 마세요. 작품 판본·소장처를 혼동하지 마세요. "
-        "인물 관계, 정신질환, 미래 사건과의 인과를 추측하지 마세요. 답변 시 주의 보정문은 원문보다 우선하며 감상 포인트는 팀의 편집 보충임을 밝히세요. "
-        "이전 대화는 질문 맥락이며 사실 근거가 아닙니다. 사용한 근거의 chunk_id를 used_chunk_ids에 넣으세요. "
-        "URL을 만들거나 답변에 직접 쓰지 마세요. 원문을 길게 그대로 옮기지 마세요. "
-        + instructions(db, user_id, body.explanation_style),
-        {
-            "artwork": {"title": art.title, "artist": art.artist_name},
-            "question": body.question,
-            "history": [t.model_dump() for t in body.history],
-            "sources": [
-                {
-                    "chunk_id": d.metadata["chunk_id"],
-                    "text": d.page_content[:5000],
-                    "annotation": d.metadata.get("annotation"),
-                }
-                for d in docs
-            ],
-        },
+        instructions(db, user_id, body.explanation_style),
+        context(art, body, docs),
     )
-    ids = set(draft.used_chunk_ids)
-    used = [d for d in docs if d.metadata["chunk_id"] in ids]
-    if (
-        draft.refused
-        or not used
-        or not ids.issubset({d.metadata["chunk_id"] for d in docs})
-    ):
+    try:
+        return validate_response(draft.model_dump(), docs)
+    except (ValueError, AttributeError):
         return ChatResponse(
-            answer="현재 자료에서 확인할 수 있는 근거가 부족해 답을 유보할게요. 작품에 관한 다른 질문을 들려주세요.",
+            answer=NO_EVIDENCE_MESSAGE,
             refused=True,
             sources=[],
         )
-    sources = {
-        d.metadata["document_id"]: Source.model_validate(d.metadata) for d in used
-    }
-    return ChatResponse(
-        answer=draft.answer, refused=False, sources=list(sources.values())
-    )

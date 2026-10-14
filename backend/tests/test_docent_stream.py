@@ -9,7 +9,7 @@ from app.schemas.chat import ChatRequest
 from app.services import docent_stream
 
 
-@pytest.mark.parametrize("used_ids,refused", [([9], False), ([999], True), ([], True)])
+@pytest.mark.parametrize("used_ids, refused", [([4], False), ([999], True), ([], True)])
 def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids, refused):
     metadata = {
         "chunk_id": 9,
@@ -36,7 +36,12 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
         docent_stream, "get_settings",
         lambda: SimpleNamespace(openai_api_key="test", assistant_model="mock"),
     )
-    monkeypatch.setattr(docent_stream.docent_service, "instructions", lambda *args: "")
+    styles = []
+    monkeypatch.setattr(
+        docent_stream.docent_service,
+        "instructions",
+        lambda *args: styles.append(args) or "",
+    )
     saved = []
     monkeypatch.setattr(
         docent_stream.chat_service,
@@ -60,7 +65,7 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
 
         async def astream(self, messages):
             yield {"answer": "근거"}
-            yield {"answer": "근거 있는 답변", "refused": False, "used_chunk_ids": used_ids}
+            yield {"answer": "근거 있는 답변", "refused": False, "used_document_ids": used_ids}
 
     monkeypatch.setattr(docent_stream, "JsonOutputParser", FakeParser)
     monkeypatch.setattr(docent_stream, "ChatOpenAI", FakeModel)
@@ -71,7 +76,7 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
             async for event in docent_stream.answer_events(
                 None,
                 artwork_id=1,
-                body=ChatRequest(question="무엇인가요?"),
+                body=ChatRequest(question="무엇인가요?", explanation_style="deep"),
                 user_id=3,
             )
         ]
@@ -79,10 +84,11 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
     events = asyncio.run(collect())
     assert events[:2] == [("token", "근거"), ("token", " 있는 답변")]
     assert events[-1][0] == "done"
-    assert events[-1][1].refused == refused
+    assert events[-1][1].refused is refused
     if refused:
-        assert events[-1][1].sources == []
         assert events[-2][0] == "replace"
+        assert events[-1][1].sources == []
     else:
         assert events[-1][1].sources[0].document_id == 4
     assert saved[0]["response"] == events[-1][1]
+    assert styles == [(None, 3, "deep")]

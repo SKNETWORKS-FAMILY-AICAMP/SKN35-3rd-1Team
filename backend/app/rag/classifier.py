@@ -134,34 +134,33 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
 
 
 def refusal_message(route: Route) -> str:
-    """refuse·other_artist 일 때 쓸 수 있는 기본 안내 문구. 답변 담당이 바꿔 써도 된다."""
+    """refuse·other_artist의 사용자 확정 안내를 서버에서 조립한다."""
     if route.kind == "refuse" and route.reason == "unreviewed_artist":
-        names = _join(route.names)
-        return f"{names} 자료는 아직 검토 중이에요. 검수가 끝난 소장 작품에 관해 물어봐 주세요."
+        return " ".join(
+            f"현재 {name} 작가의 자료는 검토 중에 있어요." for name in route.names
+        )
     if route.kind == "refuse" and route.reason == "uncollected_artist":
         names = _join(route.names)
-        return f"{names}{_topic(names)} 아직 자료를 수집하지 않은 작가라 답변드리기 어려워요."
+        return f"{names}에 관한 자료는 준비 중 입니다."
     if route.kind == "refuse" and route.reason == "unknown_artist":
-        names = _join(route.names)
-        return f"{names}{_topic(names)} 이 미술관에서 다루지 않는 작가예요. 소장 작품에 관해 물어봐 주세요."
+        return " ".join(
+            f"현재 {name}의 자료는 검토 중에 있어요." for name in route.names
+        )
+    if route.kind == "refuse" and route.reason == "off_topic":
+        return "해당 작품과 작가에 대해서만 대화 할 수 있어요."
     if route.kind == "refuse":
         return "이 도슨트는 작품과 작가에 관한 자료로만 답할 수 있어요. 작품에 대해 궁금한 점을 물어봐 주세요."
     if route.kind == "other_artist":
-        names = _join(_artists()[s].name for s in route.artists if s in _artists())
-        return f"{names}에 관한 질문은 {names}의 작품을 고른 뒤 물어봐 주세요. 지금은 고른 작품의 자료만 볼 수 있어요."
+        names = [_artists()[s].name for s in route.artists if s in _artists()]
+        return " ".join(
+            f"{name}의 작품을 선택하면 해당 작가에 관해 대화할 수 있어요."
+            for name in names
+        )
     return ""
 
 
 def _join(names) -> str:
     return ", ".join(names)
-
-
-def _topic(word: str) -> str:
-    """받침이 있으면 '은', 없으면 '는' (클림트는 / 피카소는 / 마네는)."""
-    last = word.strip()[-1:]
-    if not ("가" <= last <= "힣"):
-        return "은(는)"
-    return "은" if (ord(last) - 0xAC00) % 28 else "는"
 
 
 def _find_artists(text: str) -> tuple[str, tuple[str, ...], tuple[str, ...], tuple[str, ...]]:

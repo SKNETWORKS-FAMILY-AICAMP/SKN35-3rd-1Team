@@ -9,18 +9,12 @@ from app.core.timeutil import local_date, utcnow
 from app.schemas.catalog import ArtworkCard
 from app.schemas.diary import DiaryEntry
 
-Priority = Literal["technique", "background", "artist_life"]
-DEFAULT_PRIORITIES = ["background", "technique", "artist_life"]
-
 
 class ProfileWrite(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     # 공개 감상 피드에 표시되는 이름. 생략하면 지금 이름을 그대로 둔다.
     nickname: Annotated[str, StringConstraints(min_length=2, max_length=20)] | None = None
     birth_date: date | None = None
-    explanation_priorities: list[Priority] = Field(
-        default_factory=lambda: DEFAULT_PRIORITIES.copy(), min_length=3, max_length=3
-    )
     conversation_style: Literal["easy", "professional"] = "easy"
     onboarding_completed: bool = True
 
@@ -30,14 +24,6 @@ class ProfileWrite(BaseModel):
         if value is not None and not date(1900, 1, 1) <= value <= local_date(utcnow()):
             raise ValueError("생년월일을 확인해 주세요.")
         return value
-
-    @field_validator("explanation_priorities")
-    @classmethod
-    def unique_priorities(cls, value):
-        if len(set(value)) != 3:
-            raise ValueError("설명 항목은 한 번씩 선택해 주세요.")
-        return value
-
 
 class ProfileOut(ProfileWrite):
     nickname: str
