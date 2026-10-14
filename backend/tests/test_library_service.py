@@ -76,11 +76,18 @@ def test_calendar_queries_the_month(monkeypatch) -> None:
         return [CalendarRow(date(2026, 10, 12), 2, 5)]
 
     monkeypatch.setattr(activity_repository, "calendar", fake_calendar)
+    monkeypatch.setattr(
+        activity_repository,
+        "latest_view_by_day",
+        lambda db, **kwargs: {date(2026, 10, 12): (_artwork(7), "작가")},
+    )
     days = library_service.calendar(FakeDb(), user_id=3, month="2026-10")
     assert seen == {"user_id": 3, "start": date(2026, 10, 1), "end": date(2026, 11, 1)}
-    assert [d.model_dump() for d in days] == [
-        {"date": date(2026, 10, 12), "artwork_count": 2, "total_views": 5}
+    assert [(d.date, d.artwork_count, d.total_views) for d in days] == [
+        (date(2026, 10, 12), 2, 5)
     ]
+    # The calendar cell shows the most recently viewed artwork of that day.
+    assert days[0].artwork is not None and days[0].artwork.id == 7
 
 
 def _artwork(artwork_id: int) -> Artwork:
@@ -110,3 +117,52 @@ def test_day_list_keeps_order_and_marks_utc(monkeypatch) -> None:
     assert [(r.id, r.view_count) for r in result] == [(2, 3), (1, 1)]
     assert result[0].artist_name == "모네"
     assert result[0].last_viewed_at == datetime(2026, 10, 12, 5, 0, tzinfo=UTC)
+
+
+def test_latest_view_by_day_picks_the_most_recent_artwork() -> None:
+    from datetime import datetime
+
+    from sqlalchemy import DefaultClause, MetaData, create_engine, text
+    from sqlalchemy.orm import Session
+
+    from app.models import Artist, ArtMovement, ArtworkView, User
+
+    engine = create_engine("sqlite://")
+    metadata = MetaData()
+    for model in (User, ArtMovement, Artist, Artwork, ArtworkView):
+        table = model.__table__.to_metadata(metadata)
+        for column in table.columns:
+            if column.server_default is not None and "ON UPDATE" in str(
+                column.server_default.arg
+            ):
+                column.server_default = DefaultClause(text("CURRENT_TIMESTAMP"))
+    metadata.create_all(engine)
+    day = date(2026, 10, 12)
+    with Session(engine) as db:
+        db.add(User(id=1, firebase_uid="u", email="u@example.com", nickname="u"))
+        db.add(ArtMovement(id=1, slug="m", name="사조"))
+        db.add(Artist(id=1, slug="a", name="작가", movement_id=1))
+        db.flush()
+        db.add_all([_artwork(1), _artwork(2)])
+        db.flush()
+        db.add_all(
+            [
+                ArtworkView(
+                    user_id=1,
+                    viewed_on=day,
+                    artwork_id=1,
+                    last_viewed_at=datetime(2026, 10, 12, 1),
+                ),
+                ArtworkView(
+                    user_id=1,
+                    viewed_on=day,
+                    artwork_id=2,
+                    last_viewed_at=datetime(2026, 10, 12, 5),
+                ),
+            ]
+        )
+        db.commit()
+        latest = activity_repository.latest_view_by_day(
+            db, user_id=1, start=date(2026, 10, 1), end=date(2026, 11, 1)
+        )
+    assert {d: a.id for d, (a, _) in latest.items()} == {day: 2}

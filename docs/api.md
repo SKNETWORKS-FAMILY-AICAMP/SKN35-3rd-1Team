@@ -55,7 +55,7 @@
 | DELETE | `/api/artists/{artist_id}/follow` | `204` | 필요 | 팔로우 취소. 팔로우가 없어도 `204` |
 | GET | `/api/me/follows` | `ArtistCard[]` | 필요 | 팔로우한 작가 |
 | POST | `/api/artworks/{artwork_id}/views` | `204` | 필요 | 열람 기록. 같은 날 다시 보면 `view_count`만 증가 |
-| GET | `/api/me/library/calendar?month=YYYY-MM` | `CalendarDay[]` | 필요 | 월별 감상 기록. 본 날만 날짜순 |
+| GET | `/api/me/library/calendar?month=YYYY-MM` | `CalendarDay[]` | 필요 | 월별 감상 기록. 본 날만 날짜순. `artwork`는 그날 마지막으로 본 작품(캘린더 썸네일) |
 | GET | `/api/me/library/days/{YYYY-MM-DD}` | `ViewedArtwork[]` | 필요 | 그날 본 작품, 마지막으로 본 순 |
 | GET | `/api/me/recommendations/artworks` | `RecommendedArtwork[]` | 필요 | 좋아요 기반 맞춤 작품 3개, 작가당 1개. 좋아요가 없으면 최근 열람 → 팔로우한 작가 작품 → 큐레이션 작품 무작위(사용자·날짜별로 고정, 새로고침해도 같은 결과). 이미지 없는 작품은 나오지 않음 |
 | GET | `/api/me/recommendations/artists` | `RecommendedArtist[]` | 필요 | 추천 작가 3명. 유사도 합산 순위 상위 3명, 팔로우한 작가 제외(좋아요한 작품의 작가는 포함) |
