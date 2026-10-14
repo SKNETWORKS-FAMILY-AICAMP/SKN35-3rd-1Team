@@ -134,7 +134,10 @@ class _DocentChatState extends State<DocentChat> {
                           'AI 도슨트',
                           style: sans(14, weight: FontWeight.w600),
                         ),
-                        Text('작품에 관해 물어보세요.', style: sans(11, color: muted)),
+                        Text(
+                          '설명 방식을 고르고 작품에 관해 물어보세요.',
+                          style: sans(11, color: muted),
+                        ),
                       ],
                     ),
                   ),
@@ -146,6 +149,13 @@ class _DocentChatState extends State<DocentChat> {
                     icon: const Icon(Icons.restart_alt, size: 19),
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              child: _StyleTabs(
+                value: conversation!.style,
+                onChanged: busy ? null : conversation!.setStyle,
               ),
             ),
             Container(
@@ -267,10 +277,15 @@ class _DocentChatState extends State<DocentChat> {
                       padding: const EdgeInsets.all(18),
                       child: Column(
                         children: [
-                          const LinearProgressIndicator(color: sage, minHeight: 2),
+                          const LinearProgressIndicator(
+                            color: sage,
+                            minHeight: 2,
+                          ),
                           const SizedBox(height: 8),
                           Text(
-                            conversation!.resetting ? '대화를 정리하고 있어요…' : '도슨트가 답변하고 있어요…',
+                            conversation!.resetting
+                                ? '대화를 정리하고 있어요…'
+                                : '도슨트가 답변하고 있어요…',
                             style: sans(12, color: muted),
                           ),
                         ],
@@ -434,6 +449,61 @@ class _DocentChatState extends State<DocentChat> {
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(c), child: const Text('닫기')),
+      ],
+    ),
+  );
+}
+
+/// Explanation depth for the next answers. Changing it never rewrites old answers.
+class _StyleTabs extends StatelessWidget {
+  const _StyleTabs({required this.value, required this.onChanged});
+  final String value;
+  final ValueChanged<String>? onChanged;
+  static const styles = [
+    ('easy', 'Easy', '쉽고 친근하게'),
+    ('standard', 'Standard', '차분하고 편안하게'),
+    ('deep', 'Deep', '깊이 있게'),
+  ];
+
+  @override
+  Widget build(BuildContext context) => Container(
+    key: const ValueKey('docent-style-tabs'),
+    padding: const EdgeInsets.all(3),
+    decoration: BoxDecoration(
+      color: soft,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      children: [
+        for (final s in styles)
+          Expanded(
+            child: Tooltip(
+              message: s.$3,
+              child: Semantics(
+                selected: value == s.$1,
+                button: true,
+                label: '${s.$2} 설명, ${s.$3}',
+                child: TextButton(
+                  key: ValueKey('docent-style-${s.$1}'),
+                  onPressed: onChanged == null ? null : () => onChanged!(s.$1),
+                  style: editorialButtonStyle(
+                    dark: value == s.$1,
+                    quiet: value != s.$1,
+                    minimumSize: const Size(0, 36),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  child: Text(
+                    s.$2,
+                    style: sans(
+                      12,
+                      color: value == s.$1 ? Colors.white : muted,
+                      weight: value == s.$1 ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     ),
   );
