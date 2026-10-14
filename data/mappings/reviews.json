@@ -266,6 +266,11 @@
       "reviewed_on": "2026-10-11",
       "content_sha256": "52d295c8cf856a002b6b4cee3fe561d9414ce2469adcbc6caef38c64ddab87fe"
     },
+    "claude-monet/water-lilies-setting-sun": {
+      "reviewer": "taemin1997",
+      "reviewed_on": "2026-10-14",
+      "content_sha256": "58c32ce22ad1061cdfb0e6d6a237b8150416058939109229a2ba8c5dcac01ee6"
+    },
     "claude-monet/woman-with-parasol": {
       "reviewer": "A(PM·전처리) 최종 승인 / Codex AI 1차 검토",
       "reviewed_on": "2026-10-11",

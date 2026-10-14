@@ -1,0 +1,1 @@
+During the 1920s, the state of France built a pair of oval rooms at the Musée de l'Orangerie as a permanent home for eight large water lily murals by Monet. The exhibit opened to the public on 16 May 1927, a few months after Monet's death. Sixty water lily paintings from around the globe were assembled for a special exhibition at the Musée de l'Orangerie in 1999.
