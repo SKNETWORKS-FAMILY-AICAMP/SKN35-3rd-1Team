@@ -15,7 +15,12 @@ from app.core.config import get_settings
 from app.rag.classifier import Route, classify_artwork, refusal_message
 from app.rag.retriever import retrieve
 from app.schemas.chat import ChatResponse
-from app.services import catalog_service, docent_scope, mypage_service, recommendation_service
+from app.services import (
+    catalog_service,
+    docent_scope,
+    mypage_service,
+    recommendation_service,
+)
 from app.services.docent_grounding import (
     NO_EVIDENCE_MESSAGE,
     GroundedAnswer,

@@ -45,6 +45,8 @@ DEICTIC = ("이 그림", "이 작품", "이 화가", "이 작가", "그림에", 
 # 작가 사이의 관계·영향·비교를 묻는 표현. 범위 안 생애·비교 문서에 답이 있을 수 있다.
 RELATION = ("관계", "영향", "만났", "만난", "친구", "스승", "제자", "배웠", "함께", "같이", "교류", "비교", "차이",
             "달라", "다른 점", "다르게", "공통", "닮", "비슷한 점", "모방", "따라")
+# 두 작가를 견주는 질문은 승인된 비교 근거가 필요하다. 관계·영향 질문은 생애 문서도 사용한다.
+COMPARISON = re.compile(r"비교|차이|달라|달랐|다른 점|다르게|공통점")
 # 이 서비스가 답할 수 없는 실시간·생활 정보
 OFF_TOPIC = re.compile(
     r"날씨|미세먼지|기온|환율|주가|주식|코인|맛집|교통|뉴스|로또|"
@@ -126,7 +128,15 @@ def classify_artwork(session, artwork_id: int, question: str) -> Route:
         scope = repo.scope_document_ids(session, artwork_id) if scope is None else scope
         return repo.name_in_scope(session, scope, name)
 
-    return classify(question, artist, named_in_scope)
+    route = classify(question, artist, named_in_scope)
+    others = tuple(s for s in route.artists if s != artist)
+    if route.kind == "rag" and others and COMPARISON.search(question):
+        # 범위 문서는 고른 작가 자료뿐이라, 다른 작가 쪽 근거는 그 작가를 함께 다룬 비교 문서에만 있다.
+        # 없으면 LLM 이 상대 작가를 일반 지식으로 채워 비교하므로 (평가 compare-002: 모네·세잔) 검색 전에 거절한다.
+        scope = repo.scope_document_ids(session, artwork_id) if scope is None else scope
+        if not repo.comparison_covers(session, scope, others):
+            return Route("refuse", "no_comparison_source", artists=others, matched=("comparison_uncovered",))
+    return route
 
 
 def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bool] | None = None) -> Route:
@@ -194,6 +204,9 @@ def refusal_message(route: Route) -> str:
         return " ".join(
             f"현재 {name}의 자료는 검토 중에 있어요." for name in route.names
         )
+    if route.kind == "refuse" and route.reason == "no_comparison_source":
+        names = _join(_artists()[s].name for s in route.artists if s in _artists())
+        return f"검수된 자료로는 {names} 작가와의 비교를 확인하기 어려워요. 지금 작품과 작가에 대해 물어봐 주세요."
     if route.kind == "refuse" and route.reason == "off_topic":
         return "해당 작품과 작가에 대해서만 대화 할 수 있어요."
     if route.kind == "refuse":
