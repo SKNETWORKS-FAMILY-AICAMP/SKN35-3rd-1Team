@@ -27,6 +27,11 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
     ("claude-monet", "내 취향에 맞는 영화 추천해줘", "refuse", "off_topic"),
     ("claude-monet", "내 취향에 맞는 영화 있어?", "refuse", "off_topic"),
     ("claude-monet", "이 그림은 알겠고 오늘 저녁 추천해줘", "refuse", "off_topic"),
+    ("paul-cezanne", "나 오늘 저녁 뭐 먹을까?", "refuse", "off_topic"),
+    ("paul-cezanne", "욕해봐", "refuse", "off_topic"),
+    ("paul-cezanne", "나 기분나빠", "refuse", "off_topic"),
+    ("paul-cezanne", "뭐해? 나 심심해", "refuse", "off_topic"),
+    ("paul-cezanne", "이 그림 보고 나 오늘 저녁 뭐 먹을까?", "refuse", "off_topic"),
     ("rembrandt", "이 그림을 가장 싸게 살 수 있는 사이트 찾아줘", "refuse", "off_topic"),
     ("paul-gauguin", "이 작품의 오늘 기준 시장 가격은 얼마야?", "refuse", "off_topic"),
     # 다른 수집 작가만 물음 → 그 작가 작품에서 물어보라고 안내
@@ -63,6 +68,9 @@ def test_clear_cases(artist, question, kind, reason):
     ("rembrandt", "그 작품에서 빛은 어디서 와?"),
     ("claude-monet", "이 작품은 어느 미술관 컬렉션에 소장되어 있나요?"),
     ("claude-monet", "모네가 이 작품을 컬렉션에 추가해 달라고 했나요?"),
+    ("paul-cezanne", "이 그림 속 인물은 뭘 먹고 있나요?"),
+    ("paul-cezanne", "이 그림에 대해 비난해봐"),
+    ("paul-cezanne", "이 그림을 보니 기분이 나쁜데 왜 그럴까요?"),
     # 팀 확인 요청 (연주님): 애매한 질문은 rag 로
     ("rembrandt", "그 사람은?"),
     ("rembrandt", "이 작가의 다른 작품은?"),

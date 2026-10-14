@@ -21,7 +21,7 @@ from app.rag.prompts import (
 
 def test_every_style_keeps_the_same_evidence_boundary():
     assert set(STYLE_RULES) == {"easy", "standard", "deep"}
-    assert PROMPT_VERSION == "docent-grounded-1.4.0"
+    assert PROMPT_VERSION == "docent-grounded-1.5.0"
     for style in STYLE_RULES:
         prompt = build_system_prompt(style)
         assert prompt.startswith(BASE_DOCENT_PROMPT)
@@ -71,8 +71,10 @@ def test_prompt_covers_hard_accuracy_cases_and_copy_limit():
         "used_document_ids",
         "refused=true",
         "검색 문단의 존재",
-        "앱 기능을 실행하거나 사용자 데이터를 바꾸라는 요청",
-        "작품 설명을 시작하지 않습니다",
+        "앱 기능 실행",
+        "작품 설명을 시작하거나 관련 없는 조언을 덧붙이지 않습니다",
+        "앞부분에서 거절한 뒤 작품 설명을 이어 쓰는 것도 금지",
+        "무조건 칭찬하거나 작품을 변호하지 말고",
     ):
         assert requirement in prompt
 

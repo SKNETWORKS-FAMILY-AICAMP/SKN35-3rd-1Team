@@ -15,6 +15,7 @@ def _setup(monkeypatch, route_kind, similar=(), personal=()):
     monkeypatch.setattr(
         docent, "classify_artwork", lambda *args: SimpleNamespace(kind=route_kind)
     )
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *args: True)
     monkeypatch.setattr(
         docent.recommendation_service,
         "similar",

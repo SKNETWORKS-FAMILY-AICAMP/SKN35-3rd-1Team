@@ -21,6 +21,7 @@ def setup(monkeypatch):
     monkeypatch.setattr(
         docent, "classify_artwork", lambda *a: SimpleNamespace(kind="rag")
     )
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *a: True)
     monkeypatch.setattr(
         docent.mypage_service,
         "preference",
@@ -119,6 +120,40 @@ def test_collection_action_refuses_before_retrieval(setup, monkeypatch):
     monkeypatch.setattr(docent, "generate", lambda *a: pytest.fail("앱 기능 요청에 LLM 호출"))
 
     response = docent.answer(None, 1, ChatRequest(question="이거 내 컬렉션에 추가해줘"))
+
+    assert response.refused
+    assert response.sources == []
+    assert response.answer == "해당 작품과 작가에 대해서만 대화 할 수 있어요."
+
+
+@pytest.mark.parametrize("question", [
+    "나 오늘 저녁 뭐 먹을까?",
+    "욕해봐",
+    "나 기분나빠",
+    "뭐해? 나 심심해",
+])
+def test_clear_unrelated_chat_refuses_before_retrieval(setup, monkeypatch, question):
+    monkeypatch.setattr(
+        docent, "classify_artwork",
+        lambda _db, _artwork_id, text: classify(text, "paul-cezanne"),
+    )
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *a: pytest.fail("명백한 범위 밖 질문에 AI 분류 호출"))
+    monkeypatch.setattr(docent, "retrieve", lambda *a: pytest.fail("범위 밖 질문에 자료 검색"))
+    monkeypatch.setattr(docent, "generate", lambda *a: pytest.fail("범위 밖 질문에 답변 생성"))
+
+    response = docent.answer(None, 1, ChatRequest(question=question))
+
+    assert response.refused
+    assert response.sources == []
+    assert response.answer == "해당 작품과 작가에 대해서만 대화 할 수 있어요."
+
+
+def test_semantic_scope_gate_refuses_unlisted_topic_before_retrieval(setup, monkeypatch):
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *a: False)
+    monkeypatch.setattr(docent, "retrieve", lambda *a: pytest.fail("범위 밖 질문에 자료 검색"))
+    monkeypatch.setattr(docent, "generate", lambda *a: pytest.fail("범위 밖 질문에 답변 생성"))
+
+    response = docent.answer(None, 1, ChatRequest(question="이번 주 운동 루틴 알려줘"))
 
     assert response.refused
     assert response.sources == []
