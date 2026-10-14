@@ -92,14 +92,12 @@ class DocentConversation extends ChangeNotifier {
         notifyListeners();
         return;
       }
-      for (final rune in text.runes) {
-        if (!_current(revision)) return;
-        final current = hasPendingAnswer ? messages.removeLast().content : '';
-        messages.add(ChatTurn('assistant', current + String.fromCharCode(rune)));
-        hasPendingAnswer = true;
-        notifyListeners();
-        await Future<void>.delayed(const Duration(milliseconds: 12));
-      }
+      // Render each server delta once; artificial per-character waits delayed
+      // final citations and rebuilt the whole chat dozens of times per second.
+      final current = hasPendingAnswer ? messages.removeLast().content : '';
+      messages.add(ChatTurn('assistant', current + text));
+      hasPendingAnswer = true;
+      notifyListeners();
     }
 
     try {

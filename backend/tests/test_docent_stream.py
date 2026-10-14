@@ -3,11 +3,14 @@
 import asyncio
 from types import SimpleNamespace
 
+import pytest
+
 from app.schemas.chat import ChatRequest
 from app.services import docent_stream
 
 
-def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch):
+@pytest.mark.parametrize("used_ids,refused", [([9], False), ([999], True), ([], True)])
+def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids, refused):
     metadata = {
         "chunk_id": 9,
         "document_id": 4,
@@ -57,7 +60,7 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch):
 
         async def astream(self, messages):
             yield {"answer": "근거"}
-            yield {"answer": "근거 있는 답변", "refused": False, "used_chunk_ids": [9]}
+            yield {"answer": "근거 있는 답변", "refused": False, "used_chunk_ids": used_ids}
 
     monkeypatch.setattr(docent_stream, "JsonOutputParser", FakeParser)
     monkeypatch.setattr(docent_stream, "ChatOpenAI", FakeModel)
@@ -76,5 +79,10 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch):
     events = asyncio.run(collect())
     assert events[:2] == [("token", "근거"), ("token", " 있는 답변")]
     assert events[-1][0] == "done"
-    assert events[-1][1].sources[0].document_id == 4
+    assert events[-1][1].refused == refused
+    if refused:
+        assert events[-1][1].sources == []
+        assert events[-2][0] == "replace"
+    else:
+        assert events[-1][1].sources[0].document_id == 4
     assert saved[0]["response"] == events[-1][1]

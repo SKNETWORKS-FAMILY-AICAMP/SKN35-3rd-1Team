@@ -216,7 +216,9 @@ class ArtlogApi {
     }
 
     checkSession();
-    final accessToken = tokenProvider == null ? token : await tokenProvider!(false);
+    final accessToken = tokenProvider == null
+        ? token
+        : await tokenProvider!(false);
     checkSession();
     final previous = history.length > 12
         ? history.sublist(history.length - 12)
@@ -227,23 +229,29 @@ class ArtlogApi {
     );
     request.headers['Accept'] = 'text/event-stream';
     request.headers['Content-Type'] = 'application/json';
-    if (accessToken != null) request.headers['Authorization'] = 'Bearer $accessToken';
+    if (accessToken != null) {
+      request.headers['Authorization'] = 'Bearer $accessToken';
+    }
     request.body = jsonEncode({
       'question': question,
       'history': previous.map((h) => h.toHistory()).toList(),
     });
 
     try {
-      final response = await _client.send(request).timeout(const Duration(seconds: 45));
+      final response = await _client
+          .send(request)
+          .timeout(const Duration(seconds: 45));
       checkSession();
       if (response.statusCode == 401 &&
           tokenProvider != null &&
           accessToken != null &&
           retryAuthentication) {
-        await response.stream.drain<void>();
+        await response.stream.drain<void>().timeout(
+          const Duration(seconds: 45),
+        );
         await tokenProvider!(true);
         checkSession();
-        return _chatStream(
+        return await _chatStream(
           id,
           question,
           history,
@@ -254,7 +262,29 @@ class ArtlogApi {
         );
       }
       if (response.statusCode < 200 || response.statusCode >= 300) {
-        await response.stream.drain<void>();
+        await response.stream.drain<void>().timeout(
+          const Duration(seconds: 45),
+        );
+        checkSession();
+        // Only an unsupported endpoint can safely fall back. Never replay a
+        // generation that has started or failed midway: it may already be saved.
+        if ({404, 405, 501}.contains(response.statusCode)) {
+          return ChatReply.fromJson(
+            object(
+              await _request(
+                'POST',
+                'artworks/${Uri.encodeComponent(id)}/chat',
+                sessionBound: true,
+                expectedSessionRevision: revision,
+                retryAuthentication: retryAuthentication,
+                body: {
+                  'question': question,
+                  'history': previous.map((h) => h.toHistory()).toList(),
+                },
+              ),
+            ),
+          );
+        }
         if (response.statusCode == 401) onUnauthorized?.call();
         throw ApiException(switch (response.statusCode) {
           401 => '로그인이 만료되었어요. 다시 로그인해 주세요.',
@@ -265,7 +295,8 @@ class ArtlogApi {
           _ => '답변을 불러오지 못했어요. 다시 시도해 주세요.',
         }, status: response.statusCode);
       }
-      if (!(response.headers['content-type']?.contains('text/event-stream') ?? false)) {
+      if (!(response.headers['content-type']?.contains('text/event-stream') ??
+          false)) {
         throw const ApiException('서버의 채팅 스트림 형식을 확인해 주세요.');
       }
 
@@ -275,26 +306,36 @@ class ArtlogApi {
       Future<void> dispatch() async {
         if (data.isEmpty) return;
         final payload = jsonDecode(data.join('\n'));
-        if (event == 'token') {
-          await onToken(object(payload)['content'] as String);
-        } else if (event == 'replace') {
-          await onReplace(object(payload)['content'] as String);
+        if (event == 'token' || event == 'replace') {
+          final content = object(payload)['content'];
+          if (content is! String) {
+            throw const FormatException('Invalid chat text');
+          }
+          if (event == 'token') {
+            await onToken(content);
+          } else {
+            await onReplace(content);
+          }
         } else if (event == 'done') {
           reply = ChatReply.fromJson(object(payload));
         } else if (event == 'error') {
-          throw ApiException(object(payload)['message'] as String? ?? 'AI 응답이 중단되었어요.');
+          throw ApiException(
+            object(payload)['message'] as String? ?? 'AI 응답이 중단되었어요.',
+          );
         }
       }
 
-      await for (final line in response.stream
-          .transform(utf8.decoder)
-          .transform(const LineSplitter())
-          .timeout(const Duration(seconds: 45))) {
+      await for (final line
+          in response.stream
+              .transform(utf8.decoder)
+              .transform(const LineSplitter())
+              .timeout(const Duration(seconds: 45))) {
         checkSession();
         if (line.isEmpty) {
           await dispatch();
           event = 'message';
           data.clear();
+          if (reply != null) break;
         } else if (line.startsWith('event:')) {
           event = line.substring(6).trim();
         } else if (line.startsWith('data:')) {

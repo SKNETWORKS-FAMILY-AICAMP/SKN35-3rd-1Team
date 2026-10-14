@@ -7,7 +7,7 @@
 import json
 import logging
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import StreamingResponse
 
 from app.core.auth import CurrentUser, OptionalUser
@@ -52,8 +52,11 @@ async def ask_stream(
                 else:
                     assert isinstance(payload, str)
                     yield _frame(event, {"content": payload})
-        except Exception:
-            logger.exception("Docent stream failed for artwork_id=%s", artwork_id)
+        except HTTPException as exc:
+            yield _frame("error", {"message": str(exc.detail)})
+        except Exception as exc:  # noqa: BLE001 -- SSE boundary must end with a safe error frame.
+            # Provider exceptions may contain request data. Log the type only.
+            logger.error("Docent stream failed for artwork_id=%s: %s", artwork_id, type(exc).__name__)
             yield _frame("error", {"message": "AI 응답을 완료하지 못했어요. 다시 시도해 주세요."})
 
     return StreamingResponse(
