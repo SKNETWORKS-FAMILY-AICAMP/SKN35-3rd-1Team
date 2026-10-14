@@ -1,5 +1,6 @@
 """Chroma 접속 방식 선택 테스트. 실제로 접속하지 않고 어떤 클라이언트를 어떤 값으로 만드는지만 본다."""
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -54,7 +55,7 @@ def test_blank_cloud_values_fall_back_to_server(monkeypatch, made):
 
 def test_local_folder_when_no_server(monkeypatch, made):
     assert use(monkeypatch, chroma_path="data/chroma") == "PersistentClient"
-    assert made[0][1]["path"].endswith("data/chroma")
+    assert Path(made[0][1]["path"]).parts[-2:] == ("data", "chroma")  # Windows 는 data\chroma
 
 
 def test_nothing_configured_explains_options(monkeypatch, made):
