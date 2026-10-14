@@ -4,8 +4,12 @@ Rules only (no model call), so the offer is predictable and never invents works:
 
 - Interest: this is at least the ``MIN_QUESTIONS``-th question about the artwork
   in the conversation, and the docent actually answered (not refused).
-- If the member has viewed several works by the same artist and has no
-  "{artist} 모음" collection yet, offer to create it from those views.
+- Once per conversation: only the first such answer offers. It is read from the
+  stored conversation (already holding this exchange), so reloading or restoring
+  the chat does not bring the offer back; resetting the chat starts over.
+- If the member has viewed several works by the same artist, has no
+  "{artist} 모음" collection yet and still has room for a new collection,
+  offer to create it from those views.
 - Otherwise, if the artwork is in none of the member's collections, offer to
   put it in one.
 
@@ -15,7 +19,9 @@ through the regular collection REST calls.
 
 from sqlalchemy import select
 
-from app.models import Collection, CollectionItem
+from app.core.collection_limits import MAX_SAVED_COLLECTIONS
+from app.models import ChatMessage, ChatRole, Collection, CollectionItem
+from app.repositories import chat_repository
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.schemas.mypage import (
     CollectionAction,
@@ -30,14 +36,33 @@ MIN_ARTIST_VIEWS = 3  # distinct works by one artist before offering an artist c
 MAX_CHOICES = 6
 
 
-def questions_asked(body: ChatRequest) -> int:
-    return 1 + sum(1 for turn in body.history if turn.role == "user")
+def first_interest(db, user_id: int, artwork_id: int) -> bool:
+    """True only for the conversation's first answered question from the third on."""
+    session_id = chat_repository.get_session_id(
+        db, user_id=user_id, artwork_id=artwork_id
+    )
+    if session_id is None:
+        return False
+    refused = db.scalars(
+        select(ChatMessage.refused)
+        .where(
+            ChatMessage.session_id == session_id,
+            ChatMessage.role == ChatRole.ASSISTANT,
+        )
+        .order_by(ChatMessage.id)
+    ).all()
+    eligible = [i for i, r in enumerate(refused, 1) if i >= MIN_QUESTIONS and not r]
+    return eligible[:1] == [len(refused)]
 
 
 def suggest(
     db, user_id: int | None, artwork_id: int, body: ChatRequest, response: ChatResponse
 ) -> CollectionSuggestion | None:
-    if user_id is None or response.refused or questions_asked(body) < MIN_QUESTIONS:
+    if (
+        user_id is None
+        or response.refused
+        or not first_interest(db, user_id, artwork_id)
+    ):
         return None
     art = catalog_service.get_artwork(db, artwork_id)
     collections = db.execute(
@@ -49,7 +74,11 @@ def suggest(
 
     basis = auto.Basis("artist", artist_id=art.artist_id)
     collection_name = auto.name_for(basis, art.artist_name)
-    if collection_name.casefold() not in names:
+    # At the saved-collection quota, accepting would only fail with 409.
+    if (
+        len(collections) < MAX_SAVED_COLLECTIONS
+        and collection_name.casefold() not in names
+    ):
         works = auto.artworks(db, user_id, basis)
         if len(works) >= MIN_ARTIST_VIEWS:
             return CollectionSuggestion(

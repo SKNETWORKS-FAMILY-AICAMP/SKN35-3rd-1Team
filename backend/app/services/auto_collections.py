@@ -13,12 +13,13 @@ from dataclasses import dataclass
 from fastapi import HTTPException
 from sqlalchemy import func, select
 
+from app.core.collection_limits import MAX_COLLECTION_ARTWORKS
 from app.core.timeutil import local_date, month_range, utcnow
 from app.models import Artist, Artwork, ArtworkView
 from app.schemas.mypage import AutoCollectionOut
 from app.services import catalog_service
 
-MAX_ITEMS = 60  # an auto collection shows at most this many artworks
+MAX_ITEMS = MAX_COLLECTION_ARTWORKS
 TOP_ARTISTS = 3  # artist collections shown on the collection page
 MIN_ARTIST_WORKS = 2  # an artist collection needs at least this many viewed works
 MIN_FREQUENT_VIEWS = 2  # "자주 본 작품" only lists works viewed this often
@@ -103,7 +104,7 @@ def resolve(
                 if artist_query and not artists
                 else "어느 작가인지 정확한 이름을 알려주세요."
             )
-        (artist_id, artist_name), = artists
+        ((artist_id, artist_name),) = artists
         return Basis("artist", artist_id=artist_id), artist_name
     if kind == "month":
         if month is None or not 1 <= month <= 12:

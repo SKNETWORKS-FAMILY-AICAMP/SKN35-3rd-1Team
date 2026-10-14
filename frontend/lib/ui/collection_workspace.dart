@@ -121,7 +121,10 @@ class _CollectionEditorState extends State<_CollectionEditor> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('나만 볼 수 있는 작은 전시를 만들어 보세요.', style: sans(12, color: muted)),
+            Text(
+              '나만 볼 수 있는 작은 전시를 만들어 보세요. 최대 $maxSavedCollections개, 각 $maxCollectionArtworks점까지 저장할 수 있어요.',
+              style: sans(12, color: muted),
+            ),
             const SizedBox(height: 20),
             TextField(
               controller: name,
@@ -166,8 +169,11 @@ class CollectionWorkspace extends StatefulWidget {
 class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   List<ArtCollection> rows = [];
   List<AutoCollection> autos = [];
-  bool started = false, loading = true;
-  String? error;
+  List<AutoCollection> themes = [];
+  bool themeLoading = true;
+  String? themeMessage;
+  bool started = false, loading = true, autoLoading = true;
+  String? error, autoError;
   int serial = 0;
   @override
   void didChangeDependencies() {
@@ -186,27 +192,62 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         request = ++serial;
     setState(() {
       loading = true;
-      error = null;
+      autoLoading = true;
+      themeLoading = true;
+      themeMessage = null;
+      error = autoError = null;
     });
-    try {
-      final result = await s.collections(force: true);
-      // Auto collections are a bonus: a failure there keeps the saved ones visible.
-      final auto = await s.autoCollections().catchError(
-        (Object _) => <AutoCollection>[],
-      );
-      if (mounted && request == serial && s.userKey == identity) {
-        setState(() {
-          rows = result;
-          autos = auto;
-        });
+
+    bool current() => mounted && request == serial && s.userKey == identity;
+    Future<void> saved() async {
+      try {
+        final result = await s.collections(force: true);
+        if (current()) setState(() => rows = result);
+      } catch (e) {
+        if (current()) setState(() => error = ArtlogState.message(e));
+      } finally {
+        if (current()) setState(() => loading = false);
       }
-    } catch (e) {
-      if (mounted && request == serial && s.userKey == identity) {
-        setState(() => error = ArtlogState.message(e));
-      }
-    } finally {
-      if (mounted && request == serial) setState(() => loading = false);
     }
+
+    Future<void> automatic() async {
+      try {
+        final result = await s.autoCollections();
+        if (current()) setState(() => autos = result);
+      } catch (e) {
+        if (current()) {
+          setState(() {
+            autos = [];
+            autoError = ArtlogState.message(e);
+          });
+        }
+      } finally {
+        if (current()) setState(() => autoLoading = false);
+      }
+    }
+
+    Future<void> themed() async {
+      try {
+        final (result, message) = await s.themeCollections();
+        if (current()) {
+          setState(() {
+            themes = result;
+            themeMessage = message;
+          });
+        }
+      } catch (e) {
+        if (current()) {
+          setState(
+            () =>
+                themeMessage = 'AI 취향 모음을 불러오지 못했어요. ${ArtlogState.message(e)}',
+          );
+        }
+      } finally {
+        if (current()) setState(() => themeLoading = false);
+      }
+    }
+
+    await Future.wait([saved(), automatic(), themed()]);
   }
 
   Future<void> create() async {
@@ -274,7 +315,9 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                 child: IconButton(
                   key: const ValueKey('collections-refresh'),
                   tooltip: '컬렉션 새로고침',
-                  onPressed: loading ? null : load,
+                  onPressed: loading || autoLoading || themeLoading
+                      ? null
+                      : load,
                   style: editorialButtonStyle(
                     minimumSize: const Size(44, 44),
                     padding: EdgeInsets.zero,
@@ -316,7 +359,54 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         ],
       ),
       const SizedBox(height: 18),
-      if (loading)
+      Text(
+        '그림을 둘러보고 마음에 드는 작품에 좋아요해 보세요. AI가 취향을 따라 작은 전시를 모아 드려요.',
+        style: sans(12, color: muted),
+      ),
+      ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        title: Text('자동 컬렉션은 언제 생기나요?', style: sans(12)),
+        childrenPadding: const EdgeInsets.only(bottom: 16),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'AI 취향 모음: 작품 3점 정도를 감상하거나 좋아요하면, 테마에 맞는 새로운 작품도 함께 추천해요. '
+            '좋아요가 바뀌거나 새 작품을 3점 이상 더 보면 새로 꾸며져요.\n'
+            '최근 본 작품: 상세를 연 작품 1점부터\n'
+            '자주 본 작품: 같은 작품을 다시 열어 총 2회 이상 감상\n'
+            '작가 모음: 같은 작가의 서로 다른 작품 2점 이상, 많이 본 작가 상위 3명\n'
+            '이번 달의 감상: 한국 시간 기준 이번 달에 본 작품 1점부터\n'
+            '기록에 따라 자동으로 바뀌며, 상세에서 ‘내 컬렉션으로 저장’을 누르면 직접 편집할 수 있어요.',
+            style: sans(12, color: muted, height: 1.8),
+          ),
+        ],
+      ),
+      if (themeLoading)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 14,
+                height: 14,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '감상한 그림에서 어울리는 테마를 찾고 있어요…',
+                  style: sans(12, color: muted),
+                ),
+              ),
+            ],
+          ),
+        ),
+      if (themeMessage != null)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(themeMessage!, style: sans(12, color: muted)),
+        ),
+      if (loading || autoLoading)
         const Center(
           child: Padding(
             padding: EdgeInsets.all(24),
@@ -324,118 +414,151 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
           ),
         ),
       if (error != null)
-        EmptyView(error!, action: ArtButton('다시 불러오기', onTap: load)),
-      if (!loading && error == null)
-        LayoutBuilder(
-          builder: (context, c) {
-            final columns = c.maxWidth >= 900
-                ? 3
-                : c.maxWidth >= 540
-                ? 2
-                : 1;
-            final width = (c.maxWidth - 16 * (columns - 1)) / columns;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                SizedBox(width: width, child: const _LikedCollectionCard()),
-                for (final auto in autos)
-                  SizedBox(
-                    width: width,
-                    child: _SpecialCollectionCard(
-                      key: ValueKey('collection-auto-${auto.key}'),
-                      title: auto.name,
-                      badge: '자동',
-                      subtitle: '${auto.count}점 · ${auto.description}',
-                      cover: auto.cover,
-                      emptyIcon: Icons.auto_awesome_outlined,
-                      onTap: () => context.push(
-                        '/collection/auto/${Uri.encodeComponent(auto.key)}',
-                      ),
-                    ),
+        EmptyView(
+          '저장한 컬렉션을 불러오지 못했어요. $error',
+          action: ArtButton('다시 불러오기', onTap: load),
+        ),
+      if (autoError != null)
+        EmptyView(
+          '자동 컬렉션을 불러오지 못했어요. $autoError',
+          action: ArtButton('자동 컬렉션 다시 불러오기', onTap: load),
+        ),
+      if (!autoLoading && autoError == null && autos.isEmpty)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            '아직 로그인 후 감상한 작품이 없어요. 작품 상세를 열고 돌아와 새로고침해 주세요.',
+            style: sans(12, color: muted),
+          ),
+        ),
+      LayoutBuilder(
+        builder: (context, c) {
+          final columns = c.maxWidth >= 900
+              ? 3
+              : c.maxWidth >= 540
+              ? 2
+              : 1;
+          final width = (c.maxWidth - 16 * (columns - 1)) / columns;
+          return Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              SizedBox(width: width, child: const _LikedCollectionCard()),
+              for (final theme in themes)
+                SizedBox(
+                  width: width,
+                  child: _SpecialCollectionCard(
+                    key: ValueKey('collection-auto-${theme.key}'),
+                    title: theme.name,
+                    badge: 'AI 취향',
+                    subtitle: '${theme.count}점 · ${theme.description}',
+                    cover: theme.cover,
+                    emptyIcon: Icons.auto_awesome_outlined,
+                    onTap: () async {
+                      await context.push(
+                        '/collection/auto/${Uri.encodeComponent(theme.key)}',
+                      );
+                      if (mounted) await load();
+                    },
                   ),
-                for (final group in rows)
-                  SizedBox(
-                    width: width,
-                    child: SurfacePanel(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(4),
-                            onTap: () async {
-                              await context.push(
-                                '/collection/${Uri.encodeComponent(group.id)}',
-                              );
-                              if (mounted) await load();
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: CollectionCover(
-                                    group.previews.firstOrNull,
-                                    emptyIcon:
-                                        Icons.add_photo_alternate_outlined,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(group.name, style: serif(20)),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '${group.count}점 · 나만 보기',
-                                  style: sans(11, color: muted),
-                                ),
-                                if (group.description.isNotEmpty) ...[
-                                  const SizedBox(height: 9),
-                                  Text(
-                                    group.description,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: sans(12, color: muted),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
+                ),
+              for (final auto in autoLoading ? <AutoCollection>[] : autos)
+                SizedBox(
+                  width: width,
+                  child: _SpecialCollectionCard(
+                    key: ValueKey('collection-auto-${auto.key}'),
+                    title: auto.name,
+                    badge: '자동',
+                    subtitle: '${auto.count}점 · ${auto.description}',
+                    cover: auto.cover,
+                    emptyIcon: Icons.auto_awesome_outlined,
+                    onTap: () async {
+                      await context.push(
+                        '/collection/auto/${Uri.encodeComponent(auto.key)}',
+                      );
+                      if (mounted) await load();
+                    },
+                  ),
+                ),
+              for (final group
+                  in loading || error != null ? <ArtCollection>[] : rows)
+                SizedBox(
+                  width: width,
+                  child: SurfacePanel(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () async {
+                            await context.push(
+                              '/collection/${Uri.encodeComponent(group.id)}',
+                            );
+                            if (mounted) await load();
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextButton(
-                                onPressed: () async {
-                                  if (await editCollection(
-                                            context,
-                                            ArtlogScope.of(context),
-                                            collection: group,
-                                          ) !=
-                                          null &&
-                                      mounted) {
-                                    await load();
-                                  }
-                                },
-                                child: const Text('편집'),
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                tooltip: '${group.name} 컬렉션 삭제',
-                                onPressed: () => remove(group),
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  size: 18,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: CollectionCover(
+                                  group.previews.firstOrNull,
+                                  emptyIcon: Icons.add_photo_alternate_outlined,
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              Text(group.name, style: serif(20)),
+                              const SizedBox(height: 5),
+                              Text(
+                                '${group.count}점 · 나만 보기',
+                                style: sans(11, color: muted),
+                              ),
+                              if (group.description.isNotEmpty) ...[
+                                const SizedBox(height: 9),
+                                Text(
+                                  group.description,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: sans(12, color: muted),
+                                ),
+                              ],
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                if (await editCollection(
+                                          context,
+                                          ArtlogScope.of(context),
+                                          collection: group,
+                                        ) !=
+                                        null &&
+                                    mounted) {
+                                  await load();
+                                }
+                              },
+                              child: const Text('편집'),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              tooltip: '${group.name} 컬렉션 삭제',
+                              onPressed: () => remove(group),
+                              icon: const Icon(Icons.delete_outline, size: 18),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-              ],
-            );
-          },
-        ),
+                ),
+            ],
+          );
+        },
+      ),
       const SizedBox(height: 30),
       const Divider(),
     ],

@@ -77,6 +77,11 @@ extension MyPageState on ArtlogState {
       throw const ApiException('컬렉션 이름은 1~80자, 소개는 500자까지 입력해 주세요.');
     }
     late ArtCollection result;
+    if (id == null && artworkIds.toSet().length > maxCollectionArtworks) {
+      throw const ApiException(
+        '컬렉션에는 작품을 $maxCollectionArtworks점까지 담을 수 있어요.',
+      );
+    }
     if (config.demo) {
       final rows = _demoCollections();
       if (rows.any(
@@ -87,8 +92,8 @@ extension MyPageState on ArtlogState {
       if (id != null && !rows.any((c) => c.id == id)) {
         throw const ApiException('컬렉션을 찾을 수 없어요.');
       }
-      if (id == null && rows.length >= 50) {
-        throw const ApiException('컬렉션은 50개까지 만들 수 있어요.');
+      if (id == null && rows.length >= maxSavedCollections) {
+        throw const ApiException('컬렉션은 $maxSavedCollections개까지 만들 수 있어요.');
       }
       final old = rows.where((c) => c.id == id).firstOrNull;
       final initial = old == null
@@ -150,8 +155,10 @@ extension MyPageState on ArtlogState {
       if (remove) {
         ids.remove(artworkId);
       } else {
-        if (ids.length >= 500 && !ids.contains(artworkId)) {
-          throw const ApiException('한 컬렉션에 500점까지 담을 수 있어요.');
+        if (ids.length >= maxCollectionArtworks && !ids.contains(artworkId)) {
+          throw const ApiException(
+            '컬렉션에는 작품을 $maxCollectionArtworks점까지 담을 수 있어요.',
+          );
         }
         ids.add(artworkId);
       }
@@ -272,6 +279,12 @@ extension MyPageState on ArtlogState {
   }
 
   /// Collections computed from view history, like auto playlists.
+  Future<(List<AutoCollection>, String?)> themeCollections() async {
+    _requireMember();
+    if (config.demo) return (<AutoCollection>[], null);
+    return api.refreshThemeCollections();
+  }
+
   Future<List<AutoCollection>> autoCollections() async {
     _requireMember();
     if (!config.demo) return api.autoCollections();
@@ -351,7 +364,11 @@ extension MyPageState on ArtlogState {
     } else if (key != 'recent' && month == null) {
       return [];
     }
-    return ids.take(60).map(workFor).whereType<Artwork>().toList();
+    return ids
+        .take(maxCollectionArtworks)
+        .map(workFor)
+        .whereType<Artwork>()
+        .toList();
   }
 
   List<String> _demoTopArtists() {
