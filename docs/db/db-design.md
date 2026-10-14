@@ -41,7 +41,7 @@ TiDB Cloud Starter 클러스터 하나에 서비스 테이블 20개를 두고 �
 | `artwork_views` | 날짜별 열람 기록 | 8·9번 |
 | `chat_sessions` | 사용자 × 작품당 도슨트 대화 1개 | 3번 대화 이어 보기, 내 대화 목록 |
 | `chat_messages` | 대화의 질문·답변과 답변 출처(JSON) | 3·10번 기록 복원, 추천 신호(질문) |
-| `diary_entries` | 사용자 × 날짜당 감상글 1개. 기본 비공개이고, 공개로 바꾼 글은 피드에 노출 | 내 감상·비평, 캘린더, 공개 피드 |
+| `diary_entries` | 사용자 × 작품당 감상글 1개, 하루 개수 제한 없음. 기본 비공개이고, 공개로 바꾼 글은 피드에 노출 | 내 감상·비평, 캘린더, 공개 피드 |
 | `collections` | 사용자가 만든 비공개 작품 묶음 | 마이 컬렉션, 채팅·MCP로 컬렉션 만들기 |
 | `collection_items` | 컬렉션에 담긴 작품(N:M) | 마이 컬렉션, AI 취향 소개의 근거 |
 
@@ -298,7 +298,7 @@ erDiagram
 | 문서 → 청크 | 1:N | `document_chunks.document_id` | CASCADE |
 | 사용자 ↔ 작품 (대화) | N:M | `chat_sessions`, UNIQUE `(user_id, artwork_id)` | CASCADE |
 | 대화 → 메시지 | 1:N | `chat_messages.session_id` | CASCADE |
-| 사용자 → 감상글 | 1:N, 날짜당 1개 | `diary_entries.user_id`, UNIQUE `(user_id, entry_date)` | CASCADE |
+| 사용자 → 감상글 | 1:N, 작품당 1개 | `diary_entries.user_id`, UNIQUE `(user_id, artwork_id)` | CASCADE |
 | 작품 → 감상글 | 1:N (선택) | `diary_entries.artwork_id` (NULL 허용) | SET NULL. 작품이 빠져도 글은 남음 |
 | 사용자 → 컬렉션 | 1:N | `collections.user_id`, UNIQUE `(user_id, name)` | CASCADE |
 | 컬렉션 ↔ 작품 | N:M | `collection_items`, PK `(collection_id, artwork_id)` | CASCADE (양쪽 모두) |
@@ -613,7 +613,8 @@ erDiagram
 | `uq_document_chunks_doc_idx` | (document\_id, chunk\_index) | 범위 문서의 청크 조회 |
 | `ix_diary_public_id` | (is\_public, id) | 공개 피드 최신순 커서 조회 |
 | `ix_diary_artwork_public_id` | (artwork\_id, is\_public, id) | 작품별 공개 감상글 |
-| `uq_diary_user_date` | (user\_id, entry\_date) | 내 감상글 월별·하루 조회 |
+| `uq_diary_user_artwork` | (user\_id, artwork\_id) | 작품마다 감상글 한 편, 작품별 내 감상글 조회 |
+| `ix_diary_user_date` | (user\_id, entry\_date) | 내 감상글 월별 조회 (하루 여러 편 허용) |
 | `ix_collections_user_id` | (user\_id) | 내 컬렉션 목록 |
 | `collection_items` PK | (collection\_id, artwork\_id) | 컬렉션의 작품 목록, 미리보기 3점 |
 

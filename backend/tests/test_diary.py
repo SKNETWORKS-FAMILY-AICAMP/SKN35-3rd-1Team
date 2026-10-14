@@ -75,21 +75,37 @@ def client():
     engine.dispose()
 
 
-def put(client, day="2026-10-13", *, token="a", **body):
+def auth(token="a"):
+    return {"Authorization": f"Bearer {token}"}
+
+
+def post(client, day="2026-10-13", *, token="a", **body):
+    return client.post(
+        "/api/me/diary",
+        headers=auth(token),
+        json={"entry_date": day, "content": "감상", **body},
+    )
+
+
+def put(client, entry_id, *, token="a", **body):
     return client.put(
-        f"/api/me/diary/{day}",
-        headers={"Authorization": f"Bearer {token}"},
+        f"/api/me/diary/{entry_id}",
+        headers=auth(token),
         json={"content": "감상", **body},
     )
 
 
 def test_private_default_and_public_to_private_transition(client):
-    private = put(client)
-    assert private.status_code == 200
+    private = post(client)
+    assert private.status_code == 201
     assert not private.json()["is_public"]
     assert client.get("/api/diary/feed").json()["items"] == []
-    public = put(client, content="  빛이 따뜻해요  ", is_public=True, artwork_id=1)
-    assert public.json()["id"] == private.json()["id"]
+    entry_id = private.json()["id"]
+    public = put(
+        client, entry_id, content="  빛이 따뜻해요  ", is_public=True, artwork_id=1
+    )
+    assert public.json()["id"] == entry_id
+    assert public.json()["entry_date"] == "2026-10-13"
     feed = client.get("/api/diary/feed")
     assert feed.headers["cache-control"] == "no-store"
     item = feed.json()["items"][0]
@@ -98,55 +114,69 @@ def test_private_default_and_public_to_private_transition(client):
     assert item["artwork"]["id"] == 1
     assert not {"email", "firebase_uid", "user_id"}.intersection(item)
     assert "private-a@example.com" not in feed.text
-    put(client, is_public=False)
+    put(client, entry_id, is_public=False)
     assert client.get("/api/diary/feed").json()["items"] == []
 
 
+def test_many_per_day_but_one_per_artwork(client):
+    first = post(client, artwork_id=1, content="첫 작품")
+    second = post(client, artwork_id=2, content="둘째 작품")
+    free = [post(client, content=f"메모 {i}") for i in range(2)]
+    assert [r.status_code for r in (first, second, *free)] == [201] * 4
+    duplicate = post(client, "2026-10-20", artwork_id=1)
+    assert duplicate.status_code == 409
+    # Moving an entry onto an artwork that already has one is also refused.
+    assert put(client, second.json()["id"], artwork_id=1).status_code == 409
+    # Keeping its own artwork is fine.
+    assert put(client, first.json()["id"], artwork_id=1).status_code == 200
+    # Another member can write about the same artwork.
+    assert post(client, token="b", artwork_id=1).status_code == 201
+    month = client.get("/api/me/diary?month=2026-10", headers=auth()).json()
+    assert len(month) == 4
+    mine = client.get("/api/me/diary/artworks/1", headers=auth()).json()
+    assert mine["id"] == first.json()["id"]
+    assert client.get("/api/me/diary/artworks/2", headers=auth("b")).json() is None
+    client.delete(f"/api/me/diary/{first.json()['id']}", headers=auth())
+    assert post(client, artwork_id=1).status_code == 201
+
+
 def test_users_cannot_read_edit_or_delete_other_diaries(client):
-    first = put(client, content="A의 비공개 기록").json()
-    assert (
-        client.get(
-            "/api/me/diary/2026-10-13", headers={"Authorization": "Bearer b"}
-        ).json()
-        is None
-    )
-    second = put(client, token="b", content="B의 기록").json()
-    assert second["id"] != first["id"]
-    client.delete("/api/me/diary/2026-10-13", headers={"Authorization": "Bearer b"})
-    own = client.get("/api/me/diary/2026-10-13", headers={"Authorization": "Bearer a"})
+    first = post(client, content="A의 비공개 기록", artwork_id=1).json()
+    assert client.get("/api/me/diary/artworks/1", headers=auth("b")).json() is None
+    assert client.get("/api/me/diary?month=2026-10", headers=auth("b")).json() == []
+    assert put(client, first["id"], token="b", content="덮어쓰기").status_code == 404
+    client.delete(f"/api/me/diary/{first['id']}", headers=auth("b"))
+    own = client.get("/api/me/diary/artworks/1", headers=auth())
     assert own.json()["content"] == first["content"]
     assert own.headers["cache-control"] == "private, no-store"
 
 
 def test_public_feed_cursor_and_artwork_filter(client):
     for day in range(1, 7):
-        put(client, f"2026-10-{day:02}", is_public=day != 5, artwork_id=day % 2 + 1)
+        post(client, f"2026-10-{day:02}", is_public=day != 5)
+    post(client, "2026-10-07", is_public=True, artwork_id=2)
     one = client.get("/api/diary/feed?limit=2").json()
     two = client.get(f"/api/diary/feed?limit=2&before_id={one['next_cursor']}").json()
     assert [e["entry_date"] for e in one["items"] + two["items"]] == [
+        "2026-10-07",
         "2026-10-06",
         "2026-10-04",
         "2026-10-03",
-        "2026-10-02",
     ]
     filtered = client.get("/api/diary/feed?artwork_id=2").json()["items"]
-    assert all(e["artwork"]["id"] == 2 for e in filtered)
+    assert [e["artwork"]["id"] for e in filtered] == [2]
     assert client.get("/api/diary/feed?limit=31").status_code == 422
 
 
-def test_diary_only_day_month_boundaries_and_delete(client):
-    put(client, "2026-09-30")
-    put(client, "2026-10-01", is_public=True)
-    put(client, "2026-10-31")
-    put(client, "2026-11-01")
-    month = client.get(
-        "/api/me/diary?month=2026-10", headers={"Authorization": "Bearer a"}
-    ).json()
+def test_diary_month_boundaries_and_delete(client):
+    post(client, "2026-09-30")
+    public = post(client, "2026-10-01", is_public=True).json()
+    post(client, "2026-10-31")
+    post(client, "2026-11-01")
+    month = client.get("/api/me/diary?month=2026-10", headers=auth()).json()
     assert [d["entry_date"] for d in month] == ["2026-10-31", "2026-10-01"]
     assert (
-        client.delete(
-            "/api/me/diary/2026-10-01", headers={"Authorization": "Bearer a"}
-        ).status_code
+        client.delete(f"/api/me/diary/{public['id']}", headers=auth()).status_code
         == 204
     )
     assert client.get("/api/diary/feed").json()["items"] == []
@@ -157,20 +187,23 @@ def test_diary_only_day_month_boundaries_and_delete(client):
     [{"content": "  "}, {"content": "x" * 2001}, {"user_id": 2}, {"artwork_id": -1}],
 )
 def test_invalid_body_cannot_write(client, body):
-    assert put(client, **body).status_code == 422
+    assert post(client, **body).status_code == 422
 
 
 def test_auth_validation_and_missing_artwork_preserves_existing(client):
     assert client.get("/api/me/diary?month=2026-10").status_code == 401
     assert (
-        client.put("/api/me/diary/2026-10-13", json={"content": "내용"}).status_code
+        client.post(
+            "/api/me/diary", json={"entry_date": "2026-10-13", "content": "내용"}
+        ).status_code
         == 401
     )
-    assert client.delete("/api/me/diary/2026-10-13").status_code == 401
-    put(client)
-    assert put(client, artwork_id=999).status_code == 404
-    own = client.get(
-        "/api/me/diary/2026-10-13", headers={"Authorization": "Bearer a"}
-    ).json()
-    assert own["content"] == "감상"
-    assert put(client, "2026-02-30").status_code == 422
+    assert client.put("/api/me/diary/1", json={"content": "내용"}).status_code == 401
+    assert client.delete("/api/me/diary/1").status_code == 401
+    entry = post(client).json()
+    assert post(client, artwork_id=999).status_code == 404
+    assert put(client, entry["id"], content="바뀜", artwork_id=999).status_code == 404
+    month = client.get("/api/me/diary?month=2026-10", headers=auth()).json()
+    assert [d["content"] for d in month] == ["감상"]
+    assert post(client, "2026-02-30").status_code == 422
+    assert put(client, 999).status_code == 404

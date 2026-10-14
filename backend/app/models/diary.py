@@ -1,4 +1,8 @@
-"""Daily impressions. Private until the owner explicitly publishes them."""
+"""Artwork impressions. One per member and artwork, any number per day.
+
+Private until the owner explicitly publishes them. Entries without an artwork
+are free notes and are not limited.
+"""
 
 from datetime import date, datetime
 
@@ -22,7 +26,8 @@ from app.models.base import TABLE_OPTIONS, Base
 class DiaryEntry(Base):
     __tablename__ = "diary_entries"
     __table_args__ = (
-        UniqueConstraint("user_id", "entry_date", name="uq_diary_user_date"),
+        UniqueConstraint("user_id", "artwork_id", name="uq_diary_user_artwork"),
+        Index("ix_diary_user_date", "user_id", "entry_date"),
         Index("ix_diary_public_id", "is_public", "id"),
         Index("ix_diary_artwork_public_id", "artwork_id", "is_public", "id"),
         TABLE_OPTIONS,

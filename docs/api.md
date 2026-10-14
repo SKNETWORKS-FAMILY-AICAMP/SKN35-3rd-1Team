@@ -194,17 +194,18 @@
 
 ## 감상평·다이어리 API (20261013_0007)
 
-하루에 사용자당 감상평 한 편을 저장합니다. 공개 피드·캘린더·다이어리는 같은 `diary_entries` 데이터를 사용합니다. 기본은 비공개입니다.
+20261014_0010부터 감상평은 **작품마다 한 편**이고 하루에 쓸 수 있는 개수는 제한하지 않습니다(이전에는 하루 한 편). 작품 없이 남긴 기록(`artwork_id` null)은 개수 제한이 없습니다. 공개 피드·캘린더·다이어리는 같은 `diary_entries` 데이터를 사용합니다. 기본은 비공개입니다.
 
 | 메서드 | 경로 | 인증 | 동작 |
 | --- | --- | --- | --- |
 | GET | `/api/diary/feed?limit=12&before_id=123&artwork_id=42` | 불필요 | 공개 글만 최신 id순, artwork_id·before_id는 선택. limit 1~30 |
-| GET | `/api/me/diary?month=YYYY-MM` | 필요 | 내 월별 감상평, 날짜 내림차순 |
-| GET | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 날짜별 감상평. 없으면 null |
-| PUT | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 날짜별 감상평 생성·수정·공개 범위 변경 |
-| DELETE | `/api/me/diary/YYYY-MM-DD` | 필요 | 내 글 삭제, 204 |
+| GET | `/api/me/diary?month=YYYY-MM` | 필요 | 내 월별 감상평, 날짜·id 내림차순. 하루에 여러 편일 수 있음 |
+| GET | `/api/me/diary/artworks/{artwork_id}` | 필요 | 이 작품에 남긴 내 감상평. 없으면 null |
+| POST | `/api/me/diary` | 필요 | 감상평 작성, 201. 같은 작품에 이미 있으면 409 |
+| PUT | `/api/me/diary/{entry_id}` | 필요 | 내 감상평 수정·공개 범위 변경. 내 글이 아니면 404, 다른 내 글이 있는 작품으로 바꾸면 409 |
+| DELETE | `/api/me/diary/{entry_id}` | 필요 | 내 글 삭제, 204 |
 
-PUT 본문: `content`(공백 제거 후 1~2000자), `is_public`(기본 false), `artwork_id`(선택, null 허용). 사용자 식별 필드는 받지 않으며 검증된 로그인 사용자로 결정합니다.
+POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `is_public`(기본 false), `artwork_id`(선택, null 허용). PUT 본문은 `entry_date`를 뺀 같은 필드이며 작성 날짜는 바뀌지 않습니다. 사용자 식별 필드는 받지 않으며 검증된 로그인 사용자로 결정합니다.
 
 응답 글: `id`, `entry_date`, `content`, `is_public`, `author_name`, `artwork`(ArtworkCard 또는 null), `created_at`, `updated_at`(UTC). 이메일·Firebase UID·내부 사용자 ID는 반환하지 않습니다.
 피드 응답: `{items: DiaryEntry[], next_cursor: int|null}`. 다음 페이지는 before_id=next_cursor. 공개 피드는 no-store, 개인 조회는 private/no-store입니다. 비공개 전환·삭제는 다음 조회부터 피드에서 제외됩니다.

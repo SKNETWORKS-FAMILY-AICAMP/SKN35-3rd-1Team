@@ -90,6 +90,7 @@ class DiaryEditorState extends State<DiaryEditor> {
         content.text,
         isPublic,
         artworkId,
+        id: widget.entry?.id,
       );
       if (!mounted || s.userKey != identity) return;
       setState(() {
@@ -127,7 +128,7 @@ class DiaryEditorState extends State<DiaryEditor> {
         identity = ArtlogScope.of(context).userKey;
     setState(() => busy = true);
     try {
-      await s.deleteDiary(widget.date);
+      await s.deleteDiary(widget.entry!.id);
       if (!mounted || s.userKey != identity) return;
       content.clear();
       setState(() {
@@ -155,7 +156,10 @@ class DiaryEditorState extends State<DiaryEditor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('오늘의 감상평', style: serif(21)),
+          Text(
+            widget.entry == null ? '새 감상평' : '감상평 수정',
+            style: serif(21),
+          ),
           const SizedBox(height: 12),
           if (widget.legacyNote.isNotEmpty && widget.entry == null)
             Text(
@@ -291,12 +295,6 @@ class _DiaryComposer extends StatefulWidget {
 class _DiaryComposerState extends State<_DiaryComposer> {
   final editor = GlobalKey<DiaryEditorState>();
   final today = seoulDate();
-  late Future<List<DiaryEntry>> entries;
-  @override
-  void initState() {
-    super.initState();
-    entries = widget.state.diaryMonth(today.substring(0, 7));
-  }
 
   bool closing = false;
   Future<void> close() async {
@@ -331,50 +329,22 @@ class _DiaryComposerState extends State<_DiaryComposer> {
       content: SizedBox(
         width: 540,
         child: SingleChildScrollView(
-          child: FutureBuilder<List<DiaryEntry>>(
-            future: entries,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return EmptyView(
-                  ArtlogState.message(snapshot.error!),
-                  action: ArtButton(
-                    '다시 불러오기',
-                    onTap: () => setState(
-                      () => entries = widget.state.diaryMonth(
-                        today.substring(0, 7),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (!snapshot.hasData) {
-                return const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              final entry = snapshot.data!
-                  .where((e) => e.date == today)
-                  .firstOrNull;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$today · 오늘의 기록은 내 피드의 감상 캘린더에도 함께 저장됩니다.',
-                    style: sans(12, color: muted),
-                  ),
-                  const SizedBox(height: 20),
-                  DiaryEditor(
-                    key: editor,
-                    date: today,
-                    entry: entry,
-                    works: widget.state.artworks,
-                    onSaved: (_) => Navigator.pop(context, true),
-                    onDeleted: () => Navigator.pop(context, true),
-                  ),
-                ],
-              );
-            },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$today · 작품마다 한 편씩, 하루에 여러 편 남길 수 있어요. 내 피드의 감상 캘린더에도 함께 저장됩니다.',
+                style: sans(12, color: muted),
+              ),
+              const SizedBox(height: 20),
+              DiaryEditor(
+                key: editor,
+                date: today,
+                works: widget.state.artworks,
+                onSaved: (_) => Navigator.pop(context, true),
+                onDeleted: () => Navigator.pop(context, true),
+              ),
+            ],
           ),
         ),
       ),

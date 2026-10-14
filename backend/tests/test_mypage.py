@@ -146,10 +146,11 @@ def test_nickname_change_is_optional_own_and_shown_in_feed(client):
     other = client.get("/api/me/profile", headers={"Authorization": "Bearer b"})
     assert other.json()["nickname"] == "감상가2"
 
-    day = client.put(
-        "/api/me/diary/2026-10-01", json={"content": "공개 감상", "is_public": True}
+    day = client.post(
+        "/api/me/diary",
+        json={"entry_date": "2026-10-01", "content": "공개 감상", "is_public": True},
     )
-    assert day.status_code == 200, day.text
+    assert day.status_code == 201, day.text
     feed = client.get("/api/diary/feed").json()["items"]
     assert [item["author_name"] for item in feed] == ["새벽산책"]
     assert "private-1@example.com" not in str(feed)
@@ -229,13 +230,18 @@ def test_no_other_owner_can_read_or_mutate_collection(client):
 
 
 def test_own_critiques_activity_and_taste_never_read_other_user(client, monkeypatch):
-    client.put(
-        "/api/me/diary/2026-10-14", json={"content": "비공개 비평", "artwork_id": 1}
+    client.post(
+        "/api/me/diary",
+        json={"entry_date": "2026-10-14", "content": "비공개 비평", "artwork_id": 1},
     )
-    client.put(
-        "/api/me/diary/2026-10-13",
+    client.post(
+        "/api/me/diary",
         headers={"Authorization": "Bearer b"},
-        json={"content": "다른 이용자의 비평", "artwork_id": 2},
+        json={
+            "entry_date": "2026-10-13",
+            "content": "다른 이용자의 비평",
+            "artwork_id": 2,
+        },
     )
     cid = group(client)
     client.put(f"/api/me/collections/{cid}/items/1")

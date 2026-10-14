@@ -465,30 +465,52 @@ class ArtlogApi {
     ),
   ).map((v) => DiaryEntry.fromJson(object(v))).toList();
 
+  /// Creates an entry when [id] is null, otherwise updates that entry.
+  /// One entry per artwork; any number per day.
   Future<DiaryEntry> saveDiary(
     String date,
     String content,
     bool isPublic,
-    String? artworkId,
-  ) async => DiaryEntry.fromJson(
-    object(
-      await _request(
-        'PUT',
-        'me/diary/${Uri.encodeComponent(date)}',
-        authenticated: true,
-        body: {
-          'content': content,
-          'is_public': isPublic,
-          'artwork_id': artworkId == null ? null : int.parse(artworkId),
-        },
+    String? artworkId, {
+    String? id,
+  }) async {
+    final body = {
+      'content': content,
+      'is_public': isPublic,
+      'artwork_id': artworkId == null ? null : int.parse(artworkId),
+    };
+    return DiaryEntry.fromJson(
+      object(
+        id == null
+            ? await _request(
+                'POST',
+                'me/diary',
+                authenticated: true,
+                body: {'entry_date': date, ...body},
+              )
+            : await _request(
+                'PUT',
+                'me/diary/${Uri.encodeComponent(id)}',
+                authenticated: true,
+                body: body,
+              ),
       ),
-    ),
-  );
+    );
+  }
 
-  Future<void> deleteDiary(String date) async {
+  Future<DiaryEntry?> diaryForArtwork(String artworkId) async {
+    final j = await _request(
+      'GET',
+      'me/diary/artworks/${Uri.encodeComponent(artworkId)}',
+      authenticated: true,
+    );
+    return j == null ? null : DiaryEntry.fromJson(object(j));
+  }
+
+  Future<void> deleteDiary(String id) async {
     await _request(
       'DELETE',
-      'me/diary/${Uri.encodeComponent(date)}',
+      'me/diary/${Uri.encodeComponent(id)}',
       authenticated: true,
     );
   }

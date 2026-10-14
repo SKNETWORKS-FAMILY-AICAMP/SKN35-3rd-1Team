@@ -204,11 +204,11 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('impression-submit')));
     await tester.pumpAndSettle();
     final today = seoulDate();
-    expect(find.byKey(ValueKey('comment-$today')), findsOneWidget);
     final entry = (await s.diaryMonth(today.substring(0, 7))).single;
+    expect(find.byKey(ValueKey('comment-${entry.id}')), findsOneWidget);
     expect(entry.isPublic, isTrue);
     expect(entry.artwork?.id, art.id);
-    final author = find.byKey(ValueKey('comment-author-$today'));
+    final author = find.byKey(ValueKey('comment-author-${entry.id}'));
     await Scrollable.ensureVisible(tester.element(author), alignment: .5);
     await tester.pumpAndSettle();
     await tester.tap(author);

@@ -234,7 +234,8 @@ class _ImpressionCommentState extends State<ImpressionComment> {
   }
 }
 
-/// Saves today's public impression for this artwork, like posting a comment.
+/// Saves the member's public impression of this artwork, like posting a comment.
+/// One per artwork; writing again replaces it after confirmation.
 class ImpressionComposer extends StatefulWidget {
   const ImpressionComposer({
     super.key,
@@ -264,17 +265,17 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
     final today = seoulDate();
     setState(() => busy = true);
     try {
-      // One impression per day: confirm before replacing today's entry.
-      final existing = (await s.diaryMonth(
-        today.substring(0, 7),
-      )).where((e) => e.date == today).firstOrNull;
+      // One impression per artwork: confirm before replacing the earlier one.
+      final existing = await s.diaryForArtwork(widget.artworkId);
       if (!mounted || s.userKey != identity) return;
       if (existing != null) {
         final replace = await showDialog<bool>(
           context: context,
           builder: (c) => SurfaceDialog(
-            title: const Text('오늘의 감상을 바꿀까요?'),
-            content: const Text('감상은 하루에 한 편 남길 수 있어요. 오늘 남긴 감상이 이 내용으로 바뀌어요.'),
+            title: const Text('이 작품의 감상을 바꿀까요?'),
+            content: const Text(
+              '감상은 작품마다 한 편 남길 수 있어요. 이 작품에 남긴 감상이 이 내용으로 바뀌어요.',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(c, false),
@@ -289,7 +290,13 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
         );
         if (replace != true || !mounted) return;
       }
-      await s.saveDiary(today, text, true, widget.artworkId);
+      await s.saveDiary(
+        today,
+        text,
+        true,
+        widget.artworkId,
+        id: existing?.id,
+      );
       if (!mounted || s.userKey != identity) return;
       input.clear();
       widget.onSaved();

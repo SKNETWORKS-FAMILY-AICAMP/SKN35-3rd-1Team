@@ -3,8 +3,7 @@
 from datetime import date
 
 from sqlalchemy import delete, select
-from sqlalchemy.dialects.mysql import insert as mysql_insert
-from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy import update as sa_update
 from sqlalchemy.orm import Session
 
 from app.core import timeutil
@@ -20,9 +19,15 @@ def rows():
     )
 
 
-def own(db: Session, user_id: int, day: date):
+def own(db: Session, user_id: int, entry_id: int):
     return db.execute(
-        rows().where(DiaryEntry.user_id == user_id, DiaryEntry.entry_date == day)
+        rows().where(DiaryEntry.user_id == user_id, DiaryEntry.id == entry_id)
+    ).first()
+
+
+def for_artwork(db: Session, user_id: int, artwork_id: int):
+    return db.execute(
+        rows().where(DiaryEntry.user_id == user_id, DiaryEntry.artwork_id == artwork_id)
     ).first()
 
 
@@ -34,7 +39,7 @@ def month(db: Session, user_id: int, start: date, end: date):
             DiaryEntry.entry_date >= start,
             DiaryEntry.entry_date < end,
         )
-        .order_by(DiaryEntry.entry_date.desc())
+        .order_by(DiaryEntry.entry_date.desc(), DiaryEntry.id.desc())
     ).all()
 
 
@@ -56,7 +61,7 @@ def feed(
     return db.execute(query.order_by(DiaryEntry.id.desc()).limit(limit + 1)).all()
 
 
-def save(
+def create(
     db: Session,
     *,
     user_id: int,
@@ -64,35 +69,48 @@ def save(
     content: str,
     is_public: bool,
     artwork_id: int | None,
-):
-    values = {
-        "content": content,
-        "is_public": is_public,
-        "artwork_id": artwork_id,
-        "updated_at": timeutil.utcnow(),
-    }
-    if db.get_bind().dialect.name == "sqlite":
-        stmt = sqlite_insert(DiaryEntry).values(
-            user_id=user_id, entry_date=day, **values
-        )
-        stmt = stmt.on_conflict_do_update(
-            index_elements=["user_id", "entry_date"], set_=values
-        )
-    else:
-        stmt = mysql_insert(DiaryEntry).values(
-            user_id=user_id, entry_date=day, **values
-        )
-        stmt = stmt.on_duplicate_key_update(**values)
-    db.execute(stmt)
-    db.commit()
-    db.expire_all()
-    return own(db, user_id, day)
+) -> int:
+    now = timeutil.utcnow()
+    entry = DiaryEntry(
+        user_id=user_id,
+        entry_date=day,
+        content=content,
+        is_public=is_public,
+        artwork_id=artwork_id,
+        created_at=now,
+        updated_at=now,
+    )
+    db.add(entry)
+    db.flush()
+    return entry.id
 
 
-def remove(db: Session, user_id: int, day: date):
+def update(
+    db: Session,
+    *,
+    user_id: int,
+    entry_id: int,
+    content: str,
+    is_public: bool,
+    artwork_id: int | None,
+) -> int:
+    """Returns the number of the owner's rows changed (0 when not found)."""
+    return db.execute(
+        sa_update(DiaryEntry)
+        .where(DiaryEntry.user_id == user_id, DiaryEntry.id == entry_id)
+        .values(
+            content=content,
+            is_public=is_public,
+            artwork_id=artwork_id,
+            updated_at=timeutil.utcnow(),
+        )
+    ).rowcount
+
+
+def remove(db: Session, user_id: int, entry_id: int):
     db.execute(
         delete(DiaryEntry).where(
-            DiaryEntry.user_id == user_id, DiaryEntry.entry_date == day
+            DiaryEntry.user_id == user_id, DiaryEntry.id == entry_id
         )
     )
     db.commit()

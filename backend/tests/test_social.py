@@ -118,12 +118,21 @@ def test_hidden_follow_lists_only_visible_to_owner(client):
 
 
 def test_member_diary_and_feed_expose_only_public_entries_with_author_id(client):
-    client.put(
-        "/api/me/diary/2026-10-01",
+    client.post(
+        "/api/me/diary",
         headers=B,
-        json={"content": "공개 감상", "is_public": True, "artwork_id": 1},
+        json={
+            "entry_date": "2026-10-01",
+            "content": "공개 감상",
+            "is_public": True,
+            "artwork_id": 1,
+        },
     )
-    client.put("/api/me/diary/2026-10-02", headers=B, json={"content": "비공개"})
+    client.post(
+        "/api/me/diary",
+        headers=B,
+        json={"entry_date": "2026-10-02", "content": "비공개"},
+    )
     entries = client.get("/api/users/pub2/diary").json()["items"]
     assert [e["content"] for e in entries] == ["공개 감상"]
     feed = client.get("/api/diary/feed").json()["items"]

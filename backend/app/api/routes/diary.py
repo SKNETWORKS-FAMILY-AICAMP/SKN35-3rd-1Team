@@ -1,15 +1,14 @@
 """Private diary operations use only the identity verified by CurrentUser."""
 
-from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query, Response
+from fastapi import APIRouter, HTTPException, Path, Query, Response
 
 from app.api.routes.library import Month
 from app.core.auth import CurrentUser
 from app.db.session import DbSession
 from app.repositories import diary_repository
-from app.schemas.diary import DiaryEntry, DiaryFeed, DiaryWrite
+from app.schemas.diary import DiaryCreate, DiaryEntry, DiaryFeed, DiaryWrite
 from app.services import diary_service
 
 router = APIRouter(tags=["diary"])
@@ -40,22 +39,40 @@ def month(
         raise HTTPException(422, "올바른 연월을 입력해 주세요.") from None
 
 
-@router.get("/me/diary/{day}")
-def day_entry(
-    day: date, user: CurrentUser, db: DbSession, response: Response
+@router.get("/me/diary/artworks/{artwork_id}")
+def artwork_entry(
+    artwork_id: Annotated[int, Path(gt=0)],
+    user: CurrentUser,
+    db: DbSession,
+    response: Response,
 ) -> DiaryEntry | None:
+    """The caller's impression of one artwork, if any (one per artwork)."""
     response.headers["Cache-Control"] = "private, no-store"
-    return diary_service.get_day(db, user.id, day)
+    return diary_service.get_for_artwork(db, user.id, artwork_id)
 
 
-@router.put("/me/diary/{day}")
-def save(
-    day: date, body: DiaryWrite, user: CurrentUser, db: DbSession, response: Response
+@router.post("/me/diary", status_code=201)
+def create(
+    body: DiaryCreate, user: CurrentUser, db: DbSession, response: Response
 ) -> DiaryEntry:
     response.headers["Cache-Control"] = "private, no-store"
-    return diary_service.save(db, user.id, day, body)
+    return diary_service.create(db, user.id, body)
 
 
-@router.delete("/me/diary/{day}", status_code=204)
-def remove(day: date, user: CurrentUser, db: DbSession) -> None:
-    diary_repository.remove(db, user.id, day)
+@router.put("/me/diary/{entry_id}")
+def update(
+    entry_id: Annotated[int, Path(gt=0)],
+    body: DiaryWrite,
+    user: CurrentUser,
+    db: DbSession,
+    response: Response,
+) -> DiaryEntry:
+    response.headers["Cache-Control"] = "private, no-store"
+    return diary_service.update(db, user.id, entry_id, body)
+
+
+@router.delete("/me/diary/{entry_id}", status_code=204)
+def remove(
+    entry_id: Annotated[int, Path(gt=0)], user: CurrentUser, db: DbSession
+) -> None:
+    diary_repository.remove(db, user.id, entry_id)

@@ -138,7 +138,7 @@ void main() {
           yesterday,
           '함께 나눌 그림 이야기',
           true,
-          state.artworks.first.id,
+          state.artworks[1].id,
         );
         await tester.pumpWidget(
           ArtlogApp(state: state, initialLocation: '/library'),
@@ -173,7 +173,7 @@ void main() {
         addTearDown(tester.view.resetDevicePixelRatio);
         final state = (await tester.runAsync(boot))!;
         final today = seoulDate();
-        await state.saveDiary(
+        final post = await state.saveDiary(
           today,
           '빛의 방향을 따라 바라본 하루',
           true,
@@ -192,7 +192,7 @@ void main() {
         expect(find.text('오늘의 감상을 남겨보세요'), findsNothing);
         expect(find.textContaining('빛의 방향을 따라 바라본 하루'), findsOneWidget);
         expect(find.textContaining('혼자 간직할 문장'), findsNothing);
-        await tester.tap(find.byKey(ValueKey('feed-author-$today')));
+        await tester.tap(find.byKey(ValueKey('feed-author-${post.id}')));
         await tester.pumpAndSettle();
         expect(find.text('내 피드로'), findsOneWidget);
         expect(find.byKey(const ValueKey('member-intro')), findsOneWidget);

@@ -574,32 +574,51 @@ class ArtlogState extends ChangeNotifier {
     if (!authenticated) return [];
     if (!config.demo) return api.diaryMonth(month);
     return _demoDiary().where((e) => e.date.startsWith(month)).toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
+      ..sort((a, b) {
+        final byDate = b.date.compareTo(a.date);
+        return byDate != 0 ? byDate : b.id.compareTo(a.id);
+      });
   }
 
+  static const duplicateArtworkMessage =
+      '이 작품에는 이미 감상평을 남겼어요. 남긴 감상평을 수정해 주세요.';
+
+  /// Creates an entry when [id] is null, otherwise updates it. A member may
+  /// write any number of entries a day but only one per artwork.
   Future<DiaryEntry> saveDiary(
     String date,
     String content,
     bool isPublic,
-    String? artworkId,
-  ) async {
+    String? artworkId, {
+    String? id,
+  }) async {
     if (!authenticated) {
       throw const ApiException('로그인 후 기록할 수 있어요.', status: 401);
     }
     final revision = _identityRevision;
     DiaryEntry result;
     if (config.demo) {
+      final entries = _demoDiary();
+      final previous = entries.where((e) => e.id == id).firstOrNull;
+      if (id != null && previous == null) {
+        throw const ApiException('감상평을 찾을 수 없어요.', status: 404);
+      }
+      if (artworkId != null &&
+          entries.any((e) => e.artwork?.id == artworkId && e.id != id)) {
+        throw const ApiException(duplicateArtworkMessage, status: 409);
+      }
       result = DiaryEntry(
-        id: date,
-        date: date,
+        id: id ?? '${DateTime.now().microsecondsSinceEpoch}',
+        date: previous?.date ?? date,
         content: content.trim(),
         isPublic: isPublic,
         author: _myNickname,
         authorId: SocialState.demoMemberId,
         artwork: artworkId == null ? null : workFor(artworkId),
       );
-      final entries = _demoDiary()..removeWhere((e) => e.date == date);
-      entries.add(result);
+      entries
+        ..removeWhere((e) => e.id == id)
+        ..add(result);
       if (!await prefs.setString(
         _diaryKey,
         jsonEncode(entries.map((e) => e.toJson()).toList()),
@@ -607,22 +626,29 @@ class ArtlogState extends ChangeNotifier {
         throw const ApiException('감상평을 저장하지 못했어요.');
       }
     } else {
-      result = await api.saveDiary(date, content, isPublic, artworkId);
+      result = await api.saveDiary(date, content, isPublic, artworkId, id: id);
     }
     if (revision != _identityRevision) {
       throw const ApiException('계정이 바뀌었어요. 다시 확인해 주세요.');
     }
-    await prefs.remove(_noteKey(date));
+    await prefs.remove(_noteKey(result.date));
     ++diaryRevision;
     notifyListeners();
     return result;
   }
 
-  Future<void> deleteDiary(String date) async {
+  /// The member's own entry for [artworkId], if any.
+  Future<DiaryEntry?> diaryForArtwork(String artworkId) async {
+    if (!authenticated) return null;
+    if (!config.demo) return api.diaryForArtwork(artworkId);
+    return _demoDiary().where((e) => e.artwork?.id == artworkId).firstOrNull;
+  }
+
+  Future<void> deleteDiary(String id) async {
     if (!authenticated) throw const ApiException('로그인이 필요해요.', status: 401);
     final revision = _identityRevision;
     if (config.demo) {
-      final entries = _demoDiary()..removeWhere((e) => e.date == date);
+      final entries = _demoDiary()..removeWhere((e) => e.id == id);
       if (!await prefs.setString(
         _diaryKey,
         jsonEncode(entries.map((e) => e.toJson()).toList()),
@@ -630,10 +656,9 @@ class ArtlogState extends ChangeNotifier {
         throw const ApiException('감상평을 삭제하지 못했어요.');
       }
     } else {
-      await api.deleteDiary(date);
+      await api.deleteDiary(id);
     }
     if (revision != _identityRevision) return;
-    await prefs.remove(_noteKey(date));
     ++diaryRevision;
     notifyListeners();
   }
@@ -650,7 +675,10 @@ class ArtlogState extends ChangeNotifier {
                   (artworkId == null || e.artwork?.id == artworkId),
             )
             .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+          ..sort((a, b) {
+            final byDate = b.date.compareTo(a.date);
+            return byDate != 0 ? byDate : b.id.compareTo(a.id);
+          });
     final start = (int.tryParse(cursor ?? '') ?? 0).clamp(0, entries.length);
     final page = entries.skip(start).take(12).toList();
     final next = start + page.length;

@@ -6,10 +6,16 @@ import 'design.dart';
 import '../diary.dart';
 import 'diary_editor.dart';
 
-/// 감상 캘린더: monthly views with the day's diary editor.
+/// 감상 캘린더: monthly views with the day's impressions and an editor.
+/// A day may hold any number of impressions, one per artwork.
 class FeedCalendar extends StatefulWidget {
-  const FeedCalendar({super.key, this.artworkId, this.initialDate});
-  final String? artworkId, initialDate;
+  const FeedCalendar({
+    super.key,
+    this.artworkId,
+    this.initialDate,
+    this.initialEntryId,
+  });
+  final String? artworkId, initialDate, initialEntryId;
   @override
   State<FeedCalendar> createState() => _FeedCalendarState();
 }
@@ -28,7 +34,10 @@ class _FeedCalendarState extends State<FeedCalendar> {
   late DateTime month = DateTime.parse('${initialDay.substring(0, 7)}-01');
   late String selected = initialDay;
   String? identity, calendarError, dayError, diaryError;
-  Map<String, DiaryEntry> diaryEntries = {};
+  Map<String, List<DiaryEntry>> diaryEntries = {};
+  // The entry open in the editor; null means writing a new one.
+  late String? editingId = widget.initialEntryId;
+  int get diaryCount => diaryEntries.values.fold(0, (n, l) => n + l.length);
   GlobalKey<DiaryEditorState> editorKey = GlobalKey<DiaryEditorState>();
   bool sample = false, loading = false, dayLoading = false;
   int monthRevision = 0, dayRevision = 0;
@@ -130,7 +139,10 @@ class _FeedCalendarState extends State<FeedCalendar> {
       }
       setState(() {
         calendarDays = result;
-        diaryEntries = {for (final e in entries) e.date: e};
+        diaryEntries = {};
+        for (final e in entries) {
+          (diaryEntries[e.date] ??= []).add(e);
+        }
         diaryError = nextDiaryError;
       });
       await loadDay(selected);
@@ -153,6 +165,7 @@ class _FeedCalendarState extends State<FeedCalendar> {
     final currentIdentity = identity;
     if (!s.authenticated) return;
     setState(() {
+      if (date != selected) editingId = null;
       selected = date;
       dayLoading = true;
       dayError = null;
@@ -188,6 +201,22 @@ class _FeedCalendarState extends State<FeedCalendar> {
       selected = dateKey(month);
     });
     loadMonth();
+  }
+
+  DiaryEntry? get editingEntry => editingId == null
+      ? null
+      : diaryEntries[selected]?.where((e) => e.id == editingId).firstOrNull;
+
+  Future<void> edit(String? id) async {
+    if (id == editingId ||
+        !(await editorKey.currentState?.confirmDiscard() ?? true) ||
+        !mounted) {
+      return;
+    }
+    setState(() {
+      editingId = id;
+      editorKey = GlobalKey<DiaryEditorState>();
+    });
   }
 
   @override
@@ -246,7 +275,7 @@ class _FeedCalendarState extends State<FeedCalendar> {
                       style: sans(11, color: muted),
                     ),
                     Text(
-                      '감상평 ${diaryEntries.length}편',
+                      '감상평 $diaryCount편',
                       style: sans(11, color: muted),
                     ),
                   ],
@@ -402,7 +431,7 @@ class _FeedCalendarState extends State<FeedCalendar> {
                       final art = ids.isEmpty ? null : s.workFor(ids.first);
                       return Semantics(
                         label:
-                            '${month.month}월 $d일, $count점 감상${diaryEntries.containsKey(date) ? ', 감상평 있음' : ''}',
+                            '${month.month}월 $d일, $count점 감상${diaryEntries.containsKey(date) ? ', 감상평 ${diaryEntries[date]!.length}편' : ''}',
                         button: true,
                         selected: selected == date,
                         child: InkWell(
@@ -441,9 +470,9 @@ class _FeedCalendarState extends State<FeedCalendar> {
                                     ),
                                   ),
                                 ),
-                                if (diaryEntries[date] case final entry?)
+                                if (diaryEntries[date] case final entries?)
                                   Icon(
-                                    entry.isPublic
+                                    entries.any((e) => e.isPublic)
                                         ? Icons.public
                                         : Icons.lock_outline,
                                     size: 13,
@@ -630,18 +659,107 @@ class _FeedCalendarState extends State<FeedCalendar> {
             description: diaryError!,
             action: ArtButton('다이어리 다시 불러오기', onTap: loadMonth),
           )
-        else
+        else ...[
+          for (final entry in diaryEntries[selected] ?? const <DiaryEntry>[])
+            _DayEntryTile(
+              entry: entry,
+              editing: entry.id == editingId,
+              onEdit: () => edit(entry.id),
+            ),
+          if (editingId != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () => edit(null),
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('새 감상평 쓰기'),
+              ),
+            ),
+          const SizedBox(height: 12),
           DiaryEditor(
             key: editorKey,
             date: selected,
-            entry: diaryEntries[selected],
+            entry: editingEntry,
             works: [...dayWorks, ?s.workFor(widget.artworkId ?? '')],
-            initialArtworkId: widget.artworkId,
-            legacyNote: s.note(selected),
-            onSaved: (entry) =>
-                setState(() => diaryEntries[entry.date] = entry),
-            onDeleted: () => setState(() => diaryEntries.remove(selected)),
+            initialArtworkId: editingId == null ? widget.artworkId : null,
+            legacyNote: diaryEntries.containsKey(selected)
+                ? ''
+                : s.note(selected),
+            onSaved: (entry) => setState(() {
+              final day = diaryEntries[entry.date] ??= [];
+              final i = day.indexWhere((e) => e.id == entry.id);
+              if (i < 0) {
+                day.insert(0, entry);
+              } else {
+                day[i] = entry;
+              }
+              editingId = null;
+              editorKey = GlobalKey<DiaryEditorState>();
+            }),
+            onDeleted: () => setState(() {
+              diaryEntries[selected]?.removeWhere((e) => e.id == editingId);
+              if (diaryEntries[selected]?.isEmpty ?? false) {
+                diaryEntries.remove(selected);
+              }
+              editingId = null;
+              editorKey = GlobalKey<DiaryEditorState>();
+            }),
           ),
+        ],
+      ],
+    ),
+  );
+}
+
+/// One saved impression of the selected day, with a button to edit it.
+class _DayEntryTile extends StatelessWidget {
+  const _DayEntryTile({
+    required this.entry,
+    required this.editing,
+    required this.onEdit,
+  });
+  final DiaryEntry entry;
+  final bool editing;
+  final VoidCallback onEdit;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+    decoration: BoxDecoration(
+      color: editing ? soft : pearl,
+      border: Border.all(color: editing ? green : line, width: .6),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          entry.isPublic ? Icons.public : Icons.lock_outline,
+          size: 15,
+          color: green,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                entry.artwork?.title ?? '작품 없이 남긴 기록',
+                style: sans(12, weight: FontWeight.w600),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                entry.content,
+                style: sans(12, color: muted),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: editing ? null : onEdit,
+          child: Text(editing ? '수정 중' : '수정'),
+        ),
       ],
     ),
   );

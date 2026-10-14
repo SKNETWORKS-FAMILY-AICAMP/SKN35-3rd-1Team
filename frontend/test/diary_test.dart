@@ -35,16 +35,35 @@ void main() {
     'published diary disappears from feed when made private or deleted',
     () async {
       final s = await state();
-      await s.saveDiary('2026-10-13', '공개 감상', true, null);
+      final saved = await s.saveDiary('2026-10-13', '공개 감상', true, null);
       expect((await s.diaryFeed()).entries.single.content, '공개 감상');
-      await s.saveDiary('2026-10-13', '비공개 감상', false, null);
+      await s.saveDiary('2026-10-13', '비공개 감상', false, null, id: saved.id);
       expect((await s.diaryFeed()).entries, isEmpty);
       expect((await s.diaryMonth('2026-10')).single.isPublic, isFalse);
-      await s.deleteDiary('2026-10-13');
+      await s.deleteDiary(saved.id);
       expect(await s.diaryMonth('2026-10'), isEmpty);
       s.dispose();
     },
   );
+
+  test('many impressions a day, but only one per artwork', () async {
+    final s = await state();
+    await s.load();
+    final [first, second, ...] = s.artworks;
+    final a = await s.saveDiary('2026-10-13', '첫 작품', true, first.id);
+    await s.saveDiary('2026-10-13', '둘째 작품', true, second.id);
+    await s.saveDiary('2026-10-13', '작품 없는 메모', false, null);
+    expect(await s.diaryMonth('2026-10'), hasLength(3));
+    await expectLater(
+      s.saveDiary('2026-10-14', '같은 작품 또', true, first.id),
+      throwsA(isA<ApiException>().having((e) => e.status, 'status', 409)),
+    );
+    expect((await s.diaryForArtwork(first.id))?.id, a.id);
+    await s.saveDiary('2026-10-13', '고친 감상', true, first.id, id: a.id);
+    expect((await s.diaryForArtwork(first.id))?.content, '고친 감상');
+    expect((await s.diaryFeed()).entries, hasLength(2));
+    s.dispose();
+  });
 
   test(
     'live diary contract and feed pagination use correct methods and IDs',
@@ -73,12 +92,23 @@ void main() {
         }),
       )..token = 'test';
       await api.saveDiary('2026-10-13', '기록', false, '42');
+      expect(requests.single.method, 'POST');
+      expect(requests.single.url.path, '/me/diary');
       expect(jsonDecode(requests.single.body), {
+        'entry_date': '2026-10-13',
         'content': '기록',
         'is_public': false,
         'artwork_id': 42,
       });
       expect(requests.single.headers['Authorization'], 'Bearer test');
+      await api.saveDiary('2026-10-13', '고친 기록', true, null, id: '7');
+      expect(requests.last.method, 'PUT');
+      expect(requests.last.url.path, '/me/diary/7');
+      expect(jsonDecode(requests.last.body), {
+        'content': '고친 기록',
+        'is_public': true,
+        'artwork_id': null,
+      });
       expect(
         (await api.diaryFeed(cursor: '21', artworkId: '42')).nextCursor,
         '17',
@@ -88,8 +118,9 @@ void main() {
         'before_id': '21',
         'artwork_id': '42',
       });
-      await api.deleteDiary('2026-10-13');
+      await api.deleteDiary('7');
       expect(requests.last.method, 'DELETE');
+      expect(requests.last.url.path, '/me/diary/7');
       api.close();
     },
   );
@@ -164,7 +195,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == '$label, 감상평 있음',
+          (w) => w is Semantics && w.properties.label == '$label, 감상평 1편',
         ),
         findsOneWidget,
       );
@@ -186,7 +217,12 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final s = await state();
-      await s.saveDiary('2026-10-13', '다른 눈으로 보는 그림', true, null);
+      final saved = await s.saveDiary(
+        '2026-10-13',
+        '다른 눈으로 보는 그림',
+        true,
+        null,
+      );
       await tester.pumpWidget(
         host(
           s,
@@ -210,7 +246,13 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('다른 눈으로 보는 그림'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await s.saveDiary('2026-10-13', '이제 나만 보는 그림', false, null);
+      await s.saveDiary(
+        '2026-10-13',
+        '이제 나만 보는 그림',
+        false,
+        null,
+        id: saved.id,
+      );
       await tester.pumpAndSettle();
       expect(find.textContaining('다른 눈으로 보는 그림'), findsNothing);
       await tester.pumpWidget(const SizedBox());

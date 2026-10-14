@@ -20,6 +20,10 @@ class DiaryWrite(BaseModel):
     artwork_id: Annotated[int, Field(gt=0)] | None = None
 
 
+class DiaryCreate(DiaryWrite):
+    entry_date: date
+
+
 class DiaryEntry(BaseModel):
     id: int
     entry_date: date

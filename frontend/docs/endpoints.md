@@ -62,7 +62,7 @@ ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_view
 
 ## 감상평·다이어리
 
-`GET /api/diary/feed`, `GET /api/me/diary?month=YYYY-MM`, `PUT/DELETE /api/me/diary/YYYY-MM-DD`를 사용합니다. 상세 계약은 `docs/api.md`의 0007 절을 참고합니다. 공개 감상은 `/community`, 작품별 감상은 상세 화면, 개인 기록은 `/library`의 캘린더·다이어리 탭에서 확인합니다. 작품 상세에서 작성 버튼을 누르면 작품을 선택한 상태로 서재에 진입합니다.
+`GET /api/diary/feed`, `GET /api/me/diary?month=YYYY-MM`, `POST /api/me/diary`, `PUT/DELETE /api/me/diary/{entry_id}`, `GET /api/me/diary/artworks/{artwork_id}`를 사용합니다. 감상평은 작품마다 한 편이고 하루 개수 제한은 없습니다. 상세 계약은 `docs/api.md`의 0007 절을 참고합니다. 공개 감상은 `/community`, 작품별 감상은 상세 화면, 개인 기록은 `/library`의 캘린더·다이어리 탭에서 확인합니다. 작품 상세에서 작성 버튼을 누르면 작품을 선택한 상태로 서재에 진입합니다.
 
 공개 설정은 저장 시 반영되며 새 글은 기본 비공개입니다. 체험 모드에서는 브라우저에만 저장되고 실제 공유로 표시하지 않습니다. 기존 브라우저 메모는 작성란에 불러오되 사용자가 저장하기 전 서버로 전송하지 않습니다.
 

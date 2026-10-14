@@ -33,7 +33,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
   late String tab = feedTabs.any((t) => t.$1 == widget.initialTab)
       ? widget.initialTab
       : 'posts';
-  String? calendarDate;
+  String? calendarDate, calendarEntryId;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,10 @@ class _MyFeedPageState extends State<MyFeedPage> {
                       quiet: tab != t.$1,
                       tinted: tab == t.$1,
                     ),
-                    onPressed: () => setState(() => tab = t.$1),
+                    onPressed: () => setState(() {
+                      tab = t.$1;
+                      calendarEntryId = null;
+                    }),
                     child: Text(
                       t.$2,
                       style: sans(
@@ -86,17 +89,19 @@ class _MyFeedPageState extends State<MyFeedPage> {
           ),
           const SizedBox(height: 16),
           KeyedSubtree(
-            key: ValueKey('${s.userKey}/$tab/$calendarDate'),
+            key: ValueKey('${s.userKey}/$tab/$calendarDate/$calendarEntryId'),
             child: switch (tab) {
               'collections' => const CollectionWorkspace(),
               'artists' => const _LikedArtists(),
               'calendar' => FeedCalendar(
                 artworkId: widget.artworkId,
                 initialDate: calendarDate ?? widget.initialDate,
+                initialEntryId: calendarEntryId,
               ),
               _ => _ImpressionList(
                 onOpen: (e) => setState(() {
                   calendarDate = e.date;
+                  calendarEntryId = e.id;
                   tab = 'calendar';
                 }),
               ),

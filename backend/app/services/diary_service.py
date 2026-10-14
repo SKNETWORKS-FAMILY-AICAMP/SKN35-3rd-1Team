@@ -1,12 +1,17 @@
-"""Daily journal and public impressions share one source of truth."""
+"""Journal and public impressions share one source of truth.
 
-from datetime import UTC, date
+A member may write any number of impressions a day but only one per artwork.
+"""
 
+from datetime import UTC
+
+from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.timeutil import month_range
 from app.repositories import diary_repository as repo
-from app.schemas.diary import DiaryEntry, DiaryFeed, DiaryWrite
+from app.schemas.diary import DiaryCreate, DiaryEntry, DiaryFeed, DiaryWrite
 from app.services.catalog_service import ensure_artwork, to_artwork_card
 
 
@@ -25,8 +30,11 @@ def serialize(row) -> DiaryEntry:
     )
 
 
-def get_day(db: Session, user_id: int, day: date) -> DiaryEntry | None:
-    row = repo.own(db, user_id, day)
+DUPLICATE_ARTWORK = "이 작품에는 이미 감상평을 남겼어요. 남긴 감상평을 수정해 주세요."
+
+
+def get_for_artwork(db: Session, user_id: int, artwork_id: int) -> DiaryEntry | None:
+    row = repo.for_artwork(db, user_id, artwork_id)
     return serialize(row) if row else None
 
 
@@ -35,10 +43,46 @@ def get_month(db: Session, user_id: int, month: str) -> list[DiaryEntry]:
     return [serialize(row) for row in repo.month(db, user_id, start, end)]
 
 
-def save(db: Session, user_id: int, day: date, body: DiaryWrite) -> DiaryEntry:
-    if body.artwork_id is not None:
-        ensure_artwork(db, body.artwork_id)
-    return serialize(repo.save(db, user_id=user_id, day=day, **body.model_dump()))
+def _check_artwork(
+    db: Session, user_id: int, artwork_id: int | None, entry_id: int | None = None
+) -> None:
+    if artwork_id is None:
+        return
+    ensure_artwork(db, artwork_id)
+    taken = repo.for_artwork(db, user_id, artwork_id)
+    if taken is not None and taken[0].id != entry_id:
+        raise HTTPException(409, DUPLICATE_ARTWORK)
+
+
+def _commit(db: Session) -> None:
+    try:
+        db.commit()
+    except IntegrityError:
+        # Two requests for the same artwork raced past the check above.
+        db.rollback()
+        raise HTTPException(409, DUPLICATE_ARTWORK) from None
+    db.expire_all()
+
+
+def create(db: Session, user_id: int, body: DiaryCreate) -> DiaryEntry:
+    _check_artwork(db, user_id, body.artwork_id)
+    entry_id = repo.create(
+        db,
+        user_id=user_id,
+        day=body.entry_date,
+        **body.model_dump(exclude={"entry_date"}),
+    )
+    _commit(db)
+    return serialize(repo.own(db, user_id, entry_id))
+
+
+def update(db: Session, user_id: int, entry_id: int, body: DiaryWrite) -> DiaryEntry:
+    if repo.own(db, user_id, entry_id) is None:
+        raise HTTPException(404, "감상평을 찾을 수 없어요.")
+    _check_artwork(db, user_id, body.artwork_id, entry_id)
+    repo.update(db, user_id=user_id, entry_id=entry_id, **body.model_dump())
+    _commit(db)
+    return serialize(repo.own(db, user_id, entry_id))
 
 
 def get_feed(
