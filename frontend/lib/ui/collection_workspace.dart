@@ -168,12 +168,11 @@ class CollectionWorkspace extends StatefulWidget {
 
 class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   List<ArtCollection> rows = [];
-  List<AutoCollection> autos = [];
   List<AutoCollection> themes = [];
   bool themeLoading = true;
   String? themeMessage;
-  bool started = false, loading = true, autoLoading = true;
-  String? error, autoError;
+  bool started = false, loading = true;
+  String? error;
   int serial = 0;
   @override
   void didChangeDependencies() {
@@ -192,10 +191,9 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         request = ++serial;
     setState(() {
       loading = true;
-      autoLoading = true;
       themeLoading = true;
       themeMessage = null;
-      error = autoError = null;
+      error = null;
     });
 
     bool current() => mounted && request == serial && s.userKey == identity;
@@ -207,22 +205,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         if (current()) setState(() => error = ArtlogState.message(e));
       } finally {
         if (current()) setState(() => loading = false);
-      }
-    }
-
-    Future<void> automatic() async {
-      try {
-        final result = await s.autoCollections();
-        if (current()) setState(() => autos = result);
-      } catch (e) {
-        if (current()) {
-          setState(() {
-            autos = [];
-            autoError = ArtlogState.message(e);
-          });
-        }
-      } finally {
-        if (current()) setState(() => autoLoading = false);
       }
     }
 
@@ -247,7 +229,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       }
     }
 
-    await Future.wait([saved(), automatic(), themed()]);
+    await Future.wait([saved(), themed()]);
   }
 
   Future<void> create() async {
@@ -315,9 +297,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                 child: IconButton(
                   key: const ValueKey('collections-refresh'),
                   tooltip: '컬렉션 새로고침',
-                  onPressed: loading || autoLoading || themeLoading
-                      ? null
-                      : load,
+                  onPressed: loading || themeLoading ? null : load,
                   style: editorialButtonStyle(
                     minimumSize: const Size(44, 44),
                     padding: EdgeInsets.zero,
@@ -360,23 +340,21 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       ),
       const SizedBox(height: 18),
       Text(
-        '그림을 둘러보고 마음에 드는 작품에 좋아요해 보세요. AI가 취향을 따라 작은 전시를 모아 드려요.',
+        '그림을 둘러보고 마음에 드는 작품에 좋아요해 보세요. AI가 끌린 그림들의 분위기를 읽고 '
+        '‘잔잔한 저녁에 어울리는 그림’ 같은 감성 컬렉션을 만들어 드려요.',
         style: sans(12, color: muted),
       ),
       ExpansionTile(
         tilePadding: EdgeInsets.zero,
-        title: Text('자동 컬렉션은 언제 생기나요?', style: sans(12)),
+        title: Text('AI 취향 컬렉션은 언제 생기나요?', style: sans(12)),
         childrenPadding: const EdgeInsets.only(bottom: 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'AI 취향 모음: 작품 3점 정도를 감상하거나 좋아요하면, 테마에 맞는 새로운 작품도 함께 추천해요. '
+            '작품 3점 정도를 감상하거나 좋아요하면 분위기가 다른 2~4개의 컬렉션이 생기고, '
+            '아직 보지 않은 어울리는 그림도 함께 담겨요.\n'
             '좋아요가 바뀌거나 새 작품을 3점 이상 더 보면 새로 꾸며져요.\n'
-            '최근 본 작품: 상세를 연 작품 1점부터\n'
-            '자주 본 작품: 같은 작품을 다시 열어 총 2회 이상 감상\n'
-            '작가 모음: 같은 작가의 서로 다른 작품 2점 이상, 많이 본 작가 상위 3명\n'
-            '이번 달의 감상: 한국 시간 기준 이번 달에 본 작품 1점부터\n'
-            '기록에 따라 자동으로 바뀌며, 상세에서 ‘내 컬렉션으로 저장’을 누르면 직접 편집할 수 있어요.',
+            '마음에 드는 컬렉션은 상세에서 ‘내 컬렉션으로 저장’을 눌러 직접 편집할 수 있어요.',
             style: sans(12, color: muted, height: 1.8),
           ),
         ],
@@ -394,7 +372,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '감상한 그림에서 어울리는 테마를 찾고 있어요…',
+                  '감상한 그림에서 어울리는 분위기를 찾고 있어요…',
                   style: sans(12, color: muted),
                 ),
               ),
@@ -406,7 +384,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Text(themeMessage!, style: sans(12, color: muted)),
         ),
-      if (loading || autoLoading)
+      if (loading)
         const Center(
           child: Padding(
             padding: EdgeInsets.all(24),
@@ -417,19 +395,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         EmptyView(
           '저장한 컬렉션을 불러오지 못했어요. $error',
           action: ArtButton('다시 불러오기', onTap: load),
-        ),
-      if (autoError != null)
-        EmptyView(
-          '자동 컬렉션을 불러오지 못했어요. $autoError',
-          action: ArtButton('자동 컬렉션 다시 불러오기', onTap: load),
-        ),
-      if (!autoLoading && autoError == null && autos.isEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(
-            '아직 로그인 후 감상한 작품이 없어요. 작품 상세를 열고 돌아와 새로고침해 주세요.',
-            style: sans(12, color: muted),
-          ),
         ),
       LayoutBuilder(
         builder: (context, c) {
@@ -457,24 +422,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                     onTap: () async {
                       await context.push(
                         '/collection/auto/${Uri.encodeComponent(theme.key)}',
-                      );
-                      if (mounted) await load();
-                    },
-                  ),
-                ),
-              for (final auto in autoLoading ? <AutoCollection>[] : autos)
-                SizedBox(
-                  width: width,
-                  child: _SpecialCollectionCard(
-                    key: ValueKey('collection-auto-${auto.key}'),
-                    title: auto.name,
-                    badge: '자동',
-                    subtitle: '${auto.count}점 · ${auto.description}',
-                    cover: auto.cover,
-                    emptyIcon: Icons.auto_awesome_outlined,
-                    onTap: () async {
-                      await context.push(
-                        '/collection/auto/${Uri.encodeComponent(auto.key)}',
                       );
                       if (mounted) await load();
                     },
