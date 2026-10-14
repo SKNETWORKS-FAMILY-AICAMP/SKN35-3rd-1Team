@@ -7,6 +7,7 @@ import '../state.dart';
 import '../ui/collection_workspace.dart';
 import '../ui/design.dart';
 import '../ui/feed_calendar.dart';
+import '../ui/diary_feed.dart';
 
 const feedTabs = [
   ('posts', '공개 감상'),
@@ -534,6 +535,11 @@ class ImpressionRows extends StatelessWidget {
                   Text(
                     e.date.replaceAll('-', '.'),
                     style: sans(11, color: muted),
+                  ),
+                  ImpressionDeleteButton(
+                    entry: e,
+                    onDeleted: onRefresh,
+                    enabled: !loading,
                   ),
                 ],
               ),

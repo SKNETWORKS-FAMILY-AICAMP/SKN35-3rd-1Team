@@ -4,6 +4,110 @@ import '../diary.dart';
 import '../models.dart';
 import '../state.dart';
 import 'design.dart';
+import 'collection_workspace.dart';
+
+bool ownsImpression(ArtlogState s, DiaryEntry entry) =>
+    s.authenticated &&
+    entry.authorId.isNotEmpty &&
+    (s.config.demo
+        ? entry.authorId == SocialState.demoMemberId
+        : s.myPublicId != null && entry.authorId == s.myPublicId);
+
+/// The same owner-only delete action in public cards, comments and my feed.
+class ImpressionDeleteButton extends StatefulWidget {
+  const ImpressionDeleteButton({
+    super.key,
+    required this.entry,
+    this.onDeleted,
+    this.enabled = true,
+  });
+  final DiaryEntry entry;
+  final VoidCallback? onDeleted;
+  final bool enabled;
+  @override
+  State<ImpressionDeleteButton> createState() => _ImpressionDeleteButtonState();
+}
+
+class _ImpressionDeleteButtonState extends State<ImpressionDeleteButton> {
+  bool busy = false, deleting = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final s = ArtlogScope.of(context);
+    if (s.authenticated && !s.config.demo) s.loadFollowing();
+  }
+
+  Future<void> remove() async {
+    final s = ArtlogScope.of(context), identity = s.userKey;
+    final entry = widget.entry;
+    if (busy || !widget.enabled || !ownsImpression(s, entry)) return;
+    setState(() => busy = true);
+    try {
+      final approved = await showDialog<bool>(
+        context: context,
+        builder: (c) => AccountGuard(
+          state: s,
+          child: SurfaceDialog(
+            title: const Text('이 감상을 삭제할까요?'),
+            content: const Text('피드와 감상 기록에서 삭제되며 되돌릴 수 없어요.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(c, false),
+                child: const Text('취소'),
+              ),
+              TextButton(
+                key: const ValueKey('confirm-impression-delete'),
+                onPressed: () => Navigator.pop(c, true),
+                child: const Text('삭제'),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (approved != true ||
+          !mounted ||
+          s.userKey != identity ||
+          !ownsImpression(s, entry)) {
+        return;
+      }
+      setState(() => deleting = true);
+      await s.deleteDiary(entry.id);
+      if (!mounted || !s.authenticated || s.userKey != identity) return;
+      widget.onDeleted?.call();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('감상을 삭제했어요.')));
+    } catch (e) {
+      if (mounted && s.userKey == identity) showError(context, e);
+    } finally {
+      if (mounted) {
+        setState(() {
+          busy = false;
+          deleting = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!ownsImpression(ArtlogScope.of(context), widget.entry)) {
+      return const SizedBox.shrink();
+    }
+    return IconButton(
+      key: ValueKey('delete-impression-${widget.entry.id}'),
+      tooltip: '감상 삭제',
+      onPressed: busy || !widget.enabled ? null : remove,
+      icon: deleting
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.delete_outline, size: 18, color: muted),
+    );
+  }
+}
 
 class DiaryFeedView extends StatefulWidget {
   const DiaryFeedView({super.key, this.artworkId});
@@ -227,6 +331,7 @@ class _ImpressionCommentState extends State<ImpressionComment> {
                         child: Icon(Icons.lock_outline, size: 13, color: muted),
                       ),
                     ],
+                    ImpressionDeleteButton(entry: e),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -513,8 +618,7 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
   Widget build(BuildContext context) {
     final e = widget.entry, s = ArtlogScope.of(context), art = e.artwork;
     final long = e.content.characters.length > 140;
-    final mine =
-        e.authorId == s.myPublicId || e.authorId == SocialState.demoMemberId;
+    final mine = ownsImpression(s, e);
     final following = s.followingMembers.contains(e.authorId);
     return ScrollReveal(
       child: Container(
@@ -578,6 +682,7 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
                         ),
                       ),
                     ),
+                  ImpressionDeleteButton(entry: e),
                 ],
               ),
             ),
