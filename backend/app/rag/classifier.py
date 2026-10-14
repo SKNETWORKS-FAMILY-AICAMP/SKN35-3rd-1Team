@@ -45,6 +45,8 @@ DEICTIC = ("이 그림", "이 작품", "이 화가", "이 작가", "그림에", 
 # 작가 사이의 관계·영향·비교를 묻는 표현. 범위 안 생애·비교 문서에 답이 있을 수 있다.
 RELATION = ("관계", "영향", "만났", "만난", "친구", "스승", "제자", "배웠", "함께", "같이", "교류", "비교", "차이",
             "달라", "다른 점", "다르게", "공통", "닮", "비슷한 점", "모방", "따라")
+# 두 작가를 견주는 질문은 승인된 비교 근거가 필요하다. 관계·영향 질문은 생애 문서도 사용한다.
+COMPARISON = re.compile(r"비교|차이|달라|달랐|다른 점|다르게|공통점")
 # 이 서비스가 답할 수 없는 실시간·생활 정보
 OFF_TOPIC = re.compile(
     r"날씨|미세먼지|기온|환율|주가|주식|코인|맛집|교통|뉴스|로또|"
@@ -52,6 +54,16 @@ OFF_TOPIC = re.compile(
     r"(싸게|최저가|구매|구입|살 수 있는|파는|판매하는)[^?]{0,12}(사이트|곳|쇼핑몰|링크)|"
     r"(사이트|쇼핑몰)[^?]{0,8}(찾아|알려)"
 )
+# 작품 해설과 관계없는 대화 명령·근황 발화는 검색 결과가 있어도 답변하지 않는다.
+UNRELATED_CHAT = re.compile(
+    r"^\s*(?:욕\s?(?:해|해봐|해\s?줘|해\s?주세요)|"
+    r"나\s?(?:기분\s?나빠|심심해|외로워)|"
+    r"뭐\s?해\s?[?？]?\s*(?:나\s?심심해)?)\s*[.!?？]*\s*$"
+)
+MEAL_CHOICE = re.compile(r"(?:뭐|뭘|무엇을)\s?먹(?:을까|을지|어야|을래|지|어)?")
+MEAL_CONTEXT = re.compile(r"아침|점심|저녁|야식|끼니|메뉴|식사")
+FIRST_PERSON = re.compile(r"(?<![가-힣])(?:나|난|나는|내가|저|저는|우리|우리는)(?![가-힣])")
+ART_SCENE = re.compile(r"(?:그림|작품|장면)\s?(?:속|에서|에 나오는|에 그려진)|(?:그림|작품)\s?속\s?(?:인물|사람)")
 # 작품을 가리켜도 도슨트 답변으로 실행할 수 없는 앱 기능 요청. 질문형 설명이나
 # 작품의 소장 컬렉션에 관한 질문은 이 규칙으로 거절하지 않는다.
 APP_ACTION = re.compile(
@@ -116,7 +128,15 @@ def classify_artwork(session, artwork_id: int, question: str) -> Route:
         scope = repo.scope_document_ids(session, artwork_id) if scope is None else scope
         return repo.name_in_scope(session, scope, name)
 
-    return classify(question, artist, named_in_scope)
+    route = classify(question, artist, named_in_scope)
+    others = tuple(s for s in route.artists if s != artist)
+    if route.kind == "rag" and others and COMPARISON.search(question):
+        # 범위 문서는 고른 작가 자료뿐이라, 다른 작가 쪽 근거는 그 작가를 함께 다룬 비교 문서에만 있다.
+        # 없으면 LLM 이 상대 작가를 일반 지식으로 채워 비교하므로 (평가 compare-002: 모네·세잔) 검색 전에 거절한다.
+        scope = repo.scope_document_ids(session, artwork_id) if scope is None else scope
+        if not repo.comparison_covers(session, scope, others):
+            return Route("refuse", "no_comparison_source", artists=others, matched=("comparison_uncovered",))
+    return route
 
 
 def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bool] | None = None) -> Route:
@@ -125,6 +145,14 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
     named_in_scope: 이름이 고른 작품의 범위 문서에 나오는지 알려 주는 함수. 주면 범위 밖 작가로 거절하기 전에 확인한다.
     """
     text = question.strip()
+    if UNRELATED_CHAT.fullmatch(text):
+        return Route("refuse", "off_topic", matched=("unrelated_chat",))
+    if MEAL_CHOICE.search(text) and (
+        FIRST_PERSON.search(text)
+        or (MEAL_CONTEXT.search(text) and not ART_SCENE.search(text))
+        or MEAL_CHOICE.fullmatch(text.rstrip("?!？ "))
+    ):
+        return Route("refuse", "off_topic", matched=("meal_choice",))
     if APP_ACTION.search(text):
         return Route("refuse", "off_topic", matched=("app_action",))
     if OFF_TOPIC.search(text):
@@ -176,6 +204,9 @@ def refusal_message(route: Route) -> str:
         return " ".join(
             f"현재 {name}의 자료는 검토 중에 있어요." for name in route.names
         )
+    if route.kind == "refuse" and route.reason == "no_comparison_source":
+        names = _join(_artists()[s].name for s in route.artists if s in _artists())
+        return f"검수된 자료로는 {names} 작가와의 비교를 확인하기 어려워요. 지금 작품과 작가에 대해 물어봐 주세요."
     if route.kind == "refuse" and route.reason == "off_topic":
         return "해당 작품과 작가에 대해서만 대화 할 수 있어요."
     if route.kind == "refuse":
@@ -218,6 +249,11 @@ def _find_artists(text: str) -> tuple[str, tuple[str, ...], tuple[str, ...], tup
         if not artist.collected:
             planned_aliases.append(alias)
     return masked, tuple(collected), tuple(planned), tuple(planned_aliases)
+
+
+def collected_artist_slugs(text: str) -> tuple[str, ...]:
+    """글에 나온 수집 완료 작가 slug (별칭·헷갈리는 이름 처리는 질문 분류와 같다)."""
+    return _find_artists(text)[1]
 
 
 def _mentions(text: str, name: str) -> bool:

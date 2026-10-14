@@ -541,7 +541,15 @@ class ArtlogState extends ChangeNotifier {
             RegExp(r'취향|좋아할|어울리는').hasMatch(question)) &&
         otherTargets.isNotEmpty &&
         (artTargets.isEmpty || otherTargets.last.start > artTargets.last.start);
-    if (nonArtRecommendation ||
+    final unrelatedChat = RegExp(
+      r'^\s*(?:욕\s?해\s?(?:봐|줘|주세요)?|나\s?(?:기분\s?나빠|심심해|외로워)|뭐\s?해\s?[?？]?\s*(?:나\s?심심해)?)\s*[.!?？]*\s*$',
+    ).hasMatch(question);
+    final mealChoice = RegExp(r'(?:뭐|뭘|무엇을)\s?먹').hasMatch(question) &&
+        (RegExp(r'(^|[\s,.])(?:나|난|나는|내가|저|저는|우리|우리는)(?=$|[\s,.])').hasMatch(question) ||
+            (RegExp(r'아침|점심|저녁|야식|끼니|메뉴|식사').hasMatch(question) &&
+                !RegExp(r'(?:그림|작품|장면)\s?(?:속|에서|에 나오는|에 그려진)').hasMatch(question)) ||
+            RegExp(r'^\s*(?:뭐|뭘|무엇을)\s?먹').hasMatch(question));
+    if (unrelatedChat || mealChoice || nonArtRecommendation ||
         RegExp(r'주식|날씨|음식|피카소|달리|다빈치|마티스').hasMatch(question)) {
       return const ChatReply(
         '해당 작품과 작가에 대해서만 대화 할 수 있어요.',

@@ -16,7 +16,8 @@ from starlette.responses import JSONResponse
 from app.core.auth import _resolve_user
 from app.core.config import get_settings
 from app.db.session import SessionLocal
-from app.schemas.mypage import CollectionWrite
+from app.schemas.mypage import CollectionCreate, CollectionWrite
+from app.services import auto_collections
 from app.services import mypage_service as service
 
 settings = get_settings()
@@ -121,6 +122,46 @@ def add_artwork_to_collection(
         ).model_dump(mode="json")
 
 
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+def list_auto_collections(ctx: Context) -> list[dict]:
+    """List collections computed from the user's view history (recent, frequent, top artists, this month)."""
+    with SessionLocal() as db:
+        return [
+            c.model_dump(mode="json")
+            for c in auto_collections.collections(db, actor(ctx))
+        ]
+
+
+@mcp.tool(annotations=ToolAnnotations(destructiveHint=False))
+def create_collection_from_views(
+    basis: str,
+    ctx: Context,
+    name: str | None = None,
+    artist: str | None = None,
+    month: int | None = None,
+    year: int | None = None,
+    limit: int = 20,
+) -> dict:
+    """Create a private collection filled with artworks the user viewed, only when the user explicitly asks.
+
+    basis: "recent" (recently viewed), "frequent" (viewed most), "artist" (needs artist name),
+    or "month" (needs month 1-12, optional year). Artworks are chosen by the server from view history.
+    """
+    with SessionLocal() as db:
+        user_id = actor(ctx)
+        chosen, artist_name = auto_collections.resolve(db, basis, artist, month, year)
+        works = auto_collections.artworks(
+            db, user_id, chosen, max(1, min(limit, auto_collections.MAX_ITEMS))
+        )
+        if not works:
+            raise ValueError("해당하는 감상 기록이 없습니다.")
+        body = CollectionCreate(
+            name=name or auto_collections.name_for(chosen, artist_name),
+            artwork_ids=[w.id for w in works],
+        )
+        return service.save_collection(db, user_id, body).model_dump(mode="json")
+
+
 mcp_app = AuthenticatedMCP(mcp.streamable_http_app())
 
 
@@ -141,6 +182,13 @@ def new_transport():
     server.add_tool(
         add_artwork_to_collection,
         annotations=ToolAnnotations(destructiveHint=False, idempotentHint=True),
+    )
+    server.add_tool(
+        list_auto_collections, annotations=ToolAnnotations(readOnlyHint=True)
+    )
+    server.add_tool(
+        create_collection_from_views,
+        annotations=ToolAnnotations(destructiveHint=False),
     )
     mcp_app.app = server.streamable_http_app()
     return server

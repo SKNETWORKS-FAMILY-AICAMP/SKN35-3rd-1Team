@@ -14,10 +14,10 @@ from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
-from app.rag.classifier import classify_artwork
+from app.rag.classifier import Route, classify_artwork, refusal_message
 from app.rag.retriever import retrieve
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.services import catalog_service, chat_service, docent_service
+from app.services import catalog_service, chat_service, docent_scope, docent_service
 from app.services.docent_grounding import (
     NO_EVIDENCE_MESSAGE,
     context,
@@ -37,6 +37,26 @@ async def answer_events(
     # Synchronous DB and retrieval calls share one session outside the event loop.
     art = await run_in_threadpool(catalog_service.get_artwork, db, artwork_id)
     route = await run_in_threadpool(classify_artwork, db, artwork_id, body.question)
+    if route.kind == "rag" and not await run_in_threadpool(
+        docent_scope.is_artwork_request, art, body
+    ):
+        response = ChatResponse(
+            answer=refusal_message(Route("refuse", "off_topic")),
+            refused=True,
+            sources=[],
+        )
+        yield "token", response.answer
+        if user_id is not None:
+            await run_in_threadpool(
+                chat_service.save_exchange,
+                db,
+                user_id=user_id,
+                artwork_id=artwork_id,
+                question=body.question,
+                response=response,
+            )
+        yield "done", response
+        return
     if route.kind != "rag":
         response = await run_in_threadpool(
             docent_service.answer, db, artwork_id, body, user_id=user_id

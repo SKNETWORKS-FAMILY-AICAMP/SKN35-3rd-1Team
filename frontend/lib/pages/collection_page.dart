@@ -160,7 +160,7 @@ class _CollectionPageState extends State<CollectionPage> {
               .take(8)
               .toList();
     final known = {...c.artworkIds, ...works.map((a) => a.id)};
-    final cover = works.isEmpty ? c.previews : works;
+    final cover = c.previews.firstOrNull ?? works.firstOrNull;
     return PageWidth(
       vertical: 28,
       child: Column(
@@ -236,30 +236,16 @@ class _CollectionPageState extends State<CollectionPage> {
                     ),
                   ],
                 );
-                if (bounds.maxWidth < 720 || cover.isEmpty) return title;
+                if (bounds.maxWidth < 720 || cover == null) return title;
                 return Row(
                   children: [
                     Expanded(child: title),
                     const SizedBox(width: 48),
                     SizedBox(
+                      key: const ValueKey('collection-cover'),
                       width: 320,
                       height: 210,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          for (final (i, art) in cover.take(3).indexed)
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: i == 0 ? 0 : 8,
-                                  top: i == 1 ? 25 : 0,
-                                  bottom: i == 1 ? 0 : 25,
-                                ),
-                                child: ArtImage(art.image, label: art.title),
-                              ),
-                            ),
-                        ],
-                      ),
+                      child: ArtImage(cover.image, label: cover.title),
                     ),
                   ],
                 );
@@ -413,6 +399,187 @@ class _CollectionPageState extends State<CollectionPage> {
               ),
             ),
           const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+}
+
+/// A collection computed from view history. Read-only; it can be saved as a
+/// regular collection that the member then edits freely.
+class AutoCollectionPage extends StatefulWidget {
+  const AutoCollectionPage({super.key, required this.collectionKey});
+  final String collectionKey;
+  @override
+  State<AutoCollectionPage> createState() => _AutoCollectionPageState();
+}
+
+class _AutoCollectionPageState extends State<AutoCollectionPage> {
+  Future<(AutoCollection, List<Artwork>)>? future;
+  String? identity;
+  bool saving = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final s = ArtlogScope.of(context);
+    final next = '${s.userKey}/${s.authenticated}';
+    if (identity == next) return;
+    identity = next;
+    future = s.authenticated ? s.autoCollection(widget.collectionKey) : null;
+  }
+
+  Future<void> save(AutoCollection c, List<Artwork> works) async {
+    final s = ArtlogScope.of(context);
+    setState(() => saving = true);
+    try {
+      final saved = await s.saveCollection(
+        c.name,
+        c.description,
+        artworkIds: [for (final a in works) a.id],
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('‘${saved.name}’ 컬렉션으로 저장했어요.')));
+      context.go('/collection/${Uri.encodeComponent(saved.id)}');
+    } catch (e) {
+      if (mounted) showError(context, e);
+    } finally {
+      if (mounted) setState(() => saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = ArtlogScope.of(context);
+    return PageWidth(
+      vertical: 28,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => context.canPop()
+                  ? context.pop()
+                  : context.go('/library?tab=collections'),
+              icon: const Icon(Icons.arrow_back, size: 17),
+              label: const Text('내 컬렉션'),
+            ),
+          ),
+          const SizedBox(height: 20),
+          if (!s.authenticated)
+            EmptyView(
+              '감상 기록 컬렉션은 로그인 후 볼 수 있어요.',
+              action: ArtButton('로그인', onTap: () => ensureLogin(context)),
+            )
+          else
+            FutureBuilder<(AutoCollection, List<Artwork>)>(
+              future: future,
+              builder: (context, snap) {
+                if (snap.hasError) {
+                  return EmptyView(
+                    ArtlogState.message(snap.error!),
+                    action: ArtButton(
+                      '다시 불러오기',
+                      onTap: () => setState(
+                        () => future = s.autoCollection(widget.collectionKey),
+                      ),
+                    ),
+                  );
+                }
+                if (!snap.hasData) {
+                  return const Padding(
+                    padding: EdgeInsets.all(48),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                final (c, works) = snap.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      key: const ValueKey('auto-collection-header'),
+                      padding: EdgeInsets.all(compact(context) ? 24 : 40),
+                      color: museumBlack,
+                      child: LayoutBuilder(
+                        builder: (context, bounds) {
+                          final title = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Eyebrow(
+                                'FROM YOUR VIEWING',
+                                color: museumMuted,
+                              ),
+                              const SizedBox(height: 18),
+                              Text(
+                                c.name,
+                                style: serif(
+                                  compact(context) ? 28 : 38,
+                                  color: museumText,
+                                  height: 1.4,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Text(
+                                c.description,
+                                style: sans(13, color: museumMuted),
+                              ),
+                              const SizedBox(height: 22),
+                              Text(
+                                '${works.length}점 · 감상 기록에 따라 자동으로 바뀌어요',
+                                style: sans(12, color: museumText),
+                              ),
+                            ],
+                          );
+                          if (bounds.maxWidth < 720 || c.cover == null) {
+                            return title;
+                          }
+                          return Row(
+                            children: [
+                              Expanded(child: title),
+                              const SizedBox(width: 48),
+                              SizedBox(
+                                width: 320,
+                                height: 210,
+                                child: ArtImage(
+                                  c.cover!.image,
+                                  label: c.cover!.title,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    if (works.isEmpty)
+                      EmptyView(
+                        '아직 이 컬렉션에 해당하는 감상 기록이 없어요.',
+                        action: ArtButton(
+                          '작품 둘러보기',
+                          onTap: () => context.go('/artworks'),
+                        ),
+                      )
+                    else ...[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ArtButton(
+                          saving ? '저장 중…' : '내 컬렉션으로 저장',
+                          key: const ValueKey('auto-collection-save'),
+                          icon: Icons.bookmark_add_outlined,
+                          onTap: saving ? null : () => save(c, works),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ArtworkGrid(works),
+                    ],
+                  ],
+                );
+              },
+            ),
         ],
       ),
     );

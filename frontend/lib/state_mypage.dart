@@ -67,6 +67,7 @@ extension MyPageState on ArtlogState {
     String name,
     String description, {
     String? id,
+    List<String> artworkIds = const [],
   }) async {
     _requireMember();
     final revision = _identityRevision;
@@ -90,13 +91,16 @@ extension MyPageState on ArtlogState {
         throw const ApiException('컬렉션은 50개까지 만들 수 있어요.');
       }
       final old = rows.where((c) => c.id == id).firstOrNull;
+      final initial = old == null
+          ? artworkIds.toSet().where((a) => workFor(a) != null).toList()
+          : old.artworkIds;
       result = ArtCollection(
         id: id ?? DateTime.now().microsecondsSinceEpoch.toString(),
         name: name.trim(),
         description: description.trim(),
-        artworkIds: old?.artworkIds ?? [],
-        count: old?.count ?? 0,
-        previews: old?.previews ?? [],
+        artworkIds: initial,
+        count: initial.length,
+        previews: initial.map(workFor).whereType<Artwork>().take(3).toList(),
       );
       await _persistCollections([
         result,
@@ -107,6 +111,7 @@ extension MyPageState on ArtlogState {
         name.trim(),
         description.trim(),
         id: id,
+        artworkIds: artworkIds,
       );
     }
     _checkMember(revision);
@@ -256,7 +261,7 @@ extension MyPageState on ArtlogState {
 
   Future<void> applyCollectionProposal(CollectionProposal p) async {
     if (p.action == 'create' && p.name != null) {
-      await saveCollection(p.name!, '');
+      await saveCollection(p.name!, '', artworkIds: p.artworkIds);
     } else if (p.action == 'add' &&
         p.collectionId != null &&
         p.artworkId != null) {
@@ -264,5 +269,98 @@ extension MyPageState on ArtlogState {
     } else {
       throw const ApiException('요청 내용을 다시 확인해 주세요.');
     }
+  }
+
+  /// Collections computed from view history, like auto playlists.
+  Future<List<AutoCollection>> autoCollections() async {
+    _requireMember();
+    if (!config.demo) return api.autoCollections();
+    final month = seoulDate().substring(0, 7);
+    final keys = [
+      'recent',
+      'frequent',
+      for (final id in _demoTopArtists()) 'artist-$id',
+      'month-$month',
+    ];
+    return [
+      for (final key in keys)
+        if (_demoAuto(key) case final works when works.isNotEmpty)
+          AutoCollection(
+            key: key,
+            name: _autoName(key, works.first),
+            description: _autoDescriptions[key.split('-').first] ?? '',
+            count: works.length,
+            cover: works.first,
+          ),
+    ];
+  }
+
+  Future<(AutoCollection, List<Artwork>)> autoCollection(String key) async {
+    _requireMember();
+    if (!config.demo) return api.autoCollection(key);
+    final works = _demoAuto(key);
+    return (
+      AutoCollection(
+        key: key,
+        name: works.isEmpty ? '자동 컬렉션' : _autoName(key, works.first),
+        description: _autoDescriptions[key.split('-').first] ?? '',
+        count: works.length,
+        cover: works.firstOrNull,
+      ),
+      works,
+    );
+  }
+
+  static const _autoDescriptions = {
+    'recent': '최근에 감상한 순서대로 모았어요.',
+    'frequent': '여러 번 다시 본 작품이에요.',
+    'artist': '이 작가의 작품 중 감상한 그림이에요.',
+    'month': '이 달에 감상한 작품이에요.',
+  };
+
+  String _autoName(String key, Artwork first) {
+    if (key == 'recent') return '최근 본 작품';
+    if (key == 'frequent') return '자주 본 작품';
+    if (key.startsWith('artist-')) return '${artistName(first)} 모음';
+    final [year, month] = key.substring(6).split('-');
+    return year == seoulDate().substring(0, 4)
+        ? '${int.parse(month)}월의 감상'
+        : '$year년 ${int.parse(month)}월의 감상';
+  }
+
+  /// Demo view history (date -> artworks in viewing order), same rules as the server.
+  List<Artwork> _demoAuto(String key) {
+    final month = key.startsWith('month-') ? key.substring(6) : null;
+    final last = <String, String>{}, days = <String, int>{};
+    for (final day in views.entries) {
+      if (month != null && !day.key.startsWith(month)) continue;
+      for (final (i, id) in day.value.indexed) {
+        final order = '${day.key}/${i.toString().padLeft(5, '0')}';
+        if ((last[id] ?? '').compareTo(order) < 0) last[id] = order;
+        days[id] = (days[id] ?? 0) + 1;
+      }
+    }
+    var ids = last.keys.where((id) => workFor(id) != null).toList()
+      ..sort((a, b) => last[b]!.compareTo(last[a]!));
+    if (key == 'frequent') {
+      ids = ids.where((id) => days[id]! >= 2).toList()
+        ..sort((a, b) => days[b]!.compareTo(days[a]!));
+    } else if (key.startsWith('artist-')) {
+      final artist = key.substring(7);
+      ids = ids.where((id) => workFor(id)!.artistId == artist).toList();
+    } else if (key != 'recent' && month == null) {
+      return [];
+    }
+    return ids.take(60).map(workFor).whereType<Artwork>().toList();
+  }
+
+  List<String> _demoTopArtists() {
+    final works = <String, Set<String>>{};
+    for (final a in _demoAuto('recent')) {
+      works.putIfAbsent(a.artistId, () => {}).add(a.id);
+    }
+    final ranked = works.entries.where((e) => e.value.length >= 2).toList()
+      ..sort((a, b) => b.value.length.compareTo(a.value.length));
+    return ranked.take(3).map((e) => e.key).toList();
   }
 }

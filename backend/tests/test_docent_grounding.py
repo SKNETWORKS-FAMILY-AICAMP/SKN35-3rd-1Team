@@ -36,9 +36,9 @@ def _doc(document_id: int = 4) -> Document:
 def test_saved_professional_style_changes_terms_not_default_depth():
     prompt = instructions(SimpleNamespace(conversation_style="professional"))
     assert "전문 용어를 적극 사용" in prompt
-    assert "선택한 설명 스타일: 차분하고 편안하게" in prompt
+    assert "선택한 설명 스타일: 미술 용어를 곁들인 해설" in prompt
     assert "질문에서 요청한 주제와 설명 깊이" in prompt
-    assert "선택한 설명 스타일: 깊이 있게" not in prompt
+    assert "선택한 설명 스타일: 근거를 연결하는 심화 해설" not in prompt
 
 
 def test_follow_up_search_uses_previous_user_question_only():

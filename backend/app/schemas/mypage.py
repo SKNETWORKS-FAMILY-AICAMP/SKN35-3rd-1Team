@@ -35,10 +35,33 @@ class CollectionWrite(BaseModel):
     description: str = Field(default="", max_length=500)
 
 
+class CollectionCreate(CollectionWrite):
+    # Optional first artworks, kept in this order (the first one is the cover).
+    artwork_ids: list[Annotated[int, Field(gt=0)]] = Field(
+        default_factory=list, max_length=500
+    )
+
+
 class CollectionOut(CollectionWrite):
     id: int
     artwork_count: int
+    # Earliest added first; the first one is the collection cover.
     previews: list[ArtworkCard]
+
+
+class AutoCollectionOut(BaseModel):
+    """A collection computed from the owner's view history (not stored)."""
+
+    key: str
+    name: str
+    description: str
+    artwork_count: int
+    cover: ArtworkCard | None = None
+
+
+class AutoCollectionDetail(BaseModel):
+    collection: AutoCollectionOut
+    items: list[ArtworkCard]
 
 
 class ArtworkPage(BaseModel):
@@ -80,8 +103,30 @@ class CollectionAction(BaseModel):
     collection_id: int | None = None
     artwork_id: int | None = None
     name: str | None = None
+    # create only: artworks to put in the new collection, in order.
+    artwork_ids: list[int] = Field(default_factory=list)
+
+
+class CollectionChoice(BaseModel):
+    id: int
+    name: str
+
+
+class CollectionSuggestion(BaseModel):
+    """Docent chat offer to collect the artwork. Nothing is saved until confirmed."""
+
+    kind: Literal["add_artwork", "create_from_views"]
+    message: str
+    artwork_id: int
+    # add_artwork: the member's collections to choose from (or make a new one).
+    collections: list[CollectionChoice] = Field(default_factory=list)
+    # create_from_views: the new collection and the viewed artworks it would hold.
+    proposal: CollectionAction | None = None
+    artworks: list[ArtworkCard] = Field(default_factory=list)
 
 
 class CollectionChatReply(BaseModel):
     answer: str
     proposal: CollectionAction | None = None
+    # Preview of the artworks a proposal would add, so the user sees them first.
+    artworks: list[ArtworkCard] = Field(default_factory=list)

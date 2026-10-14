@@ -220,15 +220,17 @@ POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `
 | 메서드 | 경로 | 응답·용도 |
 | --- | --- | --- |
 | GET / PUT | `/api/me/profile` | 설정 조회·전체 교체. 미설정은 `onboarding_completed=false` |
-| GET | `/api/me/collections` | 컬렉션 최대 50개, 개수와 미리보기 3점, 수정 시각 내림차순 |
-| POST | `/api/me/collections` | 생성 201. 동일 계정 이름 중복은 409 |
+| GET | `/api/me/collections` | 컬렉션 최대 50개, 개수와 미리보기 3점(먼저 담은 순, 첫 작품이 대표 썸네일), 수정 시각 내림차순 |
+| POST | `/api/me/collections` | 생성 201. 선택 `artwork_ids`(최대 500)는 그 순서대로 담고 첫 작품이 대표 썸네일. 없는 작품이면 404로 아무것도 만들지 않음. 동일 계정 이름 중복은 409 |
+| GET | `/api/me/collections/auto` | 감상 기록으로 계산한 자동 컬렉션(저장하지 않음): `recent` 최근 본 작품, `frequent` 2회 이상 본 작품, `artist-{id}` 많이 본 작가 상위 3명(2점 이상), `month-YYYY-MM` 이번 달. 작품이 있는 것만, `{key, name, description, artwork_count, cover}` |
+| GET | `/api/me/collections/auto/{key}` | `{collection, items: ArtworkCard[]}` 최대 60점. 형식이 틀린 key·없는 작가는 404 |
 | PUT / DELETE | `/api/me/collections/{id}` | 이름·소개 수정 / 묶음 삭제 204 |
 | GET | `/api/me/collections/{id}/items?limit=12&before_id=...` | `{items: ArtworkCard[], next_cursor: int?}`. 작품 ID 내림차순, limit 1~30 |
 | PUT / DELETE | `/api/me/collections/{id}/items/{artwork_id}` | 작품 담기(컬렉션 응답, 중복 무해) / 꺼내기 204 |
 | GET | `/api/me/critiques?limit=12&before_id=...` | `{items: DiaryEntry[], next_cursor: int?}`. 본인의 공개·비공개 다이어리, ID 내림차순 |
 | GET | `/api/me/activity?limit=20&offset=0` | `ActivityOut[]`, 최신 감상·좋아요·다이어리·컬렉션 변경. limit 최대30, offset 최대10000 |
 | GET / POST | `/api/me/taste` | 저장한 AI 취향 소개 조회 / 근거 변경 시 생성 |
-| POST | `/api/me/collections/chat` | 컬렉션 요청 분석·제안. 이 요청만으로 DB를 변경하지 않음 |
+| POST | `/api/me/collections/chat` | 컬렉션 요청 분석·제안. 이 요청만으로 DB를 변경하지 않음. "최근 본 작품으로 만들어줘"처럼 감상 기록 요청이면 LLM은 조건(최근/자주/작가/월)만 뽑고 작품은 서버가 감상 기록에서 골라 `proposal.artwork_ids`와 미리보기 `artworks`로 제안 |
 
 ProfileWrite: `{nickname: string | null, birth_date: "YYYY-MM-DD" | null, conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘이며 선택 사항이고, 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. nickname은 공개 감상 피드에 작성자 이름으로 표시되는 값입니다. 앞뒤 공백을 지운 뒤 2~20자여야 하고, 생략하거나 null이면 지금 이름을 유지합니다(전체 교체 규칙의 예외). 중복은 허용합니다. 처음 값은 로그인할 때 Google 이름이나 이메일 @ 앞부분으로 정해지므로, 공개 전에 바꿀 수 있게 안내합니다. GET 응답에는 항상 nickname이 들어 있습니다. 성별과 이전 나이대, 설명 주제 우선순위는 새 요청에 포함하지 않습니다. 이전에 저장된 `explanation_priorities` DB 컬럼은 읽거나 갱신하지 않습니다.
 
@@ -240,9 +242,13 @@ TasteOut: `{summary: string?, evidence: ArtworkCard[], generated_at: UTC datetim
 
 CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `{answer, proposal: {action: "create"|"add", name: string?, collection_id: int?, artwork_id: int?} | null}`. 동명 작품이나 다수 검색 결과는 추가 질문으로 처리합니다. 화면에서 사용자가 제안을 확정하면 위의 컬렉션 CRUD 경로를 호출하고 서버에서 소유권·작품 존재를 다시 확인합니다.
 
+### 도슨트 채팅의 컬렉션 제안
+
+`POST /api/artworks/{id}/chat`과 `/chat/stream`의 최종 응답(`done`)에 선택 필드 `suggestion`이 붙을 수 있습니다. 로그인 회원이 한 작품에 대해 세 번째 질문을 하고 답변이 거절이 아닐 때만 규칙으로 정합니다(LLM 호출 없음). 이 작가의 작품을 3점 이상 봤고 "{작가} 모음" 컬렉션이 없으면 `kind=create_from_views`(그 작품들로 새 컬렉션 제안), 아니면 작품이 아직 어느 컬렉션에도 없을 때 `kind=add_artwork`(담을 컬렉션 목록)입니다. 제안만 하고 저장은 하지 않으며, 회원이 버튼을 누르면 기존 컬렉션 REST로 저장합니다. 제안이 없으면 JSON 응답은 `suggestion: null`, SSE `done`에는 키가 없습니다. 화면은 대화마다 한 번만 보여 줍니다.
+
 ## MCP 컬렉션 도구
 
-`/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
+`/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`, `list_auto_collections`, `create_collection_from_views(basis, name?, artist?, month?, year?, limit?)`. 구현은 `backend/app/rag/collection_mcp.py`입니다. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
 
 ## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.3)
 

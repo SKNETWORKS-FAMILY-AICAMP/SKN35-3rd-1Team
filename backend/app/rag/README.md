@@ -8,6 +8,7 @@
 - `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend_similar` / `recommend_personal`로 분류 (규칙 기반 수퍼바이저, `/chat`에서는 `classify_artwork()`). 다른 수집 작가와의 비교 질문은 두 작가를 함께 다룬 비교 문서가 범위에 없으면 `refuse`(`no_comparison_source`)
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
+- `collection_mcp.py`: 외부 MCP 클라이언트용 컬렉션 도구(`/mcp/`). 감상 기록으로 컬렉션을 만드는 도구 포함. REST와 같은 소유권 검사 서비스를 사용
 - `chain.py`: 검색 결과와 질문, 이전 대화를 LLM에 넘겨 답변 생성
 - `citations.py`: 답변에 쓰인 청크를 출처 목록으로 정리
 

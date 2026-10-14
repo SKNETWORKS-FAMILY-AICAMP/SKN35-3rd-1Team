@@ -9,8 +9,11 @@ from app.db.session import DbSession
 from app.schemas.mypage import (
     ActivityOut,
     ArtworkPage,
+    AutoCollectionDetail,
+    AutoCollectionOut,
     CollectionChatReply,
     CollectionChatRequest,
+    CollectionCreate,
     CollectionOut,
     CollectionWrite,
     CritiquePage,
@@ -18,7 +21,7 @@ from app.schemas.mypage import (
     ProfileWrite,
     TasteOut,
 )
-from app.services import collection_assistant
+from app.services import auto_collections, collection_assistant
 from app.services import mypage_service as service
 
 router = APIRouter(prefix="/me", tags=["mypage"])
@@ -52,9 +55,27 @@ def collections(
     return service.collections(db, user.id)
 
 
+@router.get("/collections/auto")
+def auto_list(
+    user: CurrentUser, db: DbSession, response: Response
+) -> list[AutoCollectionOut]:
+    """Collections computed from the caller's view history, like auto playlists."""
+    private(response)
+    return auto_collections.collections(db, user.id)
+
+
+@router.get("/collections/auto/{key}")
+def auto_detail(
+    key: str, user: CurrentUser, db: DbSession, response: Response
+) -> AutoCollectionDetail:
+    private(response)
+    summary, works = auto_collections.collection(db, user.id, key)
+    return AutoCollectionDetail(collection=summary, items=works)
+
+
 @router.post("/collections", status_code=201)
 def create(
-    body: CollectionWrite, user: CurrentUser, db: DbSession, response: Response
+    body: CollectionCreate, user: CurrentUser, db: DbSession, response: Response
 ) -> CollectionOut:
     private(response)
     return service.save_collection(db, user.id, body)
