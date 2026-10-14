@@ -263,9 +263,18 @@ class _DocentChatState extends State<DocentChat> {
                       ),
                     ),
                   if (conversation!.busy || conversation!.resetting)
-                    const Padding(
-                      padding: EdgeInsets.all(18),
-                      child: LinearProgressIndicator(color: sage, minHeight: 2),
+                    Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        children: [
+                          const LinearProgressIndicator(color: sage, minHeight: 2),
+                          const SizedBox(height: 8),
+                          Text(
+                            conversation!.resetting ? '대화를 정리하고 있어요…' : '도슨트가 답변하고 있어요…',
+                            style: sans(12, color: muted),
+                          ),
+                        ],
+                      ),
                     ),
                   if (error != null)
                     Container(

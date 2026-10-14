@@ -9,7 +9,8 @@
 | GET | `/movements`, `/artists`, `/artworks` | 없음 | 카탈로그·필터·검색 |
 | GET | `/artists/{id}`, `/artworks/{id}` | 없음 | 상세 화면 |
 | GET | `/artworks/{id}/similar` | 없음 | 비슷한 작품. 실제 서버 200·3개 확인 |
-| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 답변 |
+| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 맞춤 말투·설명 순서를 적용한 근거 기반 JSON 답변 |
+| POST | `/artworks/{id}/chat/stream` | 선택 | 같은 질문의 SSE 스트림. `token`, `replace`, `done`, `error` 이벤트 |
 | GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 저장 대화 복원 |
 | DELETE | `/artworks/{id}/chat` | 필요 | 대화 초기화, 204 |
 | GET | `/me/chats` | 필요 | 서재 대화 내역 탭, 작품별 이어보기 |
