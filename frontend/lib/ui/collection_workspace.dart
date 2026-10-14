@@ -357,17 +357,8 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                           InkWell(
                             borderRadius: BorderRadius.circular(4),
                             onTap: () async {
-                              await showModalBottomSheet<void>(
-                                context: context,
-                                isScrollControlled: true,
-                                useSafeArea: true,
-                                builder: (_) => AccountGuard(
-                                  state: ArtlogScope.of(context),
-                                  child: _CollectionDetail(
-                                    state: ArtlogScope.of(context),
-                                    group: group,
-                                  ),
-                                ),
+                              await context.push(
+                                '/collection/${Uri.encodeComponent(group.id)}',
                               );
                               if (mounted) await load();
                             },
@@ -377,10 +368,10 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(4),
                                   child: SizedBox(
-                                    height: 145,
+                                    height: 190,
                                     child: group.previews.isEmpty
                                         ? Container(
-                                            color: const Color(0xffe5eded),
+                                            color: soft,
                                             child: const Center(
                                               child: Icon(
                                                 Icons
@@ -562,214 +553,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       ),
     ],
   );
-}
-
-class _CollectionDetail extends StatefulWidget {
-  const _CollectionDetail({required this.state, required this.group});
-  final ArtlogState state;
-  final ArtCollection group;
-  @override
-  State<_CollectionDetail> createState() => _CollectionDetailState();
-}
-
-class _CollectionDetailState extends State<_CollectionDetail> {
-  final search = TextEditingController();
-  List<Artwork> works = [];
-  String? cursor, error;
-  bool loading = false, started = false;
-  final Set<String> busy = {};
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) load();
-    });
-  }
-
-  @override
-  void dispose() {
-    search.dispose();
-    super.dispose();
-  }
-
-  Future<void> load({bool reset = false}) async {
-    if (loading) return;
-    setState(() {
-      loading = true;
-      error = null;
-      if (reset) {
-        works = [];
-        cursor = null;
-      }
-    });
-    try {
-      final p = await widget.state.collectionItems(
-        widget.group.id,
-        cursor: cursor,
-      );
-      if (mounted) {
-        setState(() {
-          works.addAll(p.items);
-          cursor = p.cursor;
-          started = true;
-        });
-      }
-    } catch (e) {
-      if (mounted) setState(() => error = ArtlogState.message(e));
-    } finally {
-      if (mounted) setState(() => loading = false);
-    }
-  }
-
-  Future<void> collect(Artwork a, {bool remove = false}) async {
-    if (busy.contains(a.id)) return;
-    setState(() => busy.add(a.id));
-    try {
-      await widget.state.collect(widget.group.id, a.id, remove: remove);
-      if (mounted) {
-        await load(reset: true);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(remove ? '컬렉션에서 꺼냈어요.' : '컬렉션에 담았어요.')),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) setState(() => error = ArtlogState.message(e));
-    } finally {
-      if (mounted) setState(() => busy.remove(a.id));
-    }
-  }
-
-  Widget tile(Artwork a, {bool result = false}) => ListTile(
-    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-    leading: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: SizedBox(
-        width: 54,
-        height: 60,
-        child: ArtImage(a.image, fit: BoxFit.cover),
-      ),
-    ),
-    title: Text(a.title, style: sans(13)),
-    subtitle: Text(widget.state.artistName(a), style: sans(11, color: muted)),
-    onTap: () {
-      final router = GoRouter.of(context);
-      Navigator.pop(context);
-      router.go('/artwork/${a.id}');
-    },
-    trailing: busy.contains(a.id)
-        ? const SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-        : IconButton(
-            tooltip: result ? '${a.title} 담기' : '${a.title} 컬렉션에서 꺼내기',
-            onPressed: loading ? null : () => collect(a, remove: !result),
-            icon: Icon(
-              result ? Icons.add_circle_outline : Icons.remove_circle_outline,
-              size: 23,
-            ),
-          ),
-  );
-  @override
-  Widget build(BuildContext context) {
-    final q = search.text.trim().toLowerCase();
-    final results = q.isEmpty
-        ? <Artwork>[]
-        : widget.state.artworks
-              .where(
-                (a) => '${a.title} ${widget.state.artistName(a)}'
-                    .toLowerCase()
-                    .contains(q),
-              )
-              .take(8)
-              .toList();
-    return FractionallySizedBox(
-      heightFactor: .85,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 760),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            22,
-            20,
-            22,
-            20 + MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(child: Text(widget.group.name, style: serif(24))),
-                  IconButton(
-                    tooltip: '컬렉션 닫기',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: search,
-                onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(
-                  labelText: '담고 싶은 작품 찾기',
-                  hintText: '작품명 또는 작가',
-                  prefixIcon: Icon(Icons.search),
-                ),
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: ListView(
-                  children: [
-                    if (error != null)
-                      EmptyView(
-                        error!,
-                        action: ArtButton(
-                          '다시 시도',
-                          onTap: () => load(reset: true),
-                        ),
-                      ),
-                    if (q.isNotEmpty) ...[
-                      Text('검색 결과 · 최대 8점', style: sans(11, color: muted)),
-                      if (results.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.all(24),
-                          child: Text('일치하는 작품이 없어요.'),
-                        ),
-                      for (final a in results) tile(a, result: true),
-                      const Divider(),
-                    ],
-                    Text(
-                      '컬렉션에 담긴 그림',
-                      style: sans(12, weight: FontWeight.w700),
-                    ),
-                    if (started && works.isEmpty && !loading)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 25),
-                        child: Text('위에서 작품을 검색해 첫 그림을 담아 보세요.'),
-                      ),
-                    for (final a in works) tile(a),
-                    if (loading)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    if (cursor != null && !loading)
-                      ArtButton('그림 더 보기', outline: true, onTap: load),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class CollectionAssistant extends StatefulWidget {

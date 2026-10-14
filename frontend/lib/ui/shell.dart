@@ -261,7 +261,8 @@ class _BrandMark extends CustomPainter {
       oldDelegate.color != color;
 }
 
-String _activeRoute(String location) => location == '/settings'
+String _activeRoute(String location) =>
+    location == '/settings' || location.startsWith('/collection/')
     ? '/mypage'
     : location.startsWith('/artwork')
     ? '/gallery'
