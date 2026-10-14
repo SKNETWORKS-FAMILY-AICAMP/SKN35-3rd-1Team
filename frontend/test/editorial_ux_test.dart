@@ -152,7 +152,11 @@ void main() {
         expect(find.text('로그아웃'), findsNothing);
         await tester.tap(find.text('나만 보관할 오늘의 생각'));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('gold-frame')), findsOneWidget);
+        expect(find.byKey(const ValueKey('gold-frame')), findsNothing);
+        expect(
+          find.byKey(const ValueKey('detail-artwork-surface')),
+          findsOneWidget,
+        );
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         state.dispose();

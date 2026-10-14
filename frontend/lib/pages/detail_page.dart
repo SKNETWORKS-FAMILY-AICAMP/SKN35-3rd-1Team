@@ -89,12 +89,13 @@ class _DetailPageState extends State<DetailPage> {
           children: [
             SizedBox(
               height: compact(context) ? 380 : 500,
-              child: GoldFrame(
+              child: SizedBox(
+                key: const ValueKey('detail-artwork-surface'),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(4),
+                      padding: EdgeInsets.zero,
                       child: ArtImage(
                         art.image,
                         fit: BoxFit.contain,
@@ -195,7 +196,28 @@ class _DetailPageState extends State<DetailPage> {
             if (artist != null)
               Row(
                 children: [
-                  ClipOval(child: ArtImage(art.image, width: 42, height: 42)),
+                  artist.portrait.isEmpty
+                      ? Semantics(
+                          label: '${artist.name} 작가 사진 준비 중',
+                          child: CircleAvatar(
+                            radius: 21,
+                            backgroundColor: soft,
+                            child: Text(
+                              artist.name.isEmpty
+                                  ? '작'
+                                  : artist.name.characters.first,
+                              style: sans(16),
+                            ),
+                          ),
+                        )
+                      : ClipOval(
+                          child: ArtImage(
+                            artist.portrait,
+                            width: 42,
+                            height: 42,
+                            label: '${artist.name} 작가 사진',
+                          ),
+                        ),
                   const SizedBox(width: 11),
                   Expanded(
                     child: InkWell(
@@ -218,8 +240,6 @@ class _DetailPageState extends State<DetailPage> {
                   HoverLikeButton(
                     key: const ValueKey('detail-artist-like'),
                     label: '작가 좋아요',
-                    icon: Icons.person,
-                    outlineIcon: Icons.person_outline,
                     liked: s.follows.contains(artist.id),
                     subject: artist.name,
                     onPressed: s.pendingFollows.contains(artist.id)

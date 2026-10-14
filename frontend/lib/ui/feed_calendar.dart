@@ -31,6 +31,24 @@ class _FeedCalendarState extends State<FeedCalendar> {
   int monthRevision = 0, dayRevision = 0;
   Map<String, CalendarDay> calendarDays = {};
   List<Artwork> dayWorks = [];
+  final calendarMeasureKey = GlobalKey();
+  double? calendarHeight;
+  bool measuring = false;
+
+  void measureCalendar() {
+    if (measuring) return;
+    measuring = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      measuring = false;
+      if (!mounted) return;
+      final box = calendarMeasureKey.currentContext?.findRenderObject();
+      if (box is! RenderBox || !box.hasSize) return;
+      final height = box.size.height;
+      if (calendarHeight == null || (calendarHeight! - height).abs() > .5) {
+        setState(() => calendarHeight = height);
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -215,13 +233,34 @@ class _FeedCalendarState extends State<FeedCalendar> {
             builder: (context, c) {
               final calendar = _calendar(s);
               final day = _dayPanel(s);
+              if (c.maxWidth > 920) measureCalendar();
               return c.maxWidth > 920
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(flex: 7, child: calendar),
+                        Expanded(
+                          flex: 7,
+                          child: KeyedSubtree(
+                            key: const ValueKey('calendar-main-panel'),
+                            child: calendar,
+                          ),
+                        ),
                         const SizedBox(width: 24),
-                        Expanded(flex: 3, child: day),
+                        Expanded(
+                          flex: 3,
+                          child: SizedBox(
+                            key: const ValueKey('calendar-record-panel'),
+                            height: calendarHeight,
+                            child: SingleChildScrollView(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: calendarHeight ?? 0,
+                                ),
+                                child: day,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     )
                   : Column(
@@ -257,6 +296,7 @@ class _FeedCalendarState extends State<FeedCalendar> {
         .where((d) => d.date.startsWith(monthPrefix))
         .fold<int>(0, (total, d) => total + d.totalViews);
     return Container(
+      key: calendarMeasureKey,
       padding: const EdgeInsets.all(1),
       decoration: surfaceDecoration(radius: 8),
       child: Column(

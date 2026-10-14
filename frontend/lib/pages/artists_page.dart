@@ -74,8 +74,8 @@ class ArtistGrid extends StatelessWidget {
                               ),
                             ),
                           ),
-                          LikeButton(
-                            compactIcon: true,
+                          HoverLikeButton(
+                            label: '작가 좋아요',
                             liked: s.follows.contains(a.id),
                             subject: a.name,
                             onPressed: s.pendingFollows.contains(a.id)
@@ -176,7 +176,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
             const SizedBox(height: 23),
             Text(artist.summary, style: sans(14, color: muted, height: 2)),
             const SizedBox(height: 27),
-            LikeButton(
+            HoverLikeButton(
+              label: '작가 좋아요',
               liked: s.follows.contains(artist.id),
               subject: artist.name,
               onPressed: s.pendingFollows.contains(artist.id)

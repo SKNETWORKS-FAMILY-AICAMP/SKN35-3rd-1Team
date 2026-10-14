@@ -450,42 +450,24 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
     final controls = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Tooltip(
-          message: isPublic ? '모두에게 공개' : '나만 보기',
-          child: Semantics(
-            toggled: isPublic,
-            label: '감상 공개',
-            child: InkWell(
-              key: const ValueKey('impression-visibility'),
-              borderRadius: BorderRadius.circular(999),
-              onTap: busy ? null : () => setState(() => isPublic = !isPublic),
-              child: Container(
-                height: 36,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: isPublic ? soft : Colors.transparent,
-                  borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: line),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      isPublic ? Icons.public : Icons.lock_outline,
-                      size: 15,
-                      color: isPublic ? green : muted,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      isPublic ? '공개' : '비공개',
-                      style: sans(
-                        11,
-                        height: 1.2,
-                        color: isPublic ? green : muted,
-                      ),
-                    ),
-                  ],
-                ),
+        Semantics(
+          toggled: isPublic,
+          label: '감상 공개',
+          child: FilledButton(
+            key: const ValueKey('impression-visibility'),
+            onPressed: busy ? null : () => setState(() => isPublic = !isPublic),
+            style: editorialButtonStyle(
+              dark: true,
+              minimumSize: const Size(64, 36),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
+            child: Text(
+              isPublic ? '공개' : '비공개',
+              style: sans(
+                12,
+                height: 1.2,
+                color: Colors.white,
+                weight: FontWeight.w600,
               ),
             ),
           ),
@@ -545,42 +527,30 @@ class _ImpressionComposerState extends State<ImpressionComposer> {
   }
 }
 
-/// Feed posts in staggered columns, filling the width like a collage.
+/// Equal-height posts in reading order, bounded by the community page width.
 class _Collage extends StatelessWidget {
   const _Collage(this.entries);
   final List<DiaryEntry> entries;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
-      final w = c.maxWidth;
-      final columns = w >= 1600
-          ? 5
-          : w >= 1200
-          ? 4
-          : w >= 840
+      final wanted = c.maxWidth >= 960
           ? 3
-          : w >= 520
+          : c.maxWidth >= 600
           ? 2
           : 1;
+      final columns = wanted.clamp(1, entries.length);
       const gap = 20.0;
-      return Row(
+      final width = (c.maxWidth - gap * (columns - 1)) / columns;
+      return Wrap(
         key: const ValueKey('feed-collage'),
-        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: gap,
         children: [
-          for (var col = 0; col < columns; col++) ...[
-            if (col > 0) const SizedBox(width: gap),
-            Expanded(
-              child: Column(
-                children: [
-                  for (var i = col; i < entries.length; i += columns)
-                    DiaryPostCard(
-                      key: ValueKey(entries[i].id),
-                      entry: entries[i],
-                    ),
-                ],
-              ),
+          for (final entry in entries)
+            SizedBox(
+              width: width,
+              child: DiaryPostCard(key: ValueKey(entry.id), entry: entry),
             ),
-          ],
         ],
       );
     },
@@ -596,8 +566,6 @@ class DiaryPostCard extends StatefulWidget {
 }
 
 class _DiaryPostCardState extends State<DiaryPostCard> {
-  bool expanded = false;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -617,12 +585,12 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
   @override
   Widget build(BuildContext context) {
     final e = widget.entry, s = ArtlogScope.of(context), art = e.artwork;
-    final long = e.content.characters.length > 140;
     final mine = ownsImpression(s, e);
     final following = s.followingMembers.contains(e.authorId);
     return ScrollReveal(
       child: Container(
         key: ValueKey('feed-post-${e.id}'),
+        height: 520,
         margin: const EdgeInsets.only(bottom: 20),
         decoration: const BoxDecoration(
           color: pearl,
@@ -686,63 +654,89 @@ class _DiaryPostCardState extends State<DiaryPostCard> {
                 ],
               ),
             ),
-            if (art != null)
-              InkWell(
-                onTap: () => context.go('/artwork/${art.id}'),
-                child: AspectRatio(
-                  aspectRatio: (art.imageAspectRatio ?? .8).clamp(.55, 1.8),
-                  child: ColoredBox(
-                    color: museumBlack,
-                    child: ArtImage(
-                      art.image,
-                      fit: BoxFit.cover,
-                      label: '${art.title} 작품 보기',
+            SizedBox(
+              height: 250,
+              child: art == null
+                  ? const ColoredBox(
+                      color: soft,
+                      child: Center(
+                        child: Icon(Icons.format_quote, size: 40, color: muted),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () => context.go('/artwork/${art.id}'),
+                      child: ArtImage(
+                        art.image,
+                        fit: BoxFit.cover,
+                        label: '${art.title} 작품 보기',
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (art != null)
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (art != null)
+                      Text(
+                        '${art.artistName.isEmpty ? s.artistName(art) : art.artistName} · ${art.title}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: sans(11, color: muted),
+                      ),
+                    const SizedBox(height: 6),
                     Text(
-                      '${art.artistName.isEmpty ? s.artistName(art) : art.artistName} · ${art.title}',
-                      maxLines: 1,
+                      e.content,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: sans(11, color: muted),
-                    ),
-                  const SizedBox(height: 4),
-                  AnimatedSize(
-                    duration: reduceMotion(context)
-                        ? Duration.zero
-                        : const Duration(milliseconds: 260),
-                    curve: Curves.easeOutCubic,
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      long && !expanded
-                          ? '${e.content.characters.take(140)}…'
-                          : e.content,
                       style: sans(13, height: 1.75),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            if (long)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () => setState(() => expanded = !expanded),
-                  child: Text(expanded ? '접기' : '더 보기'),
+                  ],
                 ),
               ),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 2, 14, 12),
-              child: Text(
-                e.date.replaceAll('-', '.'),
-                style: sans(11, color: muted),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      e.date.replaceAll('-', '.'),
+                      style: sans(11, color: muted),
+                    ),
+                  ),
+                  TextButton(
+                    key: ValueKey('read-impression-${e.id}'),
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (c) => SurfaceDialog(
+                        title: Text('${e.author}의 감상'),
+                        content: SizedBox(
+                          width: 520,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.sizeOf(c).height * .55,
+                            ),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                e.content,
+                                style: sans(14, height: 1.9),
+                              ),
+                            ),
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(c),
+                            child: const Text('닫기'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: const Text('감상 읽기'),
+                  ),
+                ],
               ),
             ),
           ],

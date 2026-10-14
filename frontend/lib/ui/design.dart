@@ -16,7 +16,7 @@ TextStyle sans(
   FontWeight weight = FontWeight.w400,
   double height = 1.7,
 }) => TextStyle(
-  fontFamily: 'Pretendard',
+  fontFamily: 'ChironSungHK',
   fontSize: size,
   color: color,
   fontWeight: weight,
@@ -26,7 +26,7 @@ TextStyle sans(
 );
 TextStyle serif(double size, {Color color = ink, double height = 1.6}) =>
     TextStyle(
-      fontFamily: 'Pretendard',
+      fontFamily: 'ChironSungHK',
       fontSize: size,
       fontWeight: FontWeight.w600,
       color: color,
@@ -35,16 +35,16 @@ TextStyle serif(double size, {Color color = ink, double height = 1.6}) =>
       leadingDistribution: TextLeadingDistribution.even,
     );
 TextStyle english(double size, {Color color = ink}) => TextStyle(
-  fontFamily: 'Pretendard',
+  fontFamily: 'ChironSungHK',
   fontSize: size * .82,
   color: color,
   height: 1.3,
   leadingDistribution: TextLeadingDistribution.even,
 );
 
-/// The logo keeps its own serif wordmark; all reading text uses Pretendard.
+/// Chiron Sung HK is shared by all text styles, including Korean.
 TextStyle brandFont(double size, {Color color = ink}) => TextStyle(
-  fontFamily: 'Cormorant',
+  fontFamily: 'ChironSungHK',
   fontSize: size,
   color: color,
   height: 1.2,
@@ -94,7 +94,7 @@ class Eyebrow extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     label,
     style: const TextStyle(
-      fontFamily: 'Pretendard',
+      fontFamily: 'ChironSungHK',
       fontSize: 10,
       fontWeight: FontWeight.w600,
       letterSpacing: 1.8,
