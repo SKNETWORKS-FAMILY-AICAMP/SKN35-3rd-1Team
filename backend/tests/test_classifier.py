@@ -133,3 +133,10 @@ def test_pending_artist_message_explains_review(monkeypatch):
     route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
     assert route.reason == "unreviewed_artist"
     assert "검토 중" in refusal_message(route)
+
+
+def test_approved_artist_is_routed_as_other_artist():
+    route = classify("클림트의 키스는 언제 그렸어?", "rembrandt")
+    assert route.kind == "other_artist"
+    assert route.artists == ("gustav-klimt",)
+    assert "작품을 고른 뒤" in refusal_message(route)
