@@ -9,6 +9,10 @@ const line = Color(0xffdfE1d9);
 const sage = Color(0xff90998b);
 const pearl = Color(0xffffffff);
 const soft = Color(0xffeeefe9);
+const museumBlack = Color(0xff080808);
+const museumText = Color(0xfff5f3ee);
+const museumMuted = Color(0xffb6b5af);
+const museumLine = Color(0xff333330);
 
 BoxDecoration surfaceDecoration({
   double radius = 12,
@@ -79,10 +83,10 @@ ButtonStyle editorialButtonStyle({
   backgroundColor: WidgetStateProperty.resolveWith(
     (s) => s.contains(WidgetState.disabled)
         ? (quiet ? Colors.transparent : soft)
-        : dark
-        ? ink
         : quiet
         ? Colors.transparent
+        : dark
+        ? ink
         : tinted
         ? soft
         : Colors.white,
@@ -123,10 +127,12 @@ class FilterPill extends StatelessWidget {
     required this.selected,
     required this.onSelected,
     this.avatar,
+    this.inverse = false,
   });
   final Widget label;
   final Widget? avatar;
   final bool selected;
+  final bool inverse;
   final ValueChanged<bool>? onSelected;
   @override
   Widget build(BuildContext context) => Theme(
@@ -137,8 +143,14 @@ class FilterPill extends StatelessWidget {
       selected: selected,
       onSelected: onSelected,
       showCheckmark: false,
-      color: WidgetStatePropertyAll(selected ? ink : Colors.transparent),
-      side: BorderSide(color: selected ? ink : line),
+      color: WidgetStatePropertyAll(
+        selected ? (inverse ? museumText : ink) : Colors.transparent,
+      ),
+      side: BorderSide(
+        color: selected
+            ? (inverse ? museumText : ink)
+            : (inverse ? museumLine : line),
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       elevation: 0,
       pressElevation: 0,
@@ -148,10 +160,14 @@ class FilterPill extends StatelessWidget {
         fontFamily: 'NotoSansKR',
         fontSize: 12,
         fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-        color: selected ? Colors.white : ink,
+        color: inverse
+            ? (selected ? museumBlack : museumText)
+            : (selected ? Colors.white : ink),
       ),
       iconTheme: IconThemeData(
-        color: selected ? Colors.white : muted,
+        color: inverse
+            ? (selected ? museumBlack : museumMuted)
+            : (selected ? Colors.white : muted),
         size: 16,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),

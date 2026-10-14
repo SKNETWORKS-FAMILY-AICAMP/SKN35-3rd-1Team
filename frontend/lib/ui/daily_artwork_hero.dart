@@ -119,7 +119,7 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
       ),
     );
     final information = Container(
-      color: ink,
+      color: museumBlack,
       padding: EdgeInsets.all(mobile ? 24 : 32),
       child: mobile
           ? Column(
@@ -203,7 +203,7 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
                   top: 20,
                   right: mobile ? 16 : 40,
                   child: Container(
-                    color: ink,
+                    color: museumBlack,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

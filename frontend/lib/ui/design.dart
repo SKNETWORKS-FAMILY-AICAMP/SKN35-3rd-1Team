@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../state.dart';
@@ -139,10 +140,12 @@ class SectionTitle extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.inverse = false,
   });
   final String eyebrow, title;
   final String? subtitle;
   final Widget? trailing;
+  final bool inverse;
   @override
   Widget build(BuildContext context) => ScrollReveal(
     child: Row(
@@ -152,12 +155,21 @@ class SectionTitle extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Eyebrow(eyebrow),
+              Eyebrow(eyebrow, color: inverse ? museumMuted : muted),
               const SizedBox(height: 9),
-              Text(title, style: serif(compact(context) ? 22 : 26)),
+              Text(
+                title,
+                style: serif(
+                  compact(context) ? 22 : 26,
+                  color: inverse ? museumText : ink,
+                ),
+              ),
               if (subtitle != null) ...[
                 const SizedBox(height: 5),
-                Text(subtitle!, style: sans(12, color: muted)),
+                Text(
+                  subtitle!,
+                  style: sans(12, color: inverse ? museumMuted : muted),
+                ),
               ],
             ],
           ),
@@ -219,28 +231,35 @@ class ArtImage extends StatelessWidget {
     this.label,
     this.width,
     this.height,
+    this.onAspectRatio,
   });
   final String image;
   final BoxFit fit;
   final String? label;
   final double? width, height;
+  final ValueChanged<double>? onAspectRatio;
   Widget failure() => LayoutBuilder(
     builder: (context, constraints) {
       final small = constraints.maxWidth < 90 || constraints.maxHeight < 80;
+      final dark = Theme.of(context).brightness == Brightness.dark;
       return Semantics(
         label: image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
         child: ColoredBox(
-          color: const Color(0xffe4eaf2),
+          color: dark ? museumLine : soft,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.image_outlined, color: sage, size: small ? 18 : 30),
+                Icon(
+                  Icons.image_outlined,
+                  color: dark ? museumMuted : sage,
+                  size: small ? 18 : 30,
+                ),
                 if (!small) ...[
                   const SizedBox(height: 8),
                   Text(
                     image.isEmpty ? '제공되는 작품 이미지 없음' : '이미지를 불러오지 못했어요',
-                    style: sans(11, color: muted),
+                    style: sans(11, color: dark ? museumMuted : muted),
                   ),
                 ],
               ],
@@ -290,14 +309,27 @@ class ArtImage extends StatelessWidget {
             Widget child,
             int? frame,
             bool sync,
-          ) => sync || frame != null
-              ? child
-              : const ColoredBox(
-                  color: Color(0xffe4eaf2),
-                  child: Center(
-                    child: Icon(Icons.image_outlined, color: sage, size: 22),
-                  ),
-                );
+          ) {
+            // Read the already decoded image; no second request or decode.
+            final raw = child is Semantics ? child.child : child;
+            if (onAspectRatio != null && raw is RawImage && raw.image != null) {
+              final ratio = raw.image!.width / raw.image!.height;
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => onAspectRatio!(ratio),
+              );
+            }
+            return sync || frame != null
+                ? child
+                : ColoredBox(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? museumLine
+                        : soft,
+                    child: Center(
+                      child: Icon(Icons.image_outlined, color: sage, size: 22),
+                    ),
+                  );
+          }
+
           return asset
               ? Image.asset(
                   image,
@@ -333,10 +365,12 @@ class EmptyView extends StatelessWidget {
     this.description = '',
     this.action,
     this.icon = Icons.local_florist_outlined,
+    this.inverse = false,
   });
   final String title, description;
   final Widget? action;
   final IconData icon;
+  final bool inverse;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 62, horizontal: 20),
@@ -344,14 +378,18 @@ class EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 34, color: sage),
+          Icon(icon, size: 34, color: inverse ? museumMuted : sage),
           const SizedBox(height: 22),
-          Text(title, style: serif(21), textAlign: TextAlign.center),
+          Text(
+            title,
+            style: serif(21, color: inverse ? museumText : ink),
+            textAlign: TextAlign.center,
+          ),
           if (description.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
               description,
-              style: sans(12, color: muted),
+              style: sans(12, color: inverse ? museumMuted : muted),
               textAlign: TextAlign.center,
             ),
           ],
@@ -684,30 +722,44 @@ Future<void> logoutUser(BuildContext context) async {
 }
 
 class ArtworkCard extends StatefulWidget {
-  const ArtworkCard(this.art, {super.key});
+  const ArtworkCard(this.art, {super.key, this.museum = false});
   final Artwork art;
+  final bool museum;
   @override
   State<ArtworkCard> createState() => _ArtworkCardState();
 }
 
 class _ArtworkCardState extends State<ArtworkCard> {
   bool hover = false;
+  bool focused = false;
+  double? resolvedRatio;
+
+  @override
+  void didUpdateWidget(ArtworkCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.art.image != widget.art.image) resolvedRatio = null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context), a = widget.art;
     final liked = s.likes.contains(a.id);
+    final museum = widget.museum;
+    final foreground = museum ? museumText : ink;
+    final secondary = museum ? museumMuted : muted;
+    final ratio = (resolvedRatio ?? a.imageAspectRatio ?? 1.2).clamp(.55, 2.1);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
-            aspectRatio: 1.10,
+            aspectRatio: museum ? ratio : 1.10,
             child: MouseRegion(
               onEnter: (_) => setState(() => hover = true),
               onExit: (_) => setState(() => hover = false),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(museum ? 0 : 4),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -715,6 +767,8 @@ class _ArtworkCardState extends State<ArtworkCard> {
                       label: '${a.title} 작품 보기',
                       button: true,
                       child: InkWell(
+                        onFocusChange: (value) =>
+                            setState(() => focused = value),
                         onTap: () => context.go('/artwork/${a.id}'),
                         child: AnimatedScale(
                           scale: hover && !reduceMotion(context) ? 1.035 : 1,
@@ -724,6 +778,22 @@ class _ArtworkCardState extends State<ArtworkCard> {
                           child: ArtImage(
                             a.image,
                             label: '${s.artistName(a)}, ${a.title}',
+                            fit: museum ? BoxFit.contain : BoxFit.cover,
+                            onAspectRatio: museum
+                                ? (value) {
+                                    if (!mounted ||
+                                        widget.art.image != a.image ||
+                                        (value -
+                                                    (resolvedRatio ??
+                                                        a.imageAspectRatio ??
+                                                        1.2))
+                                                .abs() <
+                                            .01) {
+                                      return;
+                                    }
+                                    setState(() => resolvedRatio = value);
+                                  }
+                                : null,
                           ),
                         ),
                       ),
@@ -732,26 +802,56 @@ class _ArtworkCardState extends State<ArtworkCard> {
                       right: 9,
                       top: 9,
                       child: Material(
-                        color: paper.withValues(alpha: 0.94),
+                        color: museum
+                            ? museumBlack.withValues(alpha: .90)
+                            : paper.withValues(alpha: 0.94),
                         shape: const CircleBorder(),
                         child: IconButton(
                           tooltip: '${a.title} ${liked ? '좋아요 취소' : '좋아요'}',
                           isSelected: liked,
                           iconSize: 17,
                           constraints: const BoxConstraints(
-                            minHeight: 36,
-                            minWidth: 36,
+                            minHeight: 44,
+                            minWidth: 44,
                           ),
                           onPressed: s.pendingLikes.contains(a.id)
                               ? null
                               : () => likeArtwork(context, a),
                           icon: Icon(
                             liked ? Icons.favorite : Icons.favorite_border,
-                            color: green,
+                            color: museum ? museumText : green,
                           ),
                         ),
                       ),
                     ),
+                    if (museum)
+                      Positioned(
+                        bottom: 12,
+                        left: 12,
+                        child: IgnorePointer(
+                          child: ExcludeSemantics(
+                            child: AnimatedOpacity(
+                              opacity: hover || focused ? 1 : 0,
+                              duration: reduceMotion(context)
+                                  ? Duration.zero
+                                  : const Duration(milliseconds: 180),
+                              child: ColoredBox(
+                                color: museumBlack,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  child: Text(
+                                    '작품 보기 ↗',
+                                    style: sans(11, color: museumText),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -768,34 +868,49 @@ class _ArtworkCardState extends State<ArtworkCard> {
                     a.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: sans(14, weight: FontWeight.w500),
+                    style: sans(14, color: foreground, weight: FontWeight.w500),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Flexible(
-                flex: 0,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 80),
-                  child: Text(
-                    a.year,
-                    style: sans(10, color: muted),
-                    textAlign: TextAlign.right,
+              if (!museum || !compact(context)) ...[
+                const SizedBox(width: 8),
+                Flexible(
+                  flex: 0,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 80),
+                    child: Text(
+                      a.year,
+                      style: sans(10, color: secondary),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           const SizedBox(height: 3),
-          Text(s.artistName(a), style: sans(12, color: muted)),
+          Text(s.artistName(a), style: sans(12, color: secondary)),
           const SizedBox(height: 2),
           Text(
             s.artistEnglish(a),
-            style: english(15, color: const Color(0xff929b85)),
+            style: english(
+              15,
+              color: museum ? museumMuted : const Color(0xff929b85),
+            ),
           ),
+          if (museum && compact(context))
+            Text(
+              a.year,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: sans(10, color: secondary),
+            ),
           if (a.reason.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(a.reason, style: sans(11, color: green)),
+            Text(
+              a.reason,
+              style: sans(11, color: museum ? museumMuted : green),
+            ),
           ],
         ],
       ),
@@ -804,13 +919,92 @@ class _ArtworkCardState extends State<ArtworkCard> {
 }
 
 class ArtworkGrid extends StatelessWidget {
-  const ArtworkGrid(this.works, {super.key, this.maxColumns = 4});
+  const ArtworkGrid(
+    this.works, {
+    super.key,
+    this.maxColumns = 4,
+    this.museum = false,
+  });
   final List<Artwork> works;
   final int maxColumns;
+  final bool museum;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
       if (c.maxWidth <= 0) return const SizedBox.shrink();
+      if (museum) {
+        final columns =
+            (c.maxWidth >= 1000
+                    ? 3
+                    : c.maxWidth >= 340
+                    ? 2
+                    : 1)
+                .clamp(1, maxColumns);
+        final gap = columns == 1
+            ? 0.0
+            : c.maxWidth >= 1000
+            ? 32.0
+            : compact(context)
+            ? 16.0
+            : 24.0;
+        final width = (c.maxWidth - gap * (columns - 1)) / columns;
+        return FocusTraversalGroup(
+          policy: OrderedTraversalPolicy(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: columns > 1 ? 24 : 0),
+            child: Row(
+              key: const ValueKey('museum-artwork-wall'),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var col = 0; col < columns; col++) ...[
+                  if (col > 0) SizedBox(width: gap),
+                  SizedBox(
+                    width: width,
+                    child: MuseumColumnMotion(
+                      column: col,
+                      enabled: columns >= 3,
+                      child: Column(
+                        children: [
+                          if (columns > 1 && works.length >= columns)
+                            SizedBox(
+                              height: col == 1
+                                  ? (columns == 3 ? 72 : 32)
+                                  : col == 2
+                                  ? 24
+                                  : 0,
+                            ),
+                          for (var i = col; i < works.length; i += columns)
+                            FocusTraversalOrder(
+                              order: NumericFocusOrder(i.toDouble()),
+                              child: Semantics(
+                                sortKey: OrdinalSortKey(i.toDouble()),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: columns == 1 ? 28 : 36,
+                                  ),
+                                  child: ScrollReveal(
+                                    key: ValueKey(works[i].id),
+                                    order: col,
+                                    child: RepaintBoundary(
+                                      child: ArtworkCard(
+                                        works[i],
+                                        museum: true,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+      }
       final columns =
           (c.maxWidth > 1000
                   ? 4

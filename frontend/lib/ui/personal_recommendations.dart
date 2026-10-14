@@ -5,7 +5,8 @@ import '../state.dart';
 import 'design.dart';
 
 class PersonalRecommendations extends StatefulWidget {
-  const PersonalRecommendations({super.key});
+  const PersonalRecommendations({super.key, this.inverse = false});
+  final bool inverse;
   @override
   State<PersonalRecommendations> createState() =>
       _PersonalRecommendationsState();
@@ -36,12 +37,14 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
     if (s.config.demo || !s.authenticated) return const SizedBox.shrink();
+    final inverse = widget.inverse;
     return PageWidth(
       vertical: 35,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionTitle(
+          SectionTitle(
+            inverse: inverse,
             eyebrow: 'CURATED FOR YOU',
             title: '취향이 이어지는 다음 그림',
             subtitle: '마음에 담은 작품과 감상 기록을 따라 골랐어요.',
@@ -63,13 +66,20 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 );
               }
               if (snapshot.data?.isEmpty ?? true) {
-                return const EmptyView('취향에 맞는 작품을 준비하고 있어요.');
+                return EmptyView('취향에 맞는 작품을 준비하고 있어요.', inverse: inverse);
               }
-              return ArtworkGrid(snapshot.data!, maxColumns: 3);
+              return ArtworkGrid(
+                snapshot.data!.take(3).toList(),
+                maxColumns: 3,
+                museum: inverse,
+              );
             },
           ),
           const SizedBox(height: 35),
-          Text('새롭게 만나볼 작가', style: serif(23)),
+          Text(
+            '새롭게 만나볼 작가',
+            style: serif(23, color: inverse ? museumText : ink),
+          ),
           const SizedBox(height: 15),
           FutureBuilder<List<Artist>>(
             key: ValueKey('artists/$signature'),
@@ -87,13 +97,18 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 );
               }
               if (snapshot.data?.isEmpty ?? true) {
-                return const EmptyView('추천할 작가를 준비하고 있어요.');
+                return EmptyView('추천할 작가를 준비하고 있어요.', inverse: inverse);
               }
               return Column(
                 children: [
-                  for (final artist in snapshot.data!)
+                  for (final artist in snapshot.data!.take(3))
                     Card(
-                      color: const Color(0xffe8eeee),
+                      color: inverse ? museumBlack : const Color(0xffe8eeee),
+                      shape: inverse
+                          ? const RoundedRectangleBorder(
+                              side: BorderSide(color: museumLine),
+                            )
+                          : null,
                       elevation: 0,
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(
@@ -107,13 +122,17 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                         ),
                         title: Text(
                           artist.name,
-                          style: sans(13, weight: FontWeight.w600),
+                          style: sans(
+                            13,
+                            color: inverse ? museumText : ink,
+                            weight: FontWeight.w600,
+                          ),
                         ),
                         subtitle: Text(
                           artist.reason.isEmpty
                               ? s.artistMovement(artist)
                               : artist.reason,
-                          style: sans(11, color: muted),
+                          style: sans(11, color: inverse ? museumMuted : muted),
                         ),
                         onTap: () => context.go('/artist/${artist.id}'),
                         trailing: IconButton(
@@ -140,12 +159,22 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
     );
   }
 
-  Widget _loading() => const Padding(
-    padding: EdgeInsets.all(24),
-    child: Center(child: CircularProgressIndicator(color: green)),
+  Widget _loading() => Padding(
+    padding: const EdgeInsets.all(24),
+    child: Center(
+      child: CircularProgressIndicator(
+        color: widget.inverse ? museumText : green,
+      ),
+    ),
   );
   Widget _error(Object error, VoidCallback retry) => EmptyView(
     ArtlogState.message(error),
-    action: ArtButton('추천 다시 불러오기', outline: true, onTap: retry),
+    inverse: widget.inverse,
+    action: ArtButton(
+      '추천 다시 불러오기',
+      outline: !widget.inverse,
+      light: widget.inverse,
+      onTap: retry,
+    ),
   );
 }

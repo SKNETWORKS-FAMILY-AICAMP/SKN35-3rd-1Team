@@ -85,6 +85,44 @@ class PageMotionScope extends InheritedWidget {
       controller != oldWidget.controller;
 }
 
+/// Small opposing offsets give the three exhibition columns depth while keeping
+/// their measured layout and each artwork's hit area intact.
+class MuseumColumnMotion extends StatelessWidget {
+  const MuseumColumnMotion({
+    super.key,
+    required this.column,
+    required this.enabled,
+    required this.child,
+  });
+  final int column;
+  final bool enabled;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    final motion = PageMotionScope.maybeOf(context);
+    if (!enabled || reduceMotion(context) || motion == null) return child;
+    return AnimatedBuilder(
+      animation: motion,
+      child: child,
+      builder: (context, child) {
+        final amount = (motion.offset / 1800).clamp(0.0, 1.0) * 22;
+        return Transform.translate(
+          offset: Offset(
+            0,
+            amount *
+                (column == 1
+                    ? 1
+                    : column == 0
+                    ? -.65
+                    : -.3),
+          ),
+          child: child,
+        );
+      },
+    );
+  }
+}
+
 /// Reveals a section once when it enters the outer viewport. After completing,
 /// it detaches from scrolling; there are no timers or perpetual frame callbacks.
 class ScrollReveal extends StatefulWidget {

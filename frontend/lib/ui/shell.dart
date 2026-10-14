@@ -50,10 +50,11 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final state = ArtlogScope.of(context);
     final mobile = MediaQuery.sizeOf(context).width < 850;
+    final exhibition = widget.location == '/gallery';
     return PageMotionScope(
       controller: motion,
       child: Scaffold(
-        backgroundColor: paper,
+        backgroundColor: exhibition ? museumBlack : paper,
         body: SafeArea(
           bottom: false,
           child: Stack(
@@ -63,13 +64,20 @@ class _AppShellState extends State<AppShell> {
                   _Header(location: widget.location, motion: motion),
                   Expanded(
                     child: state.loading
-                        ? const Center(
-                            child: CircularProgressIndicator(color: green),
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: exhibition ? museumText : green,
+                            ),
                           )
                         : state.error != null
                         ? EmptyView(
                             state.error!,
-                            action: ArtButton('다시 불러오기', onTap: state.load),
+                            inverse: exhibition,
+                            action: ArtButton(
+                              '다시 불러오기',
+                              light: exhibition,
+                              onTap: state.load,
+                            ),
                           )
                         : Semantics(
                             container: true,
@@ -81,7 +89,7 @@ class _AppShellState extends State<AppShell> {
               Positioned(
                 bottom: 20,
                 right: mobile ? 16 : 28,
-                child: _ReturnToTop(motion: motion),
+                child: _ReturnToTop(motion: motion, inverse: exhibition),
               ),
             ],
           ),
@@ -144,8 +152,9 @@ class _AppPageState extends State<AppPage> {
 }
 
 class _ReturnToTop extends StatelessWidget {
-  const _ReturnToTop({required this.motion});
+  const _ReturnToTop({required this.motion, required this.inverse});
   final PageMotionController motion;
+  final bool inverse;
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: motion,
@@ -167,8 +176,19 @@ class _ReturnToTop extends StatelessWidget {
               duration: duration,
               child: IconButton(
                 tooltip: '맨 위로',
-                style: editorialButtonStyle(dark: true).copyWith(
-                  side: const WidgetStatePropertyAll(BorderSide(color: sage)),
+                style: editorialButtonStyle(dark: !inverse).copyWith(
+                  backgroundColor: WidgetStatePropertyAll(
+                    inverse ? museumText : ink,
+                  ),
+                  foregroundColor: WidgetStatePropertyAll(
+                    inverse ? museumBlack : Colors.white,
+                  ),
+                  shape: inverse
+                      ? const WidgetStatePropertyAll(CircleBorder())
+                      : null,
+                  side: WidgetStatePropertyAll(
+                    BorderSide(color: inverse ? museumText : sage),
+                  ),
                 ),
                 onPressed: () =>
                     motion.returnToTop(immediately: reduceMotion(context)),
@@ -274,11 +294,13 @@ class _Header extends StatelessWidget {
         ? 0.0
         : (motion.offset / 220).clamp(0.0, 1.0);
     final active = _activeRoute(location);
-    final white = editorialButtonStyle(dark: true, quiet: true);
+    final white = editorialButtonStyle(dark: true, quiet: true).copyWith(
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+    );
     return Stack(
       children: [
         ColoredBox(
-          color: ink,
+          color: museumBlack,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -340,7 +362,7 @@ class _Header extends StatelessWidget {
                 Container(
                   height: 48,
                   decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: Color(0xff3d403b))),
+                    border: Border(top: BorderSide(color: museumLine)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -536,7 +558,7 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: 64),
     child: ColoredBox(
-      color: ink,
+      color: museumBlack,
       child: PageWidth(
         vertical: 40,
         child: Column(
