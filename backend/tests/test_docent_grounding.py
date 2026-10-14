@@ -70,6 +70,22 @@ def test_context_keeps_identity_and_editorial_metadata_without_profile():
     assert "source_url" not in data["sources"][0]
 
 
+def test_context_keeps_recent_turns_without_full_repeated_essays():
+    history = [
+        ChatTurn(role="user", content=f"질문 {i}")
+        if i % 2 == 0 else ChatTurn(role="assistant", content="긴 작품 설명 " * 100)
+        for i in range(12)
+    ]
+    data = context(
+        SimpleNamespace(title="작품", artist_name="작가"),
+        ChatRequest(question="그 인물은 누구야?", history=history),
+        [_doc()],
+    )
+    assert len(data["history"]) == 6
+    assert data["history"][0]["content"] == "질문 6"
+    assert all(len(turn["content"]) <= 600 for turn in data["history"])
+
+
 def test_public_source_uses_retrieved_metadata_only():
     result = validate_response(
         {"answer": "자료에 따르면 1889년입니다.", "refused": False, "used_document_ids": [4]},
