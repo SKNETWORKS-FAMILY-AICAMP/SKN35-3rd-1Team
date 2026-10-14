@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "청크 검색 설정 비교용 18문항의 정답 청크. doc_key와 chunk_index 조합을 사용해 재청킹 실험에서도 비교한다.",
+  "cases": [
+    {"id": "fact-002", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear", "chunk_index": 0}]},
+    {"id": "fact-005", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-bedroom", "chunk_index": 0}]},
+    {"id": "detail-006", "target_chunks": [{"doc_key": "paul-gauguin/commentary-when-will-you-marry", "chunk_index": 0}]},
+    {"id": "detail-007", "target_chunks": [{"doc_key": "paul-cezanne/apples-oranges", "chunk_index": 0}]},
+    {"id": "compare-001", "target_chunks": [{"doc_key": "_comparisons/comparison-van-gogh-and-gauguin-arles", "chunk_index": 0}]},
+    {"id": "multiturn-002", "target_chunks": [{"doc_key": "paul-gauguin/commentary-spirit-of-the-dead-watching", "chunk_index": 0}]},
+    {"id": "prompt-001", "target_chunks": [{"doc_key": "kim-hong-do/chuseongbudo-inscription", "chunk_index": 3}]},
+    {"id": "prompt-002", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-starry-night", "chunk_index": 0}]},
+    {"id": "prompt-003", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-sower-1888", "chunk_index": 0}]},
+    {"id": "prompt-004", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-langlois-bridge", "chunk_index": 0}]},
+    {"id": "prompt-005", "target_chunks": [{"doc_key": "jeong-seon/yuksangmyodo", "chunk_index": 0}, {"doc_key": "jeong-seon/yuksangmyodo", "chunk_index": 1}]},
+    {"id": "prompt-006", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-starry-night", "chunk_index": 1}]},
+    {"id": "prompt-007", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-starry-night", "chunk_index": 0}]},
+    {"id": "prompt-008", "target_chunks": [{"doc_key": "kim-hong-do/chuseongbudo-inscription", "chunk_index": 1}, {"doc_key": "kim-hong-do/chuseongbudo-inscription", "chunk_index": 2}, {"doc_key": "kim-hong-do/chuseongbudo-inscription", "chunk_index": 3}]},
+    {"id": "prompt-009", "target_chunks": [{"doc_key": "vincent-van-gogh/commentary-the-starry-night", "chunk_index": 0}]},
+    {"id": "boundary-001", "target_chunks": [{"doc_key": "claude-monet/impression-sunrise", "chunk_index": 4}, {"doc_key": "claude-monet/impression-sunrise", "chunk_index": 5}]},
+    {"id": "boundary-002", "target_chunks": [{"doc_key": "rembrandt/the-night-watch.en", "chunk_index": 0}, {"doc_key": "rembrandt/the-night-watch.en", "chunk_index": 1}]},
+    {"id": "boundary-003", "target_chunks": [{"doc_key": "_comparisons/chiaroscuro", "chunk_index": 12}, {"doc_key": "_comparisons/chiaroscuro", "chunk_index": 13}]}
+  ]
+}
