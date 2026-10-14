@@ -551,6 +551,7 @@ class ArtlogApi {
     String name,
     String description, {
     String? id,
+    List<String> artworkIds = const [],
   }) async => ArtCollection.fromJson(
     object(
       await _request(
@@ -559,10 +560,33 @@ class ArtlogApi {
             ? 'me/collections'
             : 'me/collections/${Uri.encodeComponent(id)}',
         authenticated: true,
-        body: {'name': name, 'description': description},
+        body: {
+          'name': name,
+          'description': description,
+          // Only a new collection takes its first artworks (first is the cover).
+          if (id == null && artworkIds.isNotEmpty)
+            'artwork_ids': artworkIds.map(int.parse).toList(),
+        },
       ),
     ),
   );
+  Future<List<AutoCollection>> autoCollections() async => items(
+    await _request('GET', 'me/collections/auto', authenticated: true),
+  ).map((e) => AutoCollection.fromJson(object(e))).toList();
+  Future<(AutoCollection, List<Artwork>)> autoCollection(String key) async {
+    final j = object(
+      await _request(
+        'GET',
+        'me/collections/auto/${Uri.encodeComponent(key)}',
+        authenticated: true,
+      ),
+    );
+    return (
+      AutoCollection.fromJson(object(j['collection'])),
+      items(j['items']).map((e) => Artwork.fromJson(object(e))).toList(),
+    );
+  }
+
   Future<void> deleteCollection(String id) async {
     await _request(
       'DELETE',

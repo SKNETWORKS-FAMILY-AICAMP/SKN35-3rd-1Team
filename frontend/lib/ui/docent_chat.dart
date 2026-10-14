@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models.dart';
 import '../docent_conversation.dart';
+import '../state.dart';
+import 'collection_workspace.dart' show CollectionCover, editCollection;
 import 'design.dart';
 
 class DocentChat extends StatefulWidget {
@@ -252,6 +254,13 @@ class _DocentChatState extends State<DocentChat> {
                                     ),
                                   ),
                                 ),
+                          if (m.suggestion case final offer?) ...[
+                            const SizedBox(height: 10),
+                            _CollectOffer(
+                              offer: offer,
+                              onClose: () => conversation!.closeSuggestion(m),
+                            ),
+                          ],
                           if (m.sources.isNotEmpty) ...[
                             const SizedBox(height: 9),
                             Wrap(
@@ -530,4 +539,133 @@ class _StyleTabs extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// The docent's offer to collect the artwork. Saves only when a button is tapped.
+class _CollectOffer extends StatefulWidget {
+  const _CollectOffer({required this.offer, required this.onClose});
+  final CollectionSuggestion offer;
+  final VoidCallback onClose;
+  @override
+  State<_CollectOffer> createState() => _CollectOfferState();
+}
+
+class _CollectOfferState extends State<_CollectOffer> {
+  bool busy = false;
+
+  Future<void> run(Future<String?> Function() action) async {
+    if (busy) return;
+    setState(() => busy = true);
+    try {
+      final done = await action();
+      if (!mounted || done == null) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(done)));
+      widget.onClose();
+    } catch (e) {
+      if (mounted) showError(context, e);
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = ArtlogScope.of(context), offer = widget.offer;
+    return Container(
+      key: const ValueKey('docent-collect-offer'),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: soft,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.bookmark_add_outlined, size: 17, color: green),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(offer.message, style: sans(12, height: 1.6)),
+              ),
+            ],
+          ),
+          if (offer.createsCollection && offer.artworks.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 56,
+              child: Row(
+                children: [
+                  for (final a in offer.artworks.take(5))
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: SizedBox(
+                          width: 46,
+                          child: CollectionCover(a, height: 56),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 7,
+            runSpacing: 6,
+            children: [
+              if (offer.createsCollection)
+                SourceChip(
+                  label: Text(
+                    '‘${offer.name}’ 만들기',
+                    style: sans(11, weight: FontWeight.w600),
+                  ),
+                  onPressed: busy
+                      ? null
+                      : () => run(() async {
+                          final c = await s.saveCollection(
+                            offer.name ?? '',
+                            '',
+                            artworkIds: offer.artworkIds,
+                          );
+                          return '‘${c.name}’ 컬렉션을 만들었어요.';
+                        }),
+                )
+              else ...[
+                for (final (id, name) in offer.collections)
+                  SourceChip(
+                    label: Text('$name에 담기', style: sans(11)),
+                    onPressed: busy
+                        ? null
+                        : () => run(() async {
+                            await s.collect(id, offer.artworkId);
+                            return '‘$name’에 담았어요.';
+                          }),
+                  ),
+                SourceChip(
+                  avatar: const Icon(Icons.add, size: 13),
+                  label: Text('새 컬렉션', style: sans(11)),
+                  onPressed: busy
+                      ? null
+                      : () => run(() async {
+                          final c = await editCollection(context, s);
+                          if (c == null) return null;
+                          await s.collect(c.id, offer.artworkId);
+                          return '‘${c.name}’에 담았어요.';
+                        }),
+                ),
+              ],
+              SourceChip(
+                label: Text('괜찮아요', style: sans(11, color: muted)),
+                onPressed: busy ? null : widget.onClose,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

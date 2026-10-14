@@ -157,6 +157,16 @@ class _ArtlogAppState extends State<ArtlogApp> {
               ),
             ),
             GoRoute(
+              path: '/collection/auto/:key',
+              pageBuilder: (_, state) => _contentPage(
+                state,
+                AutoCollectionPage(
+                  key: ValueKey(state.pathParameters['key']),
+                  collectionKey: state.pathParameters['key']!,
+                ),
+              ),
+            ),
+            GoRoute(
               path: '/collection/:id',
               pageBuilder: (_, state) => _contentPage(
                 state,

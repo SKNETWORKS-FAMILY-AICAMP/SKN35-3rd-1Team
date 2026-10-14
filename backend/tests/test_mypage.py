@@ -1,5 +1,6 @@
 """Account isolation, real collection SQL and the actual MCP wire protocol."""
 
+from datetime import timedelta
 from types import SimpleNamespace
 
 import pytest
@@ -9,8 +10,8 @@ from sqlalchemy import DefaultClause, MetaData, create_engine, text
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
-from app import collection_mcp
 from app.core.auth import get_current_user
+from app.core.timeutil import local_date, utcnow
 from app.db.session import get_db
 from app.main import app
 from app.models import (
@@ -25,6 +26,7 @@ from app.models import (
     User,
     UserPreference,
 )
+from app.rag import collection_mcp
 from app.services import collection_assistant as ai
 
 
@@ -344,6 +346,8 @@ def test_actual_mcp_initialize_tools_and_cross_account_guard(client):
         "search_artworks",
         "create_collection",
         "add_artwork_to_collection",
+        "list_auto_collections",
+        "create_collection_from_views",
     }
     assert all("user_id" not in t["inputSchema"]["properties"] for t in tools)
     created = rpc(
@@ -373,3 +377,145 @@ def test_actual_mcp_initialize_tools_and_cross_account_guard(client):
         == 401
     )
     assert rpc(client, "tools/list").headers["cache-control"] == "private, no-store"
+
+
+def view(c, user_id, artwork_id, days_ago=0, count=1):
+    """Record a view directly so the order of views is exact."""
+    db = app.dependency_overrides[get_db]()
+    at = utcnow() - timedelta(days=days_ago)
+    db.add(
+        ArtworkView(
+            user_id=user_id,
+            artwork_id=artwork_id,
+            viewed_on=local_date(at),
+            view_count=count,
+            first_viewed_at=at,
+            last_viewed_at=at,
+        )
+    )
+    db.commit()
+
+
+def test_auto_collections_follow_own_view_history_only(client):
+    assert client.get("/api/me/collections/auto").json() == []
+    view(client, 1, 3, days_ago=2)
+    view(client, 1, 7, days_ago=1, count=3)
+    view(client, 1, 5, days_ago=0)
+    view(client, 2, 9)  # another member's history never shows up
+    autos = {c["key"]: c for c in client.get("/api/me/collections/auto").json()}
+    month = local_date(utcnow()).strftime("%Y-%m")
+    assert set(autos) >= {"recent", "frequent", "artist-1"}
+    assert autos["recent"]["cover"]["id"] == 5 and autos["recent"]["artwork_count"] == 3
+    assert autos["frequent"]["artwork_count"] == 1  # only works viewed twice or more
+    assert autos["artist-1"]["name"] == "김작가 모음"
+    recent = client.get("/api/me/collections/auto/recent")
+    assert recent.headers["Cache-Control"] == "private, no-store"
+    assert [a["id"] for a in recent.json()["items"]] == [5, 7, 3]
+    this_month = client.get(f"/api/me/collections/auto/month-{month}").json()
+    assert {a["id"] for a in this_month["items"]} <= {3, 5, 7}
+    for bad in ("nope", "month-2026-13", "artist-999"):
+        assert client.get(f"/api/me/collections/auto/{bad}").status_code == 404
+    client.headers["Authorization"] = "Bearer b"
+    other = client.get("/api/me/collections/auto/recent").json()
+    assert [a["id"] for a in other["items"]] == [9]
+
+
+def test_create_with_artworks_keeps_order_and_first_is_cover(client):
+    made = client.post(
+        "/api/me/collections", json={"name": "순서 전시", "artwork_ids": [5, 2, 9, 2]}
+    )
+    assert made.status_code == 201, made.text
+    assert made.json()["artwork_count"] == 3
+    assert [a["id"] for a in made.json()["previews"]] == [5, 2, 9]
+    client.put(f"/api/me/collections/{made.json()['id']}/items/1")
+    listed = client.get("/api/me/collections").json()[0]
+    assert listed["previews"][0]["id"] == 5  # a later add never replaces the cover
+    missing = client.post(
+        "/api/me/collections", json={"name": "없는 작품", "artwork_ids": [1, 999]}
+    )
+    assert missing.status_code == 404
+    assert [c["name"] for c in client.get("/api/me/collections").json()] == ["순서 전시"]
+
+
+def test_chat_from_views_proposes_viewed_works_and_writes_nothing(client, monkeypatch):
+    view(client, 1, 4, days_ago=1)
+    view(client, 1, 8, days_ago=0)
+
+    def intent(**kw):
+        monkeypatch.setattr(ai, "generate", lambda *args: ai.Intent(action="from_views", **kw))
+        return client.post("/api/me/collections/chat", json={"message": "모아줘"}).json()
+
+    reply = intent(basis="recent")
+    assert reply["proposal"]["name"] == "최근 본 작품"
+    assert reply["proposal"]["artwork_ids"] == [8, 4]
+    assert [a["id"] for a in reply["artworks"]] == [8, 4]
+    assert client.get("/api/me/collections").json() == []
+    assert intent(basis="artist", artist_query="김작가")["proposal"]["name"] == "김작가 모음"
+    assert intent(basis="artist", artist_query="없는화가")["proposal"] is None
+    assert intent(basis="frequent")["proposal"] is None  # nothing viewed twice yet
+    assert intent(basis="month")["proposal"] is None  # month is required
+    p = reply["proposal"]
+    created = client.post(
+        "/api/me/collections", json={"name": p["name"], "artwork_ids": p["artwork_ids"]}
+    ).json()
+    assert created["previews"][0]["id"] == 8
+    assert intent(basis="recent")["proposal"] is None  # same name already exists
+
+
+def test_mcp_creates_collection_from_own_views(client):
+    view(client, 1, 6, days_ago=1)
+    view(client, 1, 2, days_ago=0)
+    autos = rpc(client, "tools/call", {"name": "list_auto_collections", "arguments": {}})
+    assert not autos.json()["result"].get("isError")
+    made = rpc(
+        client,
+        "tools/call",
+        {"name": "create_collection_from_views", "arguments": {"basis": "recent"}},
+    ).json()["result"]
+    assert not made.get("isError"), made
+    saved = client.get("/api/me/collections").json()[0]
+    assert saved["name"] == "최근 본 작품"
+    assert [a["id"] for a in saved["previews"]] == [2, 6]
+    empty = rpc(
+        client,
+        "tools/call",
+        {"name": "create_collection_from_views", "arguments": {"basis": "recent"}},
+        actor="b",
+    ).json()["result"]
+    assert empty["isError"]  # member b has no view history
+
+
+def test_docent_offers_collection_only_after_repeated_questions(client):
+    from app.schemas.chat import ChatRequest, ChatResponse, ChatTurn
+    from app.services import collection_suggestions as offers
+
+    db = app.dependency_overrides[get_db]()
+    answered = ChatResponse(answer="답", refused=False, sources=[])
+
+    def ask(questions, response=answered, user=1, artwork=1):
+        history = [
+            ChatTurn(role=role, content="질문" if role == "user" else "답")
+            for _ in range(questions - 1)
+            for role in ("user", "assistant")
+        ]
+        body = ChatRequest(question="또 질문", history=history)
+        return offers.suggest(db, user, artwork, body, response)
+
+    assert ask(2) is None  # not yet interested
+    assert ask(3, ChatResponse(answer="모름", refused=True, sources=[])) is None
+    assert ask(3, user=None) is None  # guests get no offer
+    offer = ask(3)
+    assert offer.kind == "add_artwork" and offer.collections == []
+    cid = group(client, "담을 곳")
+    assert [c.id for c in ask(3).collections] == [cid]
+    client.put(f"/api/me/collections/{cid}/items/1")
+    assert ask(3) is None  # already collected
+    for art in (2, 3, 4):
+        view(client, 1, art)
+    artist = ask(3)
+    assert artist.kind == "create_from_views"
+    assert artist.proposal.name == "김작가 모음"
+    assert sorted(artist.proposal.artwork_ids) == [2, 3, 4]
+    assert client.get("/api/me/collections").json()[0]["artwork_count"] == 1  # nothing saved
+    group(client, "김작가 모음")
+    assert ask(3) is None  # artist collection exists and artwork 1 is collected

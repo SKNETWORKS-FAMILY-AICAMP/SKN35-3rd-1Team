@@ -165,6 +165,7 @@ class CollectionWorkspace extends StatefulWidget {
 
 class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   List<ArtCollection> rows = [];
+  List<AutoCollection> autos = [];
   bool started = false, loading = true;
   String? error;
   int serial = 0;
@@ -189,8 +190,15 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
     });
     try {
       final result = await s.collections(force: true);
+      // Auto collections are a bonus: a failure there keeps the saved ones visible.
+      final auto = await s.autoCollections().catchError(
+        (Object _) => <AutoCollection>[],
+      );
       if (mounted && request == serial && s.userKey == identity) {
-        setState(() => rows = result);
+        setState(() {
+          rows = result;
+          autos = auto;
+        });
       }
     } catch (e) {
       if (mounted && request == serial && s.userKey == identity) {
@@ -331,6 +339,21 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
               runSpacing: 16,
               children: [
                 SizedBox(width: width, child: const _LikedCollectionCard()),
+                for (final auto in autos)
+                  SizedBox(
+                    width: width,
+                    child: _SpecialCollectionCard(
+                      key: ValueKey('collection-auto-${auto.key}'),
+                      title: auto.name,
+                      badge: '자동',
+                      subtitle: '${auto.count}점 · ${auto.description}',
+                      cover: auto.cover,
+                      emptyIcon: Icons.auto_awesome_outlined,
+                      onTap: () => context.push(
+                        '/collection/auto/${Uri.encodeComponent(auto.key)}',
+                      ),
+                    ),
+                  ),
                 for (final group in rows)
                   SizedBox(
                     width: width,
@@ -352,37 +375,10 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(4),
-                                  child: SizedBox(
-                                    height: 190,
-                                    child: group.previews.isEmpty
-                                        ? Container(
-                                            color: soft,
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons
-                                                    .add_photo_alternate_outlined,
-                                                size: 35,
-                                                color: sage,
-                                              ),
-                                            ),
-                                          )
-                                        : Row(
-                                            children: [
-                                              for (final a in group.previews)
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          right: 2,
-                                                        ),
-                                                    child: ArtImage(
-                                                      a.image,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
+                                  child: CollectionCover(
+                                    group.previews.firstOrNull,
+                                    emptyIcon:
+                                        Icons.add_photo_alternate_outlined,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -446,78 +442,108 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   );
 }
 
+/// One large cover image: the collection's first artwork fills the frame.
+class CollectionCover extends StatelessWidget {
+  const CollectionCover(
+    this.art, {
+    super.key,
+    this.emptyIcon = Icons.photo_outlined,
+    this.height = 190,
+  });
+  final Artwork? art;
+  final IconData emptyIcon;
+  final double height;
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    height: height,
+    width: double.infinity,
+    child: art == null
+        ? Container(
+            color: soft,
+            child: Center(child: Icon(emptyIcon, size: 35, color: sage)),
+          )
+        : ArtImage(art!.image, label: art!.title, fit: BoxFit.cover),
+  );
+}
+
 /// Default collection: every liked artwork lands here automatically.
 class _LikedCollectionCard extends StatelessWidget {
   const _LikedCollectionCard();
   @override
   Widget build(BuildContext context) {
-    final s = ArtlogScope.of(context);
-    final works = s.likedWorks;
-    return SurfacePanel(
+    final works = ArtlogScope.of(context).likedWorks;
+    return _SpecialCollectionCard(
       key: const ValueKey('collection-liked-default'),
-      padding: const EdgeInsets.all(14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(4),
-        onTap: () => context.push('/collection/likes'),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: SizedBox(
-                height: 190,
-                child: works.isEmpty
-                    ? Container(
-                        color: soft,
-                        child: const Center(
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 35,
-                            color: sage,
-                          ),
-                        ),
-                      )
-                    : Row(
-                        children: [
-                          for (final a in works.take(3))
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 2),
-                                child: ArtImage(a.image, fit: BoxFit.cover),
-                              ),
-                            ),
-                        ],
-                      ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(child: Text('좋아요한 작품', style: serif(20))),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: soft,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text('기본', style: sans(10, color: green)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Text(
-              '${works.length}점 · 좋아요를 누르면 자동으로 담겨요',
-              style: sans(11, color: muted),
-            ),
-            const SizedBox(height: 48),
-          ],
-        ),
-      ),
+      title: '좋아요한 작품',
+      badge: '기본',
+      subtitle: '${works.length}점 · 좋아요를 누르면 자동으로 담겨요',
+      cover: works.firstOrNull,
+      emptyIcon: Icons.favorite_border,
+      onTap: () => context.push('/collection/likes'),
     );
   }
+}
+
+/// Collections the app fills by itself (likes, view history). Not editable.
+class _SpecialCollectionCard extends StatelessWidget {
+  const _SpecialCollectionCard({
+    super.key,
+    required this.title,
+    required this.badge,
+    required this.subtitle,
+    required this.cover,
+    required this.emptyIcon,
+    required this.onTap,
+  });
+  final String title, badge, subtitle;
+  final Artwork? cover;
+  final IconData emptyIcon;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => SurfacePanel(
+    padding: const EdgeInsets.all(14),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(4),
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: CollectionCover(cover, emptyIcon: emptyIcon),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: serif(20),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: soft,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(badge, style: sans(10, color: green)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Text(
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: sans(11, color: muted),
+          ),
+          const SizedBox(height: 48),
+        ],
+      ),
+    ),
+  );
 }
 
 Future<void> pickCollectionForArtwork(

@@ -34,6 +34,28 @@ class ArtCollection {
   };
 }
 
+/// A collection computed from view history (recent, frequent, artist, month).
+/// Not stored on the server; [key] identifies it, e.g. `recent` or `artist-10`.
+class AutoCollection {
+  const AutoCollection({
+    required this.key,
+    required this.name,
+    this.description = '',
+    this.count = 0,
+    this.cover,
+  });
+  final String key, name, description;
+  final int count;
+  final Artwork? cover;
+  factory AutoCollection.fromJson(Json j) => AutoCollection(
+    key: text(j['key']),
+    name: text(j['name']),
+    description: text(j['description']),
+    count: (j['artwork_count'] as num?)?.toInt() ?? 0,
+    cover: j['cover'] == null ? null : Artwork.fromJson(object(j['cover'])),
+  );
+}
+
 class ArtworkPage {
   const ArtworkPage(this.items, this.cursor);
   final List<Artwork> items;
@@ -104,14 +126,18 @@ class CollectionProposal {
     this.collectionId,
     this.artworkId,
     this.name,
+    this.artworkIds = const [],
   });
   final String action;
   final String? collectionId, artworkId, name;
+  // create: artworks to put in the new collection, first one is the cover.
+  final List<String> artworkIds;
   factory CollectionProposal.fromJson(Json j) => CollectionProposal(
     action: text(j['action']),
     collectionId: j['collection_id']?.toString(),
     artworkId: j['artwork_id']?.toString(),
     name: j['name'] as String?,
+    artworkIds: items(j['artwork_ids'] ?? []).map(text).toList(),
   );
 }
 

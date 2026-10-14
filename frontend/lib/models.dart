@@ -196,16 +196,59 @@ class Source {
   );
 }
 
+/// The docent's offer to collect the artwork after repeated questions.
+/// Nothing is saved until the member picks an option.
+class CollectionSuggestion {
+  const CollectionSuggestion({
+    required this.kind,
+    required this.message,
+    required this.artworkId,
+    this.collections = const [],
+    this.name,
+    this.artworkIds = const [],
+    this.artworks = const [],
+  });
+  // add_artwork | create_from_views
+  final String kind, message, artworkId;
+  // add_artwork: (id, name) of the member's collections.
+  final List<(String, String)> collections;
+  // create_from_views: the new collection and the viewed artworks it would hold.
+  final String? name;
+  final List<String> artworkIds;
+  final List<Artwork> artworks;
+  bool get createsCollection => kind == 'create_from_views';
+  factory CollectionSuggestion.fromJson(Json j) {
+    final proposal = j['proposal'] == null ? null : object(j['proposal']);
+    return CollectionSuggestion(
+      kind: text(j['kind']),
+      message: text(j['message']),
+      artworkId: text(j['artwork_id']),
+      collections: [
+        for (final c in items(j['collections'] ?? []))
+          (text(object(c)['id']), text(object(c)['name'])),
+      ],
+      name: proposal?['name'] as String?,
+      artworkIds: items(proposal?['artwork_ids'] ?? []).map(text).toList(),
+      artworks: items(
+        j['artworks'] ?? [],
+      ).map((a) => Artwork.fromJson(object(a))).toList(),
+    );
+  }
+}
+
 class ChatTurn {
   const ChatTurn(
     this.role,
     this.content, {
     this.sources = const [],
     this.refused = false,
+    this.suggestion,
   });
   final String role, content;
   final List<Source> sources;
   final bool refused;
+  // Shown under the latest answer only; never restored from saved history.
+  final CollectionSuggestion? suggestion;
   factory ChatTurn.fromJson(Json j) {
     final role = text(j['role']);
     if ((role != 'user' && role != 'assistant') ||
@@ -249,10 +292,11 @@ class ChatSummary {
 }
 
 class ChatReply {
-  const ChatReply(this.answer, this.refused, this.sources);
+  const ChatReply(this.answer, this.refused, this.sources, [this.suggestion]);
   final String answer;
   final bool refused;
   final List<Source> sources;
+  final CollectionSuggestion? suggestion;
   factory ChatReply.fromJson(Json j) {
     if (j['answer'] is! String ||
         j['refused'] is! bool ||
@@ -265,6 +309,9 @@ class ChatReply {
       j['answer'],
       j['refused'],
       (j['sources'] as List).map((s) => Source.fromJson(object(s))).toList(),
+      j['suggestion'] == null
+          ? null
+          : CollectionSuggestion.fromJson(object(j['suggestion'])),
     );
   }
 }

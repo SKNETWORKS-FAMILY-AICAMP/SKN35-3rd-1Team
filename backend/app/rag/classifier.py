@@ -220,6 +220,11 @@ def _find_artists(text: str) -> tuple[str, tuple[str, ...], tuple[str, ...], tup
     return masked, tuple(collected), tuple(planned), tuple(planned_aliases)
 
 
+def collected_artist_slugs(text: str) -> tuple[str, ...]:
+    """글에 나온 수집 완료 작가 slug (별칭·헷갈리는 이름 처리는 질문 분류와 같다)."""
+    return _find_artists(text)[1]
+
+
 def _mentions(text: str, name: str) -> bool:
     """name 이 낱말로 나오는지. 한글 이름은 앞에 한글이 붙지 않고, 뒤에는 조사만 올 수 있다."""
     if not HANGUL.search(name):
