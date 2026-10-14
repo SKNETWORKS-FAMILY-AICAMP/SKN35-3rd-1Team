@@ -141,7 +141,7 @@ void main() {
       );
       await state.load();
       await tester.pumpWidget(
-        ArtlogApp(state: state, initialLocation: '/library'),
+        ArtlogApp(state: state, initialLocation: '/library?tab=calendar'),
       );
       await tester.pumpAndSettle();
       expect(

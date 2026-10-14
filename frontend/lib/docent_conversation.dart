@@ -12,6 +12,14 @@ class DocentConversation extends ChangeNotifier {
   final ArtlogState state;
   final Artwork art;
   final List<ChatTurn> messages = [];
+  // easy / standard / deep, chosen with the tabs above the chat.
+  String style = 'standard';
+  void setStyle(String value) {
+    if (style == value) return;
+    style = value;
+    notifyListeners();
+  }
+
   String? error, historyError, failedQuestion;
   bool busy = false, loading = false, resetting = false, _disposed = false;
   int _revision = 0;
@@ -102,11 +110,12 @@ class DocentConversation extends ChangeNotifier {
 
     try {
       final reply = state.config.demo
-          ? await state.ask(art, question, history)
+          ? await state.ask(art, question, history, style: style)
           : await state.api.chatStream(
               art.id,
               question,
               history,
+              style: style,
               onToken: (token) => reveal(token),
               onReplace: (text) => reveal(text, replace: true),
             );

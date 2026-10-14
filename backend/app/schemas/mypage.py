@@ -74,8 +74,11 @@ class ActivityOut(BaseModel):
 
 
 class TasteOut(BaseModel):
+    # One-line AI introduction shown under the nickname.
     summary: str | None = None
     evidence: list[ArtworkCard] = Field(default_factory=list)
+    # Public impressions read for the introduction (their text is not returned).
+    impression_count: int = 0
     generated_at: datetime | None = None
     stale: bool = False
 

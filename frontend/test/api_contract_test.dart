@@ -135,7 +135,11 @@ void main() {
       expect(sent.method, 'POST');
       expect(sent.url.path, '/api/artworks/42/chat');
       final body = jsonDecode(sent.body) as Map<String, dynamic>;
-      expect(body.keys, unorderedEquals(['question', 'history']));
+      expect(
+        body.keys,
+        unorderedEquals(['question', 'history', 'explanation_style']),
+      );
+      expect(body['explanation_style'], 'standard');
       expect(body['question'], '누가 그렸나요?');
       expect(body['history'], hasLength(12));
       expect(body['history'][0], {'role': 'user', 'content': 'turn2'});

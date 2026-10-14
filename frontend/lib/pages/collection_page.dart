@@ -142,7 +142,7 @@ class _CollectionPageState extends State<CollectionPage> {
                 action: ArtButton(
                   error == null ? '내 컬렉션으로' : '다시 불러오기',
                   onTap: error == null
-                      ? () => context.go('/mypage?tab=collections')
+                      ? () => context.go('/library?tab=collections')
                       : () => load(reset: true),
                 ),
               ),
@@ -172,7 +172,7 @@ class _CollectionPageState extends State<CollectionPage> {
               key: const ValueKey('collection-back'),
               onPressed: () => context.canPop()
                   ? context.pop()
-                  : context.go('/mypage?tab=collections'),
+                  : context.go('/library?tab=collections'),
               icon: const Icon(Icons.arrow_back, size: 17),
               label: const Text('내 컬렉션'),
             ),

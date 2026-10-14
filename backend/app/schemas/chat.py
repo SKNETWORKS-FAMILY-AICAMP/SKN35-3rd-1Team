@@ -25,6 +25,8 @@ class ChatRequest(BaseModel):
     question: str = Field(min_length=1, max_length=500)
     # The client sends at most the last 12 messages.
     history: list[ChatTurn] = Field(default_factory=list, max_length=12)
+    # Tab chosen above the chat. None keeps the account's saved preference.
+    explanation_style: Literal["easy", "standard", "deep"] | None = None
 
 
 class BasisSource(BaseModel):

@@ -18,7 +18,7 @@ from app.services import mypage_service as service
 
 
 class TasteDraft(BaseModel):
-    summary: str = Field(min_length=1, max_length=800)
+    summary: str = Field(min_length=1, max_length=120)
 
 
 class Intent(BaseModel):
@@ -60,11 +60,12 @@ def generate(schema, instruction, data):
 
 def make_taste(db, user_id):
     evidence = service.taste_evidence(db, user_id)
-    if not evidence:
+    impressions = service.taste_impressions(db, user_id)
+    if not evidence and not impressions:
         raise HTTPException(
-            409, "좋아하는 그림을 누르거나 컬렉션에 작품을 담아 주세요."
+            409, "공개 감상을 남기거나 좋아하는 그림을 눌러 주세요."
         )
-    fingerprint = service.taste_fingerprint(evidence)
+    fingerprint = service.taste_fingerprint(evidence, impressions)
     p = service.preference(db, user_id)
     if p and p.taste_summary and p.taste_fingerprint == fingerprint:
         return service.get_taste(db, user_id)
@@ -74,17 +75,21 @@ def make_taste(db, user_id):
         and (utcnow() - p.taste_generated_at).total_seconds() < 30
     ):
         raise HTTPException(429, "잠시 뒤 새 취향 소개를 만들어 주세요.")
+    data = {
+        "works": [
+            {"title": e.title, "artist": e.artist_name, "year": e.year_label}
+            for e in evidence
+        ]
+    }
+    if impressions:
+        data["impressions"] = impressions
     result = generate(
         TasteDraft,
-        "한국어로 미술 컬렉션 취향 소개를 3~4문장 작성하세요. 제공된 작품 제목·작가 정보만 근거로 쓰세요. "
-        "관찰과 추측을 구분하고 '이런 작품에 관심을 두고 계시네요'처럼 부드럽게 표현하세요. "
-        "작품의 색채·기법·사조가 데이터에 없으면 지어내지 마세요. 성격, 직업, 나이, 성별을 추론하지 마세요.",
-        {
-            "works": [
-                {"title": e.title, "artist": e.artist_name, "year": e.year_label}
-                for e in evidence
-            ]
-        },
+        "한국어로 이 감상가를 소개하는 한 문장(60자 이내)을 작성하세요. 프로필 닉네임 아래에 표시됩니다. "
+        "공개 감상평(impressions)에 드러난 시선을 우선하고, 좋아한 작품 제목·작가 정보로 보완하세요. "
+        "'~에 마음이 머무는 감상가'처럼 부드럽게 표현하고 관찰과 추측을 구분하세요. "
+        "데이터에 없는 색채·기법·사조를 지어내지 마세요. 성격, 직업, 나이, 성별을 추론하지 마세요.",
+        data,
     )
     if p is None:
         p = UserPreference(user_id=user_id)
@@ -98,6 +103,7 @@ def make_taste(db, user_id):
     return TasteOut(
         summary=result.summary,
         evidence=evidence,
+        impression_count=len(impressions),
         generated_at=p.taste_generated_at.replace(tzinfo=UTC),
     )
 

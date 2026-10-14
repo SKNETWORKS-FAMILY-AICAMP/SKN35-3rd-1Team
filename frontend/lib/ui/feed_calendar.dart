@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../state.dart';
-import '../ui/design.dart';
-import '../ui/saved_chats.dart';
+import 'design.dart';
 import '../diary.dart';
-import '../ui/diary_editor.dart';
+import 'diary_editor.dart';
 
-class LibraryPage extends StatefulWidget {
-  const LibraryPage({super.key, this.artworkId, this.initialDate});
+/// 감상 캘린더: monthly views with the day's diary editor.
+class FeedCalendar extends StatefulWidget {
+  const FeedCalendar({super.key, this.artworkId, this.initialDate});
   final String? artworkId, initialDate;
   @override
-  State<LibraryPage> createState() => _LibraryPageState();
+  State<FeedCalendar> createState() => _FeedCalendarState();
 }
 
-class _LibraryPageState extends State<LibraryPage> {
+class _FeedCalendarState extends State<FeedCalendar> {
   String get initialDay {
     final d = DateTime.tryParse(widget.initialDate ?? '');
     return d != null &&
@@ -27,7 +27,6 @@ class _LibraryPageState extends State<LibraryPage> {
 
   late DateTime month = DateTime.parse('${initialDay.substring(0, 7)}-01');
   late String selected = initialDay;
-  String tab = 'calendar';
   String? identity, calendarError, dayError, diaryError;
   Map<String, DiaryEntry> diaryEntries = {};
   GlobalKey<DiaryEditorState> editorKey = GlobalKey<DiaryEditorState>();
@@ -201,225 +200,144 @@ class _LibraryPageState extends State<LibraryPage> {
     final totalViews = calendarDays.values
         .where((day) => day.date.startsWith(monthPrefix))
         .fold<int>(0, (total, day) => total + day.totalViews);
-    return PageWidth(
-      vertical: 32,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Eyebrow('PRIVATE JOURNAL'),
-          const SizedBox(height: 10),
-          Text('내 서재', style: serif(compact(context) ? 30 : 38)),
-          const SizedBox(height: 10),
-          Text('그날의 그림과 생각을 기록하는 개인 공간.', style: sans(14, color: muted)),
-          const SizedBox(height: 28),
-          if (!s.authenticated)
-            EmptyView(
-              '감상의 순간을 모아보세요.',
-              description: '로그인하면 마음에 든 작품과 감상 기록을 볼 수 있어요.',
-              action: ArtButton(
-                '로그인',
-                onTap: () async {
-                  await ensureLogin(context);
-                  if (mounted) loadMonth();
-                },
-              ),
-            )
-          else ...[
-            if (s.libraryError != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(s.libraryError!, style: sans(12, color: Colors.brown)),
-                    TextButton(
-                      onPressed: s.reloadLibrary,
-                      child: const Text('서재 다시 불러오기'),
-                    ),
-                  ],
-                ),
-              ),
-            Row(
-              children: [
-                for (final t in [
-                  ('calendar', '감상 캘린더', Icons.calendar_today_outlined),
-                  ('diary', '다이어리', Icons.menu_book_outlined),
-                  ('chats', '대화 내역', Icons.forum_outlined),
-                ])
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      child: TextButton(
-                        style: editorialButtonStyle(
-                          dark: tab == t.$1,
-                          quiet: tab != t.$1,
-                          minimumSize: const Size(0, 48),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 14,
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (!(await editorKey.currentState
-                                      ?.confirmDiscard() ??
-                                  true) ||
-                              !mounted) {
-                            return;
-                          }
-                          setState(() => tab = t.$1);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (!compact(context)) ...[
-                              Icon(
-                                t.$3,
-                                size: 16,
-                                color: tab == t.$1 ? Colors.white : muted,
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            Flexible(
-                              child: Text(
-                                compact(context)
-                                    ? switch (t.$1) {
-                                        'calendar' => '캘린더',
-                                        'likes' => '좋아요',
-                                        'follows' => '팔로우',
-                                        _ => t.$2,
-                                      }
-                                    : t.$2,
-                                style: sans(
-                                  compact(context) ? 10 : 12,
-                                  color: tab == t.$1 ? Colors.white : muted,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!s.authenticated)
+          EmptyView(
+            '감상의 순간을 모아보세요.',
+            description: '로그인하면 감상 캘린더와 다이어리를 볼 수 있어요.',
+            action: ArtButton(
+              '로그인',
+              onTap: () async {
+                await ensureLogin(context);
+                if (mounted) loadMonth();
+              },
             ),
-            if (tab == 'calendar' || tab == 'diary') ...[
-              const SizedBox(height: 28),
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                runSpacing: 15,
-                crossAxisAlignment: WrapCrossAlignment.center,
+          )
+        else ...[
+          if (s.libraryError != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${month.year}년 ${month.month}월', style: serif(26)),
-                      Text(
-                        '$visited일의 감상 · 총 $totalViews회 감상',
-                        style: sans(11, color: muted),
-                      ),
-                      Text(
-                        '감상평 ${diaryEntries.length}편',
-                        style: sans(11, color: muted),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (s.config.demo)
-                        TextButton(
-                          onPressed: () {
-                            setState(() => sample = !sample);
-                            loadMonth();
-                          },
-                          child: Text(
-                            sample ? '예시 기록 끄기' : '예시 기록 보기',
-                            style: sans(10, color: green),
-                          ),
-                        ),
-                      TextButton(
-                        onPressed: () async {
-                          if (!(await editorKey.currentState
-                                      ?.confirmDiscard() ??
-                                  true) ||
-                              !mounted) {
-                            return;
-                          }
-                          setState(() {
-                            selected = seoulDate();
-                            month = DateTime.parse(
-                              '${selected.substring(0, 7)}-01',
-                            );
-                          });
-                          loadMonth();
-                        },
-                        child: const Text('오늘'),
-                      ),
-                      IconButton(
-                        tooltip: '이전 달',
-                        onPressed: () => changeMonth(-1),
-                        icon: const Icon(Icons.chevron_left, size: 20),
-                      ),
-                      IconButton(
-                        tooltip: '다음 달',
-                        onPressed: () => changeMonth(1),
-                        icon: const Icon(Icons.chevron_right, size: 20),
-                      ),
-                    ],
+                  Text(s.libraryError!, style: sans(12, color: Colors.brown)),
+                  TextButton(
+                    onPressed: s.reloadLibrary,
+                    child: const Text('다시 불러오기'),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
-              if (sample)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: Text(
-                    '예시 캘린더를 보고 있어요. 실제 감상 기록과 구분되어 표시됩니다.',
-                    style: sans(11, color: muted),
-                  ),
+            ),
+          ...[
+            const SizedBox(height: 4),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              runSpacing: 15,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${month.year}년 ${month.month}월', style: serif(26)),
+                    Text(
+                      '$visited일의 감상 · 총 $totalViews회 감상',
+                      style: sans(11, color: muted),
+                    ),
+                    Text(
+                      '감상평 ${diaryEntries.length}편',
+                      style: sans(11, color: muted),
+                    ),
+                  ],
                 ),
-              if (loading)
-                const LinearProgressIndicator(color: sage, minHeight: 2),
-              if (calendarError != null)
-                EmptyView(
-                  calendarError!,
-                  action: ArtButton('다시 불러오기', onTap: loadMonth),
-                )
-              else if (tab == 'diary')
-                _diaryList(s)
-              else
-                LayoutBuilder(
-                  builder: (context, c) {
-                    final calendar = _calendar(s);
-                    final journal = _journal(s);
-                    return c.maxWidth > 920
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(flex: 6, child: calendar),
-                              const SizedBox(width: 28),
-                              Expanded(flex: 5, child: journal),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              calendar,
-                              const SizedBox(height: 24),
-                              journal,
-                            ],
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (s.config.demo)
+                      TextButton(
+                        onPressed: () {
+                          setState(() => sample = !sample);
+                          loadMonth();
+                        },
+                        child: Text(
+                          sample ? '예시 기록 끄기' : '예시 기록 보기',
+                          style: sans(10, color: green),
+                        ),
+                      ),
+                    TextButton(
+                      onPressed: () async {
+                        if (!(await editorKey.currentState?.confirmDiscard() ??
+                                true) ||
+                            !mounted) {
+                          return;
+                        }
+                        setState(() {
+                          selected = seoulDate();
+                          month = DateTime.parse(
+                            '${selected.substring(0, 7)}-01',
                           );
-                  },
+                        });
+                        loadMonth();
+                      },
+                      child: const Text('오늘'),
+                    ),
+                    IconButton(
+                      tooltip: '이전 달',
+                      onPressed: () => changeMonth(-1),
+                      icon: const Icon(Icons.chevron_left, size: 20),
+                    ),
+                    IconButton(
+                      tooltip: '다음 달',
+                      onPressed: () => changeMonth(1),
+                      icon: const Icon(Icons.chevron_right, size: 20),
+                    ),
+                  ],
                 ),
-            ],
-            if (tab == 'chats')
-              const Padding(
-                padding: EdgeInsets.only(top: 25),
-                child: SavedChats(),
+              ],
+            ),
+            const SizedBox(height: 18),
+            if (sample)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Text(
+                  '예시 캘린더를 보고 있어요. 실제 감상 기록과 구분되어 표시됩니다.',
+                  style: sans(11, color: muted),
+                ),
+              ),
+            if (loading)
+              const LinearProgressIndicator(color: sage, minHeight: 2),
+            if (calendarError != null)
+              EmptyView(
+                calendarError!,
+                action: ArtButton('다시 불러오기', onTap: loadMonth),
+              )
+            else
+              LayoutBuilder(
+                builder: (context, c) {
+                  final calendar = _calendar(s);
+                  final journal = _journal(s);
+                  return c.maxWidth > 920
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(flex: 6, child: calendar),
+                            const SizedBox(width: 28),
+                            Expanded(flex: 5, child: journal),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            calendar,
+                            const SizedBox(height: 24),
+                            journal,
+                          ],
+                        );
+                },
               ),
           ],
         ],
-      ),
+      ],
     );
   }
 
@@ -727,59 +645,4 @@ class _LibraryPageState extends State<LibraryPage> {
       ],
     ),
   );
-  Widget _diaryList(ArtlogState s) {
-    if (loading) return const SizedBox.shrink();
-    if (diaryError != null) {
-      return EmptyView(
-        diaryError!,
-        action: ArtButton('다시 불러오기', onTap: loadMonth),
-      );
-    }
-    if (diaryEntries.isEmpty) {
-      return EmptyView(
-        '이달의 첫 감상평을 남겨보세요.',
-        description: '그림을 보지 않은 날에도 나만의 다이어리를 쓸 수 있어요.',
-        action: ArtButton(
-          '감상평 쓰기',
-          onTap: () => setState(() => tab = 'calendar'),
-        ),
-      );
-    }
-    final entries = diaryEntries.values.toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
-    return Column(
-      children: [
-        for (final entry in entries)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: Card(
-              elevation: 0,
-              color: Colors.white,
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(18),
-                leading: Icon(
-                  entry.isPublic ? Icons.public : Icons.lock_outline,
-                  color: green,
-                ),
-                title: Text(
-                  entry.date,
-                  style: sans(12, weight: FontWeight.w600),
-                ),
-                subtitle: Text(
-                  entry.content,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: sans(12, color: muted),
-                ),
-                trailing: const Icon(Icons.edit_outlined, size: 18),
-                onTap: () {
-                  setState(() => tab = 'calendar');
-                  loadDay(entry.date);
-                },
-              ),
-            ),
-          ),
-      ],
-    );
-  }
 }

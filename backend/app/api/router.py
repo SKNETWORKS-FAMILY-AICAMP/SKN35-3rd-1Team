@@ -14,6 +14,7 @@ from app.api.routes import (
     movements,
     mypage,
     recommendations,
+    social,
 )
 
 api_router = APIRouter()
@@ -29,5 +30,6 @@ for module in (
     library,
     recommendations,
     mypage,
+    social,
 ):
     api_router.include_router(module.router)

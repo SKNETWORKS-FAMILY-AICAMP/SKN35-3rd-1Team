@@ -322,9 +322,23 @@ def activity(db, user_id, limit, offset):
     ]
 
 
+def taste_impressions(db, user_id, limit=20):
+    # Only impressions the member already published. The intro is shown on the
+    # public profile, so private diary text never reaches it.
+    return [
+        content[:300]
+        for content in db.scalars(
+            select(DiaryEntry.content)
+            .where(DiaryEntry.user_id == user_id, DiaryEntry.is_public.is_(True))
+            .order_by(DiaryEntry.id.desc())
+            .limit(limit)
+        )
+    ]
+
+
 def taste_evidence(db, user_id):
-    # Every supplied work belongs to the caller's likes or collections. No diary text,
-    # birth date, email or Firebase identifiers are sent to the language model.
+    # Every supplied work belongs to the caller's likes or collections. No private
+    # diary text, birth date, email or Firebase identifiers reach the language model.
     liked = select(ArtworkLike.artwork_id).where(ArtworkLike.user_id == user_id)
     collected = (
         select(CollectionItem.artwork_id)
@@ -341,25 +355,30 @@ def taste_evidence(db, user_id):
     )
 
 
-def taste_fingerprint(evidence):
+def taste_fingerprint(evidence, impressions=()):
+    payload = [e.model_dump() for e in evidence]
+    if impressions:
+        payload = {"works": payload, "impressions": list(impressions)}
     return sha256(
-        json.dumps(
-            [e.model_dump() for e in evidence], ensure_ascii=False, sort_keys=True
-        ).encode()
+        json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()
     ).hexdigest()
 
 
 def get_taste(db, user_id):
     p = preference(db, user_id)
     evidence = taste_evidence(db, user_id)
+    impressions = taste_impressions(db, user_id)
     return TasteOut(
         summary=p.taste_summary if p else None,
         evidence=evidence,
+        impression_count=len(impressions),
         generated_at=p.taste_generated_at.replace(tzinfo=UTC)
         if p and p.taste_generated_at
         else None,
         stale=bool(
-            p and p.taste_summary and p.taste_fingerprint != taste_fingerprint(evidence)
+            p
+            and p.taste_summary
+            and p.taste_fingerprint != taste_fingerprint(evidence, impressions)
         ),
     )
 

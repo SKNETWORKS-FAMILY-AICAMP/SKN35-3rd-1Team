@@ -64,7 +64,7 @@ void main() {
       );
       expect(tester.binding.hasScheduledFrame, isFalse);
 
-      await tester.tap(find.byKey(const ValueKey('navigation-/artists')));
+      await tester.tap(find.byKey(const ValueKey('navigation-/artworks')));
       await tester.pumpAndSettle();
       expect(tester.getSize(header).height, 80);
       expect(outer(tester).offset, 0);

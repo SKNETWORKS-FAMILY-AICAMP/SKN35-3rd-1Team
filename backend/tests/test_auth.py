@@ -46,6 +46,8 @@ def client(firebase_mode):
                 firebase_uid VARCHAR(128) NOT NULL UNIQUE,
                 email VARCHAR(255) NOT NULL UNIQUE,
                 nickname VARCHAR(50) NOT NULL,
+                public_id VARCHAR(22) NOT NULL UNIQUE,
+                follow_list_public BOOLEAN NOT NULL DEFAULT 1,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )

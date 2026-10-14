@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:math';
 import 'auth/auth_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,9 @@ import 'models.dart';
 import 'member_profile.dart';
 import 'diary.dart';
 import 'mypage.dart';
+import 'social.dart';
 part 'state_mypage.dart';
+part 'state_social.dart';
 
 class ArtlogState extends ChangeNotifier {
   ArtlogState(
@@ -47,7 +50,9 @@ class ArtlogState extends ChangeNotifier {
   int _identityRevision = 0;
   bool _disposed = false;
   bool authUiOpen = false;
-  int diaryRevision = 0;
+  int diaryRevision = 0, socialRevision = 0;
+  // Fixed for this visit so the main banner changes on each new visit only.
+  final int heroSeed = Random().nextInt(1 << 30);
   final Map<String, Future<dynamic>> _requests = {};
   final Map<String, DateTime> _requestTimes = {};
   Future<T> _cached<T>(
@@ -206,6 +211,7 @@ class ArtlogState extends ChangeNotifier {
     _requestTimes.clear();
     ++diaryRevision;
     ++collectionRevision;
+    ++socialRevision;
     _serverProfile = null;
     profileLoaded = false;
     profileError = null;
@@ -249,7 +255,7 @@ class ArtlogState extends ChangeNotifier {
       }
     } catch (e) {
       if (revision == _identityRevision) {
-        libraryError = '서재를 불러오지 못했어요. ${message(e)}';
+        libraryError = '좋아요 목록을 불러오지 못했어요. ${message(e)}';
       }
     }
     if (revision == _identityRevision) notifyListeners();
@@ -504,9 +510,12 @@ class ArtlogState extends ChangeNotifier {
   Future<ChatReply> ask(
     Artwork art,
     String question,
-    List<ChatTurn> history,
-  ) async {
-    if (!config.demo) return api.chat(art.id, question, history);
+    List<ChatTurn> history, {
+    String style = 'standard',
+  }) async {
+    if (!config.demo) {
+      return api.chat(art.id, question, history, style: style);
+    }
     await Future<void>.delayed(const Duration(milliseconds: 350));
     if (RegExp(r'주식|날씨|음식|피카소|달리|다빈치|마티스').hasMatch(question)) {
       return const ChatReply(
@@ -517,7 +526,14 @@ class ArtlogState extends ChangeNotifier {
     }
     final answer = RegExp(r'언제|연도|몇 년').hasMatch(question)
         ? '목록에 기록된 제작 시기는 ${art.year}입니다. 아래 출처에서 작품 정보를 직접 살펴보세요.'
-        : '${art.description}\n\n어떤 부분이 가장 먼저 눈에 들어오나요? 지금 답변은 목업을 체험하기 위해 준비된 감상 안내예요.';
+        : switch (style) {
+            'easy' =>
+              '${art.description.split('.').first}.\n\n쉽게 말하면, 먼저 그림 전체의 분위기를 느껴 보세요. 지금 답변은 미리보기용 쉬운 설명이에요.',
+            'deep' =>
+              '${art.description}\n\n${art.year} 무렵 ${art.medium.isEmpty ? '작가의 재료' : art.medium}로 제작된 이 작품은 구도와 시대 맥락을 함께 보면 더 깊이 읽을 수 있어요. 지금 답변은 미리보기용 깊이 있는 설명이에요.',
+            _ =>
+              '${art.description}\n\n어떤 부분이 가장 먼저 눈에 들어오나요? 지금 답변은 목업을 체험하기 위해 준비된 감상 안내예요.',
+          };
     return ChatReply(answer, false, [
       Source(
         id: 'demo-${art.id}',
@@ -578,6 +594,8 @@ class ArtlogState extends ChangeNotifier {
         date: date,
         content: content.trim(),
         isPublic: isPublic,
+        author: _myNickname,
+        authorId: SocialState.demoMemberId,
         artwork: artworkId == null ? null : workFor(artworkId),
       );
       final entries = _demoDiary()..removeWhere((e) => e.date == date);
