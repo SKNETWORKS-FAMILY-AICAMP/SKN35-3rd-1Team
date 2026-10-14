@@ -193,20 +193,13 @@ class Brand extends StatelessWidget {
     image: true,
     child: SizedBox(
       key: const ValueKey('docentalk-brand-image'),
-      width: small ? 170 : 220,
-      height: small ? 44 : 60,
-      child: ClipRect(
-        child: OverflowBox(
-          maxWidth: small ? 320 : 420,
-          maxHeight: small ? 320 : 420,
-          child: Image.asset(
-            'assets/branding/docentalk-logo.png',
-            width: small ? 320 : 420,
-            height: small ? 320 : 420,
-            cacheWidth: 960,
-            excludeFromSemantics: true,
-          ),
-        ),
+      width: small ? 186 : 240,
+      height: small ? 48 : 80,
+      child: Image.asset(
+        'assets/branding/docentalk-lockup.png',
+        fit: BoxFit.contain,
+        cacheWidth: 744,
+        excludeFromSemantics: true,
       ),
     ),
   );
