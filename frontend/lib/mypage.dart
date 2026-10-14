@@ -2,6 +2,9 @@ import 'models.dart';
 import 'models.dart' as data;
 import 'diary.dart';
 
+const maxSavedCollections = 10;
+const maxCollectionArtworks = 30;
+
 class ArtCollection {
   const ArtCollection({
     required this.id,

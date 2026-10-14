@@ -15,6 +15,7 @@ from app.models.document import (
     DocumentType,
 )
 from app.models.embedding import ArtworkEmbedding
+from app.models.theme_collection import ThemeCollectionCache
 from app.models.user import User
 from app.models.user_profile import SocialAccount, UserPreference
 
@@ -41,6 +42,7 @@ __all__ = [
     "DocumentChunk",
     "DocumentType",
     "SocialAccount",
+    "ThemeCollectionCache",
     "User",
     "UserFollow",
     "UserPreference",
