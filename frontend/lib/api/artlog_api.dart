@@ -5,6 +5,7 @@ import '../models.dart';
 import '../diary.dart';
 import '../mypage.dart';
 import '../member_profile.dart';
+import '../social.dart';
 
 class ApiException implements Exception {
   const ApiException(this.message, {this.status});
@@ -156,8 +157,9 @@ class ArtlogApi {
   Future<ChatReply> chat(
     String id,
     String question,
-    List<ChatTurn> history,
-  ) async {
+    List<ChatTurn> history, {
+    String style = 'standard',
+  }) async {
     if (question.trim().isEmpty || question.runes.length > 500) {
       throw const ApiException('질문은 1~500자까지 보낼 수 있어요.', status: 422);
     }
@@ -173,6 +175,7 @@ class ArtlogApi {
           body: {
             'question': question,
             'history': previous.map((h) => h.toHistory()).toList(),
+            'explanation_style': style,
           },
         ),
       ),
@@ -188,12 +191,14 @@ class ArtlogApi {
     List<ChatTurn> history, {
     required Future<void> Function(String) onToken,
     required Future<void> Function(String) onReplace,
+    String style = 'standard',
   }) => _chatStream(
     id,
     question,
     history,
     onToken: onToken,
     onReplace: onReplace,
+    style: style,
     revision: _sessionRevision,
   );
 
@@ -204,6 +209,7 @@ class ArtlogApi {
     required Future<void> Function(String) onToken,
     required Future<void> Function(String) onReplace,
     required int revision,
+    String style = 'standard',
     bool retryAuthentication = true,
   }) async {
     if (question.trim().isEmpty || question.runes.length > 500) {
@@ -235,6 +241,7 @@ class ArtlogApi {
     request.body = jsonEncode({
       'question': question,
       'history': previous.map((h) => h.toHistory()).toList(),
+      'explanation_style': style,
     });
 
     try {
@@ -257,6 +264,7 @@ class ArtlogApi {
           history,
           onToken: onToken,
           onReplace: onReplace,
+          style: style,
           revision: revision,
           retryAuthentication: false,
         );
@@ -280,6 +288,7 @@ class ArtlogApi {
                 body: {
                   'question': question,
                   'history': previous.map((h) => h.toHistory()).toList(),
+                  'explanation_style': style,
                 },
               ),
             ),
@@ -618,6 +627,51 @@ class ArtlogApi {
       ),
     ),
   );
+
+  Future<PublicMember> mySocial() async => PublicMember.fromJson(
+    object(await _request('GET', 'me/social', authenticated: true)),
+  );
+  Future<PublicMember> saveSocial({required bool followListPublic}) async =>
+      PublicMember.fromJson(
+        object(
+          await _request(
+            'PUT',
+            'me/social',
+            authenticated: true,
+            body: {'follow_list_public': followListPublic},
+          ),
+        ),
+      );
+  Future<PublicMember> member(String id) async => PublicMember.fromJson(
+    object(await _request('GET', 'users/${Uri.encodeComponent(id)}')),
+  );
+  Future<DiaryFeed> memberDiary(String id, {String? cursor}) async =>
+      DiaryFeed.fromJson(
+        object(
+          await _request(
+            'GET',
+            'users/${Uri.encodeComponent(id)}/diary',
+            query: {'limit': '12', 'before_id': ?cursor},
+          ),
+        ),
+      );
+  Future<void> followMember(String id, bool enabled) async {
+    await _request(
+      enabled ? 'PUT' : 'DELETE',
+      'users/${Uri.encodeComponent(id)}/follow',
+      authenticated: true,
+    );
+  }
+
+  Future<List<MemberCard>> memberList(
+    String id, {
+    required bool followers,
+  }) async => items(
+    await _request(
+      'GET',
+      'users/${Uri.encodeComponent(id)}/${followers ? 'followers' : 'following'}',
+    ),
+  ).map((e) => MemberCard.fromJson(object(e))).toList();
 
   void close() => _client.close();
 }
