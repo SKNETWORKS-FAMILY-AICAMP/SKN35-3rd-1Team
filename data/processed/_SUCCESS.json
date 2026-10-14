@@ -5,11 +5,11 @@
       "rows": 6
     },
     "artists.jsonl": {
-      "sha256": "87245f9edaffb148e4a1d8314730db60076fc00950a8a9f733985c533f3b413c",
+      "sha256": "d01c0be07f4ce702080137efb8f625e86c82cd8a15d93b68d894817e9b043cb4",
       "rows": 10
     },
     "artworks.jsonl": {
-      "sha256": "db2a7e514d7f622526e8497bc37c85db1353d72d3bb3bea84a54a2d19d830c59",
+      "sha256": "6a6a85c1c6738fd22ec5d03e4b6d40d4d18bca3a6381761fa525c5109be41b2c",
       "rows": 276
     },
     "documents.jsonl": {

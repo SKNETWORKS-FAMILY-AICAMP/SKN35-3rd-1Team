@@ -1,9 +1,9 @@
 """Account settings and private collection contracts; identity never comes from JSON."""
 
 from datetime import date, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
 from app.core.timeutil import local_date, utcnow
 from app.schemas.catalog import ArtworkCard
@@ -15,6 +15,8 @@ DEFAULT_PRIORITIES = ["background", "technique", "artist_life"]
 
 class ProfileWrite(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    # 공개 감상 피드에 표시되는 이름. 생략하면 지금 이름을 그대로 둔다.
+    nickname: Annotated[str, StringConstraints(min_length=2, max_length=20)] | None = None
     birth_date: date | None = None
     explanation_priorities: list[Priority] = Field(
         default_factory=lambda: DEFAULT_PRIORITIES.copy(), min_length=3, max_length=3

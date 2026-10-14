@@ -228,7 +228,7 @@ PUT 본문: `content`(공백 제거 후 1~2000자), `is_public`(기본 false), `
 | GET / POST | `/api/me/taste` | 저장한 AI 취향 소개 조회 / 근거 변경 시 생성 |
 | POST | `/api/me/collections/chat` | 컬렉션 요청 분석·제안. 이 요청만으로 DB를 변경하지 않음 |
 
-ProfileWrite: `{birth_date: "YYYY-MM-DD" | null, explanation_priorities: ["background","technique","artist_life"], conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘, 세 우선순위는 정확히 한 번씩 담은 순열입니다. 생일은 선택 사항이며 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. GET은 nickname을 추가합니다. 성별과 이전 나이대는 새 요청에 포함하지 않습니다.
+ProfileWrite: `{nickname: string | null, birth_date: "YYYY-MM-DD" | null, explanation_priorities: ["background","technique","artist_life"], conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘, 세 우선순위는 정확히 한 번씩 담은 순열입니다. 생일은 선택 사항이며 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. nickname은 공개 감상 피드에 작성자 이름으로 표시되는 값입니다. 앞뒤 공백을 지운 뒤 2~20자여야 하고, 생략하거나 null이면 지금 이름을 유지합니다(전체 교체 규칙의 예외). 중복은 허용합니다. 처음 값은 로그인할 때 Google 이름이나 이메일 @ 앞부분으로 정해지므로, 공개 전에 바꿀 수 있게 안내합니다. GET 응답에는 항상 nickname이 들어 있습니다. 성별과 이전 나이대는 새 요청에 포함하지 않습니다.
 
 CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionOut은 `{id, name, description, artwork_count, previews: ArtworkCard[]}`입니다. 컬렉션은 기본 비공개이며 별도 공개 API는 없습니다. 한 컬렉션에는 최대 500점을 담습니다. 묶음을 삭제해도 좋아요·다이어리와 카탈로그 작품은 유지합니다.
 

@@ -8,6 +8,9 @@
 - `translate.py`: 영어 원문을 한국어로 번역합니다. API 비용이 드므로 실행 전에 데이터 담당자에게 확인합니다.
 - `check_db.py`: TiDB 연결과 현재 테이블을 확인합니다.
 - `load_catalog.py`: 사조·작가·작품을 slug 기준으로 upsert합니다.
+- `build_image_thumbnails.py`: 위키미디어 원본 이미지 주소를 Commons API의 1280px 썸네일 주소로 바꿀 매핑(`data/mappings/image_thumbnails.json`)을 만듭니다. 원천 이미지 주소를 바꾸거나 작품을 추가하면 다시 실행한 뒤 전처리합니다.
+- `check_images.py`: 산출물의 작품 이미지·작가 초상 URL이 실제로 열리는지(상태 코드·이미지 형식·크기) 확인합니다. 위키미디어 요청 제한을 피하려고 동시 요청을 적게 둡니다.
+- `seed_demo_user.py`: 발표용으로 dev-user 계정에 감상글 6개(공개 4), 좋아요, 컬렉션 3개, 설정을 채웁니다. 여러 번 돌려도 결과가 같고, `--remove`로 시드 감상글·컬렉션만 지웁니다. 도슨트 대화는 넣지 않습니다.
 - `load_documents.py`: 문서를 doc_key 기준으로 upsert하고 작가·작품·근거 연결을 다시 맞춥니다. 본문이 바뀐 문서의 청크는 지웁니다.
 
 두 적재 스크립트는 `--dry-run`으로 바뀔 내용만 세어 볼 수 있습니다. 청킹·임베딩 스크립트는 아직 작성하지 않았습니다.
@@ -24,7 +27,7 @@ FK 때문에 부모 테이블부터 채워야 합니다. 아래 순서대로 실
 | 2 | `load_documents.py` | `data/processed/`의 문서 | `documents`, `document_artists`, `document_artworks`, `document_basis_documents` |
 | 3 | `build_chunks.py` | `documents` | `document_chunks` (청킹 + 임베딩) |
 | 4 | `build_artwork_embeddings.py` | `artworks` | `artwork_embeddings` |
-| 5 | `seed_demo_users.py` | (없음) | `users`, `artwork_likes` 등 발표용 계정 |
+| 5 | `seed_demo_user.py` | (없음) | dev-user 계정의 `user_preferences`, `artwork_likes`, `artwork_views`, `diary_entries`, `collections`, `collection_items` (발표용) |
 
 원본을 정제하는 전처리 스크립트(`preprocess.py`)는 `data/raw/`와 `data/mappings/`를 읽어 `data/processed/`에 씁니다. 기준은 [`docs/data-collection.md`](../../docs/data-collection.md)에 있습니다. 전처리 결과가 최종 확정되기 전에는 위 적재 스크립트를 실행하지 않습니다.
 
