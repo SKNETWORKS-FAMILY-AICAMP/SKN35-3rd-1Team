@@ -44,6 +44,7 @@
 | GET | `/api/artworks/{artwork_id}` | `ArtworkDetail` | | 작품 상세 |
 | GET | `/api/artworks/{artwork_id}/similar` | `ArtworkCard[]` | | 비슷한 작품 3개, 가까운 순. 작품 벡터가 없으면 빈 배열 |
 | POST | `/api/artworks/{artwork_id}/chat` | `ChatResponse` | 선택 | 도슨트 질문. 로그인 상태면 질문과 답변을 저장 |
+| POST | `/api/artworks/{artwork_id}/chat/stream` | SSE | 선택 | 같은 질문을 실시간으로 전송하고 완료 시 저장 |
 | GET | `/api/artworks/{artwork_id}/chat/messages` | `ChatMessageOut[]` | 필요 | 이 작품과 나눈 내 대화, 오래된 순. 대화가 없으면 빈 배열 |
 | DELETE | `/api/artworks/{artwork_id}/chat` | `204` | 필요 | 이 작품 대화 초기화. 대화가 없어도 `204` |
 | GET | `/api/me/chats` | `ChatSummary[]` | 필요 | 내가 대화한 작품, 최근 대화순 |
@@ -121,6 +122,7 @@
 | --- | --- | --- |
 | `question` | string | 필수, 1~500자 |
 | `history` | `ChatTurn[]` | 선택(기본 `[]`), 직전 메시지 최대 12개 |
+| `explanation_style` | `"easy" \| "standard" \| "deep"` | 선택. 채팅 상단 탭 값(화면 기본 `standard`). 생략하면 계정의 저장된 말투를 사용 |
 
 `ChatTurn`은 `{role: "user" | "assistant", content: string(1~4000자)}`입니다. 답변 맥락은 로그인 여부와 관계없이 항상 `history`로 받습니다. 서버 저장 기록은 대화 복원용입니다.
 
@@ -135,6 +137,8 @@
 | `answer` | string | 답변 본문 |
 | `refused` | bool | 근거 문서가 없어 답변을 거절했으면 `true` |
 | `sources` | `Source[]` | 답변 근거. 거절이면 빈 배열일 수 있음 |
+
+스트리밍 경로는 같은 `ChatRequest`를 받습니다. `Accept: text/event-stream`을 보내면 `token` (`{"content":"추가 문자열"}`), `replace` (`{"content":"수정된 전체 문자열"}`), `done` (검증된 `ChatResponse`), `error` (`{"message":"안내 문구"}`) 이벤트를 순서대로 받습니다. `done`의 답변과 출처가 최종 결과이며 로그인 사용자의 대화도 이 시점에 저장됩니다. `history`는 브라우저가 보내며, 로그인 시 Firebase ID 토큰을 `Authorization: Bearer` 헤더에 포함합니다.
 
 `Source`:
 
@@ -242,3 +246,20 @@ CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `
 ## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.1)
 
 `POST /api/artworks/{id}/chat`는 기존 분류·승인 문서 검색을 답변 생성과 연결합니다. 기본 쉬운 말투 또는 전문용어 스타일, 설명 순서는 서버 사용자 설정에서 읽습니다. 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 인용한 chunk ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.
+
+## 감상가 프로필·팔로우 API (20261014_0009)
+
+다른 이용자에게는 내부 ID·이메일·Firebase UID 대신 `users.public_id`(무작위 12자)만 노출합니다. 공개 감상 응답(`DiaryEntry`)에는 작성자의 `author_id`(= public_id)가 추가됩니다.
+
+| 메서드 | 경로 | 로그인 | 설명 |
+| --- | --- | --- | --- |
+| GET | `/api/me/social` | 필요 | 내 공개 프로필(`MemberProfile`). 본인에게는 팔로우 수가 항상 보임 |
+| PUT | `/api/me/social` | 필요 | `{"follow_list_public": bool}` 팔로잉/팔로워 공개 여부 |
+| GET | `/api/users/{public_id}` | 선택 | 공개 프로필. 비공개 설정이면 다른 이용자에게 `follower_count`·`following_count`가 `null` |
+| GET | `/api/users/{public_id}/diary` | 선택 | 해당 이용자의 공개 감상만, `before_id` 커서 |
+| PUT/DELETE | `/api/users/{public_id}/follow` | 필요 | 팔로우/취소(204). 자기 자신은 400 |
+| GET | `/api/users/{public_id}/followers`, `/following` | 선택 | `MemberCard[]`(최대 200). 비공개면 본인 외 403 |
+
+`MemberProfile`: `id, nickname, intro, follower_count, following_count, follow_list_public, is_following, is_me`. `intro`는 `/api/me/taste`로 만든 AI 한 줄 소개입니다. 한 줄 소개는 좋아요·컬렉션 작품과 **공개 감상평 본문**(최근 20편, 각 300자)만 근거로 쓰며 비공개 감상은 모델에 보내지 않습니다. `TasteOut.impression_count`는 읽은 공개 감상 수입니다.
+
+운영 DB에는 `alembic upgrade head`로 `20261014_0009`를 적용해야 합니다(기존 사용자 `public_id` 백필 포함).

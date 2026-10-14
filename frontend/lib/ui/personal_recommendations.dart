@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../models.dart';
 import '../state.dart';
 import 'design.dart';
@@ -15,7 +14,6 @@ class PersonalRecommendations extends StatefulWidget {
 class _PersonalRecommendationsState extends State<PersonalRecommendations> {
   String? signature;
   Future<List<Artwork>>? works;
-  Future<List<Artist>>? artists;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -26,9 +24,10 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
         '${s.userKey}/${s.authenticated}/${likes.join(',')}/${follows.join(',')}';
     if (signature != next) {
       signature = next;
-      if (!s.config.demo && s.authenticated) {
-        works = s.personalArtworks();
-        artists = s.personalArtists();
+      if (s.authenticated) {
+        works = s.config.demo
+            ? Future.value(demoRecommendations(s))
+            : s.personalArtworks();
       }
     }
   }
@@ -36,7 +35,8 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
   @override
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
-    if (s.config.demo || !s.authenticated) return const SizedBox.shrink();
+    // Signed-out visitors do not see this section at all.
+    if (!s.authenticated) return const SizedBox.shrink();
     final inverse = widget.inverse;
     return PageWidth(
       vertical: 35,
@@ -66,91 +66,16 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
                 );
               }
               if (snapshot.data?.isEmpty ?? true) {
-                return EmptyView('취향에 맞는 작품을 준비하고 있어요.', inverse: inverse);
+                return EmptyView(
+                  '마음에 드는 그림에 좋아요를 눌러 보세요.',
+                  description: '좋아요와 감상 기록을 따라 다음 그림을 골라 드려요.',
+                  inverse: inverse,
+                );
               }
               return ArtworkGrid(
                 snapshot.data!.take(3).toList(),
                 maxColumns: 3,
                 museum: inverse,
-              );
-            },
-          ),
-          const SizedBox(height: 35),
-          Text(
-            '새롭게 만나볼 작가',
-            style: serif(23, color: inverse ? museumText : ink),
-          ),
-          const SizedBox(height: 15),
-          FutureBuilder<List<Artist>>(
-            key: ValueKey('artists/$signature'),
-            future: artists,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _loading();
-              }
-              if (snapshot.hasError) {
-                return _error(
-                  snapshot.error!,
-                  () => setState(() {
-                    artists = s.personalArtists(force: true);
-                  }),
-                );
-              }
-              if (snapshot.data?.isEmpty ?? true) {
-                return EmptyView('추천할 작가를 준비하고 있어요.', inverse: inverse);
-              }
-              return Column(
-                children: [
-                  for (final artist in snapshot.data!.take(3))
-                    Card(
-                      color: inverse ? museumBlack : const Color(0xffe8eeee),
-                      shape: inverse
-                          ? const RoundedRectangleBorder(
-                              side: BorderSide(color: museumLine),
-                            )
-                          : null,
-                      elevation: 0,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 9,
-                        ),
-                        leading: SizedBox(
-                          width: 42,
-                          height: 55,
-                          child: ArtImage(s.representativeImage(artist)),
-                        ),
-                        title: Text(
-                          artist.name,
-                          style: sans(
-                            13,
-                            color: inverse ? museumText : ink,
-                            weight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          artist.reason.isEmpty
-                              ? s.artistMovement(artist)
-                              : artist.reason,
-                          style: sans(11, color: inverse ? museumMuted : muted),
-                        ),
-                        onTap: () => context.go('/artist/${artist.id}'),
-                        trailing: IconButton(
-                          tooltip:
-                              '${artist.name} ${s.follows.contains(artist.id) ? '팔로우 취소' : '팔로우'}',
-                          onPressed: s.pendingFollows.contains(artist.id)
-                              ? null
-                              : () => followArtist(context, artist),
-                          icon: Icon(
-                            s.follows.contains(artist.id)
-                                ? Icons.check
-                                : Icons.person_add_alt,
-                            size: 19,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
               );
             },
           ),
@@ -177,4 +102,19 @@ class _PersonalRecommendationsState extends State<PersonalRecommendations> {
       onTap: retry,
     ),
   );
+}
+
+/// Preview recommendations from local likes: same artists and movements first.
+List<Artwork> demoRecommendations(ArtlogState s) {
+  final liked = s.likes.map(s.workFor).whereType<Artwork>().toList();
+  if (liked.isEmpty && s.follows.isEmpty) return const [];
+  final artists = {...liked.map((a) => a.artistId), ...s.follows};
+  final movements = liked.map((a) => a.movementId).toSet();
+  int score(Artwork a) =>
+      (artists.contains(a.artistId) ? 2 : 0) +
+      (movements.contains(a.movementId) ? 1 : 0);
+  final candidates =
+      s.artworks.where((a) => !s.likes.contains(a.id) && score(a) > 0).toList()
+        ..sort((a, b) => score(b).compareTo(score(a)));
+  return candidates.take(3).toList();
 }

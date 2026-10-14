@@ -10,6 +10,7 @@
 - `test_chat_scope.py`: 범위 밖 질문 거절, 출처 포함 여부
 - `test_api_*.py`: 엔드포인트 요청·응답 형식
 - `questions/`: 테스트 질문셋 (사실 확인형, 비교형, 범위 밖)
+- `questions/prompt-accuracy.json`: 근거·판본·출처·복제·멀티턴 정확도 집중 9문항
 - `fixtures/chat-responses.json`: 실제 LLM 없이 응답 형식을 확인하는 가짜 결과
 - `contracts/activity-cases.json`: 좋아요·팔로우·열람 기록 구현 시 옮겨 쓸 계약 사례
 - `test_evaluation_fixtures.py`: 위 평가 자료의 개수와 필수 필드 검사

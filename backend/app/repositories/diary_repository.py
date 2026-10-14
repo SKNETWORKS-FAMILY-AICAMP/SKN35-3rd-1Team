@@ -13,7 +13,7 @@ from app.models import Artist, Artwork, DiaryEntry, User
 
 def rows():
     return (
-        select(DiaryEntry, User.nickname, Artwork, Artist.name)
+        select(DiaryEntry, User.nickname, Artwork, Artist.name, User.public_id)
         .join(User, User.id == DiaryEntry.user_id)
         .outerjoin(Artwork, Artwork.id == DiaryEntry.artwork_id)
         .outerjoin(Artist, Artist.id == Artwork.artist_id)
@@ -38,8 +38,17 @@ def month(db: Session, user_id: int, start: date, end: date):
     ).all()
 
 
-def feed(db: Session, *, limit: int, before_id: int | None, artwork_id: int | None):
+def feed(
+    db: Session,
+    *,
+    limit: int,
+    before_id: int | None,
+    artwork_id: int | None,
+    author_id: int | None = None,
+):
     query = rows().where(DiaryEntry.is_public.is_(True))
+    if author_id is not None:
+        query = query.where(DiaryEntry.user_id == author_id)
     if before_id is not None:
         query = query.where(DiaryEntry.id < before_id)
     if artwork_id is not None:

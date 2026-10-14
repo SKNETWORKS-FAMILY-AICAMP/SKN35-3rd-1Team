@@ -11,9 +11,10 @@ from app.services.catalog_service import ensure_artwork, to_artwork_card
 
 
 def serialize(row) -> DiaryEntry:
-    entry, nickname, artwork, artist_name = row
+    entry, nickname, artwork, artist_name, public_id = row
     return DiaryEntry(
         id=entry.id,
+        author_id=public_id,
         entry_date=entry.entry_date,
         content=entry.content,
         is_public=entry.is_public,
@@ -41,9 +42,20 @@ def save(db: Session, user_id: int, day: date, body: DiaryWrite) -> DiaryEntry:
 
 
 def get_feed(
-    db: Session, *, limit: int, before_id: int | None, artwork_id: int | None
+    db: Session,
+    *,
+    limit: int,
+    before_id: int | None,
+    artwork_id: int | None,
+    author_id: int | None = None,
 ) -> DiaryFeed:
-    rows = repo.feed(db, limit=limit, before_id=before_id, artwork_id=artwork_id)
+    rows = repo.feed(
+        db,
+        limit=limit,
+        before_id=before_id,
+        artwork_id=artwork_id,
+        author_id=author_id,
+    )
     return DiaryFeed(
         items=[serialize(row) for row in rows[:limit]],
         next_cursor=rows[limit - 1][0].id if len(rows) > limit else None,

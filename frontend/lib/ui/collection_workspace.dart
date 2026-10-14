@@ -165,9 +165,8 @@ class CollectionWorkspace extends StatefulWidget {
 
 class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   List<ArtCollection> rows = [];
-  TasteIntro? taste;
-  bool started = false, loading = true, generating = false;
-  String? error, tasteError;
+  bool started = false, loading = true;
+  String? error;
   int serial = 0;
   @override
   void didChangeDependencies() {
@@ -188,50 +187,17 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       loading = true;
       error = null;
     });
-    final tasteRequest = s.taste().then<TasteIntro?>((t) => t).catchError((
-      Object e,
-    ) {
-      if (mounted && request == serial && s.userKey == identity) {
-        setState(() => tasteError = ArtlogState.message(e));
-      }
-      return null;
-    });
     try {
       final result = await s.collections(force: true);
-      final intro = await tasteRequest;
       if (mounted && request == serial && s.userKey == identity) {
-        setState(() {
-          rows = result;
-          taste = intro;
-        });
+        setState(() => rows = result);
       }
     } catch (e) {
-      await tasteRequest;
       if (mounted && request == serial && s.userKey == identity) {
         setState(() => error = ArtlogState.message(e));
       }
     } finally {
       if (mounted && request == serial) setState(() => loading = false);
-    }
-  }
-
-  Future<void> generate() async {
-    if (generating) return;
-    final s = ArtlogScope.of(context),
-        identity = ArtlogScope.of(context).userKey;
-    setState(() {
-      generating = true;
-      tasteError = null;
-    });
-    try {
-      final intro = await s.taste(generate: true);
-      if (mounted && s.userKey == identity) setState(() => taste = intro);
-    } catch (e) {
-      if (mounted && s.userKey == identity) {
-        setState(() => tasteError = ArtlogState.message(e));
-      }
-    } finally {
-      if (mounted) setState(() => generating = false);
     }
   }
 
@@ -314,26 +280,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         ),
       if (error != null)
         EmptyView(error!, action: ArtButton('다시 불러오기', onTap: load)),
-      if (!loading && error == null && rows.isEmpty)
-        SurfacePanel(
-          padding: const EdgeInsets.all(28),
-          child: Column(
-            children: [
-              const Icon(
-                Icons.collections_bookmark_outlined,
-                size: 38,
-                color: sage,
-              ),
-              const SizedBox(height: 14),
-              Text('내가 고른 그림으로 작은 전시를', style: serif(22)),
-              const SizedBox(height: 8),
-              Text('주제나 기분에 따라 그림을 모아 보세요.', style: sans(12, color: muted)),
-              const SizedBox(height: 20),
-              ArtButton('첫 컬렉션 만들기', onTap: create),
-            ],
-          ),
-        ),
-      if (rows.isNotEmpty)
+      if (!loading && error == null)
         LayoutBuilder(
           builder: (context, c) {
             final columns = c.maxWidth >= 900
@@ -346,6 +293,7 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
               spacing: 16,
               runSpacing: 16,
               children: [
+                SizedBox(width: width, child: const _LikedCollectionCard()),
                 for (final group in rows)
                   SizedBox(
                     width: width,
@@ -357,17 +305,8 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                           InkWell(
                             borderRadius: BorderRadius.circular(4),
                             onTap: () async {
-                              await showModalBottomSheet<void>(
-                                context: context,
-                                isScrollControlled: true,
-                                useSafeArea: true,
-                                builder: (_) => AccountGuard(
-                                  state: ArtlogScope.of(context),
-                                  child: _CollectionDetail(
-                                    state: ArtlogScope.of(context),
-                                    group: group,
-                                  ),
-                                ),
+                              await context.push(
+                                '/collection/${Uri.encodeComponent(group.id)}',
                               );
                               if (mounted) await load();
                             },
@@ -377,10 +316,10 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(4),
                                   child: SizedBox(
-                                    height: 145,
+                                    height: 190,
                                     child: group.previews.isEmpty
                                         ? Container(
-                                            color: const Color(0xffe5eded),
+                                            color: soft,
                                             child: const Center(
                                               child: Icon(
                                                 Icons
@@ -467,94 +406,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
       const SizedBox(height: 30),
       const Divider(),
       ExpansionTile(
-        title: Text('AI 취향 소개', style: sans(14, weight: FontWeight.w500)),
-        subtitle: Text('좋아한 그림에서 나의 취향을 읽어요', style: sans(12, color: muted)),
-        maintainState: true,
-        children: [
-          SurfacePanel(
-            tinted: true,
-            padding: EdgeInsets.all(compact(context) ? 22 : 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.auto_awesome_outlined,
-                      color: green,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text('내 취향을 읽는 AI', style: serif(23))),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                Text(
-                  taste?.summary ??
-                      '좋아하는 그림을 모으면, 내가 어떤 작품에 마음을 두고 있는지 짧은 소개로 풀어드려요.',
-                  style: sans(14, height: 1.9),
-                ),
-                if (taste?.stale == true)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      '새로 담은 작품이 있어요. 소개를 업데이트해 보세요.',
-                      style: sans(12, color: green),
-                    ),
-                  ),
-                if (taste?.evidence.isNotEmpty == true) ...[
-                  const SizedBox(height: 14),
-                  Text(
-                    '소개에 사용되는 작품 ${taste!.evidence.length}점 · 좋아요와 컬렉션 기준',
-                    style: sans(11, color: muted),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      for (final a in taste!.evidence.take(4))
-                        SourceChip(
-                          label: Text(a.title, overflow: TextOverflow.ellipsis),
-                          onPressed: () => context.go('/artwork/${a.id}'),
-                        ),
-                    ],
-                  ),
-                ],
-                if (tasteError != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      tasteError!,
-                      style: sans(12, color: Colors.red.shade800),
-                    ),
-                  ),
-                const SizedBox(height: 18),
-                ArtButton(
-                  generating
-                      ? '취향을 읽고 있어요…'
-                      : taste?.summary == null
-                      ? '내 취향 소개 만들기'
-                      : '취향 소개 업데이트',
-                  onTap:
-                      generating || loading || taste?.evidence.isEmpty != false
-                      ? null
-                      : generate,
-                ),
-                if (ArtlogScope.of(context).config.demo)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      '미리보기에서는 실제 AI를 호출하지 않아요.',
-                      style: sans(11, color: muted),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      ExpansionTile(
         title: Text('대화로 컬렉션 정리', style: sans(14, weight: FontWeight.w500)),
         subtitle: Text('작품을 찾아 담거나 새 컬렉션을 만들어요', style: sans(12, color: muted)),
         maintainState: true,
@@ -564,208 +415,74 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
   );
 }
 
-class _CollectionDetail extends StatefulWidget {
-  const _CollectionDetail({required this.state, required this.group});
-  final ArtlogState state;
-  final ArtCollection group;
-  @override
-  State<_CollectionDetail> createState() => _CollectionDetailState();
-}
-
-class _CollectionDetailState extends State<_CollectionDetail> {
-  final search = TextEditingController();
-  List<Artwork> works = [];
-  String? cursor, error;
-  bool loading = false, started = false;
-  final Set<String> busy = {};
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) load();
-    });
-  }
-
-  @override
-  void dispose() {
-    search.dispose();
-    super.dispose();
-  }
-
-  Future<void> load({bool reset = false}) async {
-    if (loading) return;
-    setState(() {
-      loading = true;
-      error = null;
-      if (reset) {
-        works = [];
-        cursor = null;
-      }
-    });
-    try {
-      final p = await widget.state.collectionItems(
-        widget.group.id,
-        cursor: cursor,
-      );
-      if (mounted) {
-        setState(() {
-          works.addAll(p.items);
-          cursor = p.cursor;
-          started = true;
-        });
-      }
-    } catch (e) {
-      if (mounted) setState(() => error = ArtlogState.message(e));
-    } finally {
-      if (mounted) setState(() => loading = false);
-    }
-  }
-
-  Future<void> collect(Artwork a, {bool remove = false}) async {
-    if (busy.contains(a.id)) return;
-    setState(() => busy.add(a.id));
-    try {
-      await widget.state.collect(widget.group.id, a.id, remove: remove);
-      if (mounted) {
-        await load(reset: true);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(remove ? '컬렉션에서 꺼냈어요.' : '컬렉션에 담았어요.')),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) setState(() => error = ArtlogState.message(e));
-    } finally {
-      if (mounted) setState(() => busy.remove(a.id));
-    }
-  }
-
-  Widget tile(Artwork a, {bool result = false}) => ListTile(
-    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-    leading: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: SizedBox(
-        width: 54,
-        height: 60,
-        child: ArtImage(a.image, fit: BoxFit.cover),
-      ),
-    ),
-    title: Text(a.title, style: sans(13)),
-    subtitle: Text(widget.state.artistName(a), style: sans(11, color: muted)),
-    onTap: () {
-      final router = GoRouter.of(context);
-      Navigator.pop(context);
-      router.go('/artwork/${a.id}');
-    },
-    trailing: busy.contains(a.id)
-        ? const SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-        : IconButton(
-            tooltip: result ? '${a.title} 담기' : '${a.title} 컬렉션에서 꺼내기',
-            onPressed: loading ? null : () => collect(a, remove: !result),
-            icon: Icon(
-              result ? Icons.add_circle_outline : Icons.remove_circle_outline,
-              size: 23,
-            ),
-          ),
-  );
+/// Default collection: every liked artwork lands here automatically.
+class _LikedCollectionCard extends StatelessWidget {
+  const _LikedCollectionCard();
   @override
   Widget build(BuildContext context) {
-    final q = search.text.trim().toLowerCase();
-    final results = q.isEmpty
-        ? <Artwork>[]
-        : widget.state.artworks
-              .where(
-                (a) => '${a.title} ${widget.state.artistName(a)}'
-                    .toLowerCase()
-                    .contains(q),
-              )
-              .take(8)
-              .toList();
-    return FractionallySizedBox(
-      heightFactor: .85,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 760),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            22,
-            20,
-            22,
-            20 + MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(child: Text(widget.group.name, style: serif(24))),
-                  IconButton(
-                    tooltip: '컬렉션 닫기',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
+    final s = ArtlogScope.of(context);
+    final works = s.likedWorks;
+    return SurfacePanel(
+      key: const ValueKey('collection-liked-default'),
+      padding: const EdgeInsets.all(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(4),
+        onTap: () => context.push('/collection/likes'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: SizedBox(
+                height: 190,
+                child: works.isEmpty
+                    ? Container(
+                        color: soft,
+                        child: const Center(
+                          child: Icon(
+                            Icons.favorite_border,
+                            size: 35,
+                            color: sage,
+                          ),
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          for (final a in works.take(3))
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 2),
+                                child: ArtImage(a.image, fit: BoxFit.cover),
+                              ),
+                            ),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(child: Text('좋아요한 작품', style: serif(20))),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: search,
-                onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(
-                  labelText: '담고 싶은 작품 찾기',
-                  hintText: '작품명 또는 작가',
-                  prefixIcon: Icon(Icons.search),
+                  decoration: BoxDecoration(
+                    color: soft,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text('기본', style: sans(10, color: green)),
                 ),
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: ListView(
-                  children: [
-                    if (error != null)
-                      EmptyView(
-                        error!,
-                        action: ArtButton(
-                          '다시 시도',
-                          onTap: () => load(reset: true),
-                        ),
-                      ),
-                    if (q.isNotEmpty) ...[
-                      Text('검색 결과 · 최대 8점', style: sans(11, color: muted)),
-                      if (results.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.all(24),
-                          child: Text('일치하는 작품이 없어요.'),
-                        ),
-                      for (final a in results) tile(a, result: true),
-                      const Divider(),
-                    ],
-                    Text(
-                      '컬렉션에 담긴 그림',
-                      style: sans(12, weight: FontWeight.w700),
-                    ),
-                    if (started && works.isEmpty && !loading)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 25),
-                        child: Text('위에서 작품을 검색해 첫 그림을 담아 보세요.'),
-                      ),
-                    for (final a in works) tile(a),
-                    if (loading)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    if (cursor != null && !loading)
-                      ArtButton('그림 더 보기', outline: true, onTap: load),
-                  ],
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Text(
+              '${works.length}점 · 좋아요를 누르면 자동으로 담겨요',
+              style: sans(11, color: muted),
+            ),
+            const SizedBox(height: 48),
+          ],
         ),
       ),
     );

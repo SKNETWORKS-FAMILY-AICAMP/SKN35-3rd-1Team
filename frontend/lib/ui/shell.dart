@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../social.dart';
 import '../state.dart';
 import 'design.dart';
 import 'member_profile_dialog.dart';
@@ -94,6 +95,7 @@ class _AppShellState extends State<AppShell> {
             ],
           ),
         ),
+        endDrawer: const AccountDrawer(),
         bottomNavigationBar: mobile
             ? _MobileNavigation(location: widget.location)
             : null,
@@ -261,22 +263,18 @@ class _BrandMark extends CustomPainter {
       oldDelegate.color != color;
 }
 
-String _activeRoute(String location) => location == '/settings'
-    ? '/mypage'
-    : location.startsWith('/artwork')
-    ? '/gallery'
-    : location.startsWith('/artist')
-    ? '/artists'
+String _activeRoute(String location) =>
+    location == '/settings' || location.startsWith('/collection/')
+    ? '/library'
+    : location.startsWith('/artworks') ||
+          location.startsWith('/artwork/') ||
+          location.startsWith('/artist')
+    ? '/artworks'
+    : location.startsWith('/user/')
+    ? '/community'
     : location;
 
-Future<void> _openAccount(BuildContext context) async {
-  final state = ArtlogScope.of(context);
-  if (!state.authenticated &&
-      (!await ensureLogin(context) || !context.mounted)) {
-    return;
-  }
-  if (context.mounted) context.go('/mypage');
-}
+void _openAccount(BuildContext context) => Scaffold.of(context).openEndDrawer();
 
 class _Header extends StatelessWidget {
   const _Header({required this.location, required this.motion});
@@ -369,9 +367,9 @@ class _Header extends StatelessWidget {
                     children: [
                       for (final item in [
                         ('/gallery', '발견하기'),
-                        ('/artists', '작가'),
+                        ('/artworks', '작품 리스트'),
                         ('/community', '감상 피드'),
-                        ('/library', '내 서재'),
+                        ('/library', '내 피드'),
                       ])
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -451,10 +449,11 @@ class _MobileNavigation extends StatelessWidget {
         child: Row(
           children: [
             for (final item in [
-              ('/gallery', '발견', Icons.grid_view_outlined),
+              ('/gallery', '발견', Icons.home_outlined),
+              ('/artworks', '작품', Icons.grid_view_outlined),
               ('/community', '피드', Icons.dynamic_feed_outlined),
-              ('/library', '내 서재', Icons.book_outlined),
-              ('/mypage', '마이페이지', Icons.person_outline),
+              ('/library', '내 피드', Icons.person_outline),
+              ('/mypage', '마이페이지', Icons.menu),
             ])
               Expanded(
                 child: Semantics(
@@ -508,7 +507,7 @@ class _MobileNavigation extends StatelessWidget {
 }
 
 class _ArtSearch extends SearchDelegate<void> {
-  _ArtSearch(this.state) : super(searchFieldLabel: '작품명이나 작가 이름으로 찾아보세요');
+  _ArtSearch(this.state) : super(searchFieldLabel: '작가 이름이나 그림 제목으로 찾아보세요');
   final ArtlogState state;
   @override
   List<Widget> buildActions(BuildContext context) => [
@@ -528,15 +527,43 @@ class _ArtSearch extends SearchDelegate<void> {
   Widget buildResults(BuildContext context) => buildSuggestions(context);
   @override
   Widget buildSuggestions(BuildContext context) {
+    final q = query.toLowerCase();
+    final artists = state.artists
+        .where((a) => '${a.name} ${a.english}'.toLowerCase().contains(q))
+        .toList();
     final result = state.artworks
         .where(
           (a) => '${a.title} ${a.titleEn} ${state.artistName(a)}'
               .toLowerCase()
-              .contains(query.toLowerCase()),
+              .contains(q),
         )
         .toList();
     return ListView(
       children: [
+        if (artists.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Text('작가', style: sans(12, color: muted)),
+          ),
+        for (final a in artists)
+          ListTile(
+            leading: SizedBox(
+              width: 46,
+              height: 46,
+              child: ArtImage(state.representativeImage(a)),
+            ),
+            title: Text(a.name),
+            subtitle: Text(a.english),
+            onTap: () {
+              close(context, null);
+              context.go('/artist/${a.id}');
+            },
+          ),
+        if (result.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Text('그림', style: sans(12, color: muted)),
+          ),
         for (final a in result)
           ListTile(
             leading: SizedBox(width: 46, height: 46, child: ArtImage(a.image)),
@@ -548,6 +575,169 @@ class _ArtSearch extends SearchDelegate<void> {
             },
           ),
       ],
+    );
+  }
+}
+
+/// 마이페이지 side panel: sign-in state and follow-list visibility.
+class AccountDrawer extends StatefulWidget {
+  const AccountDrawer({super.key});
+  @override
+  State<AccountDrawer> createState() => _AccountDrawerState();
+}
+
+class _AccountDrawerState extends State<AccountDrawer> {
+  Future<PublicMember>? social;
+  String? identity;
+  bool saving = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final s = ArtlogScope.of(context);
+    final next = '${s.userKey}/${s.authenticated}/${s.socialRevision}';
+    if (identity == next) return;
+    identity = next;
+    social = s.authenticated ? s.mySocial() : null;
+  }
+
+  Future<void> setVisibility(bool value) async {
+    setState(() => saving = true);
+    try {
+      await ArtlogScope.of(context).setFollowListPublic(value);
+    } catch (e) {
+      if (mounted) showError(context, e);
+    } finally {
+      if (mounted) setState(() => saving = false);
+    }
+  }
+
+  void go(String path) {
+    Navigator.of(context).pop();
+    context.go(path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = ArtlogScope.of(context);
+    final name = s.memberProfile?.nickname ?? '';
+    return Drawer(
+      key: const ValueKey('account-drawer'),
+      backgroundColor: paper,
+      shape: const RoundedRectangleBorder(),
+      child: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(24),
+          children: [
+            Row(
+              children: [
+                Expanded(child: Text('마이페이지', style: serif(24))),
+                IconButton(
+                  tooltip: '마이페이지 닫기',
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            if (!s.authenticated) ...[
+              Text('로그인하고 감상과 컬렉션을 모아 보세요.', style: sans(13, color: muted)),
+              const SizedBox(height: 18),
+              ArtButton(
+                '로그인',
+                key: const ValueKey('drawer-login'),
+                onTap: () async {
+                  if (await ensureLogin(context) && context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ] else ...[
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: soft,
+                    child: Text(
+                      name.isEmpty ? '나' : name.characters.first,
+                      style: english(22),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name.isEmpty ? '나' : name,
+                          style: sans(15, weight: FontWeight.w600),
+                        ),
+                        if (s.email.isNotEmpty)
+                          Text(
+                            s.email,
+                            overflow: TextOverflow.ellipsis,
+                            style: sans(11, color: muted),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.person_outline),
+                title: const Text('내 피드'),
+                onTap: () => go('/library'),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.tune),
+                title: const Text('감상 설정'),
+                onTap: () => go('/settings'),
+              ),
+              const Divider(),
+              FutureBuilder<PublicMember>(
+                future: social,
+                builder: (context, snapshot) => SwitchListTile(
+                  key: const ValueKey('drawer-follow-visibility'),
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('팔로잉/팔로워 공개'),
+                  subtitle: Text(
+                    snapshot.hasError
+                        ? ArtlogState.message(snapshot.error!)
+                        : '끄면 다른 감상가에게 팔로우 목록과 수가 보이지 않아요.',
+                    style: sans(11, color: muted),
+                  ),
+                  value: snapshot.data?.followListPublic ?? true,
+                  onChanged: snapshot.hasData && !saving ? setVisibility : null,
+                ),
+              ),
+              const Divider(),
+              if (s.loginRequired)
+                ListTile(
+                  key: const ValueKey('drawer-logout'),
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.logout),
+                  title: const Text('로그아웃'),
+                  onTap: () async {
+                    final router = GoRouter.of(context);
+                    final messenger = ScaffoldMessenger.of(context);
+                    Navigator.of(context).pop();
+                    try {
+                      await s.logout();
+                      router.go('/gallery');
+                    } catch (e) {
+                      messenger.showSnackBar(
+                        SnackBar(content: Text(ArtlogState.message(e))),
+                      );
+                    }
+                  },
+                ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
@@ -577,9 +767,9 @@ class _Footer extends StatelessWidget {
               children: [
                 for (final item in [
                   ('/gallery', '작품 발견하기'),
-                  ('/artists', '작가'),
+                  ('/artworks', '작품 리스트'),
                   ('/community', '감상 피드'),
-                  ('/library', '내 서재'),
+                  ('/library', '내 피드'),
                 ])
                   TextButton(
                     style: editorialButtonStyle(dark: true, quiet: true),

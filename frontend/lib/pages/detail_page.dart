@@ -182,20 +182,12 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                OutlinedButton.icon(
+                LikeButton(
+                  liked: s.likes.contains(art.id),
+                  subject: art.title,
                   onPressed: s.pendingLikes.contains(art.id)
                       ? null
                       : () => likeArtwork(context, art),
-                  icon: Icon(
-                    s.likes.contains(art.id)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    size: 17,
-                  ),
-                  label: Text(
-                    s.likes.contains(art.id) ? '담았어요' : '좋아요',
-                    style: sans(11),
-                  ),
                 ),
               ],
             ),
@@ -223,18 +215,12 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                   ),
-                  TextButton.icon(
+                  LikeButton(
+                    liked: s.follows.contains(artist.id),
+                    subject: artist.name,
                     onPressed: s.pendingFollows.contains(artist.id)
                         ? null
-                        : () => followArtist(context, artist),
-                    icon: Icon(
-                      s.follows.contains(artist.id) ? Icons.check : Icons.add,
-                      size: 15,
-                    ),
-                    label: Text(
-                      s.follows.contains(artist.id) ? '팔로잉' : '작가 팔로우',
-                      style: sans(11),
-                    ),
+                        : () => likeArtist(context, artist),
                   ),
                 ],
               ),
@@ -309,10 +295,10 @@ class _DetailPageState extends State<DetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextButton.icon(
-              onPressed: () => context.go('/gallery'),
+              onPressed: () => context.go('/artworks'),
               icon: const Icon(Icons.arrow_back, size: 15),
               label: Text(
-                '작품 둘러보기  ›  ${s.artistName(art)}',
+                '작품 리스트  ›  ${s.artistName(art)}',
                 style: sans(11, color: muted),
               ),
             ),

@@ -462,6 +462,58 @@ Future<void> followArtist(BuildContext context, Artist artist) async {
   }
 }
 
+/// Artworks and artists share one like control and one word: 좋아요.
+class LikeButton extends StatelessWidget {
+  const LikeButton({
+    super.key,
+    required this.liked,
+    required this.subject,
+    required this.onPressed,
+    this.light = false,
+    this.compactIcon = false,
+  });
+  final bool liked, light, compactIcon;
+  final String subject;
+  final VoidCallback? onPressed;
+  @override
+  Widget build(BuildContext context) {
+    final color = light ? museumText : ink;
+    final icon = Icon(
+      liked ? Icons.favorite : Icons.favorite_border,
+      size: 18,
+      color: liked ? const Color(0xffc0392b) : color,
+    );
+    final tooltip = '$subject ${liked ? '좋아요 취소' : '좋아요'}';
+    if (compactIcon) {
+      return IconButton(
+        tooltip: tooltip,
+        isSelected: liked,
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+        onPressed: onPressed,
+        icon: icon,
+      );
+    }
+    return Semantics(
+      label: tooltip,
+      selected: liked,
+      button: true,
+      excludeSemantics: true,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: color,
+          side: BorderSide(color: light ? museumLine : line),
+        ),
+        icon: icon,
+        label: Text('좋아요', style: sans(12, color: color)),
+      ),
+    );
+  }
+}
+
+Future<void> likeArtist(BuildContext context, Artist artist) =>
+    followArtist(context, artist);
+
 class LoginDialog extends StatefulWidget {
   const LoginDialog({super.key, required this.state});
   final ArtlogState state;

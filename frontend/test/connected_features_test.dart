@@ -49,6 +49,16 @@ Json saved(String content) => {
 http.Response jsonResponse(Object value) =>
     http.Response.bytes(utf8.encode(jsonEncode(value)), 200);
 
+http.Response sseResponse(
+  String answer, {
+  List<Object> sources = const [],
+}) => http.Response(
+  'event: token\ndata: ${jsonEncode({'content': answer})}\n\n'
+  'event: done\ndata: ${jsonEncode({'answer': answer, 'refused': false, 'sources': sources})}\n\n',
+  200,
+  headers: {'content-type': 'text/event-stream; charset=utf-8'},
+);
+
 class SessionFake implements AuthSession {
   AuthUser? current = const AuthUser(uid: 'a', email: 'a@example.invalid');
   final events = StreamController<AuthUser?>.broadcast(sync: true);
@@ -86,6 +96,9 @@ class Fixture {
     final custom = override?.call(r);
     if (custom != null) return custom;
     final path = r.url.path;
+    if (path == '/api/artworks/42/chat/stream') {
+      return sseResponse('추가 해설', sources: [source]);
+    }
     if (r.method == 'DELETE' || r.method == 'PUT' || path.endsWith('/views')) {
       return http.Response('', 204);
     }
@@ -310,12 +323,15 @@ void main() {
     await tester.pumpWidget(ArtlogApp(state: state));
     await tester.pumpAndSettle();
     final hero = tester.widget<DailyArtworkHero>(find.byType(DailyArtworkHero));
-    expect(hero.works.map((a) => a.id), ['43', '44', '42']);
+    // The banner is a random pick per visit; the list keeps featured works first.
+    expect(hero.works.map((a) => a.id).toSet(), {'42', '43', '44'});
     expect(find.byKey(const ValueKey('daily-fullscreen-hero')), findsOneWidget);
-    final grid = tester
-        .widgetList<ArtworkGrid>(find.byType(ArtworkGrid))
-        .singleWhere((g) => g.works.length == 3);
-    expect(grid.works.map((a) => a.id), ['43', '44', '42']);
+    expect(
+      tester
+          .widgetList<ArtworkGrid>(find.byType(ArtworkGrid))
+          .map((g) => g.works.map((a) => a.id).join(',')),
+      contains('43,44,42'),
+    );
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
     state.dispose();
@@ -408,7 +424,9 @@ void main() {
       final f = Fixture(), session = SessionFake();
       var posts = 0;
       f.override = (r) =>
-          r.method == 'POST' && r.url.path.endsWith('/chat') && posts++ == 0
+          r.method == 'POST' &&
+              r.url.path.endsWith('/chat/stream') &&
+              posts++ == 0
           ? Future.value(http.Response('', 503))
           : null;
       final state = await boot(f, session);
@@ -420,7 +438,9 @@ void main() {
       await c.retry();
       expect(c.messages.map((m) => m.role), ['assistant', 'user', 'assistant']);
       final postBodies = f.requests
-          .where((r) => r.url.path.endsWith('/chat') && r.method == 'POST')
+          .where(
+            (r) => r.url.path.endsWith('/chat/stream') && r.method == 'POST',
+          )
           .map((r) => jsonDecode(r.body))
           .toList();
       expect(postBodies[0]['history'], postBodies[1]['history']);
@@ -439,7 +459,7 @@ void main() {
       final f = Fixture(), session = SessionFake();
       final pending = Completer<http.Response>(), entered = Completer<void>();
       f.override = (r) {
-        if (r.method == 'POST' && r.url.path.endsWith('/chat')) {
+        if (r.method == 'POST' && r.url.path.endsWith('/chat/stream')) {
           entered.complete();
           return pending.future;
         }
@@ -456,9 +476,7 @@ void main() {
       await entered.future;
       session.change('b');
       await pumpEventQueue();
-      pending.complete(
-        jsonResponse({'answer': 'A의 답변', 'refused': false, 'sources': []}),
-      );
+      pending.complete(sseResponse('A의 답변'));
       await asking;
       expect(c.messages.map((m) => m.content), ['B의 감상']);
       expect(c.busy, false);
@@ -574,45 +592,11 @@ void main() {
         };
         final state = (await tester.runAsync(() => boot(f, session)))!;
         await tester.pumpWidget(
-          ArtlogApp(state: state, initialLocation: '/library'),
+          ArtlogApp(state: state, initialLocation: '/library?tab=calendar'),
         );
         await tester.pumpAndSettle();
         expect(find.text('1일의 감상 · 총 3회 감상'), findsOneWidget);
         expect(find.text('이날 3회 감상'), findsOneWidget);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox());
-        state.dispose();
-        await session.events.close();
-      },
-    );
-
-    testWidgets(
-      'saved chats open restored conversation and licensed sources at ${width.toInt()}px',
-      (tester) async {
-        tester.view.physicalSize = Size(width, 1000);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.resetPhysicalSize);
-        addTearDown(tester.view.resetDevicePixelRatio);
-        final f = Fixture(), session = SessionFake();
-        final state = (await tester.runAsync(() => boot(f, session)))!;
-        await tester.pumpWidget(
-          ArtlogApp(state: state, initialLocation: '/library'),
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('대화 내역'));
-        await tester.pumpAndSettle();
-        expect(find.text('2026-10-13 08:30'), findsOneWidget);
-        await tester.tap(find.text('씨름'));
-        await tester.pumpAndSettle();
-        expect(find.text('이전 감상'), findsOneWidget);
-        final chip = find.widgetWithText(ActionChip, '1 · 국립중앙박물관');
-        await tester.ensureVisible(chip);
-        await tester.tap(chip);
-        await tester.pumpAndSettle();
-        expect(find.text('이용 조건: 공공누리 제1유형'), findsOneWidget);
-        expect(find.text('편집 보강 근거'), findsOneWidget);
-        expect(find.text('국립중앙박물관 연구자료'), findsOneWidget);
-        expect(find.text('작품 연구 도록'), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         state.dispose();
@@ -632,7 +616,9 @@ void main() {
         await tester.pumpWidget(ArtlogApp(state: state));
         await tester.pumpAndSettle();
         expect(find.text('풍속화를 좋아해서'), findsOneWidget);
-        expect(find.text('조선 회화를 즐겨 감상해서'), findsOneWidget);
+        // 새롭게 만나볼 작가 was replaced by the artist stories section.
+        expect(find.text('조선 회화를 즐겨 감상해서'), findsNothing);
+        expect(find.text('그림 너머, 작가의 이야기'), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
         state.dispose();

@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.rag.classifier import classify_artwork, refusal_message
+from app.rag.prompts import STYLE_RULES
 from app.rag.retriever import retrieve
 from app.schemas.chat import ChatResponse, Source
 from app.services import catalog_service, mypage_service, recommendation_service
@@ -26,13 +27,15 @@ class GroundedAnswer(BaseModel):
     used_chunk_ids: list[int] = Field(default_factory=list, max_length=40)
 
 
-def instructions(db, user_id):
+def instructions(db, user_id, explanation_style=None):
     p = mypage_service.preference(db, user_id) if user_id else None
-    style = (
-        "회화 전문용어를 적극 사용하고 개념을 정확하게 설명하세요."
-        if p and p.conversation_style == "professional"
-        else "편안한 일상 언어와 쉬운 예시로 짧게 설명하세요. 필요한 전문용어는 풀어서 설명하세요."
-    )
+    if explanation_style in STYLE_RULES:
+        # The tab selected in the chat overrides the saved account style.
+        style = STYLE_RULES[explanation_style].replace("\n", " ")
+    elif p and p.conversation_style == "professional":
+        style = "회화 전문용어를 적극 사용하고 개념을 정확하게 설명하세요."
+    else:
+        style = "편안한 일상 언어와 쉬운 예시로 짧게 설명하세요. 필요한 전문용어는 풀어서 설명하세요."
     priorities = (
         p.explanation_priorities
         if p and p.explanation_priorities
@@ -99,7 +102,7 @@ def answer(db: Session, artwork_id, body, user_id=None):
         "인물 관계, 정신질환, 미래 사건과의 인과를 추측하지 마세요. 답변 시 주의 보정문은 원문보다 우선하며 감상 포인트는 팀의 편집 보충임을 밝히세요. "
         "이전 대화는 질문 맥락이며 사실 근거가 아닙니다. 사용한 근거의 chunk_id를 used_chunk_ids에 넣으세요. "
         "URL을 만들거나 답변에 직접 쓰지 마세요. 원문을 길게 그대로 옮기지 마세요. "
-        + instructions(db, user_id),
+        + instructions(db, user_id, body.explanation_style),
         {
             "artwork": {"title": art.title, "artist": art.artist_name},
             "question": body.question,

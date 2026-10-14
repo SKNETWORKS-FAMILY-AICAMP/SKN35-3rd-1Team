@@ -73,24 +73,27 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final state = (await tester.runAsync(demo))!;
-      await tester.pumpWidget(ArtlogApp(state: state));
-      await tester.pumpAndSettle();
-      await Scrollable.ensureVisible(
-        tester.element(find.widgetWithText(ChoiceChip, '조선 회화')),
-        alignment: .5,
+      await tester.pumpWidget(
+        ArtlogApp(state: state, initialLocation: '/artworks'),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(ChoiceChip, '조선 회화'));
+      await tester.tap(find.widgetWithText(TextButton, '조선 회화'));
       await tester.pumpAndSettle();
       expect(find.byType(ArtworkCard), findsNWidgets(2));
-      await tester.enterText(find.byType(TextField), '인왕');
+      await tester.enterText(
+        find.byKey(const ValueKey('artworks-search')),
+        '인왕',
+      );
       await tester.pumpAndSettle();
       expect(find.byType(ArtworkCard), findsOneWidget);
       expect(find.text('인왕제색도'), findsOneWidget);
-      await tester.enterText(find.byType(TextField), '없는작품');
+      await tester.enterText(
+        find.byKey(const ValueKey('artworks-search')),
+        '없는작품',
+      );
       await tester.pumpAndSettle();
       expect(find.byType(ArtworkCard), findsNothing);
-      expect(find.text('아직 만나지 못한 그림이네요.'), findsOneWidget);
+      expect(find.text('찾는 그림이 없어요.'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
       state.dispose();
     },

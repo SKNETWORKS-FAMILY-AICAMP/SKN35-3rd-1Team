@@ -7,9 +7,12 @@ class DiaryEntry {
     required this.content,
     this.isPublic = false,
     this.author = '나',
+    this.authorId = '',
     this.artwork,
   });
   final String id, date, content, author;
+  // Opaque public profile id. Empty for entries without a server profile.
+  final String authorId;
   final bool isPublic;
   final Artwork? artwork;
   factory DiaryEntry.fromJson(Json j) => DiaryEntry(
@@ -18,6 +21,7 @@ class DiaryEntry {
     content: text(j['content']),
     isPublic: j['is_public'] == true,
     author: text(j['author_name'], '감상가'),
+    authorId: text(j['author_id']),
     artwork: j['artwork'] == null
         ? null
         : Artwork.fromJson(object(j['artwork'])),
@@ -28,6 +32,7 @@ class DiaryEntry {
     'content': content,
     'is_public': isPublic,
     'author_name': author,
+    'author_id': authorId,
     'artwork': artwork == null
         ? null
         : {

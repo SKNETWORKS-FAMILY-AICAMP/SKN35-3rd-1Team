@@ -1,31 +1,24 @@
-# docs/db
+# docs
 
-TiDB 스키마 설계와 실행용 SQL입니다.
+설계, 명세, 테스트, 발표 자료를 둡니다.
 
-2026-10-14 마이페이지 확장: Alembic head `20261014_0008`에서 사용자 설정을 확장하고 `collections`·`collection_items`를 추가했습니다. 0007의 `diary_entries`를 포함해 서비스 모델은 20테이블입니다. `00_erd.mmd`에는 새 관계를 반영했습니다. PNG/SVG도 20테이블로 다시 생성했습니다. `01_schema_mvp.sql`은 0006의 17테이블 스냅샷이므로 신규 환경은 Alembic 전체 마이그레이션을 사용합니다. 운영 적용은 별도로 필요하며 이번 코드 작업에서 실행하지 않았습니다.
+## 들어갈 파일
 
-| 파일 | 내용 |
+| 파일 또는 폴더 | 내용 |
 | --- | --- |
-| `db-design.md` | 설계 문서 전체 (권장 구조, 테이블 명세, 인덱스, 추천 흐름, 주의사항, 출처) |
-| `00_erd.mmd` | SQLAlchemy 모델에서 생성한 Mermaid ERD 원본 (서비스 테이블 20개) |
-| `00_erd.png` | 빠르게 확인하는 ERD 이미지 |
-| `00_erd.svg` | 확대해도 선명한 ERD 이미지 |
-| `01_schema_mvp.sql` | 서비스 테이블 17개의 TiDB/MySQL 호환 기준 SQL |
-| `02_queries.sql` | 기능별 쿼리 예시 (좋아요, 열람, 캘린더, RAG 검색, 추천) |
-| `03_schema_later.sql` | 나중에 추가할 테이블 (유사도 사전 계산 등) |
-| `04_vector_index_tidb.sql` | 작품 수가 크게 늘었을 때 붙일 벡터 인덱스 |
+| `db/` | DB 설계 문서, ERD, 테이블 생성 SQL, 쿼리 예시 (작성되어 있음) |
+| `architecture.md` | 시스템 구성도와 요청 흐름 |
+| `api.md` | 확정한 API 명세 (작성되어 있음). 프론트·백엔드 공식 계약 |
+| `prompts.md` | 프롬프트 버전과 바꾼 이유 |
+| `prompt-accuracy-evaluation.md` | 30문항·정확도 집중 9문항의 판정과 재현 기록 절차 |
+| `test-plan.md`, `test-result.md` | RAG·사용자 활동 테스트 기준, 실행 결과, 범위 밖 질문 거절 비율 |
+| `data-collection.md` | 작가별 수집 현황과 전처리 기준 |
+| `presentation/` | 발표 자료 |
 
-## 사용 방법
+## 규칙
 
-- 테이블은 `01_schema_mvp.sql`을 실행해서 만들거나 Alembic 마이그레이션으로 만듭니다. 둘 중 하나만 씁니다.
-- `VECTOR(1536)`의 1536은 임베딩 모델의 차원 수입니다. 모델을 정한 뒤 루트 `.env`의 `EMBEDDING_DIM`과 같은 값으로 맞춥니다.
-- `02_queries.sql`은 `backend/app/repositories/`를 작성할 때 참고합니다.
-- ERD를 다시 만들 때는 `backend/`에서 `uv run python -m scripts.render_erd`를 실행합니다.
+- 프론트와 백이 동시에 작업하려면 `api.md`가 먼저 확정되어야 합니다. 구현보다 명세를 먼저 씁니다.
+- 명세를 바꿀 때는 코드와 같은 PR에서 문서를 함께 고칩니다.
+- 결정한 내용에는 이유를 한 줄 남깁니다. 발표 질의응답에서 그대로 쓸 수 있습니다.
 
-## 확인이 필요한 점
-
-2026-10-13 기준 운영 TiDB Serverless v8.5.3의 `3rd_project`에 Alembic `20261013_0006`까지 적용했습니다. 서비스 테이블 17개와 Alembic 관리 테이블 1개가 있으며, 당시 모델 기준 누락 테이블은 없었습니다. 0007·0008의 운영 적용 여부는 별도 확인해야 합니다. `social_accounts`와 `user_preferences`의 외래 키도 실제 TiDB에서 확인했습니다.
-
-- [마이페이지·온보딩·컬렉션 인수인계](mypage-and-collections-2026-10-14.md): 계정 설정, 내 비평·활동·컬렉션, AI 소개, 채팅 확정, MCP 도구와 0008 운영 반영 순서
-
-- [전체 페이지 글라스 디자인 개선](ui/optical-glass-refinement-2026-10-14.md): 모든 버튼의 상태·포인터 반사광·전체 테마·접근성·효과 성능 범위
+최신 브랜치 통합 결과와 담당자별 남은 작업은 [2026-10-13 통합·분담표](integration-and-task-board-2026-10-13.md)를 참고하세요.

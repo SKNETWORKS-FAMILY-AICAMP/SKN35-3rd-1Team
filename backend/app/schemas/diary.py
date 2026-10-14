@@ -1,4 +1,7 @@
-"""No email, Firebase UID or internal user ID is returned to the public feed."""
+"""No email, Firebase UID or internal user ID is returned to the public feed.
+
+``author_id`` is the author's opaque public profile id.
+"""
 
 from datetime import date, datetime
 from typing import Annotated
@@ -23,6 +26,7 @@ class DiaryEntry(BaseModel):
     content: str
     is_public: bool
     author_name: str
+    author_id: str
     artwork: ArtworkCard | None
     created_at: datetime
     updated_at: datetime
