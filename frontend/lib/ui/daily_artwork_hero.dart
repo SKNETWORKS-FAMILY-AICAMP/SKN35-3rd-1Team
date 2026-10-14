@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models.dart';
@@ -23,6 +24,23 @@ List<Artwork> dailyArtworks(List<Artwork> works, String date) {
     if (picked.length == 3) break;
   }
   for (final work in ordered) {
+    if (picked.length == 3) break;
+    if (picked.every((a) => a.id != work.id)) picked.add(work);
+  }
+  return picked;
+}
+
+/// Three pictured works chosen at random for this visit, one per artist first.
+List<Artwork> randomArtworks(List<Artwork> works, int seed) {
+  final pictured = works.where((a) => a.image.isNotEmpty).toList();
+  final pool = pictured.isEmpty ? [...works] : pictured;
+  pool.shuffle(Random(seed));
+  final picked = <Artwork>[];
+  for (final work in pool) {
+    if (picked.every((a) => a.artistId != work.artistId)) picked.add(work);
+    if (picked.length == 3) return picked;
+  }
+  for (final work in pool) {
     if (picked.length == 3) break;
     if (picked.every((a) => a.id != work.id)) picked.add(work);
   }
@@ -100,9 +118,9 @@ class _DailyArtworkHeroState extends State<DailyArtworkHero> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Eyebrow('THE DAILY SELECTION', color: Color(0xffc1c5bc)),
+          const Eyebrow('A RANDOM ENCOUNTER', color: Color(0xffc1c5bc)),
           const SizedBox(height: 12),
-          Text('오늘, 이 그림', style: sans(12, color: const Color(0xffc1c5bc))),
+          Text('우연히 만난 그림', style: sans(12, color: const Color(0xffc1c5bc))),
           const SizedBox(height: 5),
           Text(
             current.title,
