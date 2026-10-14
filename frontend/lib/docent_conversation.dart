@@ -22,6 +22,9 @@ class DocentConversation extends ChangeNotifier {
 
   String? error, historyError, failedQuestion;
   bool busy = false, loading = false, resetting = false, _disposed = false;
+  // The collection offer appears at most once per conversation, so ignoring
+  // it never brings it back on the next answer.
+  bool offered = false;
   int _revision = 0;
   String identity = '';
   bool get canSend => !busy && !loading && !resetting && historyError == null;
@@ -34,7 +37,7 @@ class DocentConversation extends ChangeNotifier {
     ++_revision;
     messages.clear();
     error = historyError = failedQuestion = null;
-    busy = resetting = loading = false;
+    busy = resetting = loading = offered = false;
     notifyListeners();
     unawaited(restore());
   }
@@ -121,12 +124,15 @@ class DocentConversation extends ChangeNotifier {
             );
       if (!_current(revision)) return;
       if (hasPendingAnswer) messages.removeLast();
+      final offer = offered ? null : reply.suggestion;
+      if (offer != null) offered = true;
       messages.add(
         ChatTurn(
           'assistant',
           reply.answer,
           sources: reply.sources,
           refused: reply.refused,
+          suggestion: offer,
         ),
       );
     } catch (e) {
@@ -141,6 +147,19 @@ class DocentConversation extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  /// Hide the offer under an answer (after it was accepted or declined).
+  void closeSuggestion(ChatTurn turn) {
+    final i = messages.indexOf(turn);
+    if (i < 0) return;
+    messages[i] = ChatTurn(
+      turn.role,
+      turn.content,
+      sources: turn.sources,
+      refused: turn.refused,
+    );
+    notifyListeners();
   }
 
   Future<void> retry() async {

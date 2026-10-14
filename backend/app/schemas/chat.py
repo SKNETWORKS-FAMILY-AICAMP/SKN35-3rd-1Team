@@ -11,6 +11,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.catalog import ArtworkCard
+from app.schemas.mypage import CollectionSuggestion
 
 ChatRoleName = Literal["user", "assistant"]
 DocType = Literal["artist_bio", "artwork_commentary", "artist_comparison"]
@@ -53,6 +54,8 @@ class ChatResponse(BaseModel):
     # True when the question is outside the documents for this artwork.
     refused: bool
     sources: list[Source]
+    # Offer to collect the artwork once the member keeps asking about it. Not saved.
+    suggestion: CollectionSuggestion | None = None
 
 
 class ChatMessageOut(BaseModel):

@@ -1,7 +1,7 @@
 """Owner filtering is shared by HTTP, the collection assistant and MCP tools."""
 
 import json
-from datetime import UTC
+from datetime import UTC, timedelta
 from hashlib import sha256
 
 from fastapi import HTTPException
@@ -114,6 +114,18 @@ def collection_cards(db, collection_id, limit=3, before_id=None):
     return card_rows(db, q.order_by(Artwork.id.desc()).limit(limit))
 
 
+def collection_previews(db, collection_id, limit=3):
+    """Earliest added first: the first preview is the collection cover."""
+    q = (
+        select(Artwork, Artist.name)
+        .join(Artist, Artist.id == Artwork.artist_id)
+        .join(CollectionItem, CollectionItem.artwork_id == Artwork.id)
+        .where(CollectionItem.collection_id == collection_id)
+        .order_by(CollectionItem.created_at, CollectionItem.artwork_id)
+    )
+    return card_rows(db, q.limit(limit))
+
+
 def serialize_collection(db, row):
     return CollectionOut(
         id=row.id,
@@ -124,7 +136,7 @@ def serialize_collection(db, row):
             .select_from(CollectionItem)
             .where(CollectionItem.collection_id == row.id)
         ),
-        previews=collection_cards(db, row.id),
+        previews=collection_previews(db, row.id),
     )
 
 
@@ -152,7 +164,7 @@ def collections(db, user_id):
             func.row_number()
             .over(
                 partition_by=CollectionItem.collection_id,
-                order_by=CollectionItem.artwork_id.desc(),
+                order_by=(CollectionItem.created_at, CollectionItem.artwork_id),
             )
             .label("rank"),
         )
@@ -196,13 +208,38 @@ def save_collection(db, user_id, body: CollectionWrite, collection_id=None):
             raise HTTPException(409, "컬렉션은 50개까지 만들 수 있어요.")
         row = Collection(user_id=user_id, name=body.name, description=body.description)
         db.add(row)
+    initial = getattr(body, "artwork_ids", []) if collection_id is None else []
     row.name, row.description, row.updated_at = body.name, body.description, utcnow()
     try:
+        _add_initial_artworks(db, row, initial)
         db.commit()
     except IntegrityError:
         db.rollback()
         raise HTTPException(409, "같은 이름의 컬렉션이 있어요.") from None
     return serialize_collection(db, row)
+
+
+def _add_initial_artworks(db, row, artwork_ids):
+    """Fill a new collection in the given order (chat or MCP proposals)."""
+    ids = list(dict.fromkeys(artwork_ids))
+    if not ids:
+        return
+    found = set(db.scalars(select(Artwork.id).where(Artwork.id.in_(ids))))
+    if missing := [i for i in ids if i not in found]:
+        db.rollback()
+        raise HTTPException(404, f"작품을 찾을 수 없습니다: {missing[0]}")
+    db.flush()
+    # DATETIME keeps whole seconds; spacing the times keeps the given order,
+    # so the first artwork stays the cover. All stay at or before now.
+    start = utcnow() - timedelta(seconds=len(ids))
+    db.add_all(
+        CollectionItem(
+            collection_id=row.id,
+            artwork_id=artwork_id,
+            created_at=start + timedelta(seconds=i),
+        )
+        for i, artwork_id in enumerate(ids)
+    )
 
 
 def delete_collection(db, user_id, collection_id):
@@ -381,6 +418,27 @@ def get_taste(db, user_id):
             and p.taste_fingerprint != taste_fingerprint(evidence, impressions)
         ),
     )
+
+
+def find_artists(db, query) -> list[tuple[int, str]]:
+    """(id, name) of catalog artists named in user text, by alias first then name."""
+    from app.rag.classifier import collected_artist_slugs
+
+    term = query.strip()[:40]
+    if not term:
+        return []
+    slugs = collected_artist_slugs(term)
+    where = (
+        Artist.slug.in_(slugs)
+        if slugs
+        else Artist.name.contains(term, autoescape=True)
+    )
+    return [
+        (i, name)
+        for i, name in db.execute(
+            select(Artist.id, Artist.name).where(where).order_by(Artist.id).limit(5)
+        )
+    ]
 
 
 def search_artworks(db, query, limit=8):

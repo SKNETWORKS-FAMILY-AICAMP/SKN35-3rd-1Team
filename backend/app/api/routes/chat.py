@@ -9,11 +9,17 @@ import logging
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import StreamingResponse
+from starlette.concurrency import run_in_threadpool
 
 from app.core.auth import CurrentUser, OptionalUser
 from app.db.session import DbSession
 from app.schemas.chat import ChatMessageOut, ChatRequest, ChatResponse, ChatSummary
-from app.services import chat_service, docent_service, docent_stream
+from app.services import (
+    chat_service,
+    collection_suggestions,
+    docent_service,
+    docent_stream,
+)
 
 router = APIRouter(tags=["chat"])
 logger = logging.getLogger(__name__)
@@ -32,6 +38,7 @@ def ask(artwork_id: int, body: ChatRequest, user: OptionalUser, db: DbSession) -
     response = docent_service.answer(db, artwork_id, body, user_id=user.id if user else None)
     if user is not None:
         chat_service.save_exchange(db, user_id=user.id, artwork_id=artwork_id, question=body.question, response=response)
+        response.suggestion = collection_suggestions.suggest(db, user.id, artwork_id, body, response)
     return response
 
 
@@ -48,7 +55,14 @@ async def ask_stream(
             ):
                 if event == "done":
                     assert isinstance(payload, ChatResponse)
-                    yield _frame(event, payload.model_dump(mode="json"))
+                    if user is not None:
+                        payload.suggestion = await run_in_threadpool(
+                            collection_suggestions.suggest, db, user.id, artwork_id, body, payload
+                        )
+                    frame = payload.model_dump(mode="json")
+                    if frame["suggestion"] is None:
+                        del frame["suggestion"]  # keep the done frame unchanged without an offer
+                    yield _frame(event, frame)
                 else:
                     assert isinstance(payload, str)
                     yield _frame(event, {"content": payload})
