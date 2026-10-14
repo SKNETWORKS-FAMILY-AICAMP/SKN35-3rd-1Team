@@ -6,6 +6,7 @@ import pytest
 from fastapi import HTTPException
 from langchain_core.documents import Document
 
+from app.rag.classifier import classify
 from app.schemas.chat import ChatRequest
 from app.services import docent_service as docent
 
@@ -108,6 +109,22 @@ def test_no_documents_never_calls_model(setup, monkeypatch):
     )
 
 
+def test_collection_action_refuses_before_retrieval(setup, monkeypatch):
+    monkeypatch.setattr(
+        docent,
+        "classify_artwork",
+        lambda _db, _artwork_id, question: classify(question, "claude-monet"),
+    )
+    monkeypatch.setattr(docent, "retrieve", lambda *a: pytest.fail("앱 기능 요청에 자료 검색"))
+    monkeypatch.setattr(docent, "generate", lambda *a: pytest.fail("앱 기능 요청에 LLM 호출"))
+
+    response = docent.answer(None, 1, ChatRequest(question="이거 내 컬렉션에 추가해줘"))
+
+    assert response.refused
+    assert response.sources == []
+    assert response.answer == "해당 작품과 작가에 대해서만 대화 할 수 있어요."
+
+
 def test_search_failure_uses_approved_message(setup, monkeypatch):
     def fail(*args):
         raise RuntimeError("Chroma unavailable")
@@ -121,7 +138,11 @@ def test_search_failure_uses_approved_message(setup, monkeypatch):
 
 @pytest.mark.parametrize(
     ("style", "expected"),
-    [("easy", "쉽고 친근하게"), ("standard", "차분하고 편안하게"), ("deep", "깊이 있게")],
+    [
+        ("easy", "쉬운 말로 핵심만"),
+        ("standard", "미술 용어를 곁들인 해설"),
+        ("deep", "근거를 연결하는 심화 해설"),
+    ],
 )
 def test_chat_tab_style_overrides_saved_style(setup, monkeypatch, style, expected):
     observed = {}

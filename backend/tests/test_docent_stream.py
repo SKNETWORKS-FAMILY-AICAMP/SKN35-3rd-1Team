@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from app.rag.classifier import classify
 from app.schemas.chat import ChatRequest
 from app.services import docent_stream
 
@@ -92,3 +93,41 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
         assert events[-1][1].sources[0].document_id == 4
     assert saved[0]["response"] == events[-1][1]
     assert styles == [(None, 3, "deep")]
+
+
+def test_collection_action_stream_refuses_without_artwork_answer(monkeypatch):
+    monkeypatch.setattr(
+        docent_stream.catalog_service,
+        "get_artwork",
+        lambda *args: SimpleNamespace(title="루엘에서 본 풍경", artist_name="모네"),
+    )
+    classify_action = lambda _db, _artwork_id, question: classify(question, "claude-monet")
+    monkeypatch.setattr(docent_stream, "classify_artwork", classify_action)
+    monkeypatch.setattr(docent_stream.docent_service, "classify_artwork", classify_action)
+    monkeypatch.setattr(
+        docent_stream.docent_service,
+        "retrieve",
+        lambda *args: pytest.fail("앱 기능 요청에 자료 검색"),
+    )
+    monkeypatch.setattr(
+        docent_stream.docent_service,
+        "generate",
+        lambda *args: pytest.fail("앱 기능 요청에 LLM 호출"),
+    )
+
+    async def collect():
+        return [
+            event
+            async for event in docent_stream.answer_events(
+                None,
+                artwork_id=1,
+                body=ChatRequest(question="이거 내 컬렉션에 추가해줘"),
+                user_id=None,
+            )
+        ]
+
+    events = asyncio.run(collect())
+    assert events[0] == ("token", "해당 작품과 작가에 대해서만 대화 할 수 있어요.")
+    assert events[1][0] == "done"
+    assert events[1][1].refused
+    assert events[1][1].sources == []

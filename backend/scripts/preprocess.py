@@ -45,6 +45,7 @@ SUPPLEMENTS = ROOT / "data" / "mappings" / "document_supplements.json"
 CORRECTIONS = ROOT / "data" / "mappings" / "document_corrections.json"
 ALIASES = ROOT / "data" / "mappings" / "artist_aliases.json"
 THUMBNAILS = ROOT / "data" / "mappings" / "image_thumbnails.json"
+LOCAL_IMAGES = ROOT / "data" / "mappings" / "local_images.json"
 OUTPUT_FILES = ("movements.jsonl", "artists.jsonl", "artworks.jsonl", "documents.jsonl", "artist_aliases.jsonl")
 
 MIN_CONTENT = 200  # 이보다 짧은 문서는 경고
@@ -504,6 +505,7 @@ def build() -> dict:
     initialize_editorial_metadata(cat)
     apply_overrides(cat, mapping)
     apply_image_thumbnails(cat, read_image_thumbnails())
+    apply_image_thumbnails(cat, read_local_images(), tool="build_local_images")
     apply_document_supplements(cat, read_document_supplements())
     apply_document_corrections(cat, read_document_corrections())
     apply_reviews(cat, read_reviews())
@@ -594,7 +596,14 @@ def read_image_thumbnails() -> dict:
     return json.loads(THUMBNAILS.read_text(encoding="utf-8"))
 
 
-def apply_image_thumbnails(cat: dict, thumbnails: dict) -> None:
+def read_local_images() -> dict:
+    """박물관 원본을 줄여 프론트 정적 파일로 둔 사본 매핑 (scripts/build_local_images.py)."""
+    if not LOCAL_IMAGES.exists():
+        return {}
+    return json.loads(LOCAL_IMAGES.read_text(encoding="utf-8"))
+
+
+def apply_image_thumbnails(cat: dict, thumbnails: dict, tool: str = "build_image_thumbnails") -> None:
     """위키미디어 원본 이미지 주소를 매핑에 적힌 고정 폭 썸네일 주소로 바꾼다.
 
     원본 파일은 수십~수백 MB 이고 upload.wikimedia.org 가 429 로 막기 때문이다.
@@ -608,7 +617,7 @@ def apply_image_thumbnails(cat: dict, thumbnails: dict) -> None:
             if row is None:
                 warnings.append(f"썸네일 매핑 {kind}/{slug}: 대상이 없음")
             elif row.get(field) != entry["source"]:
-                warnings.append(f"썸네일 매핑 {kind}/{slug}: 원래 주소가 바뀌어 적용하지 않음 (build_image_thumbnails 다시 실행)")
+                warnings.append(f"썸네일 매핑 {kind}/{slug}: 원래 주소가 바뀌어 적용하지 않음 ({tool} 다시 실행)")
             elif kind == "artworks" and not row.get("image_source_url"):
                 warnings.append(f"썸네일 매핑 {kind}/{slug}: 출처 페이지가 없어 적용하지 않음")
             else:

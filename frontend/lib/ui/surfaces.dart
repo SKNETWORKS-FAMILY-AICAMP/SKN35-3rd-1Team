@@ -74,7 +74,7 @@ ButtonStyle editorialButtonStyle({
   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
   textStyle: const WidgetStatePropertyAll(
     TextStyle(
-      fontFamily: 'Pretendard',
+      fontFamily: 'ChironSungHK',
       fontSize: 13,
       fontWeight: FontWeight.w500,
       height: 1.2,
@@ -163,7 +163,7 @@ class FilterPill extends StatelessWidget {
       shadowColor: Colors.transparent,
       selectedShadowColor: Colors.transparent,
       labelStyle: TextStyle(
-        fontFamily: 'Pretendard',
+        fontFamily: 'ChironSungHK',
         fontSize: 12,
         fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
         color: inverse

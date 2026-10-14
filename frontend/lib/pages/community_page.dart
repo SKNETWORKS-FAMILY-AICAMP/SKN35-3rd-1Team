@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import '../ui/design.dart';
 import '../ui/diary_feed.dart';
 
-/// Every member's public impressions as a full-width collage (up to 1980px).
+/// Every member's public impressions as a equal-height cards (up to 1280px).
 class CommunityPage extends StatelessWidget {
   const CommunityPage({super.key});
   @override
   Widget build(BuildContext context) => Align(
     alignment: Alignment.topCenter,
     child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 1980),
+      key: const ValueKey('community-content'),
+      constraints: const BoxConstraints(maxWidth: 1280),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: compact(context) ? 16 : 40,

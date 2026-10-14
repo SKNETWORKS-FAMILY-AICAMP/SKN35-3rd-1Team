@@ -24,7 +24,7 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from scripts.preprocess import load_processed
+from scripts.preprocess import ROOT, load_processed
 
 USER_AGENT = "ArtLogImageCheck/1.0 (SKN35-3rd-1Team; image URL audit)"
 MAX_BYTES = 20 * 1024 * 1024  # 이보다 크면 모바일·웹에서 로딩 실패 위험
@@ -71,6 +71,15 @@ def fetch(client: httpx.Client, url: str) -> httpx.Response:
 def check(client: httpx.Client, r: Result) -> Result:
     if not r.url:
         r.problem = "URL 없음"
+        return r
+    if r.url.startswith("/"):
+        # 프론트가 같은 도메인에서 내보내는 정적 사본 (scripts/build_local_images.py)
+        path = ROOT / "frontend" / "web" / r.url.lstrip("/")
+        r.final_host = "frontend/web"
+        if not path.is_file():
+            r.problem = "정적 사본 파일 없음"
+        else:
+            r.status, r.content_type, r.size = 200, "image/jpeg", path.stat().st_size
         return r
     for attempt in range(RETRIES + 1):
         try:

@@ -188,58 +188,28 @@ class Brand extends StatelessWidget {
   final bool small;
   final Color color;
   @override
-  Widget build(BuildContext context) => FittedBox(
-    fit: BoxFit.scaleDown,
-    alignment: Alignment.centerLeft,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomPaint(
-          size: Size(small ? 22 : 28, small ? 27 : 32),
-          painter: _BrandMark(color),
+  Widget build(BuildContext context) => Semantics(
+    label: 'Docentalk',
+    image: true,
+    child: SizedBox(
+      key: const ValueKey('docentalk-brand-image'),
+      width: small ? 170 : 220,
+      height: small ? 44 : 60,
+      child: ClipRect(
+        child: OverflowBox(
+          maxWidth: small ? 320 : 420,
+          maxHeight: small ? 320 : 420,
+          child: Image.asset(
+            'assets/branding/docentalk-logo.png',
+            width: small ? 320 : 420,
+            height: small ? 320 : 420,
+            cacheWidth: 960,
+            excludeFromSemantics: true,
+          ),
         ),
-        const SizedBox(width: 10),
-        Text(
-          'Docentalk',
-          style: brandFont(
-            small ? 30 : 36,
-            color: color,
-          ).copyWith(fontWeight: FontWeight.w600, letterSpacing: -1.2),
-        ),
-      ],
+      ),
     ),
   );
-}
-
-class _BrandMark extends CustomPainter {
-  _BrandMark(this.color);
-  final Color color;
-  @override
-  void paint(Canvas canvas, Size size) {
-    final p = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.3
-      ..strokeJoin = StrokeJoin.round;
-    canvas.save();
-    canvas.scale(size.width / 28, size.height / 32);
-    final path = Path()
-      ..moveTo(4, 3)
-      ..lineTo(12, 3)
-      ..cubicTo(29, 3, 29, 25, 12, 25)
-      ..lineTo(10, 25)
-      ..lineTo(4, 30)
-      ..close();
-    canvas.drawPath(path, p);
-    for (final x in [11.0, 17.0]) {
-      canvas.drawCircle(Offset(x, 14), 1.4, Paint()..color = color);
-    }
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(covariant _BrandMark oldDelegate) =>
-      oldDelegate.color != color;
 }
 
 String _activeRoute(String location) => location.startsWith('/collection/')
@@ -487,90 +457,104 @@ class _AccountDrawerState extends State<AccountDrawer> {
       backgroundColor: paper,
       shape: const RoundedRectangleBorder(),
       child: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(24),
+        child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(child: Text('설정', style: serif(24))),
-                IconButton(
-                  tooltip: '설정 닫기',
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            if (!s.authenticated) ...[
-              Text('로그인하고 감상과 컬렉션을 모아 보세요.', style: sans(13, color: muted)),
-              const SizedBox(height: 18),
-              ArtButton(
-                '로그인',
-                key: const ValueKey('drawer-login'),
-                onTap: () async {
-                  if (await ensureLogin(context) && context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-            ] else ...[
-              Row(
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(24),
                 children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: soft,
-                    child: Text(
-                      name.isEmpty ? '나' : name.characters.first,
-                      style: english(22),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(child: Text('설정', style: serif(24))),
+                      IconButton(
+                        tooltip: '설정 닫기',
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 20),
+                  if (!s.authenticated) ...[
+                    Text(
+                      '로그인하고 감상과 컬렉션을 모아 보세요.',
+                      style: sans(13, color: muted),
+                    ),
+                    const SizedBox(height: 18),
+                    ArtButton(
+                      '로그인',
+                      key: const ValueKey('drawer-login'),
+                      onTap: () async {
+                        if (await ensureLogin(context) && context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ] else ...[
+                    Row(
                       children: [
-                        Text(
-                          name.isEmpty ? '나' : name,
-                          style: sans(15, weight: FontWeight.w600),
-                        ),
-                        if (s.email.isNotEmpty)
-                          Text(
-                            s.email,
-                            overflow: TextOverflow.ellipsis,
-                            style: sans(11, color: muted),
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor: soft,
+                          child: Text(
+                            name.isEmpty ? '나' : name.characters.first,
+                            style: english(22),
                           ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name.isEmpty ? '나' : name,
+                                style: sans(15, weight: FontWeight.w600),
+                              ),
+                              if (s.email.isNotEmpty)
+                                Text(
+                                  s.email,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: sans(11, color: muted),
+                                ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 18),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.person_outline),
+                      title: const Text('내 피드'),
+                      onTap: () => go('/library'),
+                    ),
+                    const Divider(),
+                    FutureBuilder<PublicMember>(
+                      future: social,
+                      builder: (context, snapshot) => SwitchListTile(
+                        key: const ValueKey('drawer-follow-visibility'),
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('팔로잉/팔로워 공개'),
+                        subtitle: Text(
+                          snapshot.hasError
+                              ? ArtlogState.message(snapshot.error!)
+                              : '끄면 다른 감상가에게 팔로우 목록과 수가 보이지 않아요.',
+                          style: sans(11, color: muted),
+                        ),
+                        value: snapshot.data?.followListPublic ?? true,
+                        onChanged: snapshot.hasData && !saving
+                            ? setVisibility
+                            : null,
+                      ),
+                    ),
+                    const Divider(),
+                  ],
                 ],
               ),
-              const SizedBox(height: 18),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.person_outline),
-                title: const Text('내 피드'),
-                onTap: () => go('/library'),
-              ),
-              const Divider(),
-              FutureBuilder<PublicMember>(
-                future: social,
-                builder: (context, snapshot) => SwitchListTile(
-                  key: const ValueKey('drawer-follow-visibility'),
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('팔로잉/팔로워 공개'),
-                  subtitle: Text(
-                    snapshot.hasError
-                        ? ArtlogState.message(snapshot.error!)
-                        : '끄면 다른 감상가에게 팔로우 목록과 수가 보이지 않아요.',
-                    style: sans(11, color: muted),
-                  ),
-                  value: snapshot.data?.followListPublic ?? true,
-                  onChanged: snapshot.hasData && !saving ? setVisibility : null,
-                ),
-              ),
-              const Divider(),
-              if (s.loginRequired)
-                ListTile(
+            ),
+            if (s.authenticated && s.loginRequired)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: ListTile(
                   key: const ValueKey('drawer-logout'),
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.logout),
@@ -589,7 +573,7 @@ class _AccountDrawerState extends State<AccountDrawer> {
                     }
                   },
                 ),
-            ],
+              ),
           ],
         ),
       ),

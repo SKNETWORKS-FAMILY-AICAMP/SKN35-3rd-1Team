@@ -43,6 +43,39 @@
     "image_license": "Public domain",
     "needs_review": false
   },
+  "water-lilies-setting-sun.md": {
+    "doc_type": "artwork_commentary",
+    "title": "수련: 지는 해 해설 (영문)",
+    "artist_slugs": null,
+    "artwork_slug": "water-lilies-setting-sun",
+    "source_url": "https://en.wikipedia.org/wiki/Water_Lilies_(Monet_series)",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-14",
+    "lang": "en",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/66/Claude_Monet_-_The_Water_Lilies_-_Setting_Sun_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": true,
+    "artwork": {
+      "slug": "water-lilies-setting-sun",
+      "artist_slug": "claude-monet",
+      "movement_slug": "impressionism",
+      "title": "수련: 지는 해",
+      "title_en": "The Water Lilies – Setting Sun",
+      "year_label": "1920–1926",
+      "year_start": 1920,
+      "collection": "오랑주리 미술관 (파리)",
+      "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Claude_Monet_-_The_Water_Lilies_-_Setting_Sun_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_The_Water_Lilies_-_Setting_Sun_-_Google_Art_Project.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Claude_Monet_-_The_Water_Lilies_-_Setting_Sun_-_Google_Art_Project.jpg",
+      "is_featured": false
+    },
+    "translation": {
+      "file": "water-lilies-setting-sun.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-14",
+      "source_sha256": "21acad4d68e75fcc7cee3830f3a0309bedb72dded28cece077bf52a2104171b6"
+    }
+  },
   "rouen-cathedral.md": {
     "doc_type": "artwork_commentary",
     "title": "루앙 대성당 연작 해설",

@@ -10,18 +10,20 @@
   <meta property="og:title" content="Docentalk · 그림과 나누는 대화">
   <meta property="og:description" content="AI 도슨트와 작품을 만나고, 나만의 감상과 컬렉션을 모아보세요.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/assets/branding/docentalk-logo.png" type="image/png">
   <link rel="manifest" href="manifest.json">
   <title>Docentalk · 일상에 한 점</title>
   <style>
+    @font-face{font-family:ChironSungHK;src:url('assets/assets/fonts/ChironSungHK-Web.ttf') format('truetype');font-weight:200 900;font-display:swap}
     html,body{margin:0;background:#f8f7f4;height:100%;color:#252823}
-    #loading{height:100%;display:grid;place-content:center;text-align:center;font:14px sans-serif;gap:15px}
-    #loading strong{font:52px Georgia,serif;letter-spacing:-2px}
+    #loading{height:100%;display:grid;place-content:center;text-align:center;font:14px ChironSungHK,serif;gap:15px}
+    #loading .logo{width:220px;height:60px;overflow:hidden;position:relative;margin:auto}
+    #loading .logo img{width:420px;height:420px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
     #loading span{opacity:.7}
   </style>
 </head>
 <body>
-  <div id="loading" role="status"><strong>Docentalk</strong><span>그림을 만날 준비를 하고 있어요.</span></div>
+  <div id="loading" role="status"><div class="logo"><img src="assets/assets/branding/docentalk-logo.png" alt="Docentalk"></div><span>그림을 만날 준비를 하고 있어요.</span></div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

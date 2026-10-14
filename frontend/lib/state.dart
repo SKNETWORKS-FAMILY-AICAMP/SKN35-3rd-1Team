@@ -526,9 +526,25 @@ class ArtlogState extends ChangeNotifier {
       return api.chat(art.id, question, history, style: style);
     }
     await Future<void>.delayed(const Duration(milliseconds: 350));
-    if (RegExp(r'주식|날씨|음식|피카소|달리|다빈치|마티스').hasMatch(question)) {
+    final recommendation = RegExp(r'추천').firstMatch(question);
+    final targetText = recommendation == null
+        ? question
+        : question.substring(0, recommendation.start);
+    final artTargets = RegExp(
+      r'작품|그림|회화|미술|화가|작가|전시|초상화|자화상|풍경화|정물화|유화|수채화',
+    ).allMatches(targetText);
+    final otherTargets = RegExp(
+      r'아침|점심|저녁|야식|메뉴|음식|요리|식당|카페|영화|드라마|노래|음악|책|게임|옷|신발|가방|선물|여행|숙소|호텔',
+    ).allMatches(targetText);
+    final nonArtRecommendation =
+        (recommendation != null ||
+            RegExp(r'취향|좋아할|어울리는').hasMatch(question)) &&
+        otherTargets.isNotEmpty &&
+        (artTargets.isEmpty || otherTargets.last.start > artTargets.last.start);
+    if (nonArtRecommendation ||
+        RegExp(r'주식|날씨|음식|피카소|달리|다빈치|마티스').hasMatch(question)) {
       return const ChatReply(
-        '아직 이 질문에 답할 수 있는 자료가 준비되지 않았어요. 지금 함께 보고 있는 작품의 정보나 감상 포인트를 물어보세요.',
+        '해당 작품과 작가에 대해서만 대화 할 수 있어요.',
         true,
         [],
       );
