@@ -1,12 +1,14 @@
-"""발표용 계정(dev-user)에 감상글·좋아요·컬렉션·설정을 채운다.
+"""발표용 계정에 감상글·좋아요·컬렉션·설정을 채운다.
 
 ``backend/`` 에서 실행::
 
-    uv run python -m scripts.seed_demo_user            # 채우기
+    uv run python -m scripts.seed_demo_user            # dev-user 에 채우기
+    uv run python -m scripts.seed_demo_user --email demo@example.com  # 실제 로그인 계정에 채우기
     uv run python -m scripts.seed_demo_user --dry-run  # 바뀔 내용만 세고 되돌림
     uv run python -m scripts.seed_demo_user --remove   # 이 스크립트가 넣은 감상글·컬렉션만 지움
 
-AUTH_MODE=dev 에서 모든 요청이 처리되는 계정(users.firebase_uid = DEV_USER_UID)만 대상으로 한다.
+대상은 --email 로 고른 계정 하나, 생략하면 AUTH_MODE=dev 의 계정(users.firebase_uid = DEV_USER_UID)이다.
+AUTH_MODE=firebase 에서는 로그인할 때 계정이 생기므로, 시연 계정으로 앱에 한 번 로그인한 뒤 실행한다.
 계정이 없으면 만들지 않고 멈춘다. 여러 번 돌려도 결과가 같다: 감상글은 날짜, 컬렉션은 이름 기준으로
 갱신하고, 좋아요·담기·열람은 이미 있으면 건너뛴다. 기존 좋아요·팔로우·열람과 이미 저장된 설정은
 바꾸지 않는다. 도슨트 대화는 실제 RAG 답변이 아니면 출처가 거짓이 되므로 넣지 않는다.
@@ -169,13 +171,19 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--dry-run", action="store_true", help="바뀔 내용만 세고 되돌림")
     parser.add_argument("--remove", action="store_true", help="시드 감상글·컬렉션만 지움")
+    parser.add_argument("--email", help="대상 계정 이메일. 생략하면 dev-user")
     args = parser.parse_args(argv)
 
-    uid = get_settings().dev_user_uid
+    if args.email:
+        email = args.email.strip().lower()  # users.email 은 소문자로 저장된다
+        where, label = User.email == email, f"email={email}"
+    else:
+        uid = get_settings().dev_user_uid
+        where, label = User.firebase_uid == uid, f"firebase_uid={uid}"
     with SessionLocal() as session:
-        user = session.scalar(select(User).where(User.firebase_uid == uid))
+        user = session.scalar(select(User).where(where))
         if user is None:
-            raise SystemExit(f"firebase_uid={uid} 계정이 없습니다. 앱에 한 번 접속해 계정을 만든 뒤 실행하세요.")
+            raise SystemExit(f"{label} 계정이 없습니다. 그 계정으로 앱에 한 번 로그인해 계정을 만든 뒤 실행하세요.")
         print(f"대상: {user.email} (id {user.id})")
         stats = remove(session, user.id) if args.remove else seed(session, user.id, artwork_ids(session))
         for key, n in stats.items():
