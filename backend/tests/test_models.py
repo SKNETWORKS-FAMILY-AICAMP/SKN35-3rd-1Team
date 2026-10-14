@@ -22,6 +22,7 @@ EXPECTED_TABLES = {
     "chat_messages",
     "social_accounts",
     "user_preferences",
+    "user_follows",
     "diary_entries",
     "collections",
     "collection_items",

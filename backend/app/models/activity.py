@@ -115,3 +115,29 @@ class ArtworkView(Base):
 
     user: Mapped[User] = relationship(back_populates="artwork_views")
     artwork: Mapped[Artwork] = relationship(back_populates="views")
+
+
+class UserFollow(Base):
+    """One member following another member's public impressions."""
+
+    __tablename__ = "user_follows"
+    __table_args__ = (
+        Index("idx_user_follows_followee", "followee_id"),
+        TABLE_OPTIONS,
+    )
+
+    follower_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", name="fk_user_follows_follower", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    followee_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", name="fk_user_follows_followee", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=text("CURRENT_TIMESTAMP"),
+    )

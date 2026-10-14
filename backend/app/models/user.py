@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import secrets
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, DateTime, String, text
+from sqlalchemy import BigInteger, Boolean, DateTime, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import TABLE_OPTIONS, Base
@@ -14,6 +15,10 @@ if TYPE_CHECKING:
     from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
     from app.models.chat import ChatSession
     from app.models.user_profile import SocialAccount, UserPreference
+
+
+def new_public_id() -> str:
+    return secrets.token_urlsafe(9)
 
 
 class User(Base):
@@ -26,6 +31,18 @@ class User(Base):
     firebase_uid: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     nickname: Mapped[str] = mapped_column(String(50), nullable=False)
+    # Opaque id for public profile URLs and feed authors. Internal ids, email and
+    # Firebase uid are never exposed to other users.
+    public_id: Mapped[str] = mapped_column(
+        String(22),
+        nullable=False,
+        unique=True,
+        default=new_public_id,
+    )
+    # Whether other users may see this account's following/follower lists.
+    follow_list_public: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default=text("1")
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,

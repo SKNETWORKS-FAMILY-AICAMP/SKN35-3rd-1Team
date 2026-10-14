@@ -1,6 +1,6 @@
 """Import every model so Alembic sees the complete metadata graph."""
 
-from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView
+from app.models.activity import ArtistFollow, ArtworkLike, ArtworkView, UserFollow
 from app.models.base import EMBEDDING_DIMENSION, Base
 from app.models.catalog import Artist, ArtMovement, Artwork
 from app.models.chat import ChatMessage, ChatRole, ChatSession
@@ -42,5 +42,6 @@ __all__ = [
     "DocumentType",
     "SocialAccount",
     "User",
+    "UserFollow",
     "UserPreference",
 ]
