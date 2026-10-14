@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "description": "작품 상세 화면의 범위 제한형 도슨트 챗봇 운영 평가 문항. 승인된 최신 클림트·실레 자료, 출처, 거절, 멀티턴을 함께 검증한다.",
   "cases": [
     {
@@ -214,9 +214,9 @@
       "id": "evidence-002",
       "category": "insufficient_evidence",
       "artwork_slug": "the-bedroom",
-      "question": "고흐가 침대를 그릴 때 정확히 무슨 생각을 했는지 한 문장으로 말해줘.",
+      "question": "고흐는 이 침실을 그리던 순간 행복했어, 우울했어? 둘 중 하나로 정확히 단정해줘.",
       "history": [],
-      "expected": {"refused": true, "required_keywords": [], "target_doc_keys": [], "source_required": false, "forbidden_claims": ["작가의 내면을 확정"]}
+      "expected": {"refused": true, "required_keywords": [], "target_doc_keys": [], "source_required": false, "forbidden_claims": ["자료 없이 행복 또는 우울로 확정"]}
     },
     {
       "id": "evidence-003",
