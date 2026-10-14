@@ -1,0 +1,687 @@
+{
+  "run_at": "2026-10-14T10:35:49.6096526+09:00",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "question_version": 2,
+  "rows": [
+    {
+      "id": "fact-001",
+      "category": "factual",
+      "artwork_slug": "the-starry-night",
+      "question": "별이 빛나는 밤은 언제 그렸어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "1889"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 290,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-002",
+      "category": "factual",
+      "artwork_slug": "self-portrait-with-bandaged-ear",
+      "question": "그림에서 붕대가 오른쪽 귀에 보이는 이유가 뭐야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "거울",
+          "왼쪽 귀"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "오른쪽 귀를 다쳤다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 240,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-003",
+      "category": "factual",
+      "artwork_slug": "impression-sunrise",
+      "question": "인상, 해돋이는 어느 항구를 그린 작품이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "르아브르"
+        ],
+        "target_doc_keys": [
+          "claude-monet/impression-sunrise"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 225,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-004",
+      "category": "factual",
+      "artwork_slug": "the-night-watch",
+      "question": "야경은 실제로 밤 장면을 그린 거야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "밤",
+          "어두워진"
+        ],
+        "target_doc_keys": [
+          "rembrandt/the-night-watch",
+          "rembrandt/the-night-watch.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "처음부터 밤 장면이었다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 225,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-005",
+      "category": "factual",
+      "artwork_slug": "the-bedroom",
+      "question": "고흐의 침실 그림은 어디에 있던 방이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "아를",
+          "노란 집"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-bedroom"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 226,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-006",
+      "category": "factual",
+      "artwork_slug": "almond-blossom",
+      "question": "꽃 피는 아몬드나무는 누구를 위해 그렸어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "조카",
+          "빈센트"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-almond-blossom"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 234,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-007",
+      "category": "factual",
+      "artwork_slug": "the-kiss",
+      "question": "클림트의 키스에는 금색 물감만 쓰였어, 아니면 실제 금속박도 사용했어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "금박",
+          "은",
+          "백금"
+        ],
+        "target_doc_keys": [
+          "gustav-klimt/the-kiss"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "금색 물감만 사용했다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 227,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-008",
+      "category": "factual",
+      "artwork_slug": "the-calling-of-saint-matthew",
+      "question": "성 마태오를 부르심에서 빛은 어느 방향에서 들어와?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "빛"
+        ],
+        "target_doc_keys": [
+          "caravaggio/the-calling-of-saint-matthew"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 226,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-009",
+      "category": "factual",
+      "artwork_slug": "the-basket-of-apples",
+      "question": "사과 바구니의 탁자가 어긋나 보이는 게 맞아?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "시점",
+          "구도"
+        ],
+        "target_doc_keys": [
+          "paul-cezanne/the-basket-of-apples"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 227,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "fact-010",
+      "category": "factual",
+      "artwork_slug": "where-do-we-come-from",
+      "question": "우리는 어디서 왔는가는 어느 방향으로 읽도록 구성됐어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "오른쪽",
+          "왼쪽"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-where-do-we-come-from"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 224,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-001",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-starry-night",
+      "question": "소용돌이치는 하늘은 고흐가 실제로 본 모습이야, 상상한 모습이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "관찰",
+          "구성"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "정확한 의도는"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 227,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-002",
+      "category": "detail_interpretation",
+      "artwork_slug": "cafe-terrace-at-night",
+      "question": "밤인데도 검은색을 거의 쓰지 않은 이유를 설명해줘.",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "색",
+          "대비"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-cafe-terrace-at-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 227,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-003",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-bedroom",
+      "question": "가구와 벽의 원근이 비뚤어져 보이는데 실수야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "원근",
+          "의도"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-bedroom"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "실수로 잘못 그렸다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 269,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-004",
+      "category": "detail_interpretation",
+      "artwork_slug": "wheatfield-with-crows",
+      "question": "갈라진 길과 까마귀가 죽음을 예고한다는 해석은 확정된 사실이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "해석",
+          "단정"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-wheatfield-with-crows"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "마지막 작품",
+          "자살을 예고했다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 277,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-005",
+      "category": "detail_interpretation",
+      "artwork_slug": "portrait-of-wally",
+      "question": "발리 노이칠의 초상은 어떤 작품과 한 쌍으로 구상됐고, 두 작품은 무엇을 비교해 볼 수 있어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "꽈리",
+          "자화상",
+          "시선"
+        ],
+        "target_doc_keys": [
+          "egon-schiele/portrait-of-wally"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "두 작품이 하나의 장면이다"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 319,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-006",
+      "category": "detail_interpretation",
+      "artwork_slug": "when-will-you-marry",
+      "question": "앞뒤 두 여성의 자세와 옷차림은 어떤 대비를 만들어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "두 여성",
+          "대비"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-when-will-you-marry"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 229,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-007",
+      "category": "detail_interpretation",
+      "artwork_slug": "apples-oranges",
+      "question": "천과 과일이 기울어져 보이는 구성이 화면에 어떤 효과를 줘?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "구도",
+          "시점"
+        ],
+        "target_doc_keys": [
+          "paul-cezanne/apples-oranges"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 218,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "detail-008",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-night-watch",
+      "question": "인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는 뭐야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "집단 초상",
+          "움직임"
+        ],
+        "target_doc_keys": [
+          "rembrandt/the-night-watch",
+          "rembrandt/the-night-watch.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 221,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "compare-001",
+      "category": "comparison",
+      "artwork_slug": "the-bedroom",
+      "question": "아를에서 함께 지낼 때 고흐와 고갱의 색채와 작업 방식은 어떻게 달랐어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "고흐",
+          "고갱"
+        ],
+        "target_doc_keys": [
+          "_comparisons/comparison-van-gogh-and-gauguin-arles"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 226,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "compare-002",
+      "category": "comparison",
+      "artwork_slug": "impression-sunrise",
+      "question": "모네와 세잔은 자연을 표현하는 방식이 어떻게 달라?",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "문서에 없는 비교를 사실처럼 생성"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 224,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "compare-003",
+      "category": "comparison",
+      "artwork_slug": "the-night-watch",
+      "question": "렘브란트와 카라바조의 명암 표현 차이를 설명해줘.",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "명암"
+        ],
+        "target_doc_keys": [
+          "_comparisons/chiaroscuro",
+          "_comparisons/chiaroscuro.en",
+          "_comparisons/tenebrism",
+          "_comparisons/tenebrism.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 224,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "compare-004",
+      "category": "comparison",
+      "artwork_slug": "sunflowers-1887",
+      "question": "파리에서 그린 해바라기와 아를의 해바라기는 무엇이 달라?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "파리",
+          "아를"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-sunflowers-1887"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 228,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "scope-001",
+      "category": "out_of_scope",
+      "artwork_slug": "the-starry-night",
+      "question": "피카소의 대표작 다섯 개를 알려줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "게르니카",
+          "아비뇽의 처녀들"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 227,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "scope-002",
+      "category": "out_of_scope",
+      "artwork_slug": "water-lilies",
+      "question": "오늘 서울 날씨와 미세먼지를 알려줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "기온",
+          "미세먼지 수치"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 246,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "scope-003",
+      "category": "out_of_scope",
+      "artwork_slug": "the-night-watch",
+      "question": "이 그림을 지금 가장 싸게 살 수 있는 사이트를 찾아줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "판매 링크",
+          "구매 가격"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 225,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "evidence-001",
+      "category": "insufficient_evidence",
+      "artwork_slug": "apples-oranges",
+      "question": "쟁반 위와 카펫 위에 있는 사과가 각각 정확히 몇 개인지 세어줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "이미지를 직접 확인한 것처럼 개수를 단정"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 225,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "evidence-002",
+      "category": "insufficient_evidence",
+      "artwork_slug": "the-bedroom",
+      "question": "고흐가 침대를 그릴 때 정확히 무슨 생각을 했는지 한 문장으로 말해줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "작가의 내면을 확정"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 225,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "evidence-003",
+      "category": "insufficient_evidence",
+      "artwork_slug": "when-will-you-marry",
+      "question": "이 작품의 오늘 기준 정확한 시장 가격은 얼마야?",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "현재 가격을 추정"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 226,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "multiturn-001",
+      "category": "multi_turn",
+      "artwork_slug": "the-starry-night",
+      "question": "그 작품에서 마을과 하늘은 어떻게 대비돼?",
+      "history": [
+        {
+          "role": "user",
+          "content": "별이 빛나는 밤은 언제 그렸어?"
+        },
+        {
+          "role": "assistant",
+          "content": "고흐가 생레미에 머물던 1889년에 그렸습니다."
+        }
+      ],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "마을",
+          "하늘"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "status": "error",
+      "duration_ms": 267,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    },
+    {
+      "id": "multiturn-002",
+      "category": "multi_turn",
+      "artwork_slug": "spirit-of-the-dead-watching",
+      "question": "그 형상에 대해서는 확실히 말할 수 있어?",
+      "history": [
+        {
+          "role": "user",
+          "content": "뒤쪽 검은 형상은 뭘 뜻해?"
+        },
+        {
+          "role": "assistant",
+          "content": "고갱은 죽은 자의 영으로 설명했지만 해석에는 주의가 필요합니다."
+        }
+      ],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "고갱의 설명",
+          "해석"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-spirit-of-the-dead-watching"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "타히티 문화 전체의 확정된 믿음"
+        ]
+      },
+      "status": "error",
+      "duration_ms": 262,
+      "error": "Response status code does not indicate success: 501 (Not Implemented)."
+    }
+  ]
+}
