@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:artlog_web/api/artlog_api.dart';
 import 'package:artlog_web/config.dart';
-import 'package:artlog_web/diary.dart';
 import 'package:artlog_web/models.dart';
 import 'package:artlog_web/ui/feed_calendar.dart';
 import 'package:artlog_web/state.dart';
 import 'package:artlog_web/ui/design.dart';
-import 'package:artlog_web/ui/diary_editor.dart';
 import 'package:artlog_web/ui/diary_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -162,54 +160,34 @@ void main() {
     },
   );
 
-  testWidgets(
-    'typing in the journal does not rebuild calendar cells; saves mark diary-only day',
-    (tester) async {
-      tester.view.physicalSize = const Size(1280, 1500);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final s = await state();
-      await tester.pumpWidget(
-        host(s, const SingleChildScrollView(child: FeedCalendar())),
-      );
-      await tester.pumpAndSettle();
-      final today = DateTime.parse(seoulDate());
-      final label = '${today.month}월 ${today.day}일, 0점 감상';
-      final cell = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == label,
-      );
-      final before = tester.widget<Semantics>(cell);
-      await tester.enterText(
-        find.byKey(const ValueKey('diary-content')),
-        '고요한 색이 마음에 남았다.',
-      );
-      await tester.pump();
-      expect(identical(before, tester.widget<Semantics>(cell)), isTrue);
-      expect(
-        tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
-        isFalse,
-      );
-      await tester.ensureVisible(find.text('감상평 저장'));
-      await tester.tap(find.text('감상평 저장'));
-      await tester.pumpAndSettle();
-      expect(
-        find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == '$label, 감상평 1편',
-        ),
-        findsOneWidget,
-      );
-      expect(
-        (await s.diaryMonth(seoulDate().substring(0, 7))).single.content,
-        '고요한 색이 마음에 남았다.',
-      );
-      await tester.pumpWidget(const SizedBox());
-      s.dispose();
-    },
-  );
+  testWidgets('calendar shows the latest viewed artwork and +N extra views', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 1500);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final s = await state();
+    await tester.runAsync(s.load);
+    final today = seoulDate();
+    final [first, second, third, ...] = s.artworks;
+    for (final a in [first, second, third]) {
+      await s.recordView(a.id);
+    }
+    await tester.pumpWidget(host(s, const FeedCalendar()));
+    await tester.pumpAndSettle();
+    expect(find.byKey(ValueKey('calendar-more-$today')), findsOneWidget);
+    expect(find.text('+2'), findsOneWidget);
+    expect(find.text('3점'), findsNothing);
+    // The day panel lists the artworks, latest first.
+    expect(find.byKey(ValueKey('journal-preview-${third.id}')), findsOneWidget);
+    expect(find.byKey(const ValueKey('diary-content')), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+    s.dispose();
+  });
 
   for (final width in [320.0, 1280.0]) {
-    testWidgets('diary editor and public feed fit ${width.toInt()}px', (
+    testWidgets('public feed fits ${width.toInt()}px and hides private posts', (
       tester,
     ) async {
       tester.view.physicalSize = Size(width, 1200);
@@ -217,42 +195,12 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final s = await state();
-      final saved = await s.saveDiary(
-        '2026-10-13',
-        '다른 눈으로 보는 그림',
-        true,
-        null,
-      );
-      await tester.pumpWidget(
-        host(
-          s,
-          Column(
-            children: [
-              DiaryEditor(
-                date: '2026-10-13',
-                entry: const DiaryEntry(
-                  id: '1',
-                  date: '2026-10-13',
-                  content: '감상',
-                ),
-                onSaved: (_) {},
-                onDeleted: () {},
-              ),
-              const DiaryFeedView(),
-            ],
-          ),
-        ),
-      );
+      final saved = await s.saveDiary('2026-10-13', '다른 눈으로 보는 그림', true, null);
+      await tester.pumpWidget(host(s, const DiaryFeedView()));
       await tester.pumpAndSettle();
       expect(find.textContaining('다른 눈으로 보는 그림'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await s.saveDiary(
-        '2026-10-13',
-        '이제 나만 보는 그림',
-        false,
-        null,
-        id: saved.id,
-      );
+      await s.saveDiary('2026-10-13', '이제 나만 보는 그림', false, null, id: saved.id);
       await tester.pumpAndSettle();
       expect(find.textContaining('다른 눈으로 보는 그림'), findsNothing);
       await tester.pumpWidget(const SizedBox());

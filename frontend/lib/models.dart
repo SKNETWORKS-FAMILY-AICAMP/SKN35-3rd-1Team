@@ -139,13 +139,19 @@ class CalendarDay {
     required this.date,
     required this.artworkCount,
     required this.totalViews,
+    this.artwork,
   });
   final String date;
   final int artworkCount, totalViews;
+  // Most recently viewed artwork that day, shown in the calendar cell.
+  final Artwork? artwork;
   factory CalendarDay.fromJson(Json j) => CalendarDay(
     date: text(j['date']),
     artworkCount: (j['artwork_count'] as num?)?.toInt() ?? 0,
     totalViews: (j['total_views'] as num?)?.toInt() ?? 0,
+    artwork: j['artwork'] is Map
+        ? Artwork.fromJson(object(j['artwork']))
+        : null,
   );
 }
 

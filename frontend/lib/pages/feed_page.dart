@@ -17,14 +17,9 @@ const feedTabs = [
 
 /// 내 피드: profile header, my impressions, collections, liked artists and calendar.
 class MyFeedPage extends StatefulWidget {
-  const MyFeedPage({
-    super.key,
-    this.initialTab = 'posts',
-    this.artworkId,
-    this.initialDate,
-  });
+  const MyFeedPage({super.key, this.initialTab = 'posts', this.initialDate});
   final String initialTab;
-  final String? artworkId, initialDate;
+  final String? initialDate;
   @override
   State<MyFeedPage> createState() => _MyFeedPageState();
 }
@@ -33,7 +28,6 @@ class _MyFeedPageState extends State<MyFeedPage> {
   late String tab = feedTabs.any((t) => t.$1 == widget.initialTab)
       ? widget.initialTab
       : 'posts';
-  String? calendarDate, calendarEntryId;
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +65,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
                       quiet: tab != t.$1,
                       tinted: tab == t.$1,
                     ),
-                    onPressed: () => setState(() {
-                      tab = t.$1;
-                      calendarEntryId = null;
-                    }),
+                    onPressed: () => setState(() => tab = t.$1),
                     child: Text(
                       t.$2,
                       style: sans(
@@ -89,22 +80,12 @@ class _MyFeedPageState extends State<MyFeedPage> {
           ),
           const SizedBox(height: 16),
           KeyedSubtree(
-            key: ValueKey('${s.userKey}/$tab/$calendarDate/$calendarEntryId'),
+            key: ValueKey('${s.userKey}/$tab'),
             child: switch (tab) {
               'collections' => const CollectionWorkspace(),
               'artists' => const _LikedArtists(),
-              'calendar' => FeedCalendar(
-                artworkId: widget.artworkId,
-                initialDate: calendarDate ?? widget.initialDate,
-                initialEntryId: calendarEntryId,
-              ),
-              _ => _ImpressionList(
-                onOpen: (e) => setState(() {
-                  calendarDate = e.date;
-                  calendarEntryId = e.id;
-                  tab = 'calendar';
-                }),
-              ),
+              'calendar' => FeedCalendar(initialDate: widget.initialDate),
+              _ => const _ImpressionList(),
             },
           ),
         ],
@@ -180,10 +161,11 @@ class _MyHeaderState extends State<_MyHeader> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(
                     Icons.auto_awesome_outlined,
-                    size: 15,
+                    size: 14,
                     color: green,
                   ),
                   const SizedBox(width: 6),
@@ -194,27 +176,50 @@ class _MyHeaderState extends State<_MyHeader> {
                               ? '공개 감상을 남기면 AI가 나를 한 줄로 소개해 드려요.'
                               : '공개 감상과 좋아요를 바탕으로 AI가 나를 한 줄로 소개해요.'),
                       key: const ValueKey('feed-ai-intro'),
-                      style: sans(13, color: intro == null ? muted : ink),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(
+                        13,
+                        height: 1.3,
+                        color: intro == null ? muted : ink,
+                      ),
                     ),
                   ),
-                  if (!s.config.demo)
-                    IconButton(
-                      tooltip: intro == null
-                          ? 'AI 한 줄 소개 만들기'
-                          : 'AI 한 줄 소개 업데이트',
-                      onPressed: generating ? null : generate,
-                      icon: generating
-                          ? const SizedBox(
-                              width: 14,
-                              height: 14,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Icon(
-                              intro == null ? Icons.add : Icons.refresh,
-                              size: 16,
-                              color: taste?.stale == true ? green : muted,
-                            ),
+                  if (!s.config.demo) ...[
+                    const SizedBox(width: 6),
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: IconButton(
+                        key: const ValueKey('feed-ai-intro-refresh'),
+                        tooltip: intro == null
+                            ? 'AI 한 줄 소개 만들기'
+                            : 'AI 한 줄 소개 업데이트',
+                        onPressed: generating ? null : generate,
+                        padding: EdgeInsets.zero,
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size(24, 24),
+                          fixedSize: const Size(24, 24),
+                          padding: EdgeInsets.zero,
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide.none,
+                        ),
+                        icon: generating
+                            ? const SizedBox(
+                                width: 12,
+                                height: 12,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                ),
+                              )
+                            : Icon(
+                                intro == null ? Icons.add : Icons.refresh,
+                                size: 15,
+                                color: taste?.stale == true ? green : muted,
+                              ),
+                      ),
                     ),
+                  ],
                 ],
               ),
               if (tasteError != null)
@@ -384,8 +389,7 @@ Future<void> showMemberList(
 
 /// My impressions as a list: artist, title and one line, private ones locked.
 class _ImpressionList extends StatefulWidget {
-  const _ImpressionList({required this.onOpen});
-  final ValueChanged<DiaryEntry> onOpen;
+  const _ImpressionList();
   @override
   State<_ImpressionList> createState() => _ImpressionListState();
 }
@@ -442,7 +446,6 @@ class _ImpressionListState extends State<_ImpressionList> {
     hasMore: more,
     onMore: load,
     onRefresh: () => load(reset: true),
-    onOpen: widget.onOpen,
     emptyMessage: '아직 남긴 감상이 없어요. 작품을 보고 첫 감상을 남겨 보세요.',
   );
 }
