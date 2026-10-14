@@ -45,9 +45,9 @@ class _GalleryPageState extends State<GalleryPage> {
                     : const Duration(milliseconds: 350),
               ),
             ),
-            const SizedBox(height: 56),
             const PersonalRecommendations(inverse: true),
             const _ArtistStories(),
+            const SizedBox(height: sectionGap),
             PageWidth(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,8 +84,8 @@ class _GalleryPageState extends State<GalleryPage> {
                 ],
               ),
             ),
+            const SizedBox(height: sectionGap),
             PageWidth(
-              vertical: 56,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 28),
                 decoration: const BoxDecoration(
@@ -136,77 +136,79 @@ class _ArtistStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = ArtlogScope.of(context);
-    return PageWidth(
-      vertical: 35,
-      child: Column(
-        children: [
-          SectionTitle(
-            inverse: true,
-            eyebrow: 'BEHIND THE CANVAS',
-            title: '그림 너머, 작가의 이야기',
-            trailing: TextButton(
-              onPressed: () => context.go('/artworks?view=artists'),
-              child: Text('작가 모두 보기 ↗', style: sans(11, color: museumText)),
+    return Padding(
+      padding: const EdgeInsets.only(top: sectionGap),
+      child: PageWidth(
+        child: Column(
+          children: [
+            SectionTitle(
+              inverse: true,
+              eyebrow: 'BEHIND THE CANVAS',
+              title: '그림 너머, 작가의 이야기',
+              trailing: TextButton(
+                onPressed: () => context.go('/artworks?view=artists'),
+                child: Text('작가 모두 보기 ↗', style: sans(11, color: museumText)),
+              ),
             ),
-          ),
-          const SizedBox(height: 25),
-          LayoutBuilder(
-            builder: (context, c) {
-              if (c.maxWidth <= 0) return const SizedBox.shrink();
-              final cols = c.maxWidth > 800
-                  ? 4
-                  : c.maxWidth >= 280
-                  ? 2
-                  : 1;
-              final width = (c.maxWidth - (cols - 1) * 24) / cols;
-              return Wrap(
-                spacing: 24,
-                runSpacing: 20,
-                children: [
-                  for (final a in s.artists.take(4))
-                    SizedBox(
-                      width: width,
-                      child: InkWell(
-                        onTap: () => context.go('/artist/${a.id}'),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: ArtImage(
-                                s.representativeImage(a),
-                                width: 50,
-                                height: 64,
+            const SizedBox(height: 25),
+            LayoutBuilder(
+              builder: (context, c) {
+                if (c.maxWidth <= 0) return const SizedBox.shrink();
+                final cols = c.maxWidth > 800
+                    ? 4
+                    : c.maxWidth >= 280
+                    ? 2
+                    : 1;
+                final width = (c.maxWidth - (cols - 1) * 24) / cols;
+                return Wrap(
+                  spacing: 24,
+                  runSpacing: 20,
+                  children: [
+                    for (final a in s.artists.take(4))
+                      SizedBox(
+                        width: width,
+                        child: InkWell(
+                          onTap: () => context.go('/artist/${a.id}'),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: ArtImage(
+                                  s.representativeImage(a),
+                                  width: 50,
+                                  height: 64,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 13),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    s.artistMovement(a),
-                                    style: sans(9, color: museumMuted),
-                                  ),
-                                  Text(
-                                    a.name,
-                                    style: sans(12, color: museumText),
-                                  ),
-                                  Text(
-                                    a.english,
-                                    style: english(14, color: museumMuted),
-                                  ),
-                                ],
+                              const SizedBox(width: 13),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      s.artistMovement(a),
+                                      style: sans(9, color: museumMuted),
+                                    ),
+                                    Text(
+                                      a.name,
+                                      style: sans(12, color: museumText),
+                                    ),
+                                    Text(
+                                      a.english,
+                                      style: english(14, color: museumMuted),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                ],
-              );
-            },
-          ),
-        ],
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

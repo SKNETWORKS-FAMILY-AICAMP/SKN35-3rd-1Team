@@ -63,11 +63,6 @@ void main() {
             jsonEncode({
               'nickname': '나',
               'birth_date': '2000-01-02',
-              'explanation_priorities': [
-                'artist_life',
-                'background',
-                'technique',
-              ],
               'conversation_style': 'professional',
               'onboarding_completed': true,
             }),
@@ -103,11 +98,7 @@ void main() {
       }),
     )..token = 'firebase-token';
     final p = await api.saveProfile(
-      const MemberProfile(
-        birthDate: '2000-01-02',
-        priorities: ['artist_life', 'background', 'technique'],
-        explanationStyle: 'deep',
-      ),
+      const MemberProfile(birthDate: '2000-01-02', explanationStyle: 'deep'),
     );
     expect(p.conversationStyle, 'professional');
     await api.collect('1', '2');
@@ -121,6 +112,10 @@ void main() {
     );
     expect(observed[1].url.path, '/api/me/collections/1/items/2');
     expect(jsonDecode(observed[0].body)['user_id'], isNull);
+    expect(
+      jsonDecode(observed[0].body).containsKey('explanation_priorities'),
+      false,
+    );
     expect(jsonDecode(observed[2].body)['collection_id'], 1);
     api.close();
   });
@@ -139,11 +134,6 @@ void main() {
               jsonEncode({
                 'nickname': 'B',
                 'birth_date': null,
-                'explanation_priorities': [
-                  'background',
-                  'technique',
-                  'artist_life',
-                ],
                 'conversation_style': 'easy',
                 'onboarding_completed': true,
               }),
@@ -168,11 +158,6 @@ void main() {
           jsonEncode({
             'nickname': 'A',
             'birth_date': '2000-01-01',
-            'explanation_priorities': [
-              'background',
-              'technique',
-              'artist_life',
-            ],
             'conversation_style': 'easy',
             'onboarding_completed': true,
           }),
@@ -187,52 +172,6 @@ void main() {
       await session.events.close();
     },
   );
-  for (final width in [320.0, 1280.0]) {
-    testWidgets('my page settings reorder and save at ${width.toInt()}px', (
-      tester,
-    ) async {
-      tester.view.physicalSize = Size(width, 1000);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final s = (await tester.runAsync(() => demo()))!;
-      await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/mypage'));
-      await tester.pumpAndSettle();
-      // 마이페이지 opens as a side panel; /mypage itself now lands on 내 피드.
-      expect(find.byKey(const ValueKey('profile-tab-posts')), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('navigation-/mypage')));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('account-drawer')), findsOneWidget);
-      await tester.tap(find.text('감상 설정'));
-      await tester.pumpAndSettle();
-      await tester.enterText(
-        find.byKey(const ValueKey('profile-birth-date')),
-        '2000-02-03',
-      );
-      final move = find.byTooltip('작가의 생애 우선순위 올리기');
-      await tester.ensureVisible(move);
-      await tester.tap(move);
-      await tester.pumpAndSettle();
-      final professional = find.text('전문용어 적극 사용');
-      await tester.ensureVisible(professional);
-      await tester.tap(professional);
-      await tester.pumpAndSettle();
-      final save = find.text('설정 저장');
-      await tester.ensureVisible(save);
-      await tester.tap(save);
-      await tester.pumpAndSettle();
-      expect(s.memberProfile!.birthDate, '2000-02-03');
-      expect(s.memberProfile!.priorities, [
-        'background',
-        'artist_life',
-        'technique',
-      ]);
-      expect(s.memberProfile!.conversationStyle, 'professional');
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-      s.dispose();
-    });
-  }
   testWidgets('create collection and add an artwork through real widgets', (
     tester,
   ) async {

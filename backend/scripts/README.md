@@ -9,6 +9,7 @@
 - `check_db.py`: TiDB 연결과 현재 테이블을 확인합니다.
 - `load_catalog.py`: 사조·작가·작품을 slug 기준으로 upsert합니다.
 - `build_image_thumbnails.py`: 위키미디어 원본 이미지 주소를 Commons API의 1280px 썸네일 주소로 바꿀 매핑(`data/mappings/image_thumbnails.json`)을 만듭니다. 원천 이미지 주소를 바꾸거나 작품을 추가하면 다시 실행한 뒤 전처리합니다.
+- `build_local_images.py`: 국립중앙박물관(`museum.go.kr`) 원본 이미지(장당 4~10MB, 서버 응답이 자주 멈춤)를 긴 변 1280px JPEG로 줄여 `frontend/web/images/artworks/`에 두고, 매핑(`data/mappings/local_images.json`)을 만듭니다. 전처리가 이 매핑으로 `image_url`을 `/images/artworks/{slug}.jpg`로 바꾸며 Vercel이 같은 도메인에서 내보냅니다. 공공누리 변경금지 유형은 원본 주소를 그대로 둡니다. Pillow는 이 작업에만 쓰므로 `uv run --with pillow python -m scripts.build_local_images`로 실행합니다. 이후 `preprocess` → `load_catalog` 순서로 반영합니다.
 - `check_images.py`: 산출물의 작품 이미지·작가 초상 URL이 실제로 열리는지(상태 코드·이미지 형식·크기) 확인합니다. 위키미디어 요청 제한을 피하려고 동시 요청을 적게 둡니다.
 - `seed_demo_user.py`: 발표용 계정에 감상글 6개(공개 4), 좋아요, 컬렉션 3개, 설정을 채웁니다. 대상은 `--email`로 고르고, 생략하면 dev-user입니다. firebase 모드에서는 시연 계정으로 앱에 한 번 로그인한 뒤 실행합니다. 여러 번 돌려도 결과가 같고, `--remove`로 시드 감상글·컬렉션만 지웁니다. 도슨트 대화는 넣지 않습니다.
 - `seed_dummy_members.py`: 피드·팔로우 확인용 더미 회원 12명(`firebase_uid`가 `dummy:`로 시작)과 그들의 설정·좋아요·작가 팔로우·열람·감상평·컬렉션·회원 팔로우를 채웁니다. 기본으로 dev-user가 더미 8명을 팔로우하고, `--fan 이메일`로 다른 실제 계정을 고를 수 있습니다. 고정 시드라 여러 번 돌려도 같고, `--remove`로 더미 회원과 그 활동을 모두 지웁니다.

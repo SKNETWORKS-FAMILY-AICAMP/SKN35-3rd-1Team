@@ -88,15 +88,14 @@ class _DetailPageState extends State<DetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: compact(context) ? 340 : 440,
-              child: SurfacePanel(
-                tinted: true,
-                radius: 32,
+              height: compact(context) ? 380 : 500,
+              child: SizedBox(
+                key: const ValueKey('detail-artwork-surface'),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(25),
+                      padding: EdgeInsets.zero,
                       child: ArtImage(
                         art.image,
                         fit: BoxFit.contain,
@@ -182,7 +181,9 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                LikeButton(
+                HoverLikeButton(
+                  key: const ValueKey('detail-artwork-like'),
+                  label: '작품 좋아요',
                   liked: s.likes.contains(art.id),
                   subject: art.title,
                   onPressed: s.pendingLikes.contains(art.id)
@@ -195,7 +196,28 @@ class _DetailPageState extends State<DetailPage> {
             if (artist != null)
               Row(
                 children: [
-                  ClipOval(child: ArtImage(art.image, width: 42, height: 42)),
+                  artist.portrait.isEmpty
+                      ? Semantics(
+                          label: '${artist.name} 작가 사진 준비 중',
+                          child: CircleAvatar(
+                            radius: 21,
+                            backgroundColor: soft,
+                            child: Text(
+                              artist.name.isEmpty
+                                  ? '작'
+                                  : artist.name.characters.first,
+                              style: sans(16),
+                            ),
+                          ),
+                        )
+                      : ClipOval(
+                          child: ArtImage(
+                            artist.portrait,
+                            width: 42,
+                            height: 42,
+                            label: '${artist.name} 작가 사진',
+                          ),
+                        ),
                   const SizedBox(width: 11),
                   Expanded(
                     child: InkWell(
@@ -215,7 +237,9 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                   ),
-                  LikeButton(
+                  HoverLikeButton(
+                    key: const ValueKey('detail-artist-like'),
+                    label: '작가 좋아요',
                     liked: s.follows.contains(artist.id),
                     subject: artist.name,
                     onPressed: s.pendingFollows.contains(artist.id)
@@ -307,11 +331,6 @@ class _DetailPageState extends State<DetailPage> {
               spacing: 10,
               runSpacing: 10,
               children: [
-                ArtButton(
-                  '감상 남기기',
-                  icon: Icons.edit_outlined,
-                  onTap: () => context.go('/library?artwork_id=${art.id}'),
-                ),
                 OutlinedButton.icon(
                   onPressed: () => pickCollectionForArtwork(context, s, art),
                   icon: const Icon(Icons.bookmark_border, size: 18),

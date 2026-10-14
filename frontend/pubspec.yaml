@@ -23,33 +23,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/branding/
     - assets/catalog.json
-    - assets/fonts/licenses.json
+    - assets/fonts/
     - public/artworks/
   fonts:
-    - family: NotoSansKR
+    - family: ChironSungHK
       fonts:
-        - asset: assets/fonts/NotoSansKR-400.ttf
-        - asset: assets/fonts/NotoSansKR-500.ttf
+        - asset: assets/fonts/ChironSungHK-Web.ttf
+        - asset: assets/fonts/ChironSungHK-Web.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansKR-600.ttf
+        - asset: assets/fonts/ChironSungHK-Web.ttf
           weight: 600
-        - asset: assets/fonts/NotoSansKR-700.ttf
+        - asset: assets/fonts/ChironSungHK-Web.ttf
           weight: 700
-    - family: NotoSerifKR
-      fonts:
-        - asset: assets/fonts/NotoSerifKR-400.ttf
-        - asset: assets/fonts/NotoSerifKR-500.ttf
-          weight: 500
-        - asset: assets/fonts/NotoSerifKR-600.ttf
-          weight: 600
-    - family: DMSans
-      fonts:
-        - asset: assets/fonts/DMSans-400.ttf
-        - asset: assets/fonts/DMSans-600.ttf
-          weight: 600
-    - family: Cormorant
-      fonts:
-        - asset: assets/fonts/CormorantGaramond-400.ttf
-        - asset: assets/fonts/CormorantGaramond-600.ttf
-          weight: 600

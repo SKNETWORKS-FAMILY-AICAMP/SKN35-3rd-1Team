@@ -63,10 +63,13 @@ void main() {
               .length,
           3,
         );
-        for (final label in ['02 / 03', '03 / 03', '01 / 03']) {
+        for (final index in [1, 2, 0]) {
           await tester.tap(find.byTooltip('다음 오늘의 그림'));
           await tester.pumpAndSettle();
-          expect(find.text(label), findsOneWidget);
+          expect(
+            find.byKey(ValueKey('hero-dot-$index-active')),
+            findsOneWidget,
+          );
         }
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());

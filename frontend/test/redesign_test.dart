@@ -8,6 +8,7 @@ import 'package:artlog_web/api/artlog_api.dart';
 import 'package:artlog_web/config.dart';
 import 'package:artlog_web/main.dart';
 import 'package:artlog_web/models.dart';
+import 'package:artlog_web/pages/artists_page.dart';
 import 'package:artlog_web/state.dart';
 import 'package:artlog_web/ui/daily_artwork_hero.dart';
 import 'package:artlog_web/ui/design.dart';
@@ -102,7 +103,7 @@ void main() {
     s.dispose();
   });
 
-  testWidgets('artwork list toggles to artist tabs with one search', (
+  testWidgets('artwork list toggles views and the artist view has no tabs', (
     tester,
   ) async {
     desktop(tester);
@@ -110,20 +111,53 @@ void main() {
     await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/artworks'));
     await tester.pumpAndSettle();
     expect(find.byType(ArtworkCard), findsWidgets);
+    expect(find.byKey(const ValueKey('artworks-tab-')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('artworks-view-artists')));
     await tester.pumpAndSettle();
-    final artist = s.artists.first;
-    expect(find.byKey(ValueKey('artworks-tab-${artist.id}')), findsOneWidget);
-    await tester.tap(find.byKey(ValueKey('artworks-tab-${artist.id}')));
-    await tester.pumpAndSettle();
-    expect(find.text('작가 페이지 보기 →'), findsOneWidget);
-    expect(
-      find.byType(ArtworkCard),
-      findsNWidgets(s.artworks.where((a) => a.artistId == artist.id).length),
+    expect(find.byKey(const ValueKey('artworks-tab-')), findsNothing);
+    expect(find.byType(ArtistGrid), findsOneWidget);
+    await tester.enterText(
+      find.byKey(const ValueKey('artworks-search')),
+      s.artists.first.name,
     );
-    // Artist and artwork likes share the same control and wording.
-    expect(find.widgetWithText(OutlinedButton, '좋아요'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text(s.artists.first.name), findsWidgets);
     expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    s.dispose();
+  });
+
+  testWidgets('artwork card heart sits bottom-right and turns red when liked', (
+    tester,
+  ) async {
+    desktop(tester);
+    final s = (await tester.runAsync(demo))!;
+    await tester.pumpWidget(ArtlogApp(state: s, initialLocation: '/artworks'));
+    await tester.pumpAndSettle();
+    final art = s.artworks.first;
+    final like = find.byKey(ValueKey('artwork-like-${art.id}'));
+    Icon heart() => tester.widget<Icon>(
+      find.descendant(of: like, matching: find.byType(Icon)),
+    );
+    expect(heart().color, Colors.white);
+    await tester.tap(like);
+    await tester.pumpAndSettle();
+    expect(heart().color, likeRed);
+    expect(s.likes, contains(art.id));
+    await tester.pumpWidget(const SizedBox());
+    s.dispose();
+  });
+
+  testWidgets('settings panel replaces 마이페이지 and has no 감상 설정', (tester) async {
+    desktop(tester);
+    final s = (await tester.runAsync(demo))!;
+    await tester.pumpWidget(ArtlogApp(state: s));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('작품 검색'), findsNothing);
+    await tester.tap(find.byTooltip('설정'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('account-drawer')), findsOneWidget);
+    expect(find.text('감상 설정'), findsNothing);
     await tester.pumpWidget(const SizedBox());
     s.dispose();
   });

@@ -4,14 +4,14 @@ import 'design.dart';
 ThemeData docentalkTheme() => ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: paper,
-  fontFamily: 'NotoSansKR',
+  fontFamily: 'ChironSungHK',
   colorScheme: ColorScheme.fromSeed(
     seedColor: green,
     surface: paper,
   ).copyWith(primary: green, secondary: green, onSurface: ink, outline: line),
   dividerColor: line,
   textTheme: ThemeData.light().textTheme.apply(
-    fontFamily: 'NotoSansKR',
+    fontFamily: 'ChironSungHK',
     bodyColor: ink,
     displayColor: ink,
   ),

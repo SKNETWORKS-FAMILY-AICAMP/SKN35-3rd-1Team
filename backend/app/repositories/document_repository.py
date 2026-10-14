@@ -13,6 +13,7 @@ from app.models import (
     DocumentArtwork,
     DocumentBasis,
     DocumentChunk,
+    DocumentType,
 )
 from app.rag.chunking import ANNOTATION_SECTIONS, annotation_section
 
@@ -101,3 +102,20 @@ def name_in_scope(session: Session, scope_ids: list[int], name: str) -> bool:
         return False
     hit = select(Document.id).where(Document.id.in_(scope_ids), Document.content.contains(name, autoescape=True))
     return session.scalar(hit.limit(1)) is not None
+
+
+def comparison_covers(session: Session, scope_ids: list[int], artist_slugs: tuple[str, ...]) -> bool:
+    """범위 안 비교 문서가 질문에 나온 다른 작가를 모두 함께 다루는지. 비교 질문을 답할지 거절할지 가른다."""
+    if not scope_ids or not artist_slugs:
+        return False
+    covered = session.scalars(
+        select(Artist.slug)
+        .join(DocumentArtist, DocumentArtist.artist_id == Artist.id)
+        .join(Document, Document.id == DocumentArtist.document_id)
+        .where(
+            Document.id.in_(scope_ids),
+            Document.doc_type == DocumentType.ARTIST_COMPARISON,
+            Artist.slug.in_(artist_slugs),
+        )
+    )
+    return set(artist_slugs) <= set(covered)

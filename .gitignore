@@ -31,6 +31,7 @@ Thumbs.db
 # 로컬 실험 산출물
 *.log
 .ipynb_checkpoints/
+docs/eval-runs/
 
 # 전처리 실행 중 임시 파일과 실패 기록 (성공 결과와 _SUCCESS.json 은 커밋)
 data/processed/.staging/

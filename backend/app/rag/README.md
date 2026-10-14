@@ -5,7 +5,7 @@
 ## 들어갈 파일
 
 - `chunking.py`: 문서를 청크로 자르는 규칙 (길이, 겹침)
-- `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend_similar` / `recommend_personal`로 분류 (규칙 기반 수퍼바이저, `/chat`에서는 `classify_artwork()`)
+- `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend_similar` / `recommend_personal`로 분류 (규칙 기반 수퍼바이저, `/chat`에서는 `classify_artwork()`). 다른 수집 작가와의 비교 질문은 두 작가를 함께 다룬 비교 문서가 범위에 없으면 `refuse`(`no_comparison_source`)
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
 - `chain.py`: 검색 결과와 질문, 이전 대화를 LLM에 넘겨 답변 생성
@@ -16,7 +16,8 @@
 `retriever.retrieve(session, artwork_id, question, k=5)`는 LangChain `Document` 리스트를 돌려줍니다 (기획서 v2 약속 2). 답변 생성 담당은 이 형식만 맞으면 가짜 데이터로 먼저 개발할 수 있습니다.
 
 - `page_content`: 청크 본문. 머리말 `문서 제목 > 섹션`이 붙어 있어 프롬프트에 그대로 넣을 수 있습니다.
-- 순서: 거리 순위 k개(오름차순) → 거리와 상관없이 항상 넣는 청크(`pinned`). 범위가 비면(없는 작품) 빈 리스트입니다.
+- 순서: 고른 작품 자신의 해설 청크 → 나머지 거리 순위 청크(각각 오름차순, 일반 순위는 한 문서당 최대 2개) → 거리와 상관없이 항상 넣는 청크(`pinned`). 범위가 비면(없는 작품) 빈 리스트입니다.
+- 작품 해설·비교 문서 자리와 `pinned` 청크는 `query`가 아니라 `get()`으로 가져와 거리를 직접 계산합니다. Chroma Cloud는 필터 검색에서도 근사 후보 밖 청크를 빼 버리기 때문입니다.
 
 | `metadata` 키 | 설명 |
 | --- | --- |

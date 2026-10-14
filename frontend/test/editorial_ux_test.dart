@@ -117,7 +117,7 @@ void main() {
 
   for (final width in [320.0, 1280.0]) {
     testWidgets(
-      'my feed lists private impressions with a lock and opens the calendar at ${width.toInt()}px',
+      'my feed lists private impressions with a lock and opens the artwork at ${width.toInt()}px',
       (tester) async {
         tester.view.physicalSize = Size(width, 1100);
         tester.view.devicePixelRatio = 1;
@@ -152,11 +152,10 @@ void main() {
         expect(find.text('로그아웃'), findsNothing);
         await tester.tap(find.text('나만 보관할 오늘의 생각'));
         await tester.pumpAndSettle();
-        final field = find.byKey(const ValueKey('diary-content'));
-        await tester.ensureVisible(field);
+        expect(find.byKey(const ValueKey('gold-frame')), findsNothing);
         expect(
-          tester.widget<TextField>(field).controller!.text,
-          '나만 보관할 오늘의 생각',
+          find.byKey(const ValueKey('detail-artwork-surface')),
+          findsOneWidget,
         );
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());

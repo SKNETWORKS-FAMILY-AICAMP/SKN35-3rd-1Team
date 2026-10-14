@@ -7,6 +7,7 @@ import '../models.dart';
 
 import 'surfaces.dart';
 import 'motion.dart';
+import 'museum_artwork_images.dart';
 export 'surfaces.dart';
 export 'motion.dart';
 
@@ -16,27 +17,44 @@ TextStyle sans(
   FontWeight weight = FontWeight.w400,
   double height = 1.7,
 }) => TextStyle(
-  fontFamily: 'NotoSansKR',
+  fontFamily: 'ChironSungHK',
   fontSize: size,
   color: color,
   fontWeight: weight,
   height: height,
+  // Even leading keeps Korean text vertically centred next to icons in buttons.
+  leadingDistribution: TextLeadingDistribution.even,
 );
 TextStyle serif(double size, {Color color = ink, double height = 1.6}) =>
     TextStyle(
-      fontFamily: 'NotoSerifKR',
+      fontFamily: 'ChironSungHK',
       fontSize: size,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: color,
       height: height,
-      letterSpacing: -0.8,
+      letterSpacing: -0.6,
+      leadingDistribution: TextLeadingDistribution.even,
     );
 TextStyle english(double size, {Color color = ink}) => TextStyle(
-  fontFamily: 'Cormorant',
+  fontFamily: 'ChironSungHK',
+  fontSize: size * .82,
+  color: color,
+  height: 1.3,
+  leadingDistribution: TextLeadingDistribution.even,
+);
+
+/// Chiron Sung HK is shared by all text styles, including Korean.
+TextStyle brandFont(double size, {Color color = ink}) => TextStyle(
+  fontFamily: 'ChironSungHK',
   fontSize: size,
   color: color,
   height: 1.2,
 );
+const likeRed = Color(0xffe0393e);
+
+/// Space above every titled section on the main page.
+const sectionGap = 88.0;
+
 bool compact(BuildContext context) => MediaQuery.sizeOf(context).width < 680;
 
 class ArtlogScope extends InheritedNotifier<ArtlogState> {
@@ -77,7 +95,7 @@ class Eyebrow extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     label,
     style: const TextStyle(
-      fontFamily: 'DMSans',
+      fontFamily: 'ChironSungHK',
       fontSize: 10,
       fontWeight: FontWeight.w600,
       letterSpacing: 1.8,
@@ -184,8 +202,10 @@ class SectionTitle extends StatelessWidget {
 ///
 /// Wikimedia's redirect endpoint chooses an available thumbnail size close to the
 /// requested width and returns a browser-friendly image even when the source is a
-/// TIFF. Non-Wikimedia URLs and local assets are intentionally left unchanged.
+/// TIFF. Known museum originals use the verified local copies; other URLs stay unchanged.
 String optimizedArtworkImageUrl(String image, {int thumbnailWidth = 800}) {
+  final museumCopy = museumArtworkImages[image];
+  if (museumCopy != null) return museumCopy;
   final uri = Uri.tryParse(image);
   if (uri == null || !uri.hasAuthority) return image;
 
@@ -481,7 +501,7 @@ class LikeButton extends StatelessWidget {
     final icon = Icon(
       liked ? Icons.favorite : Icons.favorite_border,
       size: 18,
-      color: liked ? const Color(0xffc0392b) : color,
+      color: liked ? likeRed : color,
     );
     final tooltip = '$subject ${liked ? '좋아요 취소' : '좋아요'}';
     if (compactIcon) {
@@ -506,6 +526,132 @@ class LikeButton extends StatelessWidget {
         ),
         icon: icon,
         label: Text('좋아요', style: sans(12, color: color)),
+      ),
+    );
+  }
+}
+
+/// Gilded picture frame: a moulded gold border around a cream mat.
+class GoldFrame extends StatelessWidget {
+  const GoldFrame({super.key, required this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    final rail = compact(context) ? 14.0 : 20.0;
+    return Container(
+      key: const ValueKey('gold-frame'),
+      padding: EdgeInsets.all(rail),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xff8a6a2c),
+            Color(0xffe8c874),
+            Color(0xffb08a3e),
+            Color(0xfff3dc94),
+            Color(0xff7d5e24),
+          ],
+          stops: [0, .28, .52, .76, 1],
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x40000000),
+            blurRadius: 18,
+            offset: Offset(0, 8),
+          ),
+        ],
+        border: Border.all(color: const Color(0xff5f461a), width: 1.5),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xff6b5020), width: 2),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(rail * .9),
+          color: const Color(0xfff4efe3),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+/// Icon-only like whose label ("작품 좋아요", "작가 좋아요") appears on hover or
+/// focus, so two likes side by side stay distinguishable without extra text.
+class HoverLikeButton extends StatefulWidget {
+  const HoverLikeButton({
+    super.key,
+    required this.liked,
+    required this.label,
+    required this.subject,
+    required this.onPressed,
+    this.icon = Icons.favorite,
+    this.outlineIcon = Icons.favorite_border,
+  });
+  final bool liked;
+  final String label, subject;
+  final VoidCallback? onPressed;
+  final IconData icon, outlineIcon;
+  @override
+  State<HoverLikeButton> createState() => _HoverLikeButtonState();
+}
+
+class _HoverLikeButtonState extends State<HoverLikeButton> {
+  bool open = false;
+  @override
+  Widget build(BuildContext context) {
+    final show = open || widget.liked;
+    return Semantics(
+      button: true,
+      selected: widget.liked,
+      label: '${widget.subject} ${widget.label}${widget.liked ? ' 취소' : ''}',
+      excludeSemantics: true,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => open = true),
+        onExit: (_) => setState(() => open = false),
+        child: Focus(
+          onFocusChange: (v) => setState(() => open = v),
+          child: Material(
+            color: Colors.transparent,
+            shape: const StadiumBorder(side: BorderSide(color: line)),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: widget.onPressed,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 11,
+                  vertical: 9,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      widget.liked ? widget.icon : widget.outlineIcon,
+                      size: 18,
+                      color: widget.liked ? likeRed : ink,
+                    ),
+                    AnimatedSize(
+                      duration: reduceMotion(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 180),
+                      curve: Curves.easeOutCubic,
+                      child: show
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Text(
+                                widget.label,
+                                style: sans(12, height: 1.2),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -851,28 +997,35 @@ class _ArtworkCardState extends State<ArtworkCard> {
                       ),
                     ),
                     Positioned(
-                      right: 9,
-                      top: 9,
-                      child: Material(
-                        color: museum
-                            ? museumBlack.withValues(alpha: .90)
-                            : paper.withValues(alpha: 0.94),
-                        shape: const CircleBorder(),
-                        child: IconButton(
-                          tooltip: '${a.title} ${liked ? '좋아요 취소' : '좋아요'}',
-                          isSelected: liked,
-                          iconSize: 17,
-                          constraints: const BoxConstraints(
-                            minHeight: 44,
-                            minWidth: 44,
+                      right: 4,
+                      bottom: 4,
+                      child: IconButton(
+                        key: ValueKey('artwork-like-${a.id}'),
+                        tooltip: '${a.title} ${liked ? '좋아요 취소' : '좋아요'}',
+                        isSelected: liked,
+                        iconSize: 22,
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Colors.transparent,
                           ),
-                          onPressed: s.pendingLikes.contains(a.id)
-                              ? null
-                              : () => likeArtwork(context, a),
-                          icon: Icon(
-                            liked ? Icons.favorite : Icons.favorite_border,
-                            color: museum ? museumText : green,
+                          overlayColor: WidgetStatePropertyAll(
+                            Color(0x22000000),
                           ),
+                          side: WidgetStatePropertyAll(BorderSide.none),
+                        ),
+                        constraints: const BoxConstraints(
+                          minHeight: 44,
+                          minWidth: 44,
+                        ),
+                        onPressed: s.pendingLikes.contains(a.id)
+                            ? null
+                            : () => likeArtwork(context, a),
+                        icon: Icon(
+                          liked ? Icons.favorite : Icons.favorite_border,
+                          color: liked ? likeRed : Colors.white,
+                          shadows: const [
+                            Shadow(color: Color(0x99000000), blurRadius: 6),
+                          ],
                         ),
                       ),
                     ),

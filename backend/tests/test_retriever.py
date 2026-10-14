@@ -98,7 +98,18 @@ def test_own_artwork_commentary_gets_a_seat_even_if_far(collection, fake_repo, m
     monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [10, 20, 30, 50])
     add(collection, 6, 50, [0.0, 0.2, 1.0], artwork_id=7)  # 질문과 멀지만 작품 7 의 해설
     ids = [d.metadata["chunk_id"] for d in search(collection, k=1)]
-    assert 6 in ids and ids[0] == 1
+    assert ids[:2] == [6, 1]  # 작품 해설이 가장 앞, 그다음 거리순
+
+
+def test_one_document_cannot_fill_all_ranked_seats(collection, fake_repo, monkeypatch):
+    """청크가 많은 생애 문서가 일반 순위를 다 차지하지 않는다 (평가 3회차 detail-007)."""
+    monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [10, 20, 30, 90])
+    monkeypatch.setattr(repo, "pinned_chunk_ids", lambda s, a, ids: [])
+    for cid in (20, 21, 22, 23):
+        add(collection, cid, 90, [1.0, 0.01 * (cid - 19), 0.0])  # 생애 문서: 질문과 가장 가까운 청크 4개
+    docs = retriever.retrieve(None, 7, "질문", 4, collection=collection, embed=lambda q: [1.0, 0.0, 0.0])
+    ranked = [d.metadata["document_id"] for d in docs if not d.metadata["pinned"]]
+    assert ranked.count(90) == retriever.MAX_PER_DOC and 10 in ranked
 
 
 def test_comparison_seat_only_for_comparison_questions(collection, fake_repo, monkeypatch):
@@ -171,3 +182,20 @@ def test_translation_pair_counts_as_one_topic_for_comparison_seats(collection, f
 def test_same_artwork_document_outside_reviewed_scope_is_excluded(collection, fake_repo):
     add(collection, 99, 99, [1.0, 0.0, 0.0], artwork_id=7)
     assert 99 not in {d.metadata["document_id"] for d in search(collection)}
+
+
+def test_seat_candidates_do_not_depend_on_filtered_approximate_search(collection, fake_repo, monkeypatch):
+    """Chroma Cloud 는 필터 검색에서도 근사 후보 밖 청크를 뺀다 (평가 3회차: 『사과와 오렌지』 해설 1개 중 0개).
+    작품 해설·비교 문서 자리는 query(where=...) 결과에 기대지 않는다."""
+    monkeypatch.setattr(repo, "scope_document_ids", lambda s, a: [10, 20, 30, 50, 60])
+    add(collection, 6, 50, [0.0, 0.2, 1.0], artwork_id=7)
+    add(collection, 7, 60, [0.0, 0.3, 1.0], doc_type="artist_comparison")
+    real_query = collection.query
+
+    def query(**kw):
+        assert "artwork_id" not in str(kw["where"]) and "artist_comparison" not in str(kw["where"])
+        return real_query(**kw)
+
+    monkeypatch.setattr(collection, "query", query)
+    docs = retriever.retrieve(None, 7, "두 화가의 차이는?", 1, collection=collection, embed=lambda q: [1.0, 0.0, 0.0])
+    assert {6, 7} <= {d.metadata["chunk_id"] for d in docs}

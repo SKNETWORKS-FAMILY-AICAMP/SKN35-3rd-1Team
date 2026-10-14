@@ -13,6 +13,8 @@ class CalendarDay(BaseModel):
     artwork_count: int
     # Sum of view_count (reopening the same artwork counts again).
     total_views: int
+    # Most recently viewed artwork that day, shown as the calendar thumbnail.
+    artwork: ArtworkCard | None = None
 
 
 class ViewedArtwork(ArtworkCard):

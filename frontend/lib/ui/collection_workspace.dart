@@ -257,15 +257,52 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text('나만의 컬렉션', style: serif(26)),
-          Wrap(
-            spacing: 10,
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                tooltip: '컬렉션 새로고침',
-                onPressed: loading ? null : load,
-                icon: const Icon(Icons.refresh),
+              SizedBox(
+                width: 44,
+                height: 44,
+                child: IconButton(
+                  key: const ValueKey('collections-refresh'),
+                  tooltip: '컬렉션 새로고침',
+                  onPressed: loading ? null : load,
+                  style: editorialButtonStyle(
+                    minimumSize: const Size(44, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                  icon: const Icon(Icons.refresh, size: 18),
+                ),
               ),
-              ArtButton('새 컬렉션', onTap: loading ? null : create),
+              const SizedBox(width: 8),
+              SizedBox(
+                height: 44,
+                child: FilledButton(
+                  key: const ValueKey('collections-new'),
+                  onPressed: loading ? null : create,
+                  style: editorialButtonStyle(
+                    dark: true,
+                    minimumSize: const Size(0, 44),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '새 컬렉션',
+                        style: sans(
+                          13,
+                          height: 1.2,
+                          color: Colors.white,
+                          weight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.add, size: 17),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -405,12 +442,6 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
         ),
       const SizedBox(height: 30),
       const Divider(),
-      ExpansionTile(
-        title: Text('대화로 컬렉션 정리', style: sans(14, weight: FontWeight.w500)),
-        subtitle: Text('작품을 찾아 담거나 새 컬렉션을 만들어요', style: sans(12, color: muted)),
-        maintainState: true,
-        children: [CollectionAssistant(groups: rows, onChanged: load)],
-      ),
     ],
   );
 }
@@ -487,178 +518,6 @@ class _LikedCollectionCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class CollectionAssistant extends StatefulWidget {
-  const CollectionAssistant({
-    super.key,
-    required this.groups,
-    required this.onChanged,
-  });
-  final List<ArtCollection> groups;
-  final Future<void> Function() onChanged;
-  @override
-  State<CollectionAssistant> createState() => _CollectionAssistantState();
-}
-
-class _CollectionAssistantState extends State<CollectionAssistant> {
-  final input = TextEditingController();
-  String? selected, error;
-  bool busy = false;
-  List<CollectionReply> replies = [];
-  final Set<CollectionProposal> consumed = {};
-  @override
-  void dispose() {
-    input.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant CollectionAssistant oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (selected != null && !widget.groups.any((c) => c.id == selected)) {
-      selected = null;
-    }
-  }
-
-  Future<void> send() async {
-    if (busy || input.text.trim().isEmpty) return;
-    final s = ArtlogScope.of(context),
-        identity = ArtlogScope.of(context).userKey;
-    final message = input.text.trim();
-    setState(() {
-      busy = true;
-      error = null;
-    });
-    try {
-      final reply = await s.collectionChat(message, collectionId: selected);
-      if (mounted && identity == s.userKey) {
-        setState(() {
-          replies = [
-            ...replies.skip(replies.length > 5 ? replies.length - 5 : 0),
-            reply,
-          ];
-          input.clear();
-        });
-      }
-    } catch (e) {
-      if (mounted && identity == s.userKey) {
-        setState(() => error = ArtlogState.message(e));
-      }
-    } finally {
-      if (mounted) setState(() => busy = false);
-    }
-  }
-
-  Future<void> apply(CollectionProposal p) async {
-    if (busy || consumed.contains(p)) return;
-    final s = ArtlogScope.of(context),
-        identity = ArtlogScope.of(context).userKey;
-    setState(() {
-      busy = true;
-      error = null;
-    });
-    try {
-      await s.applyCollectionProposal(p);
-      if (!mounted || identity != s.userKey) return;
-      setState(() => consumed.add(p));
-      await widget.onChanged();
-    } catch (e) {
-      if (mounted) setState(() => error = ArtlogState.message(e));
-    } finally {
-      if (mounted) setState(() => busy = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => SurfacePanel(
-    padding: EdgeInsets.all(compact(context) ? 18 : 28),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('말로 만드는 나의 전시', style: serif(24)),
-        const SizedBox(height: 10),
-        Text(
-          '“고요한 풍경 컬렉션 만들어줘”\n“별이 빛나는 밤을 고요한 풍경에 담아줘”',
-          style: sans(12, color: muted, height: 1.9),
-        ),
-        const SizedBox(height: 16),
-        DropdownButtonFormField<String>(
-          key: ValueKey(
-            '${widget.groups.map((c) => c.id).join(',')}/$selected',
-          ),
-          initialValue: widget.groups.any((c) => c.id == selected)
-              ? selected
-              : null,
-          isExpanded: true,
-          decoration: const InputDecoration(labelText: '담을 컬렉션 (선택)'),
-          items: [
-            const DropdownMenuItem(value: null, child: Text('대화에서 직접 이름 말하기')),
-            for (final c in widget.groups)
-              DropdownMenuItem(
-                value: c.id,
-                child: Text(c.name, overflow: TextOverflow.ellipsis),
-              ),
-          ],
-          onChanged: busy ? null : (v) => setState(() => selected = v),
-        ),
-        const SizedBox(height: 16),
-        for (final r in replies)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: SurfacePanel(
-              tinted: true,
-              radius: 20,
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(r.answer, style: sans(13)),
-                  if (r.proposal != null) ...[
-                    const SizedBox(height: 12),
-                    ArtButton(
-                      consumed.contains(r.proposal)
-                          ? '완료했어요'
-                          : r.proposal!.action == 'create'
-                          ? '이 컬렉션 만들기'
-                          : '이 작품 담기',
-                      onTap: busy || consumed.contains(r.proposal)
-                          ? null
-                          : () => apply(r.proposal!),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        TextField(
-          controller: input,
-          enabled: !busy,
-          minLines: 1,
-          maxLines: 3,
-          maxLength: 500,
-          decoration: const InputDecoration(
-            labelText: '컬렉션에 어떤 그림을 담을까요?',
-            hintText: '원하는 컬렉션이나 작품을 말해 주세요.',
-          ),
-          onSubmitted: (_) => send(),
-        ),
-        const SizedBox(height: 10),
-        if (error != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(error!, style: sans(12, color: Colors.red.shade800)),
-          ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ArtButton(
-            busy ? '확인하고 있어요…' : '요청 보내기',
-            onTap: busy ? null : send,
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
 Future<void> pickCollectionForArtwork(
