@@ -139,7 +139,10 @@ def reviews(out, tmp_path_factory, monkeypatch):
 def test_mapping_overrides_apply_to_dataset_format(out):
     assert pp.main() == 0
     works = {w["slug"]: w for w in pp.load_processed("artworks.jsonl")}
-    assert works["sunflowers-1887"]["image_url"].startswith("https://images.metmuseum.org/")
+    # 메트·국립중앙박물관 원본은 프론트 정적 사본으로 바뀌고 출처 페이지는 그대로 남는다
+    assert works["sunflowers-1887"]["image_url"] == "/images/artworks/sunflowers-1887.jpg"
+    assert works["sunflowers-1887"]["image_source_url"].startswith("https://www.metmuseum.org/")
+    assert works["haeinsa"]["image_url"] == "/images/artworks/haeinsa.jpg"
     assert works["impression-sunrise"]["image_source_url"].startswith("https://commons.wikimedia.org/wiki/File:")
     fan = works["jeongyangsa-deoksu-2292"]
     assert fan["image_url"] == "https://www.museum.go.kr/files/zin/curator_15_1.jpg"
