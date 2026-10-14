@@ -52,6 +52,16 @@ OFF_TOPIC = re.compile(
     r"(싸게|최저가|구매|구입|살 수 있는|파는|판매하는)[^?]{0,12}(사이트|곳|쇼핑몰|링크)|"
     r"(사이트|쇼핑몰)[^?]{0,8}(찾아|알려)"
 )
+# 작품 해설과 관계없는 대화 명령·근황 발화는 검색 결과가 있어도 답변하지 않는다.
+UNRELATED_CHAT = re.compile(
+    r"^\s*(?:욕\s?(?:해|해봐|해\s?줘|해\s?주세요)|"
+    r"나\s?(?:기분\s?나빠|심심해|외로워)|"
+    r"뭐\s?해\s?[?？]?\s*(?:나\s?심심해)?)\s*[.!?？]*\s*$"
+)
+MEAL_CHOICE = re.compile(r"(?:뭐|뭘|무엇을)\s?먹(?:을까|을지|어야|을래|지|어)?")
+MEAL_CONTEXT = re.compile(r"아침|점심|저녁|야식|끼니|메뉴|식사")
+FIRST_PERSON = re.compile(r"(?<![가-힣])(?:나|난|나는|내가|저|저는|우리|우리는)(?![가-힣])")
+ART_SCENE = re.compile(r"(?:그림|작품|장면)\s?(?:속|에서|에 나오는|에 그려진)|(?:그림|작품)\s?속\s?(?:인물|사람)")
 # 작품을 가리켜도 도슨트 답변으로 실행할 수 없는 앱 기능 요청. 질문형 설명이나
 # 작품의 소장 컬렉션에 관한 질문은 이 규칙으로 거절하지 않는다.
 APP_ACTION = re.compile(
@@ -125,6 +135,14 @@ def classify(question: str, artist_slug: str, named_in_scope: Callable[[str], bo
     named_in_scope: 이름이 고른 작품의 범위 문서에 나오는지 알려 주는 함수. 주면 범위 밖 작가로 거절하기 전에 확인한다.
     """
     text = question.strip()
+    if UNRELATED_CHAT.fullmatch(text):
+        return Route("refuse", "off_topic", matched=("unrelated_chat",))
+    if MEAL_CHOICE.search(text) and (
+        FIRST_PERSON.search(text)
+        or (MEAL_CONTEXT.search(text) and not ART_SCENE.search(text))
+        or MEAL_CHOICE.fullmatch(text.rstrip("?!？ "))
+    ):
+        return Route("refuse", "off_topic", matched=("meal_choice",))
     if APP_ACTION.search(text):
         return Route("refuse", "off_topic", matched=("app_action",))
     if OFF_TOPIC.search(text):

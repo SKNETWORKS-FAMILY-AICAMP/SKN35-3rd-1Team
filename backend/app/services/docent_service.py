@@ -12,10 +12,10 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.rag.classifier import classify_artwork, refusal_message
+from app.rag.classifier import Route, classify_artwork, refusal_message
 from app.rag.retriever import retrieve
 from app.schemas.chat import ChatResponse
-from app.services import catalog_service, mypage_service, recommendation_service
+from app.services import catalog_service, docent_scope, mypage_service, recommendation_service
 from app.services.docent_grounding import (
     NO_EVIDENCE_MESSAGE,
     GroundedAnswer,
@@ -75,6 +75,12 @@ def answer(db: Session, artwork_id, body, user_id=None):
     route = classify_artwork(db, artwork_id, body.question)
     if route.kind in ("refuse", "other_artist"):
         return ChatResponse(answer=refusal_message(route), refused=True, sources=[])
+    if not docent_scope.is_artwork_request(art, body):
+        return ChatResponse(
+            answer=refusal_message(Route("refuse", "off_topic")),
+            refused=True,
+            sources=[],
+        )
     if route.kind in ("recommend_similar", "recommend_personal"):
         if route.kind == "recommend_personal" and user_id is None:
             works = recommendation_service.similar(db, artwork_id=artwork_id)
