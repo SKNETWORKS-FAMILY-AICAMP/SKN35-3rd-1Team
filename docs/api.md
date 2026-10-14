@@ -243,9 +243,9 @@ CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `
 
 `/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
 
-## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.2)
+## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.3)
 
-`POST /api/artworks/{id}/chat`와 `/chat/stream`은 동일한 상세 도슨트 시스템 프롬프트와 승인 문서 검색을 답변 생성에 연결합니다. 채팅 탭의 `explanation_style`(`easy`·`standard`·`deep`)이 있으면 계정에 저장된 말투보다 우선합니다. 탭 선택이 없을 때만 계정의 쉬운 말투 또는 전문 용어 설정을 읽습니다. 설명 주제와 깊이는 사용자 질문과 검색 근거에 따라 정하며, 저장된 주제 우선순위와 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 모델이 반환한 문서 ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.
+`POST /api/artworks/{id}/chat`와 `/chat/stream`은 동일한 상세 도슨트 시스템 프롬프트와 승인 문서 검색을 답변 생성에 연결합니다. 채팅 탭의 `explanation_style`(`easy`·`standard`·`deep`)이 있으면 계정에 저장된 말투보다 우선합니다. 탭 선택이 없을 때만 계정의 쉬운 말투 또는 전문 용어 설정을 읽습니다. 설명 주제는 사용자 질문에 따르고, 해설·분석 질문의 기본 설명 범위와 용어 수준은 선택한 스타일에 따릅니다. `deep`은 관련 근거가 충분할 때 표현 방식·효과·의미·맥락을 더 폭넓고 깊게 연결하며, 사용자의 명시적인 분량 요청을 우선합니다. 저장된 주제 우선순위와 생년월일은 사용하지 않습니다. 근거가 없으면 거절하며, 모델이 반환한 문서 ID가 검색 결과에 없거나 비어 있어도 거절합니다. 출처 URL·라이선스·편집 보강 근거는 DB 검색 메타데이터에서만 구성합니다. 로그인 대화는 기존 `chat_service.save_exchange`로 저장합니다. 실제 생성 품질은 운영 모델·검색 자료를 연결한 별도 평가가 필요합니다.
 
 ## 감상가 프로필·팔로우 API (20261014_0009)
 
