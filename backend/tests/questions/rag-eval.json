@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "description": "작품 상세 화면의 범위 제한형 도슨트 챗봇 평가 초안. 자동 테스트와 수동 품질 평가가 함께 사용한다.",
+  "version": 2,
+  "description": "작품 상세 화면의 범위 제한형 도슨트 챗봇 운영 평가 문항. 승인된 최신 클림트·실레 자료, 출처, 거절, 멀티턴을 함께 검증한다.",
   "cases": [
     {
       "id": "fact-001",
@@ -53,10 +53,10 @@
     {
       "id": "fact-007",
       "category": "factual",
-      "artwork_slug": "spirit-of-the-dead-watching",
-      "question": "그림 뒤쪽의 검은 형상을 고갱은 무엇이라고 설명했어?",
+      "artwork_slug": "the-kiss",
+      "question": "클림트의 키스에는 금색 물감만 쓰였어, 아니면 실제 금속박도 사용했어?",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["투파파우", "죽은 자의 영"], "target_doc_keys": ["paul-gauguin/commentary-spirit-of-the-dead-watching"], "source_required": true, "forbidden_claims": []}
+      "expected": {"refused": false, "required_keywords": ["금박", "은", "백금"], "target_doc_keys": ["gustav-klimt/the-kiss"], "source_required": true, "forbidden_claims": ["금색 물감만 사용했다"]}
     },
     {
       "id": "fact-008",
@@ -117,10 +117,10 @@
     {
       "id": "detail-005",
       "category": "detail_interpretation",
-      "artwork_slug": "spirit-of-the-dead-watching",
-      "question": "뒤의 검은 존재는 실제 인물이야, 여성의 공포야?",
+      "artwork_slug": "portrait-of-wally",
+      "question": "발리 노이칠의 초상은 어떤 작품과 한 쌍으로 구상됐고, 두 작품은 무엇을 비교해 볼 수 있어?",
       "history": [],
-      "expected": {"refused": false, "required_keywords": ["명확하지", "해석"], "target_doc_keys": ["paul-gauguin/commentary-spirit-of-the-dead-watching"], "source_required": true, "forbidden_claims": ["실제 유령이 분명하다"]}
+      "expected": {"refused": false, "required_keywords": ["꽈리", "자화상", "시선"], "target_doc_keys": ["egon-schiele/portrait-of-wally"], "source_required": true, "forbidden_claims": ["두 작품이 하나의 장면이다"]}
     },
     {
       "id": "detail-006",
