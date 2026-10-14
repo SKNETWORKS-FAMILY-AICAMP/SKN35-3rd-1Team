@@ -1,0 +1,180 @@
+{
+  "run_at": "2026-10-14T10:37:22.6853484+09:00",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "temporary_accounts_deleted": true,
+  "summary": {
+    "checks": 17,
+    "passed": 0,
+    "failed": 17
+  },
+  "rows": [
+    {
+      "name": "인증 없이 프로필 접근 차단",
+      "expected_status": 401,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": "{\"detail\":\"Not Found\"}"
+    },
+    {
+      "name": "A 설정 서버 저장",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "A 설정 재조회 유지",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "PUT 후 GET으로 서버 지속성 확인",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "B 설정과 A 설정 분리",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "다른 계정에 A의 professional 설정이 보이지 않아야 함",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "설정 enum·중복 우선순위 검증",
+      "expected_status": 422,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "A 비공개 감상 저장",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "비공개 감상 B 계정 분리",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "B 조회 결과 null 기대",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "비공개 감상 공개 피드 미노출",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "고유 테스트 문자열 누출 검사",
+      "response": {
+        "leaked": false
+      }
+    },
+    {
+      "name": "컬렉션 생성",
+      "expected_status": 201,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 수정",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 작품 담기",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "다른 계정 컬렉션 접근 차단",
+      "expected_status": 404,
+      "actual_status": 404,
+      "pass": false,
+      "note": "선행 컬렉션 생성 경로가 404여서 소유권 검증으로 인정할 수 없음",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 작품 꺼내기",
+      "expected_status": 204,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "AI 취향 소개 생성",
+      "expected_status": "200 또는 근거 부족 422",
+      "actual_status": 404,
+      "pass": false,
+      "note": "신규 계정은 활동 근거가 없어 422도 정상",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 AI 채팅",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "제안만 반환하고 사용자 확인 전 DB 변경 금지",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 삭제",
+      "expected_status": 204,
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 삭제 후 목록 미노출",
+      "expected_status": 200,
+      "actual_status": 404,
+      "pass": false,
+      "note": "삭제 지속성 확인",
+      "response": {
+        "found_after_delete": true
+      }
+    }
+  ]
+}

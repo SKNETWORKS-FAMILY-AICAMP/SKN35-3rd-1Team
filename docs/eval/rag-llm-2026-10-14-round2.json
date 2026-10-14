@@ -1,0 +1,1252 @@
+{
+  "run_at": "2026-10-14T12:14:27.1484908+09:00",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "question_version": 2,
+  "rows": [
+    {
+      "id": "fact-001",
+      "category": "factual",
+      "artwork_slug": "the-starry-night",
+      "question": "별이 빛나는 밤은 언제 그렸어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "1889"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3227,
+      "answer": "《별이 빛나는 밤》은 빈센트 반 고흐가 1889년 6월에 생레미의 생폴드모솔 요양원에 머물면서 그린 작품입니다. 병실 창에서 본 새벽 풍경을 바탕으로 했지만, 실제 관찰과 기억, 상상을 섞어 재구성한 그림이에요.",
+      "refused": false,
+      "sources": {
+        "document_id": 703,
+        "title": "빈센트 반 고흐 《별이 빛나는 밤》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "The Museum of Modern Art",
+        "source_url": "https://www.moma.org/collection/works/79802",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "1889"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-002",
+      "category": "factual",
+      "artwork_slug": "self-portrait-with-bandaged-ear",
+      "question": "그림에서 붕대가 오른쪽 귀에 보이는 이유가 뭐야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "거울",
+          "왼쪽 귀"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "오른쪽 귀를 다쳤다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3073,
+      "answer": "고흐가 실제로 다친 쪽은 왼쪽 귀인데, 이 작품은 거울을 보고 그린 자화상이라서 붕대가 오른쪽 귀에 감긴 것처럼 보입니다. 즉, 거울상 때문에 귀의 방향이 바뀐 거예요. 이 점을 모르면 오른쪽 귀를 다쳤다고 오해할 수 있습니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 692,
+        "title": "빈센트 반 고흐 《귀에 붕대를 감은 자화상》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "The Courtauld Gallery",
+        "source_url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-175",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "거울",
+        "왼쪽 귀"
+      ],
+      "forbidden_hits": [
+        "오른쪽 귀를 다쳤다"
+      ],
+      "error": null
+    },
+    {
+      "id": "fact-003",
+      "category": "factual",
+      "artwork_slug": "impression-sunrise",
+      "question": "인상, 해돋이는 어느 항구를 그린 작품이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "르아브르"
+        ],
+        "target_doc_keys": [
+          "claude-monet/impression-sunrise"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 2915,
+      "answer": "《인상, 해돋이》는 프랑스의 르아브르 항구를 그린 작품입니다. 모네가 이 작품에 담은 것은 르아브르 항구의 새벽빛으로, 1874년 첫 독립 전시에서 공개되었습니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 419,
+          "title": "인상, 해돋이 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "위키백과",
+          "source_url": "https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%83%81,_%ED%95%B4%EB%8F%8B%EC%9D%B4",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        },
+        {
+          "document_id": 447,
+          "title": "클로드 모네 연표: 1872–1874 『인상, 해돋이』와 첫 독립 전시",
+          "doc_type": "artist_bio",
+          "source_name": "위키백과",
+          "source_url": "https://ko.wikipedia.org/wiki/%ED%81%B4%EB%A1%9C%EB%93%9C_%EB%AA%A8%EB%84%A4",
+          "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "르아브르"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-004",
+      "category": "factual",
+      "artwork_slug": "the-night-watch",
+      "question": "야경은 실제로 밤 장면을 그린 거야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "밤",
+          "어두워진"
+        ],
+        "target_doc_keys": [
+          "rembrandt/the-night-watch",
+          "rembrandt/the-night-watch.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "처음부터 밤 장면이었다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3543,
+      "answer": "렘브란트의 작품 『야경』은 제목과 달리 실제 밤 장면을 그린 것이 아닙니다. 이 그림은 시민 민병대의 초상화로, 빛과 그림자를 이용해 드라마틱한 효과를 냈지만, 야간 장면을 묘사한 것은 아니에요. 즉, '야경'이라는 이름은 잘못된 명칭이고, 그림 속 장면은 낮이나 실내 같은 밝은 환경을 상상할 수 있습니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 659,
+          "title": "야경 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "위키백과",
+          "source_url": "https://ko.wikipedia.org/wiki/%EC%95%BC%EA%B2%BD_%28%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8%29",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        },
+        {
+          "document_id": 660,
+          "title": "야경 해설 (영문 번역)",
+          "doc_type": "artwork_commentary",
+          "source_name": "Wikipedia (영문) · 한국어 번역 (gpt-5.4-mini)",
+          "source_url": "https://en.wikipedia.org/wiki/The_Night_Watch",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "밤"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-005",
+      "category": "factual",
+      "artwork_slug": "the-bedroom",
+      "question": "고흐의 침실 그림은 어디에 있던 방이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "아를",
+          "노란 집"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-bedroom"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 2647,
+      "answer": "고흐의 《침실》 그림은 1888년 10월에 남프랑스 아를에 있던 '노란 집' 2층에 있던 자신의 침실을 그린 것입니다. 즉, 아를의 노란 집 안에 있던 방이에요.",
+      "refused": false,
+      "sources": {
+        "document_id": 696,
+        "title": "빈센트 반 고흐 《침실》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Van Gogh Museum",
+        "source_url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "아를",
+        "노란 집"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-006",
+      "category": "factual",
+      "artwork_slug": "almond-blossom",
+      "question": "꽃 피는 아몬드나무는 누구를 위해 그렸어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "조카",
+          "빈센트"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-almond-blossom"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3197,
+      "answer": "《꽃 피는 아몬드나무》는 고흐가 1890년 2월 생레미에서 동생 테오와 제수 요한나의 아들이 태어났다는 소식을 듣고, 그 아들 빈센트 빌럼의 탄생을 축하하는 선물로 그린 작품입니다. 그래서 이 그림은 조카를 위해 그려졌고, 가족의 집에 걸릴 것을 염두에 두고 제작되었어요.",
+      "refused": false,
+      "sources": {
+        "document_id": 683,
+        "title": "빈센트 반 고흐 《꽃 피는 아몬드나무》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Van Gogh Museum",
+        "source_url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": [
+          {
+            "source_name": "Van Gogh Museum",
+            "source_url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962"
+          },
+          {
+            "source_name": "Wikipedia",
+            "source_url": "https://en.wikipedia.org/wiki/Almond_Blossoms"
+          }
+        ]
+      },
+      "keyword_hits": [
+        "조카",
+        "빈센트"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-007",
+      "category": "factual",
+      "artwork_slug": "the-kiss",
+      "question": "클림트의 키스에는 금색 물감만 쓰였어, 아니면 실제 금속박도 사용했어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "금박",
+          "은",
+          "백금"
+        ],
+        "target_doc_keys": [
+          "gustav-klimt/the-kiss"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "금색 물감만 사용했다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3503,
+      "answer": "클림트의 《키스》에는 단순히 금색 물감만 사용된 것이 아니라, 실제 금박과 은, 백금 같은 금속 재료가 포함되어 있습니다. 이 금속 재료들은 빛을 반사하여 작품 앞에서 관객이 움직일 때마다 화면의 느낌이 달라지게 하며, 옷과 배경의 장식이 피부의 부드러운 표현과 어우러져 입체와 평면이 교차하는 효과를 만듭니다. 따라서 《키스》의 금빛은 단순한 색채가 아니라 실제 금속의 반짝임을 가진 물질성으로 이해해야 합니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 30133,
+          "title": "키스 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "벨베데레 미술관",
+          "source_url": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+          "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+          "basis_sources": []
+        },
+        {
+          "document_id": 30132,
+          "title": "클림트의 금속 재료와 평면적 화법",
+          "doc_type": "artist_bio",
+          "source_name": "벨베데레 미술관",
+          "source_url": "https://www.belvedere.at/en/stories/why-did-gustav-klimt-use-gold",
+          "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+          "basis_sources": []
+        },
+        {
+          "document_id": 30109,
+          "title": "구스타프 클림트의 생애",
+          "doc_type": "artist_bio",
+          "source_name": "레오폴트 미술관",
+          "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+          "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "금박",
+        "은",
+        "백금"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-008",
+      "category": "factual",
+      "artwork_slug": "the-calling-of-saint-matthew",
+      "question": "성 마태오를 부르심에서 빛은 어느 방향에서 들어와?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "빛"
+        ],
+        "target_doc_keys": [
+          "caravaggio/the-calling-of-saint-matthew"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 2725,
+      "answer": "카라바조의 《성 마태오를 부르심》에서 빛은 오른쪽에서 들어와 테이블에 앉은 남자들의 얼굴을 비춥니다. 이 한 줄기 빛은 영적 각성과 회심의 순간을 강조하는 역할을 합니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 384,
+        "title": "성 마태오를 부르심 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "위키백과",
+        "source_url": "https://ko.wikipedia.org/wiki/%EC%84%B1_%EB%A7%88%ED%83%9C%EC%98%A4%EB%A5%BC_%EB%B6%80%EB%A5%B4%EC%8B%AC",
+        "license": "CC BY-SA 4.0",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "빛"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-009",
+      "category": "factual",
+      "artwork_slug": "the-basket-of-apples",
+      "question": "사과 바구니의 탁자가 어긋나 보이는 게 맞아?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "시점",
+          "구도"
+        ],
+        "target_doc_keys": [
+          "paul-cezanne/the-basket-of-apples"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3106,
+      "answer": "네, 『사과 바구니』에서 탁자는 직각이 없고 기울어져 있어서 어긋나 보이는 게 맞아요. 세잔은 전통적인 원근법을 따르지 않고 여러 시점을 조합해 사물을 묘사했기 때문에 탁자가 불가능한 형태로 그려졌어요. 이런 독특한 구성이 이 작품의 특징 중 하나입니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 568,
+        "title": "사과 바구니가 있는 정물 해설 (영문 번역)",
+        "doc_type": "artwork_commentary",
+        "source_name": "Wikipedia (en) · 한국어 번역 (gpt-5.4-mini)",
+        "source_url": "https://en.wikipedia.org/wiki/The_Basket_of_Apples",
+        "license": "CC BY-SA 4.0",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "시점"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "fact-010",
+      "category": "factual",
+      "artwork_slug": "where-do-we-come-from",
+      "question": "우리는 어디서 왔는가는 어느 방향으로 읽도록 구성됐어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "오른쪽",
+          "왼쪽"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-where-do-we-come-from"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3543,
+      "answer": "폴 고갱은 작품 《우리는 어디서 왔는가? 우리는 무엇인가? 우리는 어디로 가는가?》를 오른쪽에서 왼쪽으로 읽도록 구성했습니다. 오른쪽에는 아기가 있고, 중앙에는 열매를 따는 인물이 있으며, 왼쪽에는 노인이 배치되어 있어 삶의 단계를 아기에서 노년으로 이어지는 흐름으로 표현했습니다. 이 구성은 고갱이 삶의 기원에서 죽음까지를 상징적으로 보여주려 한 것입니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 610,
+          "title": "폴 고갱 《우리는 어디서 왔는가? 우리는 무엇인가? 우리는 어디로 가는가?》 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "Museum of Fine Arts, Boston",
+          "source_url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+          "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+          "basis_sources": []
+        },
+        {
+          "document_id": 626,
+          "title": "폴 고갱 연표: 1897–1898 삶의 세 질문을 대작에 담다",
+          "doc_type": "artist_bio",
+          "source_name": "Museum of Fine Arts, Boston",
+          "source_url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+          "license": "CC BY 4.0",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "오른쪽",
+        "왼쪽"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-001",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-starry-night",
+      "question": "소용돌이치는 하늘은 고흐가 실제로 본 모습이야, 상상한 모습이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "관찰",
+          "구성"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "정확한 의도는"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3369,
+      "answer": "고흐의 《별이 빛나는 밤》에 나오는 소용돌이치는 하늘은 고흐가 실제로 본 모습이라기보다, 병실 창에서 본 새벽 풍경을 출발점으로 삼아 관찰과 상상을 함께 섞어 재구성한 것입니다. 마을은 실제로 창문에서 보이지 않았고, 사이프러스와 천체의 크기와 빛도 고흐가 의도적으로 변형했어요. 그래서 하늘의 소용돌이도 자연을 보고 느낀 감정과 기억을 표현한 결과로 볼 수 있습니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 703,
+        "title": "빈센트 반 고흐 《별이 빛나는 밤》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "The Museum of Modern Art",
+        "source_url": "https://www.moma.org/collection/works/79802",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "관찰",
+        "구성"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-002",
+      "category": "detail_interpretation",
+      "artwork_slug": "cafe-terrace-at-night",
+      "question": "밤인데도 검은색을 거의 쓰지 않은 이유를 설명해줘.",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "색",
+          "대비"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-cafe-terrace-at-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3228,
+      "answer": "고흐는 밤 장면을 그릴 때 보통 쓰던 검은색 대신, 이 작품에서 검정 없이 파랑, 보라, 초록 등 다양한 색을 사용해 밤의 빛과 공간을 표현하려 했어요. 그는 가스등 아래에서 직접 작업하며 노란색과 주황색 빛이 파란 하늘을 더 선명하게 보이게 한다고 편지에 썼죠. 그래서 검은색 없이도 밤의 깊이와 밝기를 자연스럽게 보여주려는 실험적인 시도였답니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 684,
+        "title": "빈센트 반 고흐 《밤의 카페 테라스》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Kröller-Müller Museum",
+        "source_url": "https://www.krollermuller.nl/en/collection/vincent-van-gogh-terrace-of-a-caf-at-night-place-du-forum-km-108-565",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "색"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-003",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-bedroom",
+      "question": "가구와 벽의 원근이 비뚤어져 보이는데 실수야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "원근",
+          "의도"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-bedroom"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "실수로 잘못 그렸다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 4328,
+      "answer": "고흐의 《침실》에서 가구와 벽의 원근이 비뚤어져 보이는 것은 단순한 실수가 아닙니다. 실제 방의 벽이 비스듬했고, 고흐가 표현을 위해 원근을 일부러 강조하거나 왜곡한 결과입니다. 이는 일본 판화에서 영감을 받은 단순화와 강한 윤곽선 기법과 함께, 휴식과 안정감을 주고자 한 그의 의도가 반영된 것입니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 696,
+        "title": "빈센트 반 고흐 《침실》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Van Gogh Museum",
+        "source_url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "원근",
+        "의도"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-004",
+      "category": "detail_interpretation",
+      "artwork_slug": "wheatfield-with-crows",
+      "question": "갈라진 길과 까마귀가 죽음을 예고한다는 해석은 확정된 사실이야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "해석",
+          "단정"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-wheatfield-with-crows"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "마지막 작품",
+          "자살을 예고했다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3606,
+      "answer": "갈라진 길과 까마귀가 죽음을 예고한다는 해석은 확정된 사실이 아니에요. 고흐가 이 그림에서 슬픔과 외로움을 표현하려 했지만, 이를 자살 예고나 유서로 단정할 근거는 없어요. 까마귀가 관람자 쪽으로 오는지, 세 길 중 어느 길이 삶이나 죽음을 뜻하는지도 기록에 없답니다. 즉, 이런 해석은 후대에 생긴 신화에 가깝고, 고흐의 편지와 작품 제작 시기 등을 보면 새로운 형식 실험과 감정 표현이 함께 담긴 그림이에요.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 707,
+          "title": "빈센트 반 고흐 《까마귀가 나는 밀밭》 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "Van Gogh Museum",
+          "source_url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962",
+          "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+          "basis_sources": [
+            {
+              "source_name": "Van Gogh Museum",
+              "source_url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962"
+            },
+            {
+              "source_name": "Wikipedia",
+              "source_url": "https://en.wikipedia.org/wiki/Wheatfield_with_Crows"
+            }
+          ]
+        },
+        {
+          "document_id": 719,
+          "title": "오베르에서의 마지막 두 달과 죽음",
+          "doc_type": "artist_bio",
+          "source_name": "Van Gogh Museum",
+          "source_url": "https://www.vangoghmuseum.nl/en/visit/whats-on/exhibitions/overview-past-exhibitions/van-gogh-in-auvers-sur-oise",
+          "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "해석",
+        "단정"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-005",
+      "category": "detail_interpretation",
+      "artwork_slug": "portrait-of-wally",
+      "question": "발리 노이칠의 초상은 어떤 작품과 한 쌍으로 구상됐고, 두 작품은 무엇을 비교해 볼 수 있어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "꽈리",
+          "자화상",
+          "시선"
+        ],
+        "target_doc_keys": [
+          "egon-schiele/portrait-of-wally"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "두 작품이 하나의 장면이다"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3896,
+      "answer": "발리 노이칠의 초상은 에곤 실레의 같은 해 작품인 '꽈리 열매가 있는 자화상'과 한 쌍으로 구상되었습니다. 두 작품은 얼굴 크기, 목과 어깨 방향, 시선의 방향 등 구도에서 서로 응답하는 관계를 보여 줍니다. 예를 들어, 발리 노이칠의 초상은 고개를 기울이고 화면 밖을 바라보는 시선을, 자화상은 고개를 돌리면서도 관객과 시선을 맞추는 구도를 통해 서로 다른 시선과 자세를 비교할 수 있습니다. 이 두 작품을 나란히 놓고 보면, 단순한 연인 초상 이상의 구성상의 긴장과 균형을 느낄 수 있습니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 30089,
+          "title": "발리 노이칠의 초상 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "레오폴트 미술관",
+          "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/",
+          "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+          "basis_sources": []
+        },
+        {
+          "document_id": 30092,
+          "title": "꽈리 열매가 있는 자화상 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "레오폴트 미술관",
+          "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/528-self-portrait-with-chinese-lantern-plant/",
+          "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "꽈리",
+        "자화상",
+        "시선"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-006",
+      "category": "detail_interpretation",
+      "artwork_slug": "when-will-you-marry",
+      "question": "앞뒤 두 여성의 자세와 옷차림은 어떤 대비를 만들어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "두 여성",
+          "대비"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-when-will-you-marry"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3073,
+      "answer": "앞쪽 여성은 전통적인 밝은 옷을 입고 몸을 낮춰 옆을 바라보는 반면, 뒤쪽 여성은 서양식 분홍 드레스를 입고 곧게 앉아 관람자를 향합니다. 이 자세와 옷차림의 차이는 두 인물을 구별하며, 전통과 식민지 사회에서 들어온 복장이 한 장면에 공존하는 대비를 만듭니다. 즉, 전통과 서양식이 함께 있지만 서로 다른 태도와 분위기를 보여주어 작품의 주제를 드러냅니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 609,
+        "title": "폴 고갱 《언제 결혼하니?》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "The Phillips Collection",
+        "source_url": "https://www.phillipscollection.org/event/2015-12-09-painting-tahitis-women-paris",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "대비"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-007",
+      "category": "detail_interpretation",
+      "artwork_slug": "apples-oranges",
+      "question": "천과 과일이 기울어져 보이는 구성이 화면에 어떤 효과를 줘?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "구도",
+          "시점"
+        ],
+        "target_doc_keys": [
+          "paul-cezanne/apples-oranges"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3238,
+      "answer": "폴 세잔은 화면에서 대상의 여러 면을 동시에 보여주고, 고전적인 원근법을 느슨하게 다루는 방식을 썼어요. 그래서 천과 과일이 기울어져 보이는 구성은 단순히 현실을 그대로 묘사하는 게 아니라, 사물을 여러 각도에서 보고 구조를 새롭게 조직하는 효과를 줍니다. 이런 구성이 화면에 안정성과 입체감을 주면서도, 보는 이로 하여금 대상의 형태와 공간 관계를 새롭게 인식하게 해요.",
+      "refused": false,
+      "sources": {
+        "document_id": 550,
+        "title": "폴 세잔의 영향",
+        "doc_type": "artist_bio",
+        "source_name": "The Metropolitan Museum of Art (MoMA 자료와 대조)",
+        "source_url": "https://www.metmuseum.org/essays/paul-cezanne-1839-1906",
+        "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+        "basis_sources": []
+      },
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "detail-008",
+      "category": "detail_interpretation",
+      "artwork_slug": "the-night-watch",
+      "question": "인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는 뭐야?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "집단 초상",
+          "움직임"
+        ],
+        "target_doc_keys": [
+          "rembrandt/the-night-watch",
+          "rembrandt/the-night-watch.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 4002,
+      "answer": "렘브란트가 『야경』에서 인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는, 전통적인 서사 회화와 달리 각 인물을 생생한 개별 초상으로 표현하고, 실제 장소에서의 실제 사건을 보여 주는 듯하면서도 연극적이고 상상적인 구성을 통해 역동성과 자연스러운 움직임을 강조하기 위해서입니다. 작가는 \"가장 위대하고 가장 자연스러운 움직임\"을 목표로 했으며, 이로 인해 인물들이 무질서해 보이면서도 각자의 임무를 수행하는 모습에서 도덕적 탁월성 같은 의미도 드러납니다. 즉, 인물들의 배치는 순간의 생동감을 살리고, 질서와 무질서가 공존하는 복합적인 장면을 연출하기 위한 의도입니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 634,
+        "title": "렘브란트 판 레인의 생애 (영문 번역)",
+        "doc_type": "artist_bio",
+        "source_name": "Wikipedia (영문) · 한국어 번역 (gpt-5.4-mini)",
+        "source_url": "https://en.wikipedia.org/wiki/Rembrandt",
+        "license": "CC BY-SA 4.0",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "움직임"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "compare-001",
+      "category": "comparison",
+      "artwork_slug": "the-bedroom",
+      "question": "아를에서 함께 지낼 때 고흐와 고갱의 색채와 작업 방식은 어떻게 달랐어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "고흐",
+          "고갱"
+        ],
+        "target_doc_keys": [
+          "_comparisons/comparison-van-gogh-and-gauguin-arles"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3276,
+      "answer": "고흐와 고갱은 아를에서 약 두 달간 함께 지냈는데, 둘 다 강한 색과 단순한 형태를 사용한다는 점은 비슷했어요. 하지만 고흐는 눈앞의 자연과 인물을 직접 관찰하며 자신의 감정을 붓질과 색으로 표현하는 방식을 썼고, 고갱은 기억과 상상, 상징을 섞어 실제 장면을 재구성하는 방식을 선호했어요. 이런 차이가 서로에게 자극이 되면서도 갈등도 키웠답니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 364,
+          "title": "빈센트 반 고흐와 폴 고갱: 아를 공동생활과 표현 방식의 차이",
+          "doc_type": "artist_comparison",
+          "source_name": "National Gallery of Art; The Metropolitan Museum of Art",
+          "source_url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+          "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+          "basis_sources": []
+        },
+        {
+          "document_id": 718,
+          "title": "아를의 노란 집과 귀 사건",
+          "doc_type": "artist_bio",
+          "source_name": "Van Gogh Museum",
+          "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+          "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "고흐",
+        "고갱"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "compare-002",
+      "category": "comparison",
+      "artwork_slug": "impression-sunrise",
+      "question": "모네와 세잔은 자연을 표현하는 방식이 어떻게 달라?",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "문서에 없는 비교를 사실처럼 생성"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 3611,
+      "answer": "모네는 자연을 빛과 대기의 변화에 따른 순간적인 인상으로 표현했어요. 그는 야외에서 직접 관찰하며 밝은 색과 짧은 붓질로 빛의 변화를 포착했죠. 반면, 세잔은 자료에 없어서 구체적인 차이를 말씀드리기 어렵습니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 435,
+        "title": "클로드 모네의 작품 세계와 기법",
+        "doc_type": "artist_bio",
+        "source_name": "The Metropolitan Museum of Art",
+        "source_url": "https://www.metmuseum.org/toah/hd/cmon/ho_56.135.1.htm",
+        "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+        "basis_sources": []
+      },
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "compare-003",
+      "category": "comparison",
+      "artwork_slug": "the-night-watch",
+      "question": "렘브란트와 카라바조의 명암 표현 차이를 설명해줘.",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "명암"
+        ],
+        "target_doc_keys": [
+          "_comparisons/chiaroscuro",
+          "_comparisons/chiaroscuro.en",
+          "_comparisons/tenebrism",
+          "_comparisons/tenebrism.en"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 4138,
+      "answer": "카라바조는 강한 빛과 어둠의 극명한 대비를 통해 극적인 효과를 내는 테네브리즘 양식을 발전시켰습니다. 이는 단일 광원에서 빛이 뿜어져 나오는 듯한 강렬한 명암 대비를 특징으로 하죠. 반면 렘브란트는 얼굴의 밝은 부분과 그늘진 부분 사이에 부드러운 경계선을 두어, 빛과 그림자의 대비를 통해 인물의 표정과 감정을 섬세하게 표현했습니다. 예를 들어, 렘브란트의 초상화에서는 코의 능선이 밝게 빛나면서도 주변은 부드러운 반음영으로 처리되어 시선을 집중시키고 깊이감을 줍니다. 즉, 카라바조가 극적인 명암 대비로 강렬함을 강조했다면, 렘브란트는 명암을 이용해 인물의 내면과 분위기를 섬세하게 드러냈다고 볼 수 있습니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 634,
+          "title": "렘브란트 판 레인의 생애 (영문 번역)",
+          "doc_type": "artist_bio",
+          "source_name": "Wikipedia (영문) · 한국어 번역 (gpt-5.4-mini)",
+          "source_url": "https://en.wikipedia.org/wiki/Rembrandt",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        },
+        {
+          "document_id": 365,
+          "title": "테네브리즘",
+          "doc_type": "artist_comparison",
+          "source_name": "위키백과",
+          "source_url": "https://ko.wikipedia.org/wiki/%ED%85%8C%EB%84%A4%EB%B8%8C%EB%A6%AC%EC%A6%98",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        },
+        {
+          "document_id": 362,
+          "title": "키아로스쿠로",
+          "doc_type": "artist_comparison",
+          "source_name": "위키백과",
+          "source_url": "https://ko.wikipedia.org/wiki/%ED%82%A4%EC%95%84%EB%A1%9C%EC%8A%A4%EC%BF%A0%EB%A1%9C",
+          "license": "CC BY-SA 4.0",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "명암"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "compare-004",
+      "category": "comparison",
+      "artwork_slug": "sunflowers-1887",
+      "question": "파리에서 그린 해바라기와 아를의 해바라기는 무엇이 달라?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "파리",
+          "아를"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-sunflowers-1887"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3882,
+      "answer": "파리에서 그린 1887년 《해바라기》는 꽃병 없이 잘린 해바라기 두 송이를 화면 가까이에 펼쳐 놓아 꽃의 형태와 색채를 탐구한 정물화입니다. 반면 아를에서 그린 해바라기 연작은 고흐가 남프랑스 아를의 노란 집에서 고갱을 위해 그린 작품으로, 노란 화병에 꽂힌 해바라기들이 주로 등장하며 밝고 두꺼운 물감으로 자연의 활력과 우정을 표현했습니다. 즉, 파리 해바라기는 꽃송이 자체의 형태와 색채에 집중한 실험적 정물화이고, 아를 해바라기는 공동생활과 예술적 교류의 상징으로서 강한 색채와 두꺼운 붓질로 활력을 담은 작품입니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 694,
+          "title": "빈센트 반 고흐 《해바라기》(1887) 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "The Metropolitan Museum of Art",
+          "source_url": "https://www.metmuseum.org/art/collection/search/436524",
+          "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+          "basis_sources": []
+        },
+        {
+          "document_id": 713,
+          "title": "빈센트 반 고흐 연표: 1888 아를의 노란 집과 해바라기",
+          "doc_type": "artist_bio",
+          "source_name": "The National Gallery, London",
+          "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+          "license": "CC BY 4.0",
+          "basis_sources": []
+        },
+        {
+          "document_id": 712,
+          "title": "빈센트 반 고흐 연표: 1886–1888 파리에서 색이 밝아지다",
+          "doc_type": "artist_bio",
+          "source_name": "Van Gogh Museum",
+          "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/art/vincent-van-gogh",
+          "license": "CC BY 4.0",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "파리",
+        "아를"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "scope-001",
+      "category": "out_of_scope",
+      "artwork_slug": "the-starry-night",
+      "question": "피카소의 대표작 다섯 개를 알려줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "게르니카",
+          "아비뇽의 처녀들"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 878,
+      "answer": "피카소는 이 미술관에서 다루지 않는 작가예요. 소장 작품에 관해 물어봐 주세요.",
+      "refused": true,
+      "sources": null,
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "scope-002",
+      "category": "out_of_scope",
+      "artwork_slug": "water-lilies",
+      "question": "오늘 서울 날씨와 미세먼지를 알려줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "기온",
+          "미세먼지 수치"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 1010,
+      "answer": "이 도슨트는 작품과 작가에 관한 자료로만 답할 수 있어요. 작품에 대해 궁금한 점을 물어봐 주세요.",
+      "refused": true,
+      "sources": null,
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "scope-003",
+      "category": "out_of_scope",
+      "artwork_slug": "the-night-watch",
+      "question": "이 그림을 지금 가장 싸게 살 수 있는 사이트를 찾아줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "판매 링크",
+          "구매 가격"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 674,
+      "answer": "이 도슨트는 작품과 작가에 관한 자료로만 답할 수 있어요. 작품에 대해 궁금한 점을 물어봐 주세요.",
+      "refused": true,
+      "sources": null,
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "evidence-001",
+      "category": "insufficient_evidence",
+      "artwork_slug": "apples-oranges",
+      "question": "쟁반 위와 카펫 위에 있는 사과가 각각 정확히 몇 개인지 세어줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "이미지를 직접 확인한 것처럼 개수를 단정"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 2895,
+      "answer": "현재 자료에서 확인할 수 있는 근거가 부족해 답을 유보할게요. 작품에 관한 다른 질문을 들려주세요.",
+      "refused": true,
+      "sources": null,
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "evidence-002",
+      "category": "insufficient_evidence",
+      "artwork_slug": "the-bedroom",
+      "question": "고흐가 침대를 그릴 때 정확히 무슨 생각을 했는지 한 문장으로 말해줘.",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "작가의 내면을 확정"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 2393,
+      "answer": "고흐는 편지에서 색으로 휴식과 잠의 느낌을 주고 싶었다고 밝혔습니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 696,
+        "title": "빈센트 반 고흐 《침실》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Van Gogh Museum",
+        "source_url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "evidence-003",
+      "category": "insufficient_evidence",
+      "artwork_slug": "when-will-you-marry",
+      "question": "이 작품의 오늘 기준 정확한 시장 가격은 얼마야?",
+      "history": [],
+      "expected": {
+        "refused": true,
+        "required_keywords": [],
+        "target_doc_keys": [],
+        "source_required": false,
+        "forbidden_claims": [
+          "현재 가격을 추정"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 565,
+      "answer": "이 도슨트는 작품과 작가에 관한 자료로만 답할 수 있어요. 작품에 대해 궁금한 점을 물어봐 주세요.",
+      "refused": true,
+      "sources": null,
+      "keyword_hits": [],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "multiturn-001",
+      "category": "multi_turn",
+      "artwork_slug": "the-starry-night",
+      "question": "그 작품에서 마을과 하늘은 어떻게 대비돼?",
+      "history": [
+        {
+          "role": "user",
+          "content": "별이 빛나는 밤은 언제 그렸어?"
+        },
+        {
+          "role": "assistant",
+          "content": "고흐가 생레미에 머물던 1889년에 그렸습니다."
+        }
+      ],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "마을",
+          "하늘"
+        ],
+        "target_doc_keys": [
+          "vincent-van-gogh/commentary-the-starry-night"
+        ],
+        "source_required": true,
+        "forbidden_claims": []
+      },
+      "http_status": 200,
+      "duration_ms": 3645,
+      "answer": "《별이 빛나는 밤》에서 마을과 하늘은 강한 대비를 이룹니다. 화면 아래의 마을은 낮고 조용한 수평선으로 자리 잡고 있는데, 실제 병실 창에서는 보이지 않았던 상상의 요소입니다. 반면 하늘은 굵고 소용돌이치는 띠 모양의 구름과 대기가 움직임을 크게 보여 주며, 별과 달이 노란 빛을 내면서 활발하게 표현되어 있습니다. 즉, 마을은 정적인 느낌을 주고 하늘은 역동적이고 감정이 풍부한 모습으로 대비되어, 고흐가 느낀 정서와 기억을 회화적으로 재구성한 결과임을 알 수 있습니다.",
+      "refused": false,
+      "sources": [
+        {
+          "document_id": 703,
+          "title": "빈센트 반 고흐 《별이 빛나는 밤》 해설",
+          "doc_type": "artwork_commentary",
+          "source_name": "The Museum of Modern Art",
+          "source_url": "https://www.moma.org/collection/works/79802",
+          "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+          "basis_sources": []
+        },
+        {
+          "document_id": 721,
+          "title": "생레미 요양원과 그림을 통한 회복",
+          "doc_type": "artist_bio",
+          "source_name": "Van Gogh Museum",
+          "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+          "license": "CC BY 4.0 (이 데이터셋의 새 한국어 해설문)",
+          "basis_sources": []
+        }
+      ],
+      "keyword_hits": [
+        "마을",
+        "하늘"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    },
+    {
+      "id": "multiturn-002",
+      "category": "multi_turn",
+      "artwork_slug": "spirit-of-the-dead-watching",
+      "question": "그 형상에 대해서는 확실히 말할 수 있어?",
+      "history": [
+        {
+          "role": "user",
+          "content": "뒤쪽 검은 형상은 뭘 뜻해?"
+        },
+        {
+          "role": "assistant",
+          "content": "고갱은 죽은 자의 영으로 설명했지만 해석에는 주의가 필요합니다."
+        }
+      ],
+      "expected": {
+        "refused": false,
+        "required_keywords": [
+          "고갱의 설명",
+          "해석"
+        ],
+        "target_doc_keys": [
+          "paul-gauguin/commentary-spirit-of-the-dead-watching"
+        ],
+        "source_required": true,
+        "forbidden_claims": [
+          "타히티 문화 전체의 확정된 믿음"
+        ]
+      },
+      "http_status": 200,
+      "duration_ms": 2947,
+      "answer": "검은 형상은 고갱이 '죽은 자의 영혼' 또는 '죽음의 영혼'으로 설명한 존재입니다. 하지만 이 형상이 실제 방 안의 인물인지, 아니면 여성의 공포가 만들어 낸 상상인지 명확하지 않아서 작품의 불안하고 모호한 분위기를 만드는 핵심 요소입니다. 즉, 확실히 말하기 어려우며, 고갱의 설명과 작품의 상징적 의미를 함께 고려해야 합니다.",
+      "refused": false,
+      "sources": {
+        "document_id": 597,
+        "title": "폴 고갱 《죽음의 영혼이 지켜본다》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Buffalo AKG Art Museum",
+        "source_url": "https://buffaloakg.org/artworks/19651-mana%C3%B2-tupapa%C3%BA-spirit-dead-watching",
+        "license": "CC BY 4.0 (SKN35-3rd-1Team 데이터팀이 새로 작성한 해설문에만 적용)",
+        "basis_sources": []
+      },
+      "keyword_hits": [
+        "고갱의 설명"
+      ],
+      "forbidden_hits": [],
+      "error": null
+    }
+  ]
+}
