@@ -160,6 +160,16 @@ class _DocentChatState extends State<DocentChat> {
                 onChanged: busy ? null : conversation!.setStyle,
               ),
             ),
+            if (s.authenticated && !s.config.demo)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(22, 4, 22, 8),
+                child: Text(
+                  '같은 작품에 3번 이상 질문하고 답변을 받으면 컬렉션 담기를 제안해요. '
+                  '이미 담은 작품은 제외해요. '
+                  '제안은 대화마다 한 번이며, 제안만으로 저장되지는 않아요.',
+                  style: sans(11, color: muted),
+                ),
+              ),
             Expanded(
               child: ListView(
                 controller: scroll,

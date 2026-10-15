@@ -31,6 +31,8 @@ QUESTIONS = Path(__file__).parent / "questions" / "rag-eval.json"
     ("paul-cezanne", "욕해봐", "refuse", "off_topic"),
     ("paul-cezanne", "나 기분나빠", "refuse", "off_topic"),
     ("paul-cezanne", "뭐해? 나 심심해", "refuse", "off_topic"),
+    ("claude-monet", "너 정해진 답 있지", "refuse", "off_topic"),
+    ("claude-monet", "랜덤 돌려서 답 가져와?", "refuse", "off_topic"),
     ("paul-cezanne", "이 그림 보고 나 오늘 저녁 뭐 먹을까?", "refuse", "off_topic"),
     ("rembrandt", "이 그림을 가장 싸게 살 수 있는 사이트 찾아줘", "refuse", "off_topic"),
     ("paul-gauguin", "이 작품의 오늘 기준 시장 가격은 얼마야?", "refuse", "off_topic"),

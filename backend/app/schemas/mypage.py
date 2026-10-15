@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
+from app.core.collection_limits import MAX_COLLECTION_ARTWORKS
 from app.core.timeutil import local_date, utcnow
 from app.schemas.catalog import ArtworkCard
 from app.schemas.diary import DiaryEntry
@@ -13,7 +14,9 @@ from app.schemas.diary import DiaryEntry
 class ProfileWrite(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     # 공개 감상 피드에 표시되는 이름. 생략하면 지금 이름을 그대로 둔다.
-    nickname: Annotated[str, StringConstraints(min_length=2, max_length=20)] | None = None
+    nickname: Annotated[str, StringConstraints(min_length=2, max_length=20)] | None = (
+        None
+    )
     birth_date: date | None = None
     conversation_style: Literal["easy", "professional"] = "easy"
     onboarding_completed: bool = True
@@ -24,6 +27,7 @@ class ProfileWrite(BaseModel):
         if value is not None and not date(1900, 1, 1) <= value <= local_date(utcnow()):
             raise ValueError("생년월일을 확인해 주세요.")
         return value
+
 
 class ProfileOut(ProfileWrite):
     nickname: str
@@ -38,7 +42,7 @@ class CollectionWrite(BaseModel):
 class CollectionCreate(CollectionWrite):
     # Optional first artworks, kept in this order (the first one is the cover).
     artwork_ids: list[Annotated[int, Field(gt=0)]] = Field(
-        default_factory=list, max_length=500
+        default_factory=list, max_length=MAX_COLLECTION_ARTWORKS
     )
 
 
@@ -50,7 +54,7 @@ class CollectionOut(CollectionWrite):
 
 
 class AutoCollectionOut(BaseModel):
-    """A collection computed from the owner's view history (not stored)."""
+    """An automatic view grouping or a cached personal AI theme playlist."""
 
     key: str
     name: str
@@ -62,6 +66,11 @@ class AutoCollectionOut(BaseModel):
 class AutoCollectionDetail(BaseModel):
     collection: AutoCollectionOut
     items: list[ArtworkCard]
+
+
+class ThemeCollectionsOut(BaseModel):
+    items: list[AutoCollectionOut] = Field(default_factory=list)
+    message: str | None = None
 
 
 class ArtworkPage(BaseModel):

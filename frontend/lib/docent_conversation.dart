@@ -178,6 +178,8 @@ class DocentConversation extends ChangeNotifier {
       }
       if (!_current(revision)) return;
       messages.clear();
+      // A reset starts a new conversation, which may offer once again.
+      offered = false;
       error = historyError = failedQuestion = null;
     } finally {
       if (_current(revision)) {

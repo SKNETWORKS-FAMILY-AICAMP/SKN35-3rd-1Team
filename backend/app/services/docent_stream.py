@@ -21,6 +21,7 @@ from app.services import catalog_service, chat_service, docent_scope, docent_ser
 from app.services.docent_grounding import (
     NO_EVIDENCE_MESSAGE,
     context,
+    direct_chat_response,
     retrieval_question,
     validate_response,
 )
@@ -37,6 +38,24 @@ async def answer_events(
     # Synchronous DB and retrieval calls share one session outside the event loop.
     art = await run_in_threadpool(catalog_service.get_artwork, db, artwork_id)
     route = await run_in_threadpool(classify_artwork, db, artwork_id, body.question)
+    if (
+        route.kind == "rag"
+        and len(getattr(route, "artists", ())) <= 1
+        and not getattr(route, "names", ())
+        and (direct := direct_chat_response(art, body)) is not None
+    ):
+        yield "token", direct.answer
+        if user_id is not None:
+            await run_in_threadpool(
+                chat_service.save_exchange,
+                db,
+                user_id=user_id,
+                artwork_id=artwork_id,
+                question=body.question,
+                response=direct,
+            )
+        yield "done", direct
+        return
     if route.kind == "rag" and not await run_in_threadpool(
         docent_scope.is_artwork_request, art, body
     ):

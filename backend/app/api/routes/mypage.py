@@ -20,8 +20,9 @@ from app.schemas.mypage import (
     ProfileOut,
     ProfileWrite,
     TasteOut,
+    ThemeCollectionsOut,
 )
-from app.services import auto_collections, collection_assistant
+from app.services import auto_collections, collection_assistant, theme_collections
 from app.services import mypage_service as service
 
 router = APIRouter(prefix="/me", tags=["mypage"])
@@ -69,8 +70,17 @@ def auto_detail(
     key: str, user: CurrentUser, db: DbSession, response: Response
 ) -> AutoCollectionDetail:
     private(response)
+    if key.startswith("theme-"):
+        return theme_collections.detail(db, user.id, key)
     summary, works = auto_collections.collection(db, user.id, key)
     return AutoCollectionDetail(collection=summary, items=works)
+
+
+@router.post("/collections/themes/refresh")
+def refresh_themes(user: CurrentUser, db: DbSession, response: Response) -> ThemeCollectionsOut:
+    """Naturally prepare personal AI playlists; stable cached results on repeats."""
+    private(response)
+    return theme_collections.refresh(db, user.id)
 
 
 @router.post("/collections", status_code=201)

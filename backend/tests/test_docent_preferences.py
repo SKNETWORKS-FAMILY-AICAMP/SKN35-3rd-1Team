@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from langchain_core.documents import Document
 
 from app.rag.classifier import classify
-from app.schemas.chat import ChatRequest
+from app.schemas.chat import ChatRequest, ChatTurn
 from app.services import docent_service as docent
 
 
@@ -110,6 +110,59 @@ def test_no_documents_never_calls_model(setup, monkeypatch):
     )
 
 
+@pytest.mark.parametrize(("question", "history", "expected"), [
+    ("이 작가의 이름이 뭐야?", [], "이 작품의 작가는 클로드 모네입니다."),
+    ("작가 이름 이야기해줘", [], "이 작품의 작가는 클로드 모네입니다."),
+    ("이 그림 누가 그렸어?", [], "이 작품의 작가는 클로드 모네입니다."),
+    ("클로드 모네라는 작가의 이름을 다시는 답변에 넣지마", [], "알겠습니다."),
+    (
+        "왜 이름을 말 안해?",
+        [ChatTurn(role="user", content="이 작가의 이름이 뭐야?"), ChatTurn(role="assistant", content="작품 설명만 반복했습니다.")],
+        "이 작품의 작가는 클로드 모네입니다.",
+    ),
+])
+def test_identity_and_wording_corrections_skip_rag(setup, monkeypatch, question, history, expected):
+    monkeypatch.setattr(
+        docent.catalog_service,
+        "get_artwork",
+        lambda *a: SimpleNamespace(title="푸르빌의 절벽 산책로", artist_name="클로드 모네"),
+    )
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *a: pytest.fail("명확한 질문에 범위 모델 호출"))
+    monkeypatch.setattr(docent, "retrieve", lambda *a: pytest.fail("카탈로그 단답에 검색 호출"))
+    monkeypatch.setattr(docent, "generate", lambda *a: pytest.fail("카탈로그 단답에 생성 호출"))
+
+    result = docent.answer(None, 1, ChatRequest(question=question, history=history))
+    assert not result.refused and result.sources == []
+    assert expected in result.answer
+    assert len(result.answer) < 120
+
+
+def test_identity_question_overrides_earlier_no_name_request(setup, monkeypatch):
+    monkeypatch.setattr(
+        docent.catalog_service,
+        "get_artwork",
+        lambda *a: SimpleNamespace(title="푸르빌의 절벽 산책로", artist_name="클로드 모네"),
+    )
+    body = ChatRequest(question="이 작가의 이름이 뭐야?", history=[
+        ChatTurn(role="user", content="클로드 모네라는 작가의 이름을 다시는 답변에 넣지마"),
+        ChatTurn(role="assistant", content="알겠습니다."),
+    ])
+    result = docent.answer(None, 1, body)
+    assert result.answer == "이 작품의 작가는 클로드 모네입니다."
+
+
+def test_multiple_artist_identity_question_does_not_take_single_artist_shortcut(setup, monkeypatch):
+    monkeypatch.setattr(
+        docent,
+        "classify_artwork",
+        lambda *a: SimpleNamespace(kind="rag", artists=("claude-monet", "paul-cezanne"), names=()),
+    )
+    monkeypatch.setattr(docent.docent_scope, "is_artwork_request", lambda *a: False)
+    monkeypatch.setattr(docent, "retrieve", lambda *a: pytest.fail("범위 밖 질문에 검색 호출"))
+    result = docent.answer(None, 1, ChatRequest(question="모네와 세잔 작가 이름 이야기해줘"))
+    assert result.refused
+
+
 def test_collection_action_refuses_before_retrieval(setup, monkeypatch):
     monkeypatch.setattr(
         docent,
@@ -131,6 +184,8 @@ def test_collection_action_refuses_before_retrieval(setup, monkeypatch):
     "욕해봐",
     "나 기분나빠",
     "뭐해? 나 심심해",
+    "너 정해진 답 있지",
+    "랜덤 돌려서 답 가져와?",
 ])
 def test_clear_unrelated_chat_refuses_before_retrieval(setup, monkeypatch, question):
     monkeypatch.setattr(

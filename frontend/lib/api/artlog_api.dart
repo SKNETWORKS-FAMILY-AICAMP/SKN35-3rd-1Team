@@ -102,6 +102,15 @@ class ArtlogApi {
           token = null;
           onUnauthorized?.call();
         }
+        if (response.statusCode == 409) {
+          final detail = object(
+            jsonDecode(utf8.decode(response.bodyBytes)),
+          )['detail'];
+          if (detail is String &&
+              (detail.startsWith('컬렉션은 ') || detail.startsWith('컬렉션에는 '))) {
+            throw ApiException(detail, status: 409);
+          }
+        }
         throw ApiException(switch (response.statusCode) {
           401 => '로그인이 만료되었어요. 다시 로그인해 주세요.',
           403 => '이 기능을 이용할 권한이 없어요.',
@@ -573,6 +582,20 @@ class ArtlogApi {
   Future<List<AutoCollection>> autoCollections() async => items(
     await _request('GET', 'me/collections/auto', authenticated: true),
   ).map((e) => AutoCollection.fromJson(object(e))).toList();
+  Future<(List<AutoCollection>, String?)> refreshThemeCollections() async {
+    final j = object(
+      await _request(
+        'POST',
+        'me/collections/themes/refresh',
+        authenticated: true,
+      ),
+    );
+    return (
+      items(j['items']).map((e) => AutoCollection.fromJson(object(e))).toList(),
+      j['message'] as String?,
+    );
+  }
+
   Future<(AutoCollection, List<Artwork>)> autoCollection(String key) async {
     final j = object(
       await _request(

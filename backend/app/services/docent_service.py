@@ -25,6 +25,7 @@ from app.services.docent_grounding import (
     NO_EVIDENCE_MESSAGE,
     GroundedAnswer,
     context,
+    direct_chat_response,
     retrieval_question,
     validate_response,
 )
@@ -80,6 +81,13 @@ def answer(db: Session, artwork_id, body, user_id=None):
     route = classify_artwork(db, artwork_id, body.question)
     if route.kind in ("refuse", "other_artist"):
         return ChatResponse(answer=refusal_message(route), refused=True, sources=[])
+    if (
+        route.kind == "rag"
+        and len(getattr(route, "artists", ())) <= 1
+        and not getattr(route, "names", ())
+        and (direct := direct_chat_response(art, body)) is not None
+    ):
+        return direct
     if not docent_scope.is_artwork_request(art, body):
         return ChatResponse(
             answer=refusal_message(Route("refuse", "off_topic")),

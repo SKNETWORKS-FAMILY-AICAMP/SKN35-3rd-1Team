@@ -9,6 +9,7 @@ from sqlalchemy import delete, func, literal, select, union_all
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.collection_limits import MAX_COLLECTION_ARTWORKS, MAX_SAVED_COLLECTIONS
 from app.core.timeutil import utcnow
 from app.models import (
     Artist,
@@ -18,6 +19,7 @@ from app.models import (
     Collection,
     CollectionItem,
     DiaryEntry,
+    User,
     UserPreference,
 )
 from app.repositories import diary_repository
@@ -145,6 +147,7 @@ def collections(db, user_id):
         select(Collection)
         .where(Collection.user_id == user_id)
         .order_by(Collection.updated_at.desc(), Collection.id.desc())
+        # Keep collections saved under the previous quota visible.
         .limit(50)
     ).all()
     if not rows:
@@ -193,22 +196,33 @@ def collections(db, user_id):
 
 
 def save_collection(db, user_id, body: CollectionWrite, collection_id=None):
+    initial = getattr(body, "artwork_ids", []) if collection_id is None else []
+    if len(set(initial)) > MAX_COLLECTION_ARTWORKS:
+        raise HTTPException(
+            409, f"컬렉션에는 작품을 {MAX_COLLECTION_ARTWORKS}점까지 담을 수 있어요."
+        )
     row = (
         own_collection(db, user_id, collection_id)
         if collection_id is not None
         else None
     )
     if row is None:
-        count = db.scalar(
-            select(func.count())
-            .select_from(Collection)
-            .where(Collection.user_id == user_id)
+        # Concurrent creates wait on the user row; the locking read then sees
+        # rows they committed (a plain COUNT reuses the snapshot and allows 11).
+        db.execute(select(User.id).where(User.id == user_id).with_for_update())
+        count = len(
+            db.scalars(
+                select(Collection.id)
+                .where(Collection.user_id == user_id)
+                .with_for_update()
+            ).all()
         )
-        if count >= 50:
-            raise HTTPException(409, "컬렉션은 50개까지 만들 수 있어요.")
+        if count >= MAX_SAVED_COLLECTIONS:
+            raise HTTPException(
+                409, f"컬렉션은 {MAX_SAVED_COLLECTIONS}개까지 만들 수 있어요."
+            )
         row = Collection(user_id=user_id, name=body.name, description=body.description)
         db.add(row)
-    initial = getattr(body, "artwork_ids", []) if collection_id is None else []
     row.name, row.description, row.updated_at = body.name, body.description, utcnow()
     try:
         _add_initial_artworks(db, row, initial)
@@ -253,14 +267,24 @@ def add_artwork(db, user_id, collection_id, artwork_id):
     row = own_collection(db, user_id, collection_id)
     catalog_service.ensure_artwork(db, artwork_id)
     key = (collection_id, artwork_id)
-    if db.get(CollectionItem, key) is None:
-        count = db.scalar(
-            select(func.count())
-            .select_from(CollectionItem)
+    # Concurrent adds wait on the collection row; the locking read then sees
+    # items they committed, so two adds cannot both pass at 29 items.
+    db.execute(
+        select(Collection.id).where(Collection.id == collection_id).with_for_update()
+    )
+    existing = set(
+        db.scalars(
+            select(CollectionItem.artwork_id)
             .where(CollectionItem.collection_id == collection_id)
+            .with_for_update()
         )
-        if count >= 500:
-            raise HTTPException(409, "컬렉션에는 작품을 500점까지 담을 수 있어요.")
+    )
+    if artwork_id not in existing:
+        if len(existing) >= MAX_COLLECTION_ARTWORKS:
+            raise HTTPException(
+                409,
+                f"컬렉션에는 작품을 {MAX_COLLECTION_ARTWORKS}점까지 담을 수 있어요.",
+            )
         db.add(CollectionItem(collection_id=collection_id, artwork_id=artwork_id))
         row.updated_at = utcnow()
         try:
@@ -429,9 +453,7 @@ def find_artists(db, query) -> list[tuple[int, str]]:
         return []
     slugs = collected_artist_slugs(term)
     where = (
-        Artist.slug.in_(slugs)
-        if slugs
-        else Artist.name.contains(term, autoescape=True)
+        Artist.slug.in_(slugs) if slugs else Artist.name.contains(term, autoescape=True)
     )
     return [
         (i, name)
