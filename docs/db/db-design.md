@@ -4,7 +4,7 @@ Oct 9, 2026 · @고태민
 
 ## 1. 권장 구조
 
-TiDB Cloud Starter 클러스터 하나에 서비스 테이블 20개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·추천 캐시는 MVP에서 뺍니다. 채팅 기록(`chat_sessions`, `chat_messages`)은 2026-10-12에, 외부 계정 연결과 선택형 개인화 설정(`social_accounts`, `user_preferences`)은 2026-10-13에, 감상글·공개 피드(`diary_entries`)와 마이페이지 설정 확장·나만의 컬렉션(`collections`, `collection_items`)은 2026-10-13~14에 추가했습니다.
+TiDB Cloud Starter 클러스터 하나에 서비스 테이블 22개를 두고 사용자 데이터와 벡터를 함께 관리하는 구조를 권장합니다. 벡터는 RAG용 `document_chunks`와 추천용 `artwork_embeddings`로 나누고, 벡터 인덱스·추천 캐시는 MVP에서 뺍니다. 채팅 기록(`chat_sessions`, `chat_messages`)은 2026-10-12에, 외부 계정 연결과 선택형 개인화 설정(`social_accounts`, `user_preferences`)은 2026-10-13에, 감상글·공개 피드(`diary_entries`)와 마이페이지 설정 확장·나만의 컬렉션(`collections`, `collection_items`)은 2026-10-13~14에 추가했습니다. 이후 회원 팔로우(`user_follows`, 0009)·작품별 감상평 제약(0010)·AI 감성 테마 캐시(`theme_collection_cache`, 0011)를 반영했습니다. 현재 코드 head는 `20261014_0011`이며 운영 적용 이력과 구분합니다.
 
 ### 핵심 결정
 
@@ -44,6 +44,8 @@ TiDB Cloud Starter 클러스터 하나에 서비스 테이블 20개를 두고 �
 | `diary_entries` | 사용자 × 작품당 감상글 1개, 하루 개수 제한 없음. 기본 비공개이고, 공개로 바꾼 글은 피드에 노출 | 내 감상·비평, 캘린더, 공개 피드 |
 | `collections` | 사용자가 만든 비공개 작품 묶음 | 마이 컬렉션, 채팅·MCP로 컬렉션 만들기 |
 | `collection_items` | 컬렉션에 담긴 작품(N:M) | 마이 컬렉션, AI 취향 소개의 근거 |
+| `user_follows` | 회원 간 팔로우 | 공개 감상가 프로필·팔로워·팔로잉 |
+| `theme_collection_cache` | 사용자별 AI 테마 스냅샷 | 감성 테마 재사용·생성 간격 제어 |
 
 ### 벡터 테이블을 분리해야 하는가
 
@@ -77,6 +79,9 @@ TiDB Cloud Starter 클러스터 하나에 서비스 테이블 20개를 두고 �
 erDiagram
     users ||--o{ social_accounts : "로그인 계정"
     users ||--o| user_preferences : "개인화 설정"
+    users ||--o{ user_follows : "팔로우함"
+    users ||--o{ user_follows : "팔로우받음"
+    users ||--o| theme_collection_cache : "AI 테마 캐시"
     users ||--o{ artwork_likes : "좋아요"
     artworks ||--o{ artwork_likes : "좋아요 받음"
     users ||--o{ artist_follows : "팔로우"
@@ -316,7 +321,9 @@ erDiagram
 | id | BIGINT AUTO\_INCREMENT | PK | NO |  |
 | firebase\_uid | VARCHAR(128) | UNIQUE | NO | Firebase Auth 사용자 id. 서버가 검증한 ID 토큰에서만 가져옴 |
 | email | VARCHAR(255) | UNIQUE | NO | 앱에서 소문자로 정규화해 저장 |
-| nickname | VARCHAR(50) |  | NO |  |
+| nickname | VARCHAR(50) |  | NO | 공개 닉네임. 프로필 API는 공백 제거 후 2~20자 검증 |
+| public\_id | VARCHAR(22) | UNIQUE | NO | 무작위 공개 ID. 현재 생성값은 12자 |
+| follow\_list\_public | TINYINT(1) |  | NO | 기본값 1. 다른 이용자의 팔로우 목록·수 조회 허용 여부 |
 | created\_at | DATETIME |  | NO | 기본값 CURRENT\_TIMESTAMP |
 | updated\_at | DATETIME |  | NO | 수정 시 자동 갱신 |
 
@@ -342,17 +349,17 @@ erDiagram
 | tone | VARCHAR(30) |  | YES | 사용자가 선택한 답변 말투 |
 | explanation\_level | VARCHAR(30) |  | YES | 사용자가 선택한 설명 수준 |
 | birth\_date | DATE |  | YES | 마이페이지·온보딩에서 선택 입력하는 생년월일. 저장할 때 `birth_year`도 같은 연도로 맞춤 |
-| explanation\_priorities | JSON |  | YES | 설명 우선순위 3개의 순서. `technique`(회화 기법), `background`(작품 배경 이야기), `artist_life`(작가 생애). 기본값은 `background → technique → artist_life` |
+| explanation\_priorities | JSON |  | YES | 이전 설명 우선순위 호환 컬럼. 현재 API·도슨트는 읽거나 갱신하지 않음 |
 | conversation\_style | VARCHAR(30) |  | YES | `easy`(편안하고 쉬운 대화) 또는 `professional`(전문용어 적극 사용). 저장할 때 `explanation_level`도 `easy`/`deep`으로 맞춤 |
 | onboarding\_completed | TINYINT(1) |  | NO | 기본값 0. 첫 로그인 3단계 온보딩을 끝내거나 건너뛰면 1 |
 | taste\_summary | TEXT |  | YES | AI 취향 소개 결과 캐시 |
-| taste\_fingerprint | VARCHAR(64) |  | YES | 취향 소개를 만들 때 쓴 근거(좋아요·컬렉션 작품 목록)의 SHA-256. 근거가 같으면 다시 만들지 않고 캐시를 씀 |
+| taste\_fingerprint | VARCHAR(64) |  | YES | 취향 소개를 만들 때 쓴 근거(좋아요·컬렉션 작품과 공개 감상평)의 SHA-256. 근거가 같으면 다시 만들지 않고 캐시를 씀 |
 | taste\_generated\_at | DATETIME |  | YES | 취향 소개를 만든 시각 |
 | updated\_at | DATETIME |  | NO | 수정 시 자동 갱신 |
 
-개인화 행 자체가 없어도 정상 사용자입니다. 도슨트는 사용자가 직접 고른 `conversation_style`과 `explanation_priorities`만 답변 지시에 반영하고, 생년월일·성별로 말투를 추론하지 않습니다. `birth_year`, `gender`, `tone`, `explanation_level`은 0006에서 만든 초기 컬럼으로, 0008 이전 코드와의 호환을 위해 남겨 둡니다. 새 코드는 저장할 때 함께 맞춰 줍니다.
+개인화 행 자체가 없어도 정상 사용자입니다. 도슨트는 요청의 `explanation_style`(easy/standard/deep)을 우선하고 생략할 때 저장된 `conversation_style`을 사용합니다. 생년월일·성별·저장된 설명 우선순위는 답변 지시에 사용하지 않습니다. `birth_year`, `gender`, `tone`, `explanation_level`은 0006에서 만든 초기 컬럼으로, 0008 이전 코드와의 호환을 위해 남겨 둡니다. 새 코드는 저장할 때 함께 맞춰 줍니다.
 
-취향 소개에는 좋아요·컬렉션 작품(중복 제거, 최대 100점)의 제목·작가·연도만 보냅니다. 생년월일, 이메일, UID, 감상글 본문은 AI에 보내지 않습니다.
+취향 소개에는 좋아요·컬렉션 작품(중복 제거, 최대 100점)의 제목·작가·연도와 공개 감상평 최근 20편(각 300자)을 보냅니다. 생년월일·이메일·UID·비공개 감상글 본문은 보내지 않습니다. 공개 감상평만 있어도 생성할 수 있습니다.
 
 ### art\_movements
 
@@ -523,15 +530,15 @@ erDiagram
 | 컬럼 | 타입 | 키 | NULL | 설명 |
 | --- | --- | --- | --- | --- |
 | id | BIGINT AUTO\_INCREMENT | PK | NO | 피드의 정렬과 커서(`before_id`) 기준 |
-| user\_id | BIGINT | FK → users.id, UNIQUE(user\_id, entry\_date) | NO | 작성자 |
-| entry\_date | DATE |  | NO | 감상한 날짜(한국 시간). 사용자당 하루 1개 |
+| user\_id | BIGINT | FK → users.id, UNIQUE(user\_id, artwork\_id) | NO | 작성자 |
+| entry\_date | DATE |  | NO | 감상한 날짜(한국 시간). 하루 여러 편 허용 |
 | artwork\_id | BIGINT | FK → artworks.id | YES | 감상한 작품. 작품이 삭제되면 NULL |
 | content | TEXT |  | NO | 본문. API에서 1\~2,000자로 검증 |
 | is\_public | TINYINT(1) |  | NO | 기본값 0. 1이면 공개 피드에 노출 |
 | created\_at | DATETIME |  | NO |  |
 | updated\_at | DATETIME |  | NO | 수정할 때 앱에서 갱신 |
 
-공개 피드는 작성자 닉네임과 작품 카드만 돌려주고, 이메일·Firebase UID·내부 사용자 id는 내보내지 않습니다. 하루 1개 제약 때문에 같은 날 다시 쓰면 새 글이 생기지 않고 기존 글이 바뀝니다. 피드에도 한 사람의 글은 하루 최대 1개만 올라갑니다.
+공개 피드는 작성자 닉네임·공개 프로필 ID(`author_id`)·감상글·작품 카드를 반환하고, 이메일·Firebase UID·내부 사용자 ID는 내보내지 않습니다. 사용자×작품당 한 편이며 중복 작성은 409입니다. 작품 없는 메모(`artwork_id=NULL`)는 여러 편 허용합니다. 작성은 POST, 수정은 PUT이며 자동 upsert하지 않습니다.
 
 ### collections
 
@@ -544,7 +551,7 @@ erDiagram
 | created\_at | DATETIME |  | NO |  |
 | updated\_at | DATETIME |  | NO | 이름·소개·담긴 작품이 바뀌면 앱에서 갱신 |
 
-컬렉션은 모두 비공개입니다. 사용자당 50개, 컬렉션당 작품 500점까지로 앱에서 제한합니다.
+컬렉션은 모두 비공개입니다. 사용자당 10개, 컬렉션당 작품 30점으로 서버 공통 한도와 행 잠금을 적용합니다. 기존 초과 데이터는 유지하고 새 추가만 막습니다.
 
 ### collection\_items
 
@@ -555,6 +562,30 @@ erDiagram
 | created\_at | DATETIME |  | NO | 담은 시각 |
 
 같은 작품을 두 번 담아도 복합 PK 때문에 한 행만 남습니다. 앱 화면, 컬렉션 채팅, MCP 도구(`add_artwork_to_collection`)가 모두 같은 저장 서비스를 거칩니다. 채팅은 사용자가 확인 버튼을 누른 뒤에만 저장합니다.
+
+
+### user_follows
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| follower_id | BIGINT | PK, FK → users.id | NO | 팔로우하는 회원 |
+| followee_id | BIGINT | PK, FK → users.id, INDEX | NO | 팔로우받는 회원 |
+| created_at | DATETIME | | NO | 기본값 CURRENT_TIMESTAMP |
+
+두 FK 모두 사용자 삭제 시 CASCADE입니다. 자기 자신 팔로우는 서비스에서 400으로 거절합니다. 공개 API는 내부 ID 대신 `users.public_id`를 사용합니다. `follow_list_public=false`이면 다른 이용자에게 목록은 403, 팔로우 수는 null입니다.
+
+### theme_collection_cache
+
+| 컬럼 | 타입 | 키 | NULL | 설명 |
+| --- | --- | --- | --- | --- |
+| user_id | BIGINT | PK, FK → users.id | NO | 사용자당 한 행, 사용자 삭제 시 CASCADE |
+| fingerprint | VARCHAR(64) | | YES | 생성 근거 해시 |
+| themes | JSON | | NO | 테마 이름·설명·작품 ID 순서 |
+| basis | JSON | | YES | 생성 시 좋아요·열람 작품 ID |
+| generated_at | DATETIME | | YES | 마지막 성공 시각 |
+| attempted_at | DATETIME | | YES | 생성 시도 간격 제어 |
+
+기간 만료 없이 스냅샷을 재사용합니다. 좋아요 변화 또는 새로 본 작품 3점 이상일 때 갱신하며 생성 시도는 사용자당 30분에 한 번입니다. AI 실패 시 기존 테마를 유지합니다. 일반 컬렉션으로 저장하면 `collections`·`collection_items`에 별도 복사되어 이후 캐시 갱신의 영향을 받지 않습니다.
 
 ### 생애·해설·비교 문서를 저장하는 규칙
 
@@ -584,7 +615,9 @@ erDiagram
 | 청크 | UNIQUE `(document_id, chunk_index)` | 재적재 시 같은 순번 중복 삽입 거부 |
 | 이메일 | UNIQUE `(email)` | 가입 거부 |
 | 사조·작가·작품 slug | UNIQUE `(slug)` | 적재 스크립트가 upsert로 처리 |
-| 감상글 | UNIQUE `(user_id, entry_date)` | 같은 날짜는 upsert로 덮어씀 |
+| 감상글 | UNIQUE `(user_id, artwork_id)` | 같은 작품 중복 작성 409, 작품 없는 메모는 여러 편 허용 |
+| 회원 팔로우 | PK `(follower_id, followee_id)` | 중복 팔로우 무해 |
+| AI 테마 캐시 | PK `(user_id)` | 사용자당 스냅샷 한 행 |
 | 컬렉션 이름 | UNIQUE `(user_id, name)` | 409로 거부 |
 | 컬렉션 담기 | PK `(collection_id, artwork_id)` | 중복 담기는 무시 |
 
@@ -712,7 +745,7 @@ INSERT INTO artwork_likes (user_id, artwork_id) VALUES (1, 999999999);
 
 ## 6. SQL 예시
 
-기준 스키마는 2026-10-14에 TiDB Cloud Serverless v8.5.3의 `3rd_project`에 Alembic `20261014_0008`까지 적용했습니다. 모델의 서비스 테이블 20개가 모두 있고, Alembic 관리 테이블을 합치면 실제 테이블은 21개입니다. 적용 후 `alembic check`에서 모델과 DB의 차이가 없었습니다.
+과거 운영 적용 기록: 기준 스키마는 2026-10-14에 TiDB Cloud Serverless v8.5.3의 `3rd_project`에 Alembic `20261014_0008`까지 적용했습니다. 모델의 서비스 테이블 20개가 모두 있고, Alembic 관리 테이블을 합치면 실제 테이블은 21개입니다. 당시 적용 후 `alembic check`에서 모델과 DB의 차이가 없었습니다. 현재 코드에는 0009~0011이 추가되었으므로 이 기록만으로 최신 운영 적용을 확인할 수 없습니다.
 
 | 검증 항목 | 방법 | 결과 |
 | --- | --- | --- |
@@ -1201,7 +1234,7 @@ Starter 무료 한도도 확인해 두세요. 조직당 행 저장소 5GiB, 컬�
 
 ### 발표용 프로젝트로서의 현실성
 
-구현 가능한 범위입니다. 서비스 테이블 20개 중 여러 개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
+구현 가능한 범위입니다. 서비스 테이블 22개 중 여러 개는 컬럼이 2\~3개뿐인 연결 테이블이고, 추천 로직은 SQL 2개와 앱 코드 몇 줄입니다. 시간이 더 드는 쪽은 DB 밖에 있습니다.
 
 - **데이터 수집과 저작권.** 해설 문서와 작품 이미지의 라이선스를 확인해야 합니다. `license`와 `image_license` 컬럼을 둔 이유입니다.
 - **청킹 품질.** 답변 품질은 인덱스보다 청크를 어떻게 자르느냐에 더 크게 좌우됩니다.

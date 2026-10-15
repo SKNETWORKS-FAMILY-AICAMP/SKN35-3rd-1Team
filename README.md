@@ -16,7 +16,7 @@ museum-rag-react-fastapi-tidb/
 │   │   ├── api/routes/      엔드포인트 (요청 검증, 응답 반환)
 │   │   ├── services/        서비스 로직 (좋아요, 내 서재, 추천, 챗봇 흐름)
 │   │   ├── repositories/    TiDB 조회·저장, 벡터 거리 SQL
-│   │   ├── models/          SQLAlchemy 모델 (서비스 테이블 20개)
+│   │   ├── models/          SQLAlchemy 모델 (서비스 테이블 22개)
 │   │   ├── schemas/         Pydantic 요청·응답 스키마
 │   │   ├── rag/             청킹, 검색, 프롬프트, 답변 생성, 출처
 │   │   ├── clients/         임베딩·LLM API 호출
@@ -75,8 +75,8 @@ Flutter 화면 → frontend/lib/api → FastAPI routes → services → reposito
 
 1. 저장소 루트에서 `uv sync`로 파이썬 의존성을 설치합니다. `pyproject.toml`과 `uv.lock`은 루트에 있습니다.
 2. 루트의 `.env.example`을 루트에 `.env`로 복사해 값을 채웁니다. Flutter 프론트는 `--dart-define` 또는 Git 제외 설정 파일로 빌드 값을 전달합니다 (`frontend/README.md` 참고).
-3. 임베딩 모델을 정하고 `EMBEDDING_DIM`과 스키마의 `VECTOR(1536)`을 같은 값으로 맞춥니다.
-4. TiDB에 Alembic 마이그레이션 전체 이력을 적용합니다 (`alembic upgrade head`). `docs/db/01_schema_mvp.sql`은 0006 시점의 참고 스냅샷이며 현재 head는 `20261014_0008`입니다.
+3. 임베딩 모델은 `EMBEDDING_MODEL`로 지정하며, 차원 기준은 `backend/app/models/base.py`의 `EMBEDDING_DIMENSION=1536`입니다. 모델 차원을 바꾸면 DB 마이그레이션과 벡터 재생성도 필요합니다.
+4. TiDB에 Alembic 마이그레이션 전체 이력을 적용합니다 (`alembic upgrade head`). `docs/db/01_schema_mvp.sql`은 0006 시점의 참고 스냅샷이며 현재 코드 head는 `20261014_0011`입니다.
 5. `backend/scripts/`의 적재 스크립트를 정해진 순서로 실행합니다.
 6. 백엔드 서버와 프론트 개발 서버를 띄웁니다.
 

@@ -15,9 +15,15 @@
 - `seed_dummy_members.py`: 피드·팔로우 확인용 더미 회원 12명(`firebase_uid`가 `dummy:`로 시작)과 그들의 설정·좋아요·작가 팔로우·열람·감상평·컬렉션·회원 팔로우를 채웁니다. 기본으로 dev-user가 더미 8명을 팔로우하고, `--fan 이메일`로 다른 실제 계정을 고를 수 있습니다. 고정 시드라 여러 번 돌려도 같고, `--remove`로 더미 회원과 그 활동을 모두 지웁니다.
 - `load_documents.py`: 문서를 doc_key 기준으로 upsert하고 작가·작품·근거 연결을 다시 맞춥니다. 본문이 바뀐 문서의 청크는 지웁니다.
 
-두 적재 스크립트는 `--dry-run`으로 바뀔 내용만 세어 볼 수 있습니다. 청킹·임베딩 스크립트는 아직 작성하지 않았습니다.
+- `build_chunks.py`: 승인 문서를 청킹·임베딩해 TiDB에 저장합니다. 본문·모델이 같은 청크는 재사용하며 `--dry-run`, 시험용 `--limit`을 지원합니다.
+- `build_artwork_embeddings.py`: 작품 대표 벡터를 매번 전체 재생성합니다. 기본 입력은 제목·사조·재료·설명이고 `--with-artist`로 작가 이름을 포함합니다. `--dry-run`을 지원합니다.
+- `sync_chroma.py`: TiDB 청크·작품 벡터를 Chroma에 복사합니다. `--dry-run`은 변경 계획만 확인하며 `--reset`은 컬렉션을 재생성합니다.
+- `eval_retrieval.py`, `eval_docent.py`, `eval_round3.py`: 검색·도슨트 품질 평가. 실제 외부 연결이 필요한 명령이므로 옵션은 `--help`로 확인합니다.
+- `render_erd.py`: 현재 모델에서 ERD 문서·이미지를 생성합니다.
 
-2026-10-12 적재 상태: 마이그레이션 0003까지 적용, 사조 4 · 작가 8 · 작품 219 · 문서 361 · 작가 연결 134 · 작품 연결 173 · 근거 연결 135. `document_chunks`와 `artwork_embeddings`는 비어 있습니다.
+카탈로그·문서 적재도 `--dry-run`을 지원합니다.
+
+2026-10-15 저장소 산출물(`data/processed/_SUCCESS.json`) 기준: 사조 6 · 작가 10 · 작품 277 · 문서 427 · 검수 대기 문서 0. 이는 로컬 산출물 수이며 운영 DB·Chroma 적재 수나 적용 revision은 별도 확인합니다.
 
 ## 파일과 실행 순서
 
@@ -29,7 +35,8 @@ FK 때문에 부모 테이블부터 채워야 합니다. 아래 순서대로 실
 | 2 | `load_documents.py` | `data/processed/`의 문서 | `documents`, `document_artists`, `document_artworks`, `document_basis_documents` |
 | 3 | `build_chunks.py` | `documents` | `document_chunks` (청킹 + 임베딩) |
 | 4 | `build_artwork_embeddings.py` | `artworks` | `artwork_embeddings` |
-| 5 | `seed_demo_user.py` | (없음) | 대상 계정(`--email`, 기본 dev-user)의 `user_preferences`, `artwork_likes`, `artwork_views`, `diary_entries`, `collections`, `collection_items` (발표용) |
+| 5 | `sync_chroma.py` | TiDB 청크·작품 벡터 | Chroma `chunks`, `artworks` (검색용 사본) |
+| 선택 | `seed_demo_user.py` | (없음) | 대상 계정(`--email`, 기본 dev-user)의 `user_preferences`, `artwork_likes`, `artwork_views`, `diary_entries`, `collections`, `collection_items` (발표용) |
 
 원본을 정제하는 전처리 스크립트(`preprocess.py`)는 `data/raw/`와 `data/mappings/`를 읽어 `data/processed/`에 씁니다. 기준은 [`docs/data-collection.md`](../../docs/data-collection.md)에 있습니다. 전처리 결과가 최종 확정되기 전에는 위 적재 스크립트를 실행하지 않습니다.
 
@@ -41,14 +48,14 @@ FK 때문에 부모 테이블부터 채워야 합니다. 아래 순서대로 실
 uv run python -m scripts.preprocess
 ```
 
-적재 스크립트를 작성한 뒤에는 `uv run python -m scripts.load_catalog`처럼 실행합니다.
+적재 스크립트는 `uv run python -m scripts.load_catalog`처럼 실행합니다.
 
 ## 규칙
 
 - **여러 번 돌려도 안전하게**: 사조·작가·작품은 `slug`를 기준으로 있으면 갱신하고 없으면 추가합니다. 자동 증가 id는 실행할 때마다 달라질 수 있어 기준 키로 쓰지 않습니다.
 - **문서 갱신**: 문서는 `doc_key`를 기준으로 갱신합니다. 본문이 바뀐 문서만 기존 청크를 지우고 다시 청킹·임베딩합니다.
 - **편집 근거 보존**: `basis_doc_keys`는 모든 문서를 upsert한 뒤 `document_basis_documents`에 연결하고, `basis_external_sources`는 `documents`의 JSON 컬럼에 그대로 넣습니다.
-- **작품 벡터의 원문**: 제목, 사조, 재료·기법, 주제 설명을 한 덩어리로 만들어 임베딩합니다. 작가 이름을 넣으면 같은 작가 작품끼리 더 가까워지므로 넣을지 팀에서 정합니다.
+- **작품 벡터의 원문**: 제목, 사조, 재료·기법, 주제 설명을 한 덩어리로 만들어 임베딩합니다. 기본값은 작가 이름 제외이고 `--with-artist`로 포함합니다.
 - **임베딩 모델 기록**: 벡터를 넣을 때 `embedding_model` 컬럼에 모델 이름을 함께 넣습니다.
-- **API 비용**: 임베딩은 여러 건을 묶어 호출하고, 이미 같은 모델로 만든 벡터는 건너뜁니다.
+- **API 비용**: 임베딩은 여러 건을 묶어 호출합니다. 청크는 본문·모델이 같으면 재사용하지만 작품 벡터는 매번 전체 재생성합니다. Chroma 동기화는 저장된 벡터를 사용합니다.
 - 실행 결과(몇 건 추가, 몇 건 갱신)를 출력합니다.

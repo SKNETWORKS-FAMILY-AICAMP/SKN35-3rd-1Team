@@ -16,11 +16,13 @@ FastAPI 서버입니다. API, TiDB 연동, RAG, 추천, 테스트를 담습니�
 - `alembic.ini`: Alembic 설정
 
 의존성(`pyproject.toml`, `uv.lock`)과 비밀값(`.env`)은 이 폴더가 아니라 저장소 루트에 둡니다. `.env` 형식은 루트의 `.env.example`을 참고하고, `.env`는 커밋하지 않습니다.
-서버는 `backend/`에서 실행하므로 설정 코드(`app/core/`)에서 `.env` 경로를 루트(`../.env`)로 지정해야 합니다.
+설정 코드 `app/core/config.py`는 실행 위치와 관계없이 저장소 루트의 `.env`를 읽습니다. 명령은 `backend/`에서 실행합니다.
 
 ## 필요한 패키지
 
-`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `tidb-vector`, `alembic`, `pydantic-settings`, 그리고 팀이 고른 LLM·임베딩 SDK와 LangChain.
+정확한 의존성은 루트 `pyproject.toml`과 `uv.lock`이 기준입니다. FastAPI·SQLAlchemy·TiDB Vector·Alembic·Firebase Admin·LangChain/OpenAI·Chroma·MCP SDK를 사용합니다.
+
+현재 코드의 Alembic head는 `20261014_0011`(서비스 테이블 22개)입니다. 새 환경은 전체 이력을 적용합니다. `docs/db/01_schema_mvp.sql`은 이전 스냅샷입니다.
 
 ## 실행 예시
 

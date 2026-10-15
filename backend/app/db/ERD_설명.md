@@ -1,6 +1,6 @@
 # ERD 읽는 법
 
-서비스 테이블 17개는 "회원·개인화", "카탈로그", "사용자 활동", "문서·RAG" 네 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다. 운영 TiDB에는 Alembic 관리용 `alembic_version`까지 총 18개 테이블이 있습니다.
+현재 코드 head `20261014_0011`의 서비스 테이블 22개는 "회원·개인화", "카탈로그", "사용자 활동", "문서·RAG" 네 덩어리로 나뉩니다. 이 문서는 그림의 기호를 읽는 법과 각 선이 왜 그어져 있는지를 설명합니다. 이 모델을 모두 적용한 DB는 Alembic 관리용 `alembic_version`까지 총 23개 테이블입니다. 실제 운영 적용 상태는 `alembic current`로 확인합니다.
 
 ![ERD](../../../docs/db/00_erd.png)
 
@@ -31,7 +31,7 @@
 | --- | --- | --- | --- |
 | 회원·개인화 | `users`, `social_accounts`, `user_preferences` | 연두색 영역 | 서비스 사용자, 연결 로그인 계정, 선택형 도슨트 설정 |
 | 카탈로그 | `art_movements`, `artists`, `artworks`, `artwork_embeddings` | 파란색 영역 | 목록과 상세 화면에 보이는 정보, 추천용 작품 벡터 |
-| 사용자 활동 | `artwork_likes`, `artist_follows`, `artwork_views`, `chat_sessions`, `chat_messages` | 주황색 영역 | 누가 무엇을 좋아하고 팔로우하고 봤는지, 어떤 작품에 무엇을 물었는지 |
+| 사용자 활동 | `artwork_likes`, `artist_follows`, `artwork_views`, `chat_sessions`, `chat_messages`, `diary_entries`, `collections`, `collection_items`, `theme_collection_cache`, `user_follows` | 주황색 영역 등 | 누가 무엇을 좋아하고 팔로우하고 봤는지, 어떤 작품에 무엇을 물었는지 |
 | 문서·RAG | `documents`, `document_artists`, `document_artworks`, `document_basis_documents`, `document_chunks` | 보라색 영역 | 챗봇 답변의 근거, 청크와 편집 근거 연결 |
 
 `artworks`가 가운데 있는 이유는 세 덩어리가 모두 작품을 거쳐 이어지기 때문입니다. 좋아요도, 열람도, 해설 문서도, 추천 벡터도 작품에 붙습니다.
@@ -42,7 +42,7 @@
 
 **`users` → `social_accounts` (1:N)**: 한 사용자가 여러 외부 로그인 계정을 연결할 수 있도록 분리한 테이블입니다. `(provider, provider_user_id)` 조합은 UNIQUE라서 같은 외부 계정이 둘 이상의 사용자에게 붙을 수 없습니다. 2026-10-13 마이그레이션에서는 기존 사용자를 `provider='firebase'`, `provider_user_id=users.firebase_uid`로 백필했습니다. 다만 신규 로그인 시 이 테이블에 쓰는 로직은 아직 연결하지 않았으므로, 현재 로그인 동작은 이 테이블에 의존하지 않습니다.
 
-**`users` → `user_preferences` (1:0..1)**: 사용자당 최대 한 행만 가지는 선택형 개인화 설정입니다. `user_id`가 PK이자 FK라 중복 행을 DB가 막습니다. `birth_year`, `gender`, `tone`, `explanation_level`은 모두 NULL을 허용하므로 가입 필수 정보가 아닙니다. 이후 채팅 담당자가 이 값을 조회해 프롬프트에 적용할 수 있지만, 현재 단계에서는 저장 구조만 준비되어 있습니다.
+**`users` → `user_preferences` (1:0..1)**: 사용자당 최대 한 행만 가지는 선택형 개인화 설정입니다. `user_id`가 PK이자 FK라 중복 행을 DB가 막습니다. `birth_year`, `gender`, `tone`, `explanation_level`은 모두 NULL을 허용하므로 가입 필수 정보가 아닙니다. 현재 프로필 API는 생년월일·대화 스타일·온보딩 상태를 저장합니다. 도슨트는 요청 `explanation_style`을 우선하고 생략할 때 저장된 `conversation_style`을 사용합니다. 생년월일·성별·설명 우선순위는 프롬프트에 사용하지 않습니다.
 
 ## 4. 카탈로그 덩어리
 
@@ -65,6 +65,13 @@
 세 테이블에 별도 `id` 컬럼이 없는 이유가 여기 있습니다. 두세 컬럼의 조합 자체가 행을 구분하므로, 그 조합을 기본 키로 삼으면 중복이 DB에서 막힙니다.
 
 `artwork_views`만 날짜가 기본 키에 들어갑니다. 같은 작품을 오늘도 보고 내일도 볼 수 있으니 날짜까지 합쳐야 한 행이 정해집니다. 같은 날 다시 보면 행이 늘지 않고 `view_count`만 올라갑니다.
+
+
+**감상평 (`diary_entries`)**: 사용자×작품당 한 편이며 하루에는 여러 편을 쓸 수 있습니다. 작품 없는 메모는 여러 편 허용합니다. 기본 비공개이며 공개로 바꾼 글만 피드와 감상가 프로필에 나옵니다.
+
+**비공개 컬렉션 (`collections` → `collection_items`)**: 사용자당 10개, 컬렉션당 30점입니다. 컬렉션을 지워도 카탈로그 작품·좋아요·감상평은 유지됩니다.
+
+**회원 팔로우 (`users` → `user_follows` ← `users`)**: 팔로우하는 회원과 받는 회원을 복합 PK로 연결합니다. 외부에는 무작위 `public_id`만 노출하고 `follow_list_public`으로 목록과 수의 공개 여부를 제어합니다.
 
 **AI 감성 테마 캐시 (`theme_collection_cache`)**: 컬렉션 탭의 AI 테마(예: '잔잔한 저녁에 어울리는 그림')를 사용자마다 한 행에 저장합니다. 기본 키가 `user_id`(FK, 사용자 삭제 시 함께 삭제)라 사용자당 스냅샷은 하나입니다. `themes` JSON에 테마 2~4개(이름·설명·작품 ID 순서)를, `basis` JSON에 만들 때 쓴 좋아요·감상 작품 ID를 담아 두고, 좋아요가 바뀌거나 새로 본 작품이 3점 이상 쌓였을 때만 다시 만듭니다. `attempted_at`은 여러 서버가 동시에 AI를 부르지 않도록 30분 간격을 원자적으로 잡는 데 쓰입니다. 사용자가 '내 컬렉션으로 저장'을 누르면 그때 일반 `collections`/`collection_items` 행이 생기며, 이후 캐시가 갱신돼도 저장본은 바뀌지 않습니다.
 
@@ -127,13 +134,13 @@ users ──→ artwork_views ──→ artworks
 
 `artwork_views`에서 한 사용자의 한 달 치 행을 날짜별로 세면 달력이 됩니다.
 
-**개인화 도슨트(후속 구현)**:
+**개인화 도슨트**:
 
 ```text
 users ──→ user_preferences ──→ 채팅 프롬프트의 말투·설명 수준
 ```
 
-나이나 성별 자체로 말투를 단정하지 않고, 사용자가 선택한 `tone`과 `explanation_level`을 우선 적용하는 구조가 안전합니다. 출생연도와 성별은 선택 정보로만 보조할 수 있습니다.
+요청의 `explanation_style`(easy/standard/deep)이 저장된 대화 스타일보다 우선합니다. 생년월일·성별은 답변 생성에 사용하지 않습니다. `tone`·`explanation_level`은 호환 컬럼입니다.
 
 ## 8. 자주 나오는 질문
 

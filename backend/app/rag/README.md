@@ -9,8 +9,7 @@
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
 - `collection_mcp.py`: 외부 MCP 클라이언트용 컬렉션 도구(`/mcp/`). 감상 기록으로 컬렉션을 만드는 도구 포함. REST와 같은 소유권 검사 서비스를 사용
-- `chain.py`: 검색 결과와 질문, 이전 대화를 LLM에 넘겨 답변 생성
-- `citations.py`: 답변에 쓰인 청크를 출처 목록으로 정리
+답변 생성은 `services/docent_service.py`·`docent_stream.py`, 출처 검증·멀티턴 검색어 구성은 `services/docent_grounding.py`에 있습니다. 별도 `chain.py`·`citations.py`는 없습니다.
 
 ## 검색 결과 형식 (팀 약속)
 
@@ -39,7 +38,7 @@
 - 그 작품의 해설 문서 (`documents.artwork_id`)
 - 그 작품 작가의 생애 문서와 그 작가가 포함된 비교 문서 (`document_artists`)
 
-needs_review=false인 문서만 범위·연표 고정 근거에 포함합니다. 작품별 추가 검색도 이 승인 범위와 교집합을 취합니다. 분류 별칭은 collected/pending_review/planned로 나뉘며 검수 대기 작가는 검토 중 안내를 제공합니다. Docker 런타임에도 data/processed의 별칭과 _SUCCESS.json이 필요합니다.
+needs_review=false인 문서만 범위·연표 고정 근거에 포함합니다. 작품별 추가 검색도 이 승인 범위와 교집합을 취합니다. 분류 별칭은 collected/pending_review/planned로 나뉘며 검수 대기 작가는 검토 중 안내를 제공합니다. 현재 산출물의 10명은 모두 collected이고 `_SUCCESS.json`의 검수 대기 문서는 0건입니다. Docker 런타임에도 data/processed의 별칭과 _SUCCESS.json이 필요합니다.
 
 범위에 드는 문서 id를 TiDB에서 구하고, Chroma에서 `where={"document_id": {"$in": ...}}`로 그 안에서만 검색합니다.
 
@@ -49,5 +48,5 @@ needs_review=false인 문서만 범위·연표 고정 근거에 포함합니다.
 - **출처는 검색 결과에서만**: LLM이 만들어 낸 링크를 쓰지 않고, 검색된 청크의 `source_url`만 출처로 내보냅니다.
 - **SQL은 repository에**: `retriever`는 `repositories/document_repository.py`의 함수를 호출합니다. 벡터 검색은 Chroma(`clients/chroma_client.py`)가 합니다.
 - **임베딩은 clients로**: 질문 임베딩은 `clients/embedding_client.py`를 사용합니다. 문서와 같은 모델이어야 합니다.
-- **대화 맥락**: 로그인 사용자는 `chat_sessions`·`chat_messages`에 저장하고, 비로그인은 직전 12개 메시지를 요청에 담아 보냅니다 (기획서 v2). 검색은 마지막 질문만으로 합니다.
+- **대화 맥락**: 로그인 여부와 관계없이 `history`(최대 12개)를 요청으로 받습니다. 로그인 대화는 `chat_sessions`·`chat_messages`에도 저장합니다. 지시어가 있는 후속 질문은 `docent_grounding.retrieval_question()`이 최근 사용자 질문을 더해 검색어를 구성합니다.
 - 프롬프트를 고칠 때는 버전과 바꾼 이유를 `docs/`에 남깁니다.

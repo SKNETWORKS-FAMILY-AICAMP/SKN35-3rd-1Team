@@ -1,19 +1,12 @@
 # clients
 
-외부 임베딩 API와 LLM API를 호출하는 코드를 둡니다.
+외부 임베딩과 Chroma 접속을 공통으로 처리합니다.
 
-## 들어갈 파일
+- `embedding_client.py`: OpenAI 텍스트 임베딩 배치 호출·질문 임베딩·결과 차원 검사.
+- `chroma_client.py`: Chroma 클라이언트와 검색 컬렉션 생성·조회, 임베딩 모델·거리 함수 검사.
 
-- `embedding_client.py`: 텍스트를 받아 벡터를 돌려주는 함수. 여러 건을 한 번에 보내는 배치 호출 포함
-- `llm_client.py`: LLM 호출 설정 (모델 이름, 온도, 타임아웃)
+Chroma 접속 우선순위는 Cloud 설정(`CHROMA_API_KEY`·`CHROMA_TENANT`·`CHROMA_DATABASE` 모두 지정) → 서버(`CHROMA_HOST`) → 로컬(`CHROMA_PATH`)입니다. 컬렉션 이름은 `CHROMA_CHUNKS_COLLECTION`·`CHROMA_ARTWORKS_COLLECTION`로 구분합니다.
 
-## 이 폴더를 따로 둔 이유
+임베딩 모델은 `core/config.py`의 `EMBEDDING_MODEL`(기본 `text-embedding-3-small`), 차원은 `models/base.py`의 `EMBEDDING_DIMENSION`(1536)을 기준으로 합니다. 질문과 문서는 같은 모델을 사용해야 합니다.
 
-임베딩은 세 곳에서 씁니다. 챗봇이 질문을 임베딩할 때(`rag/`), 문서 청크를 적재할 때(`scripts/`), 작품 대표 벡터를 만들 때(`scripts/`)입니다. 임베딩 코드를 `rag/` 안에 두면 추천용 스크립트가 `rag`에 묶이므로 공용 위치로 뺐습니다.
-
-## 규칙
-
-- 임베딩 모델 이름과 차원 수는 `core/config.py`에서 읽어 이 폴더에서만 사용합니다. 다른 곳에 숫자 `1536`을 직접 쓰지 않습니다.
-- 질문 임베딩과 문서 임베딩은 반드시 같은 모델을 씁니다. 모델이 다르면 거리 값이 의미가 없습니다.
-- API 키는 환경변수에서 읽습니다.
-- 프롬프트 내용은 여기 두지 않습니다. 프롬프트는 `rag/prompts.py`의 몫입니다.
+현재 별도 `llm_client.py`는 없습니다. 답변·범위 판정·컬렉션 AI는 `services/docent_service.py`, `docent_stream.py`, `docent_scope.py`, `collection_assistant.py`, `theme_collections.py`에서 `ChatOpenAI`를 사용합니다. 공통 모델 설정은 `ASSISTANT_MODEL`입니다.

@@ -30,7 +30,7 @@ TIDB_DATABASE=3rd_project
 | `pool_recycle=300` | TiDB Cloud Starter는 오래 열린 연결을 끊을 수 있습니다. 5분마다 새로 맺습니다. |
 | `pool_pre_ping=True` | 끊긴 연결을 쓰기 전에 감지해 다시 연결합니다. |
 
-연결과 11개 테이블 생성 여부는 다음 명령으로 확인합니다.
+연결한 DB의 테이블은 다음 명령으로 확인합니다. 현재 모델은 서비스 테이블 22개를 정의하고, Alembic 관리 테이블까지 포함하면 23개입니다. 코드 head는 `20261014_0011`이며 실제 DB 적용 revision은 `uv run alembic current`로 확인합니다.
 
 ```bash
 uv run python -m scripts.check_db
@@ -39,5 +39,5 @@ uv run python -m scripts.check_db
 ## 규칙
 
 - 쿼리는 여기 쓰지 않습니다. 쿼리는 `repositories/`의 몫입니다.
-- 트랜잭션은 요청 단위로 묶습니다. 커밋과 롤백을 어디서 할지(세션 의존성 또는 서비스) 한 가지로 정해 섞지 않습니다.
+- `get_db`는 요청마다 세션을 열고 닫습니다. 커밋·롤백은 서비스 등 쓰기 작업 코드가 명시적으로 수행하며 의존성이 자동 커밋하지 않습니다.
 - 접속 정보는 `core/config.py`를 통해서만 읽습니다.

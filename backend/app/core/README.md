@@ -1,18 +1,15 @@
 # core
 
-설정, 인증, 예외 처리, 공통 의존성처럼 모든 기능이 함께 쓰는 기반 코드를 둡니다.
+설정, 인증, 예외와 공통 규칙을 둡니다.
 
-## 들어갈 파일
+| 파일 | 역할 |
+| --- | --- |
+| `config.py` | 저장소 루트 `.env`와 환경변수에서 TiDB·Firebase·OpenAI·Chroma·CORS·MCP·시간대 설정 로드 |
+| `auth.py` | Firebase ID 토큰 검증, 내부 사용자 조회·최초 등록, `CurrentUser`·`OptionalUser` 의존성 |
+| `exceptions.py` | 도메인 예외와 FastAPI 예외 처리기 |
+| `timeutil.py` | UTC 시각과 `APP_TIMEZONE`(기본 `Asia/Seoul`) 날짜 계산 |
+| `collection_limits.py` | 계정당 컬렉션 10개·컬렉션당 작품 30점의 공통 한도 |
 
-- `config.py`: 환경변수를 읽는 설정 클래스 (TiDB 접속 정보, 임베딩 모델과 차원, LLM 모델, JWT, CORS, 시간대)
-- `security.py`: 비밀번호 해시와 검증, 토큰 발급과 해석
-- `deps.py`: FastAPI 의존성 (`get_db`, `get_current_user`, 로그인 선택 사용자)
-- `exceptions.py`: 서비스 예외 클래스와 HTTP 응답으로 바꾸는 처리기
-- `timeutil.py`: 한국 시간 기준 오늘 날짜 계산
+로그인은 프론트 Firebase Auth가 처리합니다. 서버는 별도 비밀번호 로그인이나 토큰 발급 API를 제공하지 않습니다. `AUTH_MODE=firebase`에서는 Firebase Admin SDK로 ID 토큰을 검증하고, 검증된 UID로 `users`를 찾습니다. `AUTH_MODE=dev`에서는 Bearer 토큰이 있는 요청을 고정 개발 사용자로 처리합니다. 두 모드 모두 필수 인증 경로에 토큰이 없으면 401이고, 선택 인증 경로는 익명으로 처리합니다. 선택 인증에서도 잘못된 Firebase 토큰은 401입니다.
 
-## 규칙
-
-- 실제 비밀값은 코드와 Git에 넣지 않습니다. `config.py`는 환경변수 이름만 압니다.
-- 비밀번호는 해시만 저장합니다.
-- 열람 날짜는 DB의 `CURDATE()`가 아니라 `timeutil`로 계산합니다. DB 세션이 UTC이면 자정부터 오전 9시 사이 열람이 전날로 기록되기 때문입니다.
-- 기능별 로직은 여기 두지 않습니다. 두 개 이상의 기능이 쓰는 것만 둡니다.
+DB 의존성은 `core/deps.py`가 아니라 `app/db/session.py`에 있습니다. 임베딩 차원 기준은 `app/models/base.py`의 `EMBEDDING_DIMENSION`이며 설정 환경변수로 바꾸지 않습니다. 비밀값은 Git에 넣지 않습니다. 열람 날짜는 DB의 `CURDATE()` 대신 `timeutil`로 계산합니다.

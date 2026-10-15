@@ -1,16 +1,16 @@
 # API 명세
 
-확정일: 2026-10-12 · 갱신: 2026-10-14. 이 문서가 프론트와 백엔드의 공식 계약입니다. 기준 코드는 `backend/app/schemas/`(요청·응답 모델)와 `backend/app/api/routes/`(경로)이며, `backend/tests/test_api.py`가 OpenAPI를 기준으로 이 계약을 고정합니다. 서버를 띄우면 `/docs`(Swagger)와 `/openapi.json`에서 같은 내용을 볼 수 있습니다.
+확정일: 2026-10-12 · 갱신: 2026-10-15. 이 문서가 프론트와 백엔드의 공식 계약입니다. 기준 코드는 `backend/app/schemas/`(요청·응답 모델)와 `backend/app/api/routes/`(경로)입니다. 현재 저장소에는 OpenAPI 계약 테스트 `backend/tests/test_api.py`가 없습니다. 서버를 띄우면 `/docs`(Swagger)와 `/openapi.json`에서 같은 내용을 볼 수 있습니다.
 
-명세를 바꿀 때는 스키마·라우트·`test_api.py`·이 문서를 같은 PR에서 함께 고칩니다.
+명세를 바꿀 때는 스키마·라우트·관련 테스트·이 문서를 같은 PR에서 함께 고칩니다.
 
 ## 공통 규칙
 
 - **접두사**: REST 경로는 `/api`로 시작합니다. 외부 도구용 MCP 전송 계층은 `/mcp/`입니다. `/api/v1`은 쓰지 않습니다.
 - **id**: 경로의 `{artwork_id}`, `{artist_id}`는 DB의 숫자 `id`입니다. `slug`는 응답에만 있는 별도 필드입니다.
 - **인증**: 로그인은 프론트의 Firebase Auth가 처리하고 서버에 로그인·회원가입 API는 없습니다. 로그인이 필요한 요청은 `Authorization: Bearer <Firebase ID 토큰>`을 보냅니다. 사용자 id는 URL이나 본문으로 보내지 않고 서버가 토큰에서 꺼냅니다(`/api/me/...`). 처음 보는 uid는 서버가 `users`에 한 번 등록합니다.
-- **목록**: JSON 배열을 그대로 반환합니다. `{items: ...}` 같은 래퍼가 없습니다.
-- **페이지네이션 없음**: 작품 219점·작가 8명 규모입니다. 규모가 커지면 기존 응답을 깨지 않도록 `?limit=&offset=`를 추가하거나 `/v2`를 둡니다.
+- **목록**: 카탈로그·좋아요·팔로우·대화·월별 내 다이어리는 JSON 배열입니다. 공개 피드·회원 공개 감상평·내 감상평 페이지(`/me/critiques`)·컬렉션 작품 페이지는 `{items, next_cursor}`, AI 테마 갱신은 `{items, message}`를 사용합니다.
+- **카탈로그 페이지네이션 없음**: 저장소 산출물은 작품 277점·작가 10명입니다. 실제 목록은 DB 적재 상태에 따릅니다. 감상평·컬렉션 작품에는 커서, 활동에는 limit·offset을 사용합니다. 규모가 커지면 기존 응답을 깨지 않도록 `?limit=&offset=`를 추가하거나 `/v2`를 둡니다.
 - **카드와 상세**: 목록은 카드 모델, 상세는 카드에 필드를 더한 상세 모델을 반환합니다.
 - **본문 없는 성공**: 좋아요·팔로우·열람 기록·대화 초기화는 `204 No Content`입니다. 요청 본문도 없습니다.
 - **오류**: FastAPI 기본 형식 `{"detail": ...}`입니다.
@@ -18,9 +18,12 @@
 | 상태 | 의미 |
 | --- | --- |
 | `401` | 토큰이 없거나 검증 실패. `WWW-Authenticate: Bearer` 헤더 포함 |
-| `404` | 없는 작품·작가 id. 상세 조회, 좋아요·팔로우 `PUT`, 열람 `POST`에 적용. 취소 `DELETE`는 항상 `204` |
-| `422` | 요청 검증 실패 (질문 길이, `month` 형식, 날짜 형식 등). `detail`은 오류 항목 배열 |
-| `501` | 경로만 있고 아직 구현되지 않음 (개발 중에만). 도슨트 POST는 2026-10-14에 구현했으며 AI·검색 연결 실패는 503으로 안내 |
+| `404` | 없는 작품·작가·회원, 접근할 수 없는 개인 컬렉션·감상평. 작품 좋아요·작가 팔로우 취소는 대상 기록이 없어도 204이며, 회원 팔로우 취소는 회원 존재를 확인 |
+| `422` | 요청 검증 실패 (질문 길이, `month` 형식, 날짜 형식 등). Pydantic 검증의 `detail`은 오류 배열이며 직접 검증은 문자열일 수 있음 |
+| `400` / `403` | 자기 자신 팔로우 / 비공개 회원 팔로우 목록 조회 등 |
+| `409` | 작품별 감상평·컬렉션 이름 중복, 컬렉션 한도, 취향 소개 근거 없음 |
+| `429` | AI 취향 소개 재생성 간격 제한 |
+| `503` | AI·검색 연결 또는 응답 처리 실패. SSE 시작 후 오류는 `error` 이벤트로 안내 |
 
 ## 검색
 
@@ -28,7 +31,7 @@
 
 프론트는 `GET /api/artworks`, `GET /api/artists`로 전체 목록을 받은 뒤 클라이언트에서 거릅니다. 작품은 제목·영문 제목·작가 이름으로, 작가는 이름·영문 이름·사조 이름으로 대소문자 구분 없이 부분 일치합니다. 사조·작가 필터는 서버의 `movement_id`, `artist_id` 쿼리를 써도 되고 로컬에서 걸러도 됩니다.
 
-이유: 페이지네이션이 없어 전체 목록을 이미 한 번에 받고, 219점 규모라 서버 왕복 없이 입력할 때마다 바로 결과를 보여 주는 편이 빠릅니다. 규모가 커지면 `GET /api/artworks?q=`를 추가합니다. 선택 쿼리라 기존 클라이언트는 그대로 동작합니다.
+이유: 페이지네이션이 없어 전체 목록을 이미 한 번에 받고, 277점 산출물 규모라 서버 왕복 없이 입력할 때마다 바로 결과를 보여 주는 편이 빠릅니다. 규모가 커지면 `GET /api/artworks?q=`를 추가합니다. 선택 쿼리라 기존 클라이언트는 그대로 동작합니다.
 
 ## 엔드포인트
 
@@ -180,6 +183,7 @@
 | `date` | date | `YYYY-MM-DD` |
 | `artwork_count` | int | 그날 본 서로 다른 작품 수 |
 | `total_views` | int | `view_count` 합계 (같은 작품을 다시 열면 더해짐) |
+| `artwork` | `ArtworkCard?` | 그날 마지막으로 본 작품, 기본 null |
 
 `ViewedArtwork`: `ArtworkCard` 필드 + `view_count`(int), `last_viewed_at`(datetime).
 
@@ -189,7 +193,7 @@
 
 ## 노출하지 않는 값
 
-응답은 DB 모델이 아니라 스키마로 변환해 반환합니다. `firebase_uid`, `embedding` 같은 내부 컬럼은 어떤 응답에도 없습니다(`test_responses_never_expose_private_columns`).
+응답은 DB 모델이 아니라 스키마로 변환해 반환합니다. `firebase_uid`, `embedding` 같은 내부 컬럼은 어떤 응답에도 없습니다.
 
 
 ## 감상평·다이어리 API (20261013_0007)
@@ -207,15 +211,15 @@
 
 POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `is_public`(기본 false), `artwork_id`(선택, null 허용). PUT 본문은 `entry_date`를 뺀 같은 필드이며 작성 날짜는 바뀌지 않습니다. 사용자 식별 필드는 받지 않으며 검증된 로그인 사용자로 결정합니다.
 
-응답 글: `id`, `entry_date`, `content`, `is_public`, `author_name`, `artwork`(ArtworkCard 또는 null), `created_at`, `updated_at`(UTC). 이메일·Firebase UID·내부 사용자 ID는 반환하지 않습니다.
+응답 글: `id`, `entry_date`, `content`, `is_public`, `author_name`, `author_id`(공개 프로필 ID), `artwork`(ArtworkCard 또는 null), `created_at`, `updated_at`(UTC). 이메일·Firebase UID·내부 사용자 ID는 반환하지 않습니다.
 피드 응답: `{items: DiaryEntry[], next_cursor: int|null}`. 다음 페이지는 before_id=next_cursor. 공개 피드는 no-store, 개인 조회는 private/no-store입니다. 비공개 전환·삭제는 다음 조회부터 피드에서 제외됩니다.
 
-운영 전 `alembic upgrade head`로 0007을 적용하고 백엔드를 배포해야 합니다. AUTH_MODE=firebase 설정과 기존 인증 정보는 운영 담당자가 확인합니다. 이번 코드 변경에서 운영 DB나 배포 설정을 직접 변경하지 않았습니다.
+운영 전 `alembic upgrade head`로 현재 head `20261014_0011`까지 적용하고 백엔드를 배포해야 합니다. AUTH_MODE=firebase 설정과 기존 인증 정보는 운영 담당자가 확인합니다. 이번 코드 변경에서 운영 DB나 배포 설정을 직접 변경하지 않았습니다.
 
 
 ## 마이페이지·컬렉션 API (20261014_0008)
 
-모든 경로는 Firebase 인증이 필요하고 응답은 `Cache-Control: private, no-store`입니다. 사용자는 토큰에서 결정하며 본문의 user_id/UID 필드는 허용하지 않습니다. 다른 계정의 컬렉션 ID에는 404를 반환합니다.
+모든 경로는 인증이 필요하며 운영은 `AUTH_MODE=firebase`를 사용합니다. 조회·JSON 응답은 `Cache-Control: private, no-store`이고 본문 없는 204 응답에는 이 헤더를 별도로 설정하지 않습니다. 사용자는 토큰에서 결정하며 본문의 user_id/UID 필드는 허용하지 않습니다. 다른 계정의 컬렉션 ID에는 404를 반환합니다.
 
 | 메서드 | 경로 | 응답·용도 |
 | --- | --- | --- |
@@ -239,13 +243,13 @@ CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionO
 
 ActivityOut: `{kind: "view"|"like"|"diary"|"collection", title, occurred_at: UTC datetime, artwork_id: int?, entry_date: date?}`. 최근 상태의 활동 집계이며 변경 이벤트를 영구 보관하는 감사 로그는 아닙니다. 좋아요 취소·컬렉션 삭제 시 해당 항목은 목록에서 사라집니다.
 
-TasteOut: `{summary: string?, evidence: ArtworkCard[], generated_at: UTC datetime?, stale: bool}`. 근거는 본인 좋아요·컬렉션의 중복 제거 작품 최대100점입니다. 개인 글·생년월일·이메일·UID는 모델에 전달하지 않습니다. 동일 근거는 저장 결과를 재사용하고 변경 후 30초 이내 재생성 요청은 429입니다. 근거가 없으면 생성 409, AI 설정·응답 문제는 503입니다.
+TasteOut: `{summary: string?, evidence: ArtworkCard[], impression_count: int, generated_at: UTC datetime?, stale: bool}`. 근거는 본인 좋아요·컬렉션의 중복 제거 작품 최대100점입니다. 공개 감상평 최근 20편(각 300자)도 근거로 사용하고 `impression_count`로 개수를 반환합니다. 비공개 글·생년월일·이메일·UID는 모델에 전달하지 않습니다. 동일 근거는 저장 결과를 재사용하고 변경 후 30초 이내 재생성 요청은 429입니다. 작품과 공개 감상평 근거가 모두 없으면 생성 409, AI 설정·응답 문제는 503입니다.
 
-CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `{answer, proposal: {action: "create"|"add", name: string?, collection_id: int?, artwork_id: int?} | null}`. 동명 작품이나 다수 검색 결과는 추가 질문으로 처리합니다. 화면에서 사용자가 제안을 확정하면 위의 컬렉션 CRUD 경로를 호출하고 서버에서 소유권·작품 존재를 다시 확인합니다.
+CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `{answer, proposal: {action: "create"|"add", name: string?, collection_id: int?, artwork_id: int?, artwork_ids: int[]} | null, artworks: ArtworkCard[]}`. 동명 작품이나 다수 검색 결과는 추가 질문으로 처리합니다. 화면에서 사용자가 제안을 확정하면 위의 컬렉션 CRUD 경로를 호출하고 서버에서 소유권·작품 존재를 다시 확인합니다.
 
 ### 도슨트 채팅의 컬렉션 제안
 
-`POST /api/artworks/{id}/chat`과 `/chat/stream`의 최종 응답(`done`)에 선택 필드 `suggestion`이 붙을 수 있습니다. 로그인 회원이 한 작품에 대해 세 번째 질문을 하고 답변이 거절이 아닐 때만 규칙으로 정합니다(LLM 호출 없음). 이 작가의 작품을 3점 이상 봤고 "{작가} 모음" 컬렉션이 없으면 `kind=create_from_views`(그 작품들로 새 컬렉션 제안), 아니면 작품이 아직 어느 컬렉션에도 없을 때 `kind=add_artwork`(담을 컬렉션 목록)입니다. 제안만 하고 저장은 하지 않으며, 회원이 버튼을 누르면 기존 컬렉션 REST로 저장합니다. 제안이 없으면 JSON 응답은 `suggestion: null`, SSE `done`에는 키가 없습니다. 화면은 대화마다 한 번만 보여 줍니다.
+`POST /api/artworks/{id}/chat`과 `/chat/stream`의 최종 응답(`done`)에 선택 필드 `suggestion`이 붙을 수 있습니다. 로그인 회원의 저장된 대화에서 실질 질문이 3회 이상이 된 뒤 처음 성공한 답변에만 규칙으로 정합니다(제안 판단 자체에는 LLM 호출 없음). 말투 정정·관계없는 잡담은 질문 횟수에서 제외하고, 세 번째 질문이 거절이면 다음 성공 답변에서 판단합니다. 작품이 어느 컬렉션에도 없을 때 `kind=add_artwork`와 선택 컬렉션 최대 6개를 반환합니다. 현재 작가별 모음 생성 제안(`create_from_views`)은 생성하지 않습니다. 제안만 하고 저장은 하지 않으며, 회원이 버튼을 누르면 기존 컬렉션 REST로 저장합니다. 제안이 없으면 JSON 응답은 `suggestion: null`, SSE `done`에는 키가 없습니다. 저장 대화를 기준으로 판단하므로 새로고침·복원으로 다시 제안하지 않고, 대화 초기화 후에는 다시 판단합니다.
 
 ## MCP 컬렉션 도구
 
@@ -264,10 +268,10 @@ CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `
 | GET | `/api/me/social` | 필요 | 내 공개 프로필(`MemberProfile`). 본인에게는 팔로우 수가 항상 보임 |
 | PUT | `/api/me/social` | 필요 | `{"follow_list_public": bool}` 팔로잉/팔로워 공개 여부 |
 | GET | `/api/users/{public_id}` | 선택 | 공개 프로필. 비공개 설정이면 다른 이용자에게 `follower_count`·`following_count`가 `null` |
-| GET | `/api/users/{public_id}/diary` | 선택 | 해당 이용자의 공개 감상만, `before_id` 커서 |
+| GET | `/api/users/{public_id}/diary` | | 해당 이용자의 공개 감상만, `before_id` 커서 |
 | PUT/DELETE | `/api/users/{public_id}/follow` | 필요 | 팔로우/취소(204). 자기 자신은 400 |
-| GET | `/api/users/{public_id}/followers`, `/following` | 선택 | `MemberCard[]`(최대 200). 비공개면 본인 외 403 |
+| GET | `/api/users/{public_id}/followers`, `/api/users/{public_id}/following` | 선택 | `MemberCard[]`(최대 200). 비공개면 본인 외 403 |
 
 `MemberProfile`: `id, nickname, intro, follower_count, following_count, follow_list_public, is_following, is_me`. `intro`는 `/api/me/taste`로 만든 AI 한 줄 소개입니다. 한 줄 소개는 좋아요·컬렉션 작품과 **공개 감상평 본문**(최근 20편, 각 300자)만 근거로 쓰며 비공개 감상은 모델에 보내지 않습니다. `TasteOut.impression_count`는 읽은 공개 감상 수입니다.
 
-운영 DB에는 `alembic upgrade head`로 `20261014_0009`를 적용해야 합니다(기존 사용자 `public_id` 백필 포함).
+새 환경은 `alembic upgrade head`로 `20261014_0011`까지 적용합니다. `0009`에는 기존 사용자 `public_id` 백필이 포함됩니다. 실제 운영 적용 상태는 `alembic current`로 확인합니다.
