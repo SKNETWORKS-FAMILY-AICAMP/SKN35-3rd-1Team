@@ -1,0 +1,1504 @@
+{
+ "summary": {
+  "questions": 30,
+  "targeted": 23,
+  "hit": 23,
+  "all_hit": 23,
+  "hit_rate": 1.0,
+  "answer_top_distance": [
+   0.336,
+   0.8166
+  ],
+  "refuse_top_distance": [
+   0.6103,
+   0.9234
+  ]
+ },
+ "rows": [
+  {
+   "id": "fact-001",
+   "category": "factual",
+   "artwork_slug": "the-starry-night",
+   "question": "별이 빛나는 밤은 언제 그렸어?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-the-starry-night"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-the-starry-night": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.5608,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.5608,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.5696,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-09",
+     0.7704,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.7775,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-04",
+     0.8084,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-07",
+     0.8267,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "fact-002",
+   "category": "factual",
+   "artwork_slug": "self-portrait-with-bandaged-ear",
+   "question": "그림에서 붕대가 오른쪽 귀에 보이는 이유가 뭐야?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.5166,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear",
+     0.5166,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.6714,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-06",
+     0.672,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.7883,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-saint-remy",
+     0.81,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "fact-003",
+   "category": "factual",
+   "artwork_slug": "impression-sunrise",
+   "question": "인상, 해돋이는 어느 항구를 그린 작품이야?",
+   "expect_refused": false,
+   "targets": [
+    "claude-monet/impression-sunrise"
+   ],
+   "matched": {
+    "claude-monet/impression-sunrise": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.4997,
+   "retrieved": [
+    [
+     "claude-monet/impression-sunrise",
+     0.4997,
+     false
+    ],
+    [
+     "claude-monet/impression-sunrise",
+     0.5058,
+     false
+    ],
+    [
+     "claude-monet/impression-sunrise",
+     0.5076,
+     false
+    ],
+    [
+     "claude-monet/bio",
+     0.706,
+     false
+    ],
+    [
+     "claude-monet/influence",
+     0.712,
+     false
+    ],
+    [
+     "claude-monet/timeline-04",
+     0.7169,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "fact-004",
+   "category": "factual",
+   "artwork_slug": "the-night-watch",
+   "question": "야경은 실제로 밤 장면을 그린 거야?",
+   "expect_refused": false,
+   "targets": [
+    "rembrandt/the-night-watch",
+    "rembrandt/the-night-watch.en"
+   ],
+   "matched": {
+    "rembrandt/the-night-watch": "순위",
+    "rembrandt/the-night-watch.en": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.5639,
+   "retrieved": [
+    [
+     "rembrandt/the-night-watch",
+     0.5639,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch.en",
+     0.5643,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch.en",
+     0.5798,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.6447,
+     false
+    ],
+    [
+     "rembrandt/bio",
+     0.6539,
+     false
+    ],
+    [
+     "rembrandt/timeline-05",
+     0.7817,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "fact-005",
+   "category": "factual",
+   "artwork_slug": "the-bedroom",
+   "question": "고흐의 침실 그림은 어디에 있던 방이야?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-the-bedroom"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-the-bedroom": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.5216,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-bedroom",
+     0.5216,
+     false
+    ],
+    [
+     "vincent-van-gogh/bio-vincent-van-gogh",
+     0.6214,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-auvers-death",
+     0.6262,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.6319,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.6649,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "fact-006",
+   "category": "factual",
+   "artwork_slug": "almond-blossom",
+   "question": "꽃 피는 아몬드나무는 누구를 위해 그렸어?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-almond-blossom"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-almond-blossom": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.4559,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-almond-blossom",
+     0.4559,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-almond-blossom",
+     0.4877,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.7693,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.7947,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-saint-remy",
+     0.8011,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "fact-007",
+   "category": "factual",
+   "artwork_slug": "the-kiss",
+   "question": "클림트의 키스에는 금색 물감만 쓰였어, 아니면 실제 금속박도 사용했어?",
+   "expect_refused": false,
+   "targets": [
+    "gustav-klimt/the-kiss"
+   ],
+   "matched": {
+    "gustav-klimt/the-kiss": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.4658,
+   "retrieved": [
+    [
+     "gustav-klimt/the-kiss",
+     0.4658,
+     false
+    ],
+    [
+     "gustav-klimt/the-kiss",
+     0.574,
+     false
+    ],
+    [
+     "gustav-klimt/the-kiss",
+     0.624,
+     false
+    ],
+    [
+     "gustav-klimt/technique",
+     0.5477,
+     false
+    ],
+    [
+     "gustav-klimt/bio",
+     0.6624,
+     false
+    ],
+    [
+     "gustav-klimt/bio",
+     0.6989,
+     false
+    ],
+    [
+     "gustav-klimt/judith-i",
+     0.5748,
+     true
+    ],
+    [
+     "gustav-klimt/judith-i",
+     0.7624,
+     true
+    ],
+    [
+     "gustav-klimt/judith-i",
+     0.7696,
+     true
+    ],
+    [
+     "gustav-klimt/judith-i",
+     0.782,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "fact-008",
+   "category": "factual",
+   "artwork_slug": "the-calling-of-saint-matthew",
+   "question": "성 마태오를 부르심에서 빛은 어느 방향에서 들어와?",
+   "expect_refused": false,
+   "targets": [
+    "caravaggio/the-calling-of-saint-matthew"
+   ],
+   "matched": {
+    "caravaggio/the-calling-of-saint-matthew": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.4516,
+   "retrieved": [
+    [
+     "caravaggio/the-calling-of-saint-matthew",
+     0.4516,
+     false
+    ],
+    [
+     "caravaggio/the-calling-of-saint-matthew",
+     0.4941,
+     false
+    ],
+    [
+     "caravaggio/the-calling-of-saint-matthew",
+     0.5251,
+     false
+    ],
+    [
+     "caravaggio/bio.en",
+     0.5475,
+     false
+    ],
+    [
+     "caravaggio/timeline-05",
+     0.6522,
+     false
+    ],
+    [
+     "caravaggio/bio.en",
+     0.6592,
+     false
+    ],
+    [
+     "caravaggio/timeline-03",
+     0.7179,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "fact-009",
+   "category": "factual",
+   "artwork_slug": "the-basket-of-apples",
+   "question": "사과 바구니의 탁자가 어긋나 보이는 게 맞아?",
+   "expect_refused": false,
+   "targets": [
+    "paul-cezanne/the-basket-of-apples"
+   ],
+   "matched": {
+    "paul-cezanne/the-basket-of-apples": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.4807,
+   "retrieved": [
+    [
+     "paul-cezanne/the-basket-of-apples",
+     0.4807,
+     false
+    ],
+    [
+     "paul-cezanne/the-basket-of-apples",
+     0.5354,
+     false
+    ],
+    [
+     "paul-cezanne/the-basket-of-apples",
+     0.5844,
+     false
+    ],
+    [
+     "paul-cezanne/people",
+     0.7396,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7427,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7538,
+     false
+    ],
+    [
+     "paul-cezanne/timeline-07",
+     0.825,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "fact-010",
+   "category": "factual",
+   "artwork_slug": "where-do-we-come-from",
+   "question": "우리는 어디서 왔는가는 어느 방향으로 읽도록 구성됐어?",
+   "expect_refused": false,
+   "targets": [
+    "paul-gauguin/commentary-where-do-we-come-from"
+   ],
+   "matched": {
+    "paul-gauguin/commentary-where-do-we-come-from": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.723,
+   "retrieved": [
+    [
+     "paul-gauguin/commentary-where-do-we-come-from",
+     0.723,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-09",
+     0.7818,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-pont-aven-brittany",
+     0.8064,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-05",
+     0.8185,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-two-tahiti-stays",
+     0.8196,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-001",
+   "category": "detail_interpretation",
+   "artwork_slug": "the-starry-night",
+   "question": "소용돌이치는 하늘은 고흐가 실제로 본 모습이야, 상상한 모습이야?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-the-starry-night"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-the-starry-night": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.7223,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.7223,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.7516,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-theo-letters",
+     0.7736,
+     false
+    ],
+    [
+     "vincent-van-gogh/bio-vincent-van-gogh",
+     0.7797,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-early-netherlands",
+     0.7953,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-07",
+     0.8761,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "detail-002",
+   "category": "detail_interpretation",
+   "artwork_slug": "cafe-terrace-at-night",
+   "question": "밤인데도 검은색을 거의 쓰지 않은 이유를 설명해줘.",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-cafe-terrace-at-night"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-cafe-terrace-at-night": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.6612,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-cafe-terrace-at-night",
+     0.6612,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-cafe-terrace-at-night",
+     0.7126,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-09",
+     0.7682,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.7946,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-04",
+     0.8161,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-003",
+   "category": "detail_interpretation",
+   "artwork_slug": "the-bedroom",
+   "question": "가구와 벽의 원근이 비뚤어져 보이는데 실수야?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-the-bedroom"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-the-bedroom": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.6481,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-bedroom",
+     0.6481,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-06",
+     0.7436,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-08",
+     0.7545,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-07",
+     0.7719,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-03",
+     0.7731,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-004",
+   "category": "detail_interpretation",
+   "artwork_slug": "wheatfield-with-crows",
+   "question": "갈라진 길과 까마귀가 죽음을 예고한다는 해석은 확정된 사실이야?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-wheatfield-with-crows"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-wheatfield-with-crows": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.6863,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-wheatfield-with-crows",
+     0.6863,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-wheatfield-with-crows",
+     0.7319,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.7106,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-auvers-death",
+     0.7182,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-06",
+     0.7205,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-005",
+   "category": "detail_interpretation",
+   "artwork_slug": "portrait-of-wally",
+   "question": "발리 노이칠의 초상은 어떤 작품과 한 쌍으로 구상됐고, 두 작품은 무엇을 비교해 볼 수 있어?",
+   "expect_refused": false,
+   "targets": [
+    "egon-schiele/portrait-of-wally"
+   ],
+   "matched": {
+    "egon-schiele/portrait-of-wally": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.336,
+   "retrieved": [
+    [
+     "egon-schiele/portrait-of-wally",
+     0.336,
+     false
+    ],
+    [
+     "egon-schiele/portrait-of-wally",
+     0.3377,
+     false
+    ],
+    [
+     "egon-schiele/portrait-of-wally",
+     0.3404,
+     false
+    ],
+    [
+     "egon-schiele/bio",
+     0.5498,
+     false
+    ],
+    [
+     "egon-schiele/bio",
+     0.7084,
+     false
+    ],
+    [
+     "egon-schiele/technique",
+     0.7138,
+     false
+    ],
+    [
+     "egon-schiele/self-portrait-with-chinese-lantern-plant",
+     0.5559,
+     true
+    ],
+    [
+     "egon-schiele/self-portrait-with-chinese-lantern-plant",
+     0.7695,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "detail-006",
+   "category": "detail_interpretation",
+   "artwork_slug": "when-will-you-marry",
+   "question": "앞뒤 두 여성의 자세와 옷차림은 어떤 대비를 만들어?",
+   "expect_refused": false,
+   "targets": [
+    "paul-gauguin/commentary-when-will-you-marry"
+   ],
+   "matched": {
+    "paul-gauguin/commentary-when-will-you-marry": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.7692,
+   "retrieved": [
+    [
+     "paul-gauguin/commentary-when-will-you-marry",
+     0.7692,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-two-tahiti-stays",
+     0.7872,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-10",
+     0.7875,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.8161,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-family-separation",
+     0.8184,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-007",
+   "category": "detail_interpretation",
+   "artwork_slug": "apples-oranges",
+   "question": "천과 과일이 기울어져 보이는 구성이 화면에 어떤 효과를 줘?",
+   "expect_refused": false,
+   "targets": [
+    "paul-cezanne/apples-oranges"
+   ],
+   "matched": {
+    "paul-cezanne/apples-oranges": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.7968,
+   "retrieved": [
+    [
+     "paul-cezanne/apples-oranges",
+     0.7968,
+     false
+    ],
+    [
+     "paul-cezanne/influence",
+     0.6828,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7492,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7805,
+     false
+    ],
+    [
+     "paul-cezanne/timeline-04",
+     0.8223,
+     false
+    ],
+    [
+     "paul-cezanne/timeline-05",
+     0.8608,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "detail-008",
+   "category": "detail_interpretation",
+   "artwork_slug": "the-night-watch",
+   "question": "인물들을 줄 세우지 않고 움직이는 순간처럼 배치한 이유는 뭐야?",
+   "expect_refused": false,
+   "targets": [
+    "rembrandt/the-night-watch",
+    "rembrandt/the-night-watch.en"
+   ],
+   "matched": {
+    "rembrandt/the-night-watch": "순위",
+    "rembrandt/the-night-watch.en": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.7954,
+   "retrieved": [
+    [
+     "rembrandt/the-night-watch.en",
+     0.7954,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch.en",
+     0.8266,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch",
+     0.8592,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.6849,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.7123,
+     false
+    ],
+    [
+     "rembrandt/self-portraits.en",
+     0.7562,
+     false
+    ],
+    [
+     "rembrandt/self-portraits.en",
+     0.7608,
+     false
+    ],
+    [
+     "rembrandt/people-hendrickje.en",
+     0.7638,
+     false
+    ],
+    [
+     "rembrandt/timeline-05",
+     0.898,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "compare-001",
+   "category": "comparison",
+   "artwork_slug": "the-bedroom",
+   "question": "아를에서 함께 지낼 때 고흐와 고갱의 색채와 작업 방식은 어떻게 달랐어?",
+   "expect_refused": false,
+   "targets": [
+    "_comparisons/comparison-van-gogh-and-gauguin-arles"
+   ],
+   "matched": {
+    "_comparisons/comparison-van-gogh-and-gauguin-arles": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.6645,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-bedroom",
+     0.6645,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.4703,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.502,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.5964,
+     false
+    ],
+    [
+     "vincent-van-gogh/bio-vincent-van-gogh",
+     0.6399,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-06",
+     0.6515,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "compare-002",
+   "category": "comparison",
+   "artwork_slug": "impression-sunrise",
+   "question": "모네와 세잔은 자연을 표현하는 방식이 어떻게 달라?",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.7258,
+   "retrieved": [
+    [
+     "claude-monet/impression-sunrise",
+     0.7258,
+     false
+    ],
+    [
+     "claude-monet/impression-sunrise",
+     0.7444,
+     false
+    ],
+    [
+     "claude-monet/impression-sunrise",
+     0.7471,
+     false
+    ],
+    [
+     "claude-monet/technique",
+     0.6681,
+     false
+    ],
+    [
+     "claude-monet/timeline-08",
+     0.6844,
+     false
+    ],
+    [
+     "claude-monet/bio",
+     0.6916,
+     false
+    ],
+    [
+     "claude-monet/bio",
+     0.6923,
+     false
+    ],
+    [
+     "claude-monet/timeline-00",
+     0.7232,
+     false
+    ],
+    [
+     "claude-monet/timeline-04",
+     0.7969,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "compare-003",
+   "category": "comparison",
+   "artwork_slug": "the-night-watch",
+   "question": "렘브란트와 카라바조의 명암 표현 차이를 설명해줘.",
+   "expect_refused": false,
+   "targets": [
+    "_comparisons/chiaroscuro",
+    "_comparisons/chiaroscuro.en",
+    "_comparisons/tenebrism",
+    "_comparisons/tenebrism.en"
+   ],
+   "matched": {
+    "_comparisons/chiaroscuro": "순위",
+    "_comparisons/tenebrism": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.7305,
+   "retrieved": [
+    [
+     "rembrandt/the-night-watch.en",
+     0.7305,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch.en",
+     0.757,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch",
+     0.797,
+     false
+    ],
+    [
+     "rembrandt/self-portraits.en",
+     0.5424,
+     false
+    ],
+    [
+     "rembrandt/self-portraits.en",
+     0.603,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.6044,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.6048,
+     false
+    ],
+    [
+     "rembrandt/rembrandt-house.en",
+     0.6292,
+     false
+    ],
+    [
+     "_comparisons/tenebrism",
+     0.6396,
+     false
+    ],
+    [
+     "_comparisons/chiaroscuro",
+     0.7072,
+     false
+    ],
+    [
+     "rembrandt/timeline-05",
+     0.6712,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "compare-004",
+   "category": "comparison",
+   "artwork_slug": "sunflowers-1887",
+   "question": "파리에서 그린 해바라기와 아를의 해바라기는 무엇이 달라?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-sunflowers-1887"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-sunflowers-1887": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.5584,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-sunflowers-1887",
+     0.5584,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-sunflowers-1887",
+     0.5712,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.5991,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.6724,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.7056,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-04",
+     0.7291,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "scope-001",
+   "category": "out_of_scope",
+   "artwork_slug": "the-starry-night",
+   "question": "피카소의 대표작 다섯 개를 알려줘.",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.884,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.884,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.8859,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-09",
+     0.8174,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-04",
+     0.8416,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-07",
+     0.8591,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-auvers-death",
+     0.86,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.8614,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "scope-002",
+   "category": "out_of_scope",
+   "artwork_slug": "water-lilies",
+   "question": "오늘 서울 날씨와 미세먼지를 알려줘.",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.8398,
+   "retrieved": [
+    [
+     "claude-monet/water-lilies",
+     0.8398,
+     false
+    ],
+    [
+     "claude-monet/water-lilies",
+     0.8439,
+     false
+    ],
+    [
+     "claude-monet/water-lilies",
+     0.8515,
+     false
+    ],
+    [
+     "claude-monet/bio",
+     0.743,
+     false
+    ],
+    [
+     "claude-monet/technique",
+     0.7786,
+     false
+    ],
+    [
+     "claude-monet/influence",
+     0.7883,
+     false
+    ],
+    [
+     "claude-monet/bio",
+     0.7986,
+     false
+    ],
+    [
+     "claude-monet/places",
+     0.803,
+     false
+    ],
+    [
+     "claude-monet/timeline-08",
+     0.8231,
+     true
+    ],
+    [
+     "claude-monet/timeline-09",
+     0.9339,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "scope-003",
+   "category": "out_of_scope",
+   "artwork_slug": "the-night-watch",
+   "question": "이 그림을 지금 가장 싸게 살 수 있는 사이트를 찾아줘.",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.6999,
+   "retrieved": [
+    [
+     "rembrandt/the-night-watch.en",
+     0.6999,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch.en",
+     0.7038,
+     false
+    ],
+    [
+     "rembrandt/the-night-watch",
+     0.8687,
+     false
+    ],
+    [
+     "rembrandt/bio.en",
+     0.7234,
+     false
+    ],
+    [
+     "_comparisons/chiaroscuro.en",
+     0.7521,
+     false
+    ],
+    [
+     "_comparisons/chiaroscuro",
+     0.7537,
+     false
+    ],
+    [
+     "rembrandt/timeline-05",
+     0.9363,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "evidence-001",
+   "category": "insufficient_evidence",
+   "artwork_slug": "apples-oranges",
+   "question": "쟁반 위와 카펫 위에 있는 사과가 각각 정확히 몇 개인지 세어줘.",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.9234,
+   "retrieved": [
+    [
+     "paul-cezanne/apples-oranges",
+     0.9234,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7927,
+     false
+    ],
+    [
+     "paul-cezanne/bio",
+     0.7955,
+     false
+    ],
+    [
+     "paul-cezanne/technique",
+     0.8315,
+     false
+    ],
+    [
+     "paul-cezanne/timeline-09",
+     0.8596,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "evidence-002",
+   "category": "insufficient_evidence",
+   "artwork_slug": "the-bedroom",
+   "question": "고흐는 이 침실을 그리던 순간 행복했어, 우울했어? 둘 중 하나로 정확히 단정해줘.",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.6103,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-bedroom",
+     0.6103,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-arles-ear",
+     0.7174,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-09",
+     0.7319,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-06",
+     0.7364,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-03",
+     0.739,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "evidence-003",
+   "category": "insufficient_evidence",
+   "artwork_slug": "when-will-you-marry",
+   "question": "이 작품의 오늘 기준 정확한 시장 가격은 얼마야?",
+   "expect_refused": true,
+   "targets": [],
+   "matched": {},
+   "hit": false,
+   "all_hit": false,
+   "top_distance": 0.8179,
+   "retrieved": [
+    [
+     "paul-gauguin/commentary-when-will-you-marry",
+     0.8179,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-09",
+     0.8249,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-10",
+     0.8612,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-stockbroker-artist",
+     0.8692,
+     false
+    ],
+    [
+     "paul-gauguin/bio-paul-gauguin",
+     0.8789,
+     false
+    ]
+   ]
+  },
+  {
+   "id": "multiturn-001",
+   "category": "multi_turn",
+   "artwork_slug": "the-starry-night",
+   "question": "그 작품에서 마을과 하늘은 어떻게 대비돼?",
+   "expect_refused": false,
+   "targets": [
+    "vincent-van-gogh/commentary-the-starry-night"
+   ],
+   "matched": {
+    "vincent-van-gogh/commentary-the-starry-night": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.537,
+   "retrieved": [
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.537,
+     false
+    ],
+    [
+     "vincent-van-gogh/commentary-the-starry-night",
+     0.5563,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-05",
+     0.7291,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-saint-remy",
+     0.7392,
+     false
+    ],
+    [
+     "vincent-van-gogh/van-gogh-bio-early-netherlands",
+     0.7649,
+     false
+    ],
+    [
+     "vincent-van-gogh/timeline-07",
+     0.8018,
+     true
+    ]
+   ]
+  },
+  {
+   "id": "multiturn-002",
+   "category": "multi_turn",
+   "artwork_slug": "spirit-of-the-dead-watching",
+   "question": "그 형상에 대해서는 확실히 말할 수 있어?",
+   "expect_refused": false,
+   "targets": [
+    "paul-gauguin/commentary-spirit-of-the-dead-watching"
+   ],
+   "matched": {
+    "paul-gauguin/commentary-spirit-of-the-dead-watching": "순위"
+   },
+   "hit": true,
+   "all_hit": true,
+   "top_distance": 0.8166,
+   "retrieved": [
+    [
+     "paul-gauguin/commentary-spirit-of-the-dead-watching",
+     0.8166,
+     false
+    ],
+    [
+     "_comparisons/comparison-van-gogh-and-gauguin-arles",
+     0.8348,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-pont-aven-brittany",
+     0.8434,
+     false
+    ],
+    [
+     "paul-gauguin/timeline-10",
+     0.861,
+     false
+    ],
+    [
+     "paul-gauguin/gauguin-bio-two-tahiti-stays",
+     0.8884,
+     false
+    ]
+   ]
+  }
+ ]
+}
