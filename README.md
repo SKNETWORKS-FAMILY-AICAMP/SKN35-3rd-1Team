@@ -507,7 +507,7 @@ sequenceDiagram
 
 ### MCP: 외부 AI에서도 같은 컬렉션 기능
 
-**MCP(Model Context Protocol)**는 외부 AI 클라이언트가 정해진 도구 스키마로 서비스를 사용할 수 있게 하는 연결 규약입니다. Docentalk은 **Streamable HTTP `/mcp/`**로 다음 6개 도구를 제공합니다.
+**MCP**(Model Context Protocol)는 외부 AI 클라이언트가 정해진 도구 스키마로 서비스를 사용할 수 있게 하는 연결 규약입니다. Docentalk은 **Streamable HTTP**의 `/mcp/` 경로로 다음 6개 도구를 제공합니다.
 
 | 도구 | 기능 | 변경 여부 |
 | --- | --- | --- |
