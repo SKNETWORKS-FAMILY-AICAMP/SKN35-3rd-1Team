@@ -1,16 +1,14 @@
-# artwork components
+# 목업 작품 카드
 
-작품을 보여 주고 조작하는 컴포넌트를 둡니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 들어갈 파일
+`ArtworkCard.tsx`는 초기 목업의 정적 작품 카드입니다. 좋아요는 로컬 훅을 통해 브라우저에 저장됩니다. 이 폴더에 `ArtworkGrid.tsx`, `ArtworkInfo.tsx`, `LikeButton.tsx` 구현은 없습니다.
 
-- `ArtworkCard.tsx`: 목록용 카드 (이미지, 제목, 작가, 좋아요 버튼)
-- `ArtworkGrid.tsx`: 카드 목록 배치
-- `ArtworkInfo.tsx`: 상세 정보 (연도, 재료, 소장처, 설명, 이미지 출처)
-- `LikeButton.tsx`: 좋아요 토글
+운영 작품 UI는 Flutter를 사용하며 실제 API ID·출처·이미지·좋아요 요청을 연결합니다. 김홍도·정선 박물관 이미지 대응은 정확한 원본 URL 매핑을 유지합니다.
 
-## 규칙
+## 현재 Flutter 구현
 
-- `LikeButton`은 누르는 즉시 화면을 바꾸고, 요청이 실패하면 되돌립니다. 처리는 `hooks/`의 좋아요 훅이 합니다.
-- 비로그인 상태에서 좋아요를 누르면 로그인 화면으로 안내합니다.
-- 이미지 아래에 출처와 라이선스를 표시할 자리를 둡니다.
+- [현재 작품 목록](../../../lib/pages/artworks_page.dart)
+- [현재 작품 상세](../../../lib/pages/detail_page.dart)
+- [현재 카드·하트·이미지](../../../lib/ui/design.dart)
+- [박물관 이미지 매핑](../../../lib/ui/museum_artwork_images.dart)

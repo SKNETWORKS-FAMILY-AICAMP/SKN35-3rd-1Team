@@ -1,17 +1,14 @@
-# types
+# 목업 타입
 
-API 요청·응답에 쓰는 TypeScript 타입을 둡니다. 백엔드 `app/schemas/`와 필드 이름을 똑같이 맞춥니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 들어갈 파일
+현재 TypeScript 타입 파일은 `catalog.ts`입니다. `auth.ts`, `chat.ts`, `library.ts`, `recommendation.ts`는 이전 계획안이며 실제 API 계약 구현 파일이 아닙니다.
 
-- `auth.ts`: 사용자, 토큰
-- `catalog.ts`: 사조, 작가 카드·상세, 작품 카드·상세
-- `chat.ts`: 메시지, 질문 요청, 답변 응답, 출처 항목
-- `library.ts`: 캘린더 날짜 항목, 하루 상세
-- `recommendation.ts`: 추천 작품, 추천 작가
+운영 Flutter는 Dart 모델을 사용합니다. API 필드·nullable 값·출처·페이지 응답은 해당 모델에서 매핑하고 변경 시 서버 schema와 함께 확인합니다.
 
-## 규칙
+## 현재 Flutter 구현
 
-- 필드 이름은 백엔드 응답 그대로 씁니다 (`image_url`, `source_url`). 프론트에서 이름을 바꾸면 양쪽 문서가 어긋납니다.
-- 값이 없을 수 있는 필드는 타입에 표시합니다. 작품의 `movement`, `image_url`, 문서의 `source_url`이 해당합니다.
-- 백엔드 스키마가 바뀌면 같은 PR에서 여기 타입도 고칩니다.
+- [작품·작가·도슨트 모델](../../lib/models.dart)
+- [감상 모델](../../lib/diary.dart)
+- [컬렉션·취향 모델](../../lib/mypage.dart)
+- [공개 프로필·팔로우 모델](../../lib/social.dart)

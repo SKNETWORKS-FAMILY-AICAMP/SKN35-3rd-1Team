@@ -1,29 +1,27 @@
-# frontend/src
+# 초기 React 목업
 
-React 애플리케이션의 소스 코드입니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 폴더별 역할
+`src/`는 초기 UI 목업을 보존한 React 소스입니다. 현재 운영 서비스는 `lib/`의 Flutter Web이며 Vercel은 `src/`를 업로드에서 제외합니다.
 
-| 폴더 | 역할 | 의존해도 되는 곳 |
-| --- | --- | --- |
-| `pages/` | URL과 연결되는 화면. 컴포넌트를 조립함 | `components`, `hooks`, `stores` |
-| `components/` | 재사용 UI 조각 | `hooks`, `types` |
-| `hooks/` | 조회·변경 로직과 캐시 관리 | `api`, `types` |
-| `api/` | FastAPI 호출 함수 | `types` |
-| `stores/` | 로그인 상태 등 전역 상태 | `types` |
-| `routes/` | 라우터 정의, 접근 규칙 | `pages`, `stores` |
-| `types/` | API 응답 타입 | (없음) |
-| `assets/` | 로고, 아이콘, 스타일 | (없음) |
+| 실제 파일 | 목업 역할 |
+| --- | --- |
+| `main.tsx`, `App.tsx` | 시작·공통 레이아웃·hashchange 기반 화면 분기 |
+| `pages/GalleryPage.tsx` | 작품 탐색 |
+| `pages/ArtworkDetailPage.tsx` | 작품 상세·예시 도슨트 |
+| `pages/ArtistsPage.tsx` | 작가 목록·상세 |
+| `pages/LibraryPage.tsx` | 로컬 감상 기록 |
+| `components/common/Header.tsx` | 목업 메뉴·로고 |
+| `components/artwork/ArtworkCard.tsx` | 목업 작품 카드 |
+| `components/chat/DocentChat.tsx` | 준비된 예시 답변 |
+| `hooks/useCollection.ts` | localStorage 좋아요·작가 팔로우·열람 |
+| `types/catalog.ts`, `data/` | 정적 목업 타입·카탈로그 |
+| `assets/styles.css` | 목업 스타일 |
 
-## 데이터가 흐르는 방향
+`npm run dev`·`npm run build`는 이 React 목업용이며 운영 Flutter 실행·배포 명령이 아닙니다. 별도 로그인·API 훅·서버 저장 구조가 구현됐다고 가정하지 않습니다.
 
-```text
-pages → components → hooks → api → FastAPI
-```
+## 현재 Flutter 구현
 
-컴포넌트가 `api/`의 함수를 직접 부르지 않고 훅을 거치게 하면, 로딩·오류·캐시 처리가 한 곳에 모입니다.
-
-## 이 폴더 바로 아래에 둘 파일
-
-- `main.tsx`: 앱 시작점
-- `App.tsx`: 라우터와 공통 레이아웃 연결
+- [현재 시작·라우팅](../lib/main.dart)
+- [현재 상태](../lib/state.dart)
+- [현재 API](../lib/api/artlog_api.dart)

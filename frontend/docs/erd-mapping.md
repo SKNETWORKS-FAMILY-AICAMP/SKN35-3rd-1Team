@@ -1,42 +1,55 @@
-# 통합 dev ERD와 프론트 연결 점검
+# ERD와 프론트엔드 연결
 
-> 2026-10-14 현재: Alembic head 0008, 서비스 모델·ERD 20테이블입니다. user_preferences의 birth_date·conversation_style·onboarding_completed·AI 소개 캐시, diary_entries, collections, collection_items를 API에 연결했습니다. `explanation_priorities`는 이전 0008 스키마에 남은 미사용 컬럼입니다. 프로필 서버 저장과 말투 개인화를 구현했고, 나이대를 생년월일로 추정하지 않습니다. 아래 17테이블/501 표기는 이전 통합 스냅샷이며 [최신 인수인계](../../docs/mypage-and-collections-2026-10-14.md)를 참고합니다.
+갱신: **2026-10-15 · dev `6f0b40a` 기준**. SQLAlchemy 모델·API·Flutter 호출을 대조했습니다.
 
+## 기준
 
-최종 갱신: 2026-10-13 · 기준: 모든 팀 브랜치를 병합한 dev
+서비스 모델은 **22테이블**, Alembic head는 **`20261014_0011`**입니다. 0009의 사용자 팔로우, 0010의 작품별 감상, 0011의 AI 테마 캐시를 포함합니다. [기존 ERD 원본](../../docs/db/00_erd.mmd)과 [DB 설계](../../docs/db/db-design.md)에 이전 20테이블 표기가 남아 있을 수 있어 최신 수치는 실제 [모델](../../backend/app/models)·[마이그레이션](../../backend/alembic/versions)을 우선합니다. 이 문서 갱신은 운영 DB migration 적용을 수행하거나 보장하지 않습니다.
 
-## 확인 기준
+프론트는 DB에 직접 연결하지 않고 인증된 API를 사용합니다. 실제 엔드포인트는 [호출 표](endpoints.md)를 참고하세요.
 
-[최신 ERD](../../docs/db/00_erd.mmd), [DB 설계](../../docs/db/db-design.md), SQLAlchemy 모델과 Alembic `20261013_0006`, [API 계약](../../docs/api.md)을 대조했습니다. 최신 구조는 **서비스 테이블 17개**입니다. 이전 lsh 작업 시점의 15개 구조에 `social_accounts`·`user_preferences`가 추가되었습니다.
+## 테이블별 화면·계약 대응
 
-ERD 컬럼이 있어도 API 없이 DB에 직접 접근하지 않습니다. 토큰에서 사용자를 결정하는 서버 API를 통해 연결합니다.
+| 영역 | 테이블 | 프론트 사용 |
+| --- | --- | --- |
+| 계정 | `users` | Firebase UID로 서버 사용자 매핑. 공개 프로필에는 `public_id`·닉네임 사용 |
+| 계정 | `social_accounts` | 외부 공급자 연결 저장 구조. Flutter Google 로그인은 Firebase SDK를 사용하며 이 테이블을 직접 조작하지 않음 |
+| 계정 | `user_preferences` | 프로필 어댑터·AI 취향 소개 캐시. 현재 회원정보 편집/온보딩 폼은 없음 |
+| 카탈로그 | `art_movements` | 사조 필터 |
+| 카탈로그 | `artists` | 작가 목록·상세·사진·좋아요 |
+| 카탈로그 | `artworks` | 작품 목록·상세·출처·`is_featured` 대표 순서 |
+| 카탈로그 | `artwork_embeddings` | 서버 유사/맞춤 추천에 사용. 벡터는 프론트에 보내지 않음 |
+| 활동 | `artwork_likes` | 좋아요·취소·좋아요 모음·추천 갱신 |
+| 활동 | `artist_follows` | 작가 좋아요·관심 작가 |
+| 활동 | `artwork_views` | 상세 열람 기록, 서울 날짜 캘린더·자동 컬렉션 |
+| 활동 | `user_follows` | 감상가 팔로우·팔로잉/팔로워 목록 |
+| 감상 | `diary_entries` | 공개 피드·작품별 감상·내 기록, 공개/비공개·수정·삭제 |
+| 컬렉션 | `collections` | 직접 저장 모음의 목록·제목·설명 |
+| 컬렉션 | `collection_items` | 작품 추가·중복 방지·꺼내기·순서 |
+| 대화 | `chat_sessions` | 사용자·작품별 대화 복원·초기화 |
+| 대화 | `chat_messages` | 질문·답변·`refused`·출처 스냅샷 복원 |
+| AI 테마 | `theme_collection_cache` | 사용자별 테마·신호 지문·생성 시각·시도 시각. 일반 저장 모음과 구분 |
+| RAG | `documents` | 답변 원문 출처·라이선스 |
+| RAG | `document_artists` | 작가별 자료 검색 범위, 서버 처리 |
+| RAG | `document_artworks` | 작품별 자료 검색 범위, 서버 처리 |
+| RAG | `document_basis_documents` | 선택 응답 `basis_sources`의 편집 보강 근거 |
+| RAG | `document_chunks` | 서버 검색·근거 구성. 프론트는 최종 답변 출처 표시 |
 
-## 화면 대응
+## 식별자·권한
 
-| 테이블·컬럼 | 화면 대응·상태 |
-| --- | --- |
-| users.firebase_uid | 검증된 Firebase ID 토큰으로 서버 사용자 매핑. UID/user_id를 클라이언트 요청 본문에 넣지 않음 |
-| social_accounts | 공급자별 외부 계정 연결용 저장 구조. 기존 Firebase UID 인증 유지. 프론트의 Google SDK 로그인과 별개로 서버 연결 정책은 후속 확인 |
-| user_preferences | birth_year·gender·tone·explanation_level 저장 구조 준비. 조회/수정 API 미구현으로 온보딩은 UID별 브라우저 저장 유지 |
-| art_movements, artists, artworks | 작품의 movement_id로 필터. 숫자 ID로 상세 조회. nullable 사조·이미지는 대체 표시 |
-| artworks.is_featured | 대표 작품과 큐레이터 순서. 같은 featured 그룹 안 서버 순서 유지 |
-| artwork_likes, artist_follows | 복합 PK에 맞춘 PUT/DELETE·중복 변경 억제·계정별 서재·추천 갱신 |
-| artwork_views | 사용자·서울 날짜·작품별 행. 재방문도 POST하고 동시 호출만 중복 억제. artwork_count와 total_views·view_count 구분 |
-| chat_sessions | 사용자·작품당 하나의 대화를 복원·이어보기·초기화 |
-| chat_messages | role·content·refused·sources JSON 복원. 출처는 저장 스냅샷 사용. 서버가 NULL sources를 []로 변환 |
-| documents, document_basis_documents | 원문·라이선스와 basis_sources 편집 보강 근거를 구분해 표시. 공통 API 계약에 포함됨 |
-| document_artists, document_artworks, document_chunks, artwork_embeddings | 검색 범위·벡터 계산은 서버 수행. 프론트는 검색 답변과 유사/맞춤 추천 API를 사용 |
+- 개인 사용자 ID는 검증된 Firebase 토큰에서 서버가 결정합니다. 클라이언트가 UID/user_id를 임의로 본문에 넣지 않습니다.
+- 감상 삭제는 `entry_id`, 작품은 DB 숫자 ID, 공개 감상가 경로는 `public_id`를 사용합니다.
+- 컬렉션·감상·대화 소유권은 서버에서 검사합니다. 프론트의 버튼 숨김과 계정 변경 시 화면 초기화만으로 권한을 보장하지 않습니다.
+- 팔로우 목록 비공개 설정은 `users.follow_list_public`에 대응합니다. 서버가 숨긴 수치는 임의로 0으로 꾸며 표시하지 않습니다.
 
-서울 감상 날짜는 서버 date 응답을 따르고 명시적 UTC offset의 대화 시각은 서울 시각으로 표시합니다.
+## 프로필·감상 계약
 
-## 프로필 계약의 남은 차이
+`user_preferences`의 `birth_date`, `conversation_style`, `onboarding_completed`는 GET/PUT `/me/profile` 어댑터에 연결돼 있습니다. 현재 화면에는 해당 입력 폼이 없습니다. `birth_year`, `gender`, `tone`, `explanation_level`, `explanation_priorities` 같은 이전 필드를 현재 필수 입력으로 설명하지 않습니다. AI 취향 소개는 같은 테이블의 `taste_summary`·fingerprint·생성 시각을 사용합니다.
 
-프론트는 age_range·gender·explanation_style, DB는 birth_year·gender·tone·explanation_level입니다. 나이대를 임의의 출생연도로 바꾸지 않습니다. 선택형 출생연도 입력 또는 age_range 스키마 확장 중 무엇을 쓸지 결정한 다음 API·UI를 연결해야 합니다. enum 허용 값과 NULL·초기 설정·수정 정책도 함께 확정합니다.
+0010 이후 작품 연결 감상은 사용자·작품당 한 편이며 하루 여러 편을 허용합니다. 작품 없는 감상도 `entry_id` 기준으로 수정·삭제합니다. 서버 날짜는 서울 기준 문자열을 따르고, offset이 있는 대화 시각은 서울 시각으로 표시합니다. 캘린더의 `artwork_count`와 반복 열람을 포함한 `total_views`/`view_count`는 다른 값입니다.
 
-최신 DB 설명 문서에서는 예전의 채팅 저장 관련 FAQ도 정정됐습니다. 실제 도슨트 POST는 아직 501이므로 검색/답변 생성 및 save_exchange 연결이 남아 있습니다. 이번 통합에서 운영 DB를 변경하지 않았습니다.
+## 컬렉션·출처
 
-## 검증·담당
+사용자가 저장할 때 `collections`·`collection_items`가 생성되며 최대 10모음·각 30점입니다. 최근/반복/작가/월별 자동 모음과 AI 테마 캐시는 직접 저장한 모음과 다릅니다. AI 테마는 관심 신호 변경과 최소 30분 간격을 기준으로 재생성합니다.
 
-통합 프론트 테스트 81개와 Flutter 분석, 백엔드 279개와 Ruff, 배포 스크립트 4개 검사를 통과했습니다. 반복 열람, 화면 재방문·상단 메뉴, 재시도, 작품 수/감상 횟수, 출처·보강 근거 호환을 포함합니다.
-
-최신 통합 이력·검수 대기 자료·담당별 남은 작업은 [dev 통합·분담표](../../docs/integration-and-task-board-2026-10-13.md), 프론트 사용·배포 기록은 [인수인계](frontend-handoff.md)를 참고하세요.
+답변의 `sources`는 저장된 출처 스냅샷이며 `basis_sources`는 편집 보강 근거입니다. 원문과 보강 근거를 같은 출처라고 합치지 않습니다. 검색 청크·임베딩·모델 내부 점수는 서버에서 관리합니다.

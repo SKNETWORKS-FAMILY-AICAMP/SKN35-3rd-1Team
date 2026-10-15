@@ -1,78 +1,89 @@
-# 프론트엔드 엔드포인트 점검표
+# 프론트엔드 API 연결표
 
-점검일: 2026-10-14 · 기준: 모든 팀 브랜치를 통합한 dev · 공식 계약: [docs/api.md](../../docs/api.md).
+갱신: **2026-10-15 · dev `6f0b40a`**. 기준은 [Flutter API 어댑터](../lib/api/artlog_api.dart)와 [서버 API 계약](../../docs/api.md)입니다. 아래 경로는 공통 접두사 `/api`를 생략합니다. `API_BASE_URL`에 `/api`가 있어도 한 번만 붙입니다.
 
-실제 모드는 `API_BASE_URL=https://skn35-3rd-1team-production.up.railway.app/`, `ARTLOG_DEMO=false`, `AUTH_PROVIDER=firebase`입니다. 경로에는 DB 숫자 ID를 쓰며 공통 접두사 `/api`를 한 번만 붙입니다. 목록은 평평한 JSON 배열입니다. 별도 검색 API 없이 전체 목록을 로컬 검색·필터·정렬합니다.
+실제 운영 빌드는 `ARTLOG_DEMO=false`, `AUTH_PROVIDER=firebase`입니다. 카탈로그는 평평한 배열을 받아 로컬 검색·필터·정렬하며, 피드/컬렉션의 페이지 응답과 구분합니다.
 
-| 메서드 | 경로 (`/api` 생략) | 로그인 | 프론트 사용 |
+## 현재 화면에서 사용하는 호출
+
+| 메서드 | 경로 | 인증 | 사용 |
 | --- | --- | --- | --- |
-| GET | `/movements`, `/artists`, `/artworks` | 없음 | 카탈로그·필터·검색 |
-| GET | `/artists/{id}`, `/artworks/{id}` | 없음 | 상세 화면 |
-| GET | `/artworks/{id}/similar` | 없음 | 비슷한 작품. 실제 서버 200·3개 확인 |
-| POST | `/artworks/{id}/chat` | 선택 | 질문·history 전송. 선택한 말투와 질문 주제를 적용한 근거 기반 JSON 답변 |
-| POST | `/artworks/{id}/chat/stream` | 선택 | 같은 질문의 SSE 스트림. `token`, `replace`, `done`, `error` 이벤트 |
-| GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 저장 대화 복원 |
+| GET | `/movements`, `/artists`, `/artworks` | 공개 | 카탈로그, optional `artist_id`·`movement_id` 필터 |
+| GET | `/artists/{id}`, `/artworks/{id}` | 공개 | 작가·작품 상세 |
+| GET | `/artworks/{id}/similar` | 공개 | 관련 작품, 서버 순서 유지 |
+| POST | `/artworks/{id}/views` | 필요 | 상세 열람 기록, 204 |
+| PUT / DELETE | `/artworks/{id}/like` | 필요 | 작품 하트, 204 |
+| GET | `/me/likes` | 필요 | 좋아요한 작품 |
+| PUT / DELETE | `/artists/{id}/follow` | 필요 | 작가 하트, 204 |
+| GET | `/me/follows` | 필요 | 관심 작가 |
+| GET | `/me/recommendations/artworks`, `/me/recommendations/artists` | 필요 | 맞춤 추천·`reason` |
+| POST | `/artworks/{id}/chat/stream` | 선택 | SSE 도슨트, 로그인 시 저장 |
+| POST | `/artworks/{id}/chat` | 선택 | SSE 미지원 시 JSON 대체 |
+| GET | `/artworks/{id}/chat/messages` | 필요 | 작품별 대화 복원 |
 | DELETE | `/artworks/{id}/chat` | 필요 | 대화 초기화, 204 |
-| GET | `/me/chats` | 필요 | 서재 대화 내역 탭, 작품별 이어보기 |
-| PUT / DELETE | `/artworks/{id}/like` | 필요 | 좋아요·취소, 204 |
-| GET | `/me/likes` | 필요 | 좋아요 목록 |
-| PUT / DELETE | `/artists/{id}/follow` | 필요 | 팔로우·취소, 204 |
-| GET | `/me/follows` | 필요 | 팔로우 목록 |
-| POST | `/artworks/{id}/views` | 필요 | 로그인한 상세 열람, 204 |
-| GET | `/me/library/calendar?month=YYYY-MM` | 필요 | 월별 감상 날짜·작품 수 |
-| GET | `/me/library/days/{YYYY-MM-DD}` | 필요 | 선택한 날짜의 감상 작품 |
-| GET | `/me/recommendations/artworks` | 필요 | 로그인 후 발견하기, 작품·추천 이유 |
-| GET | `/me/recommendations/artists` | 필요 | 로그인 후 발견하기, 작가·추천 이유 |
+| GET | `/diary/feed` | 공개 | 공개 감상, `limit=12`·`before_id`·optional `artwork_id` |
+| GET | `/me/diary?month=YYYY-MM` | 필요 | 월별 개인 감상 |
+| GET | `/me/diary/artworks/{artwork_id}` | 필요 | 해당 작품의 내 감상, 없으면 null |
+| POST | `/me/diary` | 필요 | 감상 생성, `entry_date`·`content`·`is_public`·`artwork_id` |
+| PUT / DELETE | `/me/diary/{entry_id}` | 필요 | 해당 글 수정·삭제. 날짜가 아닌 글 ID 사용 |
+| GET | `/me/library/calendar?month=YYYY-MM` | 필요 | 월별 열람 집계 |
+| GET | `/me/library/days/{YYYY-MM-DD}` | 필요 | 날짜별 열람 작품·횟수 |
+| GET | `/me/profile` | 필요 | 내 계정 프로필 읽기 |
+| GET / POST | `/me/taste` | 필요 | AI 취향 소개 조회·생성 |
+| GET | `/me/collections` | 필요 | 직접 저장한 모음 |
+| POST | `/me/collections` | 필요 | 모음 생성, optional 최초 `artwork_ids` |
+| PUT / DELETE | `/me/collections/{id}` | 필요 | 제목·설명 수정 / 모음 삭제 |
+| GET | `/me/collections/{id}/items` | 필요 | 모음 작품, `limit=12`·`before_id` |
+| PUT / DELETE | `/me/collections/{id}/items/{artwork_id}` | 필요 | 작품 담기·꺼내기 |
+| GET | `/me/collections/auto`, `/me/collections/auto/{key}` | 필요 | 최근·반복·작가·월별 및 AI 테마 상세 |
+| POST | `/me/collections/themes/refresh` | 필요 | 관심 신호에 따라 캐시 재사용·AI 테마 갱신 |
+| GET | `/me/critiques` | 필요 | 내 감상 목록, `limit=12`·`before_id` |
+| GET / PUT | `/me/social` | 필요 | 공개 ID·팔로우 목록 공개 설정 |
+| GET | `/users/{public_id}` | 공개 | 다른 감상가 프로필 |
+| GET | `/users/{public_id}/diary` | 공개 | 해당 감상가의 공개 글, `limit=12`·`before_id` |
+| PUT / DELETE | `/users/{public_id}/follow` | 필요 | 감상가 팔로우·취소, 204 |
+| GET | `/users/{public_id}/followers`, `/users/{public_id}/following` | 공개 정책 적용 | 공개 설정에 따른 목록 |
 
-스트리밍 경로가 404·405·501을 반환할 때만 기존 JSON 채팅으로 한 번 전환합니다. 이미 시작된 스트림의 오류·타임아웃·503은 자동 재전송하지 않아 질문 저장과 AI 호출이 중복되지 않도록 합니다. `done`의 답변·출처를 최종 결과로 사용하며, 오류가 나면 임시 답변을 지우고 사용자가 재시도할 수 있습니다. 토큰은 서버가 보낸 덩어리대로 표시해 글자별 인위적인 지연을 만들지 않습니다.
+## 어댑터는 있지만 현재 전용 UI가 없는 호출
 
-## 인증·계정 변경
+| 메서드·경로 | 코드와 현재 노출 |
+| --- | --- |
+| `GET /me/chats` | `chats()` 존재. 현재 내 피드에 저장 대화 목록 탭 없음 |
+| `GET /me/activity?limit=20&offset=0` | 활동 어댑터 존재. 현재 전용 활동 탭 없음 |
+| `PUT /me/profile` | 생년월일·말투·완료 여부 모델/저장 메서드 존재. 현재 온보딩·프로필 수정 폼 없음 |
+| `POST /me/collections/chat` | `message`·optional `collection_id` 요청, 제안 적용 메서드 존재. 현재 컬렉션 채팅 입력 UI 없음 |
+| `POST /auth/login` | 이전 `AUTH_PROVIDER=api` 어댑터. 운영 Firebase 로그인에서 호출하지 않으며 현재 서버 지원 로그인으로 안내하지 않음 |
 
-Firebase 이메일 가입·로그인·재설정과 Google 팝업 로그인은 Flutter SDK에서 처리합니다. Google의 첫 로그인도 동일 Firebase 사용자/ID 토큰 흐름을 사용합니다. 운영 모드는 서버의 `/auth/login`·`/auth/signup`을 호출하지 않습니다. SDK에서 요청마다 ID 토큰을 받아 Bearer 헤더로 보내며 UID를 별도 본문·경로에 보내지 않습니다. 401은 한 번만 토큰을 강제 갱신하고 다시 거절되면 안내합니다. Firebase 세션을 임의로 로그아웃시키지 않습니다.
+MCP는 외부 클라이언트의 `/mcp/` 전송 계층입니다. Flutter가 별도 MCP 연결로 토큰을 우회 전달하지 않습니다. 컬렉션 제안이 있더라도 사용자의 저장 동작을 거쳐 일반 CRUD를 실행하는 정책을 유지합니다.
 
-계정 변경 시 기존 개인 요청은 새 계정으로 재시도하지 않고 늦은 응답을 버립니다. 서재·대화·입력도 초기화합니다. 서버 `AUTH_MODE=dev`에서는 모든 토큰이 한 개발 사용자로 처리되므로 서버의 Firebase 모드 확인은 별도로 필요합니다. 이번 작업에서 Railway 설정을 변경하거나 현재 모드 값을 확인하지 않았습니다.
+## SSE·질문 계약
 
-## 대화·출처
+```json
+{
+  "question": "이 그림의 구도를 설명해 주세요.",
+  "history": [{"role": "user", "content": "작가가 누구인가요?"}],
+  "explanation_style": "standard"
+}
+```
 
-- 질문 1~500자, history 직전 최대 12개 `{role, content}`, 각 content 최대 4000자.
-- 실패한 질문은 재시도 history에 중복 넣지 않습니다.
-- 응답 `{answer, refused, sources}`의 출처·원문·라이선스만 표시합니다. `refused: true`는 범위 밖 안내 말풍선입니다.
-- 저장 대화 `{role, content, refused, sources, created_at}`를 복원하고 다시 질문할 때 맥락으로 보냅니다.
-- 내 대화 목록은 `{artwork, last_message, updated_at}`이며 UTC 시각을 서울 시각으로 표시합니다.
-- 서버 답변 생성과 로그인 사용자의 `chat_service.save_exchange`를 연결했습니다. 실제 운영에는 AI·Chroma 설정과 DB 마이그레이션이 필요합니다.
+질문 1~500자, 최근 history 최대 12개·각 content 최대 4000자이며 설명은 `easy`·`standard`·`deep`입니다. 실패한 질문 재시도 시 같은 질문을 history에 중복 삽입하지 않습니다.
 
-## 추천·서재·실패
+SSE는 `token`·`replace`·`done`·`error` 이벤트를 처리합니다. 최종 `done`의 `answer`, `refused`, `sources`, optional `suggestion`으로 메시지를 확정합니다. 출처는 문서 ID·제목·자료 유형·기관·URL·라이선스와 optional `basis_sources`를 표시합니다.
 
-맞춤 추천은 카드에 `reason`이 더해진 평평한 응답입니다. 서버 순서를 유지하고 nullable reason은 표시하지 않습니다. 좋아요·팔로우가 바뀌면 추천을 새로 요청합니다. 날짜 상세는 작품 카드에 `view_count`·`last_viewed_at`이 추가된 배열입니다. 감상·비평은 서버의 다이어리 API에 저장하며 기본 비공개입니다.
+404·405·501일 때만 JSON 경로로 전환합니다. 중간 오류·무응답·503은 자동 재전송하지 않습니다. 응답 헤더와 스트림 무응답에 45초 제한을 적용하며 이를 전체 생성 시간 제한으로 설명하지 않습니다. 종료 이벤트 없이 연결이 닫히면 실패로 안내합니다.
 
-ERD 점검 후 캘린더의 `artwork_count`는 날짜별 작품 수, `total_views`는 반복 감상을 포함한 횟수로 분리해 사용합니다. 날짜 상세의 `view_count`도 표시합니다. 같은 작품을 다시 열면 POST `/artworks/{id}/views`를 다시 보내며 동시 중복 호출만 억제합니다. `is_featured`는 공개 작품 목록의 큐레이터 순서·대표 작품에 반영합니다.
+실제 모드에는 프론트 질문 주제별 거절 규칙이 없습니다. `ARTLOG_DEMO=true`의 예시 응답과 서버의 분류·RAG·`refused` 판단을 구분합니다.
 
-출처에 선택 필드 `basis_sources: [{source_name, source_url}]`가 오면 원문과 별도로 ‘편집 보강 근거’를 표시합니다. 통합 dev의 공통 API 계약에 포함되며, 필드 생략 시 기존 응답과도 호환됩니다. 전체 ERD 대응은 [ERD 연결 점검](erd-mapping.md)에 정리했습니다.
+## 인증·계정 변경·오류
 
-401/403/404/422/429/501/503, 기타 서버 실패·시간 초과·연결 오류·잘못된 JSON을 구분합니다. 미리보기 데이터로 대체하지 않습니다. 추천·대화 복원·대화 목록은 각각 로딩·빈 상태·오류·재시도를 제공합니다. 대화 초기화 실패 시 기존 내용을 유지합니다.
+Firebase 이메일·Google 인증은 SDK에서 수행하고 ID 토큰을 Bearer 헤더에 넣습니다. UID를 사용자 선택 본문에 넣지 않습니다. 401은 같은 세션에서 토큰을 한 번 갱신합니다. 계정이 바뀐 개인 요청은 새 계정 토큰으로 재전송하지 않고 늦은 응답을 버립니다.
 
-## 검증과 인수인계
+빈 204 응답은 JSON으로 읽지 않습니다. 401/403/404/409/422/429/501/503, 네트워크·시간 초과·형식 오류를 안내합니다. 컬렉션 10개·30점 초과의 409 안내를 표시하며 실제 API 실패를 데모 데이터로 바꾸지 않습니다.
 
-실제 공개 API에서 health·OpenAPI·유사 작품을 확인했습니다. 개인 기능은 MockClient·가짜 Firebase 세션으로 API 계약·화면·계정 변경을 검사했으며 운영 개인 계정의 서버 저장 전체 성공을 의미하지 않습니다. 전체 작업·담당자 후속 조치·전달 문구는 [프론트 인수인계](frontend-handoff.md)를 참고하세요.
+## 기록·공개 범위
 
-## 회원 온보딩
+공개 범위는 저장할 때 반영하며 새 감상은 기본 비공개입니다. 작품별 한 편·하루 여러 편을 허용합니다. 본인 글만 삭제 UI를 제공하고 서버가 소유권을 재검증합니다. 성공 시 피드·개인 기록을 갱신하고 실패 시 글을 유지합니다.
 
-생년월일(선택) → 대화 스타일의 2단계입니다. 실제 모드에서는 GET/PUT `/api/me/profile`로 계정에 저장하며 완료 여부도 서버가 보관합니다. 도슨트 프롬프트에는 말투만 적용하고 설명 주제는 사용자의 질문으로 정합니다. 생년월일은 AI로 보내지 않습니다. 이전 브라우저 프로필의 나이대를 정확한 생년월일로 추정하거나 자동 업로드하지 않습니다. 미리보기에서는 UID별 로컬 저장을 유지합니다.
+캘린더 날짜는 서버의 서울 날짜 문자열을 따릅니다. `artwork_count`는 서로 다른 작품 수, `total_views`·`view_count`는 반복 열람 횟수입니다. 동일 상세의 동시 POST는 억제하지만 나중 재방문은 다시 기록합니다.
 
-
-## 감상평·다이어리
-
-`GET /api/diary/feed`, `GET /api/me/diary?month=YYYY-MM`, `POST /api/me/diary`, `PUT/DELETE /api/me/diary/{entry_id}`, `GET /api/me/diary/artworks/{artwork_id}`를 사용합니다. 감상평은 작품마다 한 편이고 하루 개수 제한은 없습니다. 상세 계약은 `docs/api.md`를 참고합니다. 공개 감상은 `/community`, 작품별 감상은 상세 화면, 개인 감상 목록과 캘린더는 `/library`의 내 피드에서 확인합니다.
-
-본인 글에는 공개 피드 카드·작품 상세 감상·내 피드 목록에 삭제 버튼을 표시합니다. 로그인 사용자와 글 작성자의 공개 ID가 일치할 때만 제공하며, 확인 후 날짜가 아닌 해당 `entry_id`로 삭제합니다. 계정 전환 시 확인창을 닫고, 성공하면 피드·감상 기록을 갱신합니다. 실패 시 글을 유지하며 재시도할 수 있습니다. 서버는 별도로 삭제 대상의 소유권을 검증합니다.
-
-공개 설정은 저장 시 반영되며 새 글은 기본 비공개입니다. 체험 모드에서는 브라우저에만 저장되고 실제 공유로 표시하지 않습니다. 기존 브라우저 메모는 작성란에 불러오되 사용자가 저장하기 전 서버로 전송하지 않습니다.
-
-
-## 마이페이지·컬렉션
-
-`/mypage`는 상단 계정 버튼으로 진입합니다. GET `/me/collections`, POST/PUT/DELETE `/me/collections/{id}`, GET `/me/collections/{id}/items`, PUT/DELETE `/me/collections/{id}/items/{artwork_id}`를 사용합니다. 생성은 POST `/me/collections`입니다. 작품 목록은 12점씩, 활동은 20개씩, 내 감상·비평은 12개씩 더 불러옵니다.
-
-AI 취향 소개는 GET/POST `/me/taste`, 컬렉션 채팅은 POST `/me/collections/chat`입니다. 채팅 응답의 `proposal`을 사용자에게 보여주고 확인 버튼을 누른 뒤 해당 CRUD API로 저장합니다. MCP를 화면에서 별도 호출해 토큰을 전달하는 우회 흐름은 없습니다. 외부 MCP 클라이언트는 별도 `/mcp/` 전송 계층에서 같은 소유권 검사 서비스를 사용합니다.
-
-운영 전환과 전체 계약은 [마이페이지 인수인계](../../docs/mypage-and-collections-2026-10-14.md)를 참고하세요.
+최신 화면·남은 작업은 [인수인계](frontend-handoff.md), 테이블 대응은 [ERD 안내](erd-mapping.md)를 참고하세요.

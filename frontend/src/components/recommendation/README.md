@@ -1,16 +1,13 @@
-# recommendation components
+# 목업 추천 구성 계획
 
-추천 결과를 보여 주는 컴포넌트를 둡니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 들어갈 파일
+이 폴더에는 별도 React 추천 컴포넌트가 없습니다. 초기 목업 정적 추천과 실제 서버 추천을 구분합니다.
 
-- `SimilarArtworks.tsx`: 작품 상세의 "이 작품과 비슷한 작품" 3개. 로그인 없이도 표시
-- `RecommendedArtworks.tsx`: 좋아요 기반 맞춤 작품 3개
-- `RecommendedArtists.tsx`: 추천 작가 3명
+현재 Flutter의 관련·맞춤 작품/작가는 서버 순서와 추천 이유를 표시합니다. 계산은 서버에서 수행하고 프론트는 오류·빈 상태를 별도로 안내합니다. AI 취향 테마는 일반 추천과 다른 개인 컬렉션 기능이며 캐시·생성 조건을 따릅니다.
 
-## 규칙
+## 현재 Flutter 구현
 
-- 추천 점수 계산은 FastAPI가 합니다. 프론트는 받은 순서대로 보여 주기만 합니다.
-- 작품과 작가 표시는 `artwork/ArtworkCard`, `artist/ArtistCard`를 재사용합니다.
-- 좋아요가 없는 사용자에게도 서버가 대체 추천을 돌려주므로, 빈 결과 화면은 오류 대비용으로만 둡니다.
-- 좋아요를 누른 뒤 추천이 새로 불러와져야 합니다. 갱신은 `hooks/`의 좋아요 훅이 추천 캐시를 무효화해서 처리합니다.
+- [현재 맞춤 추천](../../../lib/ui/personal_recommendations.dart)
+- [관련 작품](../../../lib/pages/detail_page.dart)
+- [AI 취향 모음](../../../lib/ui/collection_workspace.dart)

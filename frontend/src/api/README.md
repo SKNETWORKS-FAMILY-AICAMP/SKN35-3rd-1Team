@@ -1,22 +1,12 @@
-# api
+# 목업 API 폴더
 
-FastAPI 서버를 호출하는 함수를 기능별 파일로 둡니다. 경로는 `backend/app/api/routes/README.md`의 표와 맞춥니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 들어갈 파일
+이 폴더에는 현재 실행되는 TypeScript API 클라이언트가 없습니다. 이전 `client.ts`, `auth.ts`, `chat.ts` 등 목록은 계획안이었으며 구현 파일 목록이 아닙니다.
 
-| 파일 | 호출하는 기능 |
-| --- | --- |
-| `client.ts` | 기본 주소, 토큰 헤더 첨부, 오류 응답을 공통 형식으로 변환 |
-| `auth.ts` | 가입, 로그인 |
-| `catalog.ts` | 사조·작가·작품 목록과 상세 |
-| `chat.ts` | 작품 도슨트 질문 |
-| `likes.ts` | 좋아요 등록·취소·목록 |
-| `follows.ts` | 팔로우 등록·취소·목록 |
-| `library.ts` | 열람 기록 남기기, 캘린더, 하루 상세 |
-| `recommendations.ts` | 비슷한 작품, 맞춤 작품, 추천 작가 |
+운영 Flutter는 `ArtlogApi`에서 공통 주소·Firebase Bearer 토큰·401 한 번 갱신·SSE·오류를 처리합니다. 로그인은 Firebase SDK이며 기존 서버 로그인 API를 운영 인증으로 호출하지 않습니다.
 
-## 규칙
+## 현재 Flutter 구현
 
-- 함수는 요청을 보내고 타입이 붙은 결과를 돌려주는 일만 합니다. 화면 상태를 다루지 않습니다.
-- 모든 호출은 `client.ts`를 거칩니다. 주소와 토큰 처리를 파일마다 반복하지 않습니다.
-- 응답 타입은 `types/`의 것을 씁니다.
+- [현재 API 어댑터](../../lib/api/artlog_api.dart)
+- [엔드포인트 계약](../../docs/endpoints.md)

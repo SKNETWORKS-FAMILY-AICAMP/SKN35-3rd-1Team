@@ -1,14 +1,12 @@
-# artist components
+# 목업 작가 구성 계획
 
-작가를 보여 주고 팔로우하는 컴포넌트를 둡니다.
+갱신: 2026-10-15 · dev `6f0b40a` 기준. **초기 React 목업 보존 문서**입니다.
 
-## 들어갈 파일
+이 폴더에는 별도 React 작가 컴포넌트 구현이 없습니다. 초기 목업의 작가 화면은 `src/pages/ArtistsPage.tsx`에 있습니다.
 
-- `ArtistCard.tsx`: 작가 카드 (이름, 대표 사조, 짧은 소개)
-- `ArtistProfile.tsx`: 작가 상세 상단 영역
-- `FollowButton.tsx`: 팔로우 토글
+현재 Flutter는 작품 리스트의 작가 탭과 작가 상세를 사용합니다. 작가 하트는 `/artists/{id}/follow`의 PUT/DELETE로 연결되고 관심 작가는 내 피드에서 표시합니다.
 
-## 규칙
+## 현재 Flutter 구현
 
-- `FollowButton`의 동작 방식은 `artwork/LikeButton`과 같게 맞춥니다.
-- 추천 작가 영역에서도 `ArtistCard`와 `FollowButton`을 그대로 재사용합니다.
+- [현재 작가 탭](../../../lib/pages/artworks_page.dart)
+- [현재 작가 상세](../../../lib/pages/artists_page.dart)
