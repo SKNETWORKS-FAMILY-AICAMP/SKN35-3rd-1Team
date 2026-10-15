@@ -21,7 +21,7 @@ from app.rag.prompts import (
 
 def test_every_style_keeps_the_same_evidence_boundary():
     assert set(STYLE_RULES) == {"easy", "standard", "deep"}
-    assert PROMPT_VERSION == "docent-grounded-1.5.0"
+    assert PROMPT_VERSION == "docent-grounded-1.5.1"
     for style in STYLE_RULES:
         prompt = build_system_prompt(style)
         assert prompt.startswith(BASE_DOCENT_PROMPT)
@@ -75,6 +75,9 @@ def test_prompt_covers_hard_accuracy_cases_and_copy_limit():
         "작품 설명을 시작하거나 관련 없는 조언을 덧붙이지 않습니다",
         "앞부분에서 거절한 뒤 작품 설명을 이어 쓰는 것도 금지",
         "무조건 칭찬하거나 작품을 변호하지 말고",
+        "현재 사용자의 질문과 표현 요청을 과거 대화보다 우선",
+        "이름을 직접 물으면 이름을 답합니다",
+        "같은 작품 소개를 되풀이한 답은 제출하지 않습니다",
     ):
         assert requirement in prompt
 

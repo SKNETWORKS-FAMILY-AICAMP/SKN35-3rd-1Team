@@ -168,6 +168,7 @@ def retrieval_metrics(ranked: list[tuple[str, int]], relevant: set[tuple[str, in
     dcg = sum(1 / math.log2(rank + 1) for rank, key in enumerate(top, 1) if key in relevant)
     ideal = sum(1 / math.log2(rank + 1) for rank in range(1, min(k, len(relevant)) + 1))
     return {
+        "hit_at_5": 1.0 if first else 0.0,
         "recall_at_5": round(recall, 4),
         "reciprocal_rank": round(reciprocal_rank, 4),
         "ndcg_at_5": round(dcg / ideal if ideal else 0.0, 4),
@@ -230,10 +231,10 @@ def run_overlap(session, cases: list[dict], truth: dict[str, set[tuple[str, int]
         settings.append({
             "overlap_chars": overlap,
             "questions": len(per_case),
+            "hit_at_5": round(mean(row["hit_at_5"] for row in per_case), 4),
             "recall_at_5": round(mean(row["recall_at_5"] for row in per_case), 4),
             "mrr": round(mean(row["reciprocal_rank"] for row in per_case), 4),
             "ndcg_at_5": round(mean(row["ndcg_at_5"] for row in per_case), 4),
-            "hit_at_5": round(mean(row["reciprocal_rank"] > 0 for row in per_case), 4),
             "rows": per_case,
         })
     return {

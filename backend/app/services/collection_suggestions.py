@@ -2,8 +2,9 @@
 
 Rules only (no model call), so the offer is predictable and never invents works:
 
-- Interest: this is at least the ``MIN_QUESTIONS``-th question about the artwork
-  in the conversation, and the docent actually answered (not refused).
+- Interest: this is at least the ``MIN_QUESTIONS``-th substantive question
+  about the artwork, and the docent actually answered (not refused).
+  Wording corrections and unrelated chatter do not count as interest.
 - Once per conversation: only the first such answer offers. It is read from the
   stored conversation (already holding this exchange), so reloading or restoring
   the chat does not bring the offer back; resetting the chat starts over.
@@ -24,28 +25,45 @@ from app.schemas.mypage import (
     CollectionSuggestion,
 )
 from app.services import catalog_service
+from app.services.docent_grounding import is_non_engagement_question
 
 MIN_QUESTIONS = 3  # the third question about one artwork counts as interest
 MAX_CHOICES = 6
 
 
 def first_interest(db, user_id: int, artwork_id: int) -> bool:
-    """True only for the conversation's first answered question from the third on."""
+    """Offer only on the first answered, substantive question from the third on.
+
+    The saved conversation is authoritative: the client history can be missing
+    or edited, and the current exchange has already been persisted by the route.
+    """
     session_id = chat_repository.get_session_id(
         db, user_id=user_id, artwork_id=artwork_id
     )
     if session_id is None:
         return False
-    refused = db.scalars(
-        select(ChatMessage.refused)
-        .where(
-            ChatMessage.session_id == session_id,
-            ChatMessage.role == ChatRole.ASSISTANT,
-        )
+    messages = db.scalars(
+        select(ChatMessage)
+        .where(ChatMessage.session_id == session_id)
         .order_by(ChatMessage.id)
     ).all()
-    eligible = [i for i, r in enumerate(refused, 1) if i >= MIN_QUESTIONS and not r]
-    return eligible[:1] == [len(refused)]
+    if not messages:
+        return False
+    questions = 0
+    substantive = False
+    for message in messages:
+        if message.role == ChatRole.USER:
+            substantive = not is_non_engagement_question(message.content)
+            if substantive:
+                questions += 1
+        elif (
+            message.role == ChatRole.ASSISTANT
+            and substantive
+            and questions >= MIN_QUESTIONS
+            and not message.refused
+        ):
+            return message.id == messages[-1].id
+    return False
 
 
 def suggest(
@@ -54,6 +72,7 @@ def suggest(
     if (
         user_id is None
         or response.refused
+        or is_non_engagement_question(body.question)
         or not first_interest(db, user_id, artwork_id)
     ):
         return None

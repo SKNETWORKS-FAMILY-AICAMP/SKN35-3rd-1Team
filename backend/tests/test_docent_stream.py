@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from app.rag.classifier import classify
-from app.schemas.chat import ChatRequest
+from app.schemas.chat import ChatRequest, ChatTurn
 from app.services import docent_stream
 
 
@@ -102,6 +102,8 @@ def test_rag_stream_emits_deltas_and_verified_final_answer(monkeypatch, used_ids
     "욕해봐",
     "나 기분나빠",
     "뭐해? 나 심심해",
+    "너 정해진 답 있지",
+    "랜덤 돌려서 답 가져와?",
 ])
 def test_clear_unrelated_stream_refuses_without_artwork_answer(monkeypatch, question):
     monkeypatch.setattr(
@@ -170,3 +172,39 @@ def test_semantic_scope_gate_refuses_stream_before_retrieval(monkeypatch):
     assert events[0] == ("token", "해당 작품과 작가에 대해서만 대화 할 수 있어요.")
     assert events[-1][0] == "done"
     assert events[-1][1].refused and events[-1][1].sources == []
+
+
+@pytest.mark.parametrize(("question", "history", "expected"), [
+    ("이 작가의 이름이 뭐야?", [], "이 작품의 작가는 클로드 모네입니다."),
+    (
+        "왜 이름을 말 안해?",
+        [ChatTurn(role="user", content="이 작가의 이름이 뭐야?")],
+        "이 작품의 작가는 클로드 모네입니다.",
+    ),
+])
+def test_stream_answers_artist_identity_without_repeating_commentary(monkeypatch, question, history, expected):
+    monkeypatch.setattr(
+        docent_stream.catalog_service,
+        "get_artwork",
+        lambda *a: SimpleNamespace(title="푸르빌의 절벽 산책로", artist_name="클로드 모네"),
+    )
+    monkeypatch.setattr(docent_stream, "classify_artwork", lambda *a: SimpleNamespace(kind="rag"))
+    monkeypatch.setattr(docent_stream.docent_scope, "is_artwork_request", lambda *a: pytest.fail("명확한 단답에 범위 모델 호출"))
+    monkeypatch.setattr(docent_stream, "retrieve", lambda *a: pytest.fail("명확한 단답에 검색 호출"))
+    saved = []
+    monkeypatch.setattr(docent_stream.chat_service, "save_exchange", lambda *a, **kw: saved.append(kw))
+
+    async def collect():
+        return [
+            event async for event in docent_stream.answer_events(
+                None,
+                artwork_id=1,
+                body=ChatRequest(question=question, history=history),
+                user_id=3,
+            )
+        ]
+
+    events = asyncio.run(collect())
+    assert events[0][0] == "token" and expected in events[0][1]
+    assert events[-1][0] == "done" and not events[-1][1].refused
+    assert saved[0]["response"] == events[-1][1]
