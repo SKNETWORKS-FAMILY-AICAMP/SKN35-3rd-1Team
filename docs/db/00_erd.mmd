@@ -10,6 +10,7 @@ erDiagram
     users ||--o{ collections : "user_id"
     artworks ||--o{ collection_items : "artwork_id"
     collections ||--o{ collection_items : "collection_id"
+    users ||--o| theme_collection_cache : "user_id"
     artworks ||--o{ artwork_likes : "artwork_id"
     users ||--o{ artwork_likes : "user_id"
     artists ||--o{ artist_follows : "artist_id"
@@ -27,12 +28,16 @@ erDiagram
     documents ||--o{ document_basis_documents : "basis_document_id"
     documents ||--o{ document_basis_documents : "document_id"
     documents ||--o{ document_chunks : "document_id"
+    users ||--o{ user_follows : "followee_id"
+    users ||--o{ user_follows : "follower_id"
 
     users {
         bigint id PK
         varchar firebase_uid UK
         varchar email UK
         varchar nickname
+        varchar public_id UK
+        tinyint follow_list_public
         datetime created_at
         datetime updated_at
     }
@@ -129,6 +134,14 @@ erDiagram
         bigint artwork_id PK,FK
         datetime created_at
     }
+    theme_collection_cache {
+        bigint user_id PK,FK
+        varchar fingerprint
+        json themes
+        json basis
+        datetime generated_at
+        datetime attempted_at
+    }
     artwork_likes {
         bigint user_id PK,FK
         bigint artwork_id PK,FK
@@ -199,5 +212,10 @@ erDiagram
         text content
         vector embedding
         varchar embedding_model
+        datetime created_at
+    }
+    user_follows {
+        bigint follower_id PK,FK
+        bigint followee_id PK,FK
         datetime created_at
     }

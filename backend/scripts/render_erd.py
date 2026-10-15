@@ -26,6 +26,7 @@ TABLE_GROUPS = {
         "diary_entries",
         "collections",
         "collection_items",
+        "theme_collection_cache",
         "artwork_likes",
         "artist_follows",
         "artwork_views",

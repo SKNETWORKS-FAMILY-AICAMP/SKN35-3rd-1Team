@@ -220,13 +220,14 @@ POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `
 | 메서드 | 경로 | 응답·용도 |
 | --- | --- | --- |
 | GET / PUT | `/api/me/profile` | 설정 조회·전체 교체. 미설정은 `onboarding_completed=false` |
-| GET | `/api/me/collections` | 컬렉션 최대 50개, 개수와 미리보기 3점(먼저 담은 순, 첫 작품이 대표 썸네일), 수정 시각 내림차순 |
-| POST | `/api/me/collections` | 생성 201. 선택 `artwork_ids`(최대 500)는 그 순서대로 담고 첫 작품이 대표 썸네일. 없는 작품이면 404로 아무것도 만들지 않음. 동일 계정 이름 중복은 409 |
-| GET | `/api/me/collections/auto` | 감상 기록으로 계산한 자동 컬렉션(저장하지 않음): `recent` 최근 본 작품, `frequent` 2회 이상 본 작품, `artist-{id}` 많이 본 작가 상위 3명(2점 이상), `month-YYYY-MM` 이번 달. 작품이 있는 것만, `{key, name, description, artwork_count, cover}` |
-| GET | `/api/me/collections/auto/{key}` | `{collection, items: ArtworkCard[]}` 최대 60점. 형식이 틀린 key·없는 작가는 404 |
+| GET | `/api/me/collections` | 컬렉션 목록(이전 한도로 저장된 것까지 최대 50개 표시), 개수와 미리보기 3점(먼저 담은 순, 첫 작품이 대표 썸네일), 수정 시각 내림차순 |
+| POST | `/api/me/collections` | 생성 201. 선택 `artwork_ids`(최대 30, 넘으면 422)는 그 순서대로 담고 첫 작품이 대표 썸네일. 없는 작품이면 404로 아무것도 만들지 않음. 계정당 10개를 넘으면 409 `컬렉션은 10개까지 만들 수 있어요.`, 동일 계정 이름 중복은 409 |
+| GET | `/api/me/collections/auto` | (컬렉션 탭에는 표시하지 않음. MCP·대화형 컬렉션 요청용) 감상 기록으로 계산한 자동 컬렉션(저장하지 않음): `recent` 최근 본 작품, `frequent` 2회 이상 본 작품, `artist-{id}` 많이 본 작가 상위 3명(2점 이상), `month-YYYY-MM` 이번 달. 작품이 있는 것만, `{key, name, description, artwork_count, cover}` |
+| GET | `/api/me/collections/auto/{key}` | `{collection, items: ArtworkCard[]}` 최대 30점. `theme-{n}-{버전8자}` key는 아래 AI 감성 테마의 상세(캐시 그대로). 형식이 틀린 key·없는 작가·갱신으로 사라진 테마 key는 404 |
+| POST | `/api/me/collections/themes/refresh` | AI 감성 테마 준비. 컬렉션 탭 진입 때 호출. `{items: AutoCollectionOut[], message: string?}`. 서로 다른 작품 3점 이상을 보거나 좋아요하면 '잔잔한 저녁에 어울리는 그림' 같은 분위기 테마 2~4개(각 3~8점, 관심 작품 1점 이상, 작가 2명 이상, 미감상 작품 포함 가능)를 만든다. 사용자별 DB 스냅샷(`theme_collection_cache`)이며 기간 만료 없음. 좋아요 변화 또는 새로 본 작품 3점 이상일 때만 다시 만들고, 생성 시도는 사용자당 30분에 1회. AI 실패·지연은 200과 `message`로 안내하고 기존 테마를 유지 |
 | PUT / DELETE | `/api/me/collections/{id}` | 이름·소개 수정 / 묶음 삭제 204 |
 | GET | `/api/me/collections/{id}/items?limit=12&before_id=...` | `{items: ArtworkCard[], next_cursor: int?}`. 작품 ID 내림차순, limit 1~30 |
-| PUT / DELETE | `/api/me/collections/{id}/items/{artwork_id}` | 작품 담기(컬렉션 응답, 중복 무해) / 꺼내기 204 |
+| PUT / DELETE | `/api/me/collections/{id}/items/{artwork_id}` | 작품 담기(컬렉션 응답, 중복 무해) / 꺼내기 204. 30점이면 새 작품은 409 `컬렉션에는 작품을 30점까지 담을 수 있어요.` |
 | GET | `/api/me/critiques?limit=12&before_id=...` | `{items: DiaryEntry[], next_cursor: int?}`. 본인의 공개·비공개 다이어리, ID 내림차순 |
 | GET | `/api/me/activity?limit=20&offset=0` | `ActivityOut[]`, 최신 감상·좋아요·다이어리·컬렉션 변경. limit 최대30, offset 최대10000 |
 | GET / POST | `/api/me/taste` | 저장한 AI 취향 소개 조회 / 근거 변경 시 생성 |
@@ -234,7 +235,7 @@ POST 본문: `entry_date`(YYYY-MM-DD), `content`(공백 제거 후 1~2000자), `
 
 ProfileWrite: `{nickname: string | null, birth_date: "YYYY-MM-DD" | null, conversation_style: "easy" | "professional", onboarding_completed: true}`. 생일은 1900-01-01~서울의 오늘이며 선택 사항이고, 지우면 null입니다. PUT은 전체 교체이고 생략된 설정은 기본값이 됩니다. 서버는 birth_year·tone·explanation_level의 호환 필드도 갱신합니다. nickname은 공개 감상 피드에 작성자 이름으로 표시되는 값입니다. 앞뒤 공백을 지운 뒤 2~20자여야 하고, 생략하거나 null이면 지금 이름을 유지합니다(전체 교체 규칙의 예외). 중복은 허용합니다. 처음 값은 로그인할 때 Google 이름이나 이메일 @ 앞부분으로 정해지므로, 공개 전에 바꿀 수 있게 안내합니다. GET 응답에는 항상 nickname이 들어 있습니다. 성별과 이전 나이대, 설명 주제 우선순위는 새 요청에 포함하지 않습니다. 이전에 저장된 `explanation_priorities` DB 컬럼은 읽거나 갱신하지 않습니다.
 
-CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionOut은 `{id, name, description, artwork_count, previews: ArtworkCard[]}`입니다. 컬렉션은 기본 비공개이며 별도 공개 API는 없습니다. 한 컬렉션에는 최대 500점을 담습니다. 묶음을 삭제해도 좋아요·다이어리와 카탈로그 작품은 유지합니다.
+CollectionWrite: `{name: string(1~80), description: string(0~500)}`. CollectionOut은 `{id, name, description, artwork_count, previews: ArtworkCard[]}`입니다. 컬렉션은 기본 비공개이며 별도 공개 API는 없습니다. 계정당 10개, 한 컬렉션에 최대 30점을 담습니다(직접 생성·담기·자동/AI 모음 저장·MCP 모두 같은 한도, 동시 요청도 행 잠금으로 보장). 이전 한도로 이미 넘은 데이터는 지우거나 자르지 않으며 조회·편집·삭제는 되고 새 추가만 막습니다. 묶음을 삭제해도 좋아요·다이어리와 카탈로그 작품은 유지합니다.
 
 ActivityOut: `{kind: "view"|"like"|"diary"|"collection", title, occurred_at: UTC datetime, artwork_id: int?, entry_date: date?}`. 최근 상태의 활동 집계이며 변경 이벤트를 영구 보관하는 감사 로그는 아닙니다. 좋아요 취소·컬렉션 삭제 시 해당 항목은 목록에서 사라집니다.
 
