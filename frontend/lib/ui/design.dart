@@ -295,7 +295,7 @@ class ArtImage extends StatelessWidget {
       return SizedBox(width: width, height: height, child: failure());
     }
     final uri = Uri.tryParse(image);
-    final asset = !image.startsWith('http') && image.startsWith('public/');
+    final asset = image.startsWith('assets/artworks/');
     if (!asset &&
         uri?.scheme != 'http' &&
         uri?.scheme != 'https' &&

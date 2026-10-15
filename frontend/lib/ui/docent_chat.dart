@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models.dart';
-import '../docent_conversation.dart';
+import '../conversations/docent_conversation.dart';
 import '../state.dart';
 import 'collection_workspace.dart' show CollectionCover, editCollection;
 import 'design.dart';
+import 'collection_assistant.dart';
 
 class DocentChat extends StatefulWidget {
   const DocentChat(this.art, {super.key});
@@ -142,6 +143,17 @@ class _DocentChatState extends State<DocentChat> {
                         ),
                       ],
                     ),
+                  ),
+                  IconButton(
+                    key: const ValueKey('docent-collection-assistant'),
+                    tooltip: '컬렉션 요청',
+                    onPressed: busy
+                        ? null
+                        : () => showCollectionAssistant(
+                            context,
+                            artwork: widget.art,
+                          ),
+                    icon: const Icon(Icons.bookmark_add_outlined, size: 19),
                   ),
                   if (s.config.demo)
                     Text('미리보기', style: sans(11, color: muted)),
@@ -661,9 +673,12 @@ class _CollectOfferState extends State<_CollectOffer> {
                   onPressed: busy
                       ? null
                       : () => run(() async {
-                          final c = await editCollection(context, s);
+                          final c = await editCollection(
+                            context,
+                            s,
+                            artworkIds: [offer.artworkId],
+                          );
                           if (c == null) return null;
-                          await s.collect(c.id, offer.artworkId);
                           return '‘${c.name}’에 담았어요.';
                         }),
                 ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'models.dart';
-import 'state.dart';
+import '../models.dart';
+import '../state.dart';
 
 /// One artwork conversation, scoped to the current authentication session.
 class DocentConversation extends ChangeNotifier {

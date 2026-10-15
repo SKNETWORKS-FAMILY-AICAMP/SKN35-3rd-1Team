@@ -4,70 +4,34 @@ import '../models.dart';
 import '../mypage.dart';
 import '../state.dart';
 import 'design.dart';
-
-class AccountGuard extends StatefulWidget {
-  const AccountGuard({super.key, required this.state, required this.child});
-  final ArtlogState state;
-  final Widget child;
-  @override
-  State<AccountGuard> createState() => _AccountGuardState();
-}
-
-class _AccountGuardState extends State<AccountGuard> {
-  late final String identity;
-  bool closing = false;
-  @override
-  void initState() {
-    super.initState();
-    identity = widget.state.userKey;
-    widget.state.addListener(check);
-  }
-
-  void check() {
-    if (!mounted ||
-        closing ||
-        (widget.state.authenticated && widget.state.userKey == identity)) {
-      return;
-    }
-    closing = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final route = ModalRoute.of(context);
-      if (route == null) return;
-      final navigator = Navigator.of(context);
-      if (route.isCurrent) {
-        navigator.pop();
-      } else {
-        // A discard/confirmation dialog may cover this account's form.
-        navigator.removeRoute(route);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    widget.state.removeListener(check);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
-}
+import 'account_guard.dart';
+import 'collection_assistant.dart';
+export 'account_guard.dart';
 
 Future<ArtCollection?> editCollection(
   BuildContext context,
   ArtlogState s, {
   ArtCollection? collection,
+  List<String> artworkIds = const [],
 }) async => showDialog<ArtCollection>(
   context: context,
   builder: (_) => AccountGuard(
     state: s,
-    child: _CollectionEditor(state: s, collection: collection),
+    child: _CollectionEditor(
+      state: s,
+      collection: collection,
+      artworkIds: artworkIds,
+    ),
   ),
 );
 
 class _CollectionEditor extends StatefulWidget {
-  const _CollectionEditor({required this.state, this.collection});
+  const _CollectionEditor({
+    required this.state,
+    this.collection,
+    this.artworkIds = const [],
+  });
+  final List<String> artworkIds;
   final ArtlogState state;
   final ArtCollection? collection;
   @override
@@ -99,6 +63,7 @@ class _CollectionEditorState extends State<_CollectionEditor> {
         name.text,
         description.text,
         id: widget.collection?.id,
+        artworkIds: widget.artworkIds,
       );
       if (mounted) Navigator.pop(context, c);
     } catch (e) {
@@ -304,6 +269,18 @@ class _CollectionWorkspaceState extends State<CollectionWorkspace> {
                   ),
                   icon: const Icon(Icons.refresh, size: 18),
                 ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                key: const ValueKey('collections-assistant'),
+                tooltip: 'AI와 컬렉션 만들기',
+                onPressed: loading
+                    ? null
+                    : () async {
+                        await showCollectionAssistant(context);
+                        if (mounted) await load();
+                      },
+                icon: const Icon(Icons.auto_awesome_outlined, size: 18),
               ),
               const SizedBox(width: 8),
               SizedBox(

@@ -78,9 +78,7 @@ extension MyPageState on ArtlogState {
     }
     late ArtCollection result;
     if (id == null && artworkIds.toSet().length > maxCollectionArtworks) {
-      throw const ApiException(
-        '컬렉션에는 작품을 $maxCollectionArtworks점까지 담을 수 있어요.',
-      );
+      throw const ApiException('컬렉션에는 작품을 $maxCollectionArtworks점까지 담을 수 있어요.');
     }
     if (config.demo) {
       final rows = _demoCollections();
@@ -266,13 +264,19 @@ extension MyPageState on ArtlogState {
     return api.collectionChat(message, collectionId: collectionId);
   }
 
-  Future<void> applyCollectionProposal(CollectionProposal p) async {
+  Future<String> applyCollectionProposal(CollectionProposal p) async {
     if (p.action == 'create' && p.name != null) {
-      await saveCollection(p.name!, '', artworkIds: p.artworkIds);
+      final created = await saveCollection(
+        p.name!,
+        '',
+        artworkIds: p.artworkIds,
+      );
+      return created.id;
     } else if (p.action == 'add' &&
         p.collectionId != null &&
         p.artworkId != null) {
       await collect(p.collectionId!, p.artworkId!);
+      return p.collectionId!;
     } else {
       throw const ApiException('요청 내용을 다시 확인해 주세요.');
     }

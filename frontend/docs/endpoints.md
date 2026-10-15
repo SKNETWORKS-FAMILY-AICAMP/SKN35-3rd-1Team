@@ -36,6 +36,7 @@
 | GET | `/me/collections/{id}/items` | 필요 | 모음 작품, `limit=12`·`before_id` |
 | PUT / DELETE | `/me/collections/{id}/items/{artwork_id}` | 필요 | 작품 담기·꺼내기 |
 | GET | `/me/collections/auto`, `/me/collections/auto/{key}` | 필요 | 최근·반복·작가·월별 및 AI 테마 상세 |
+| POST | `/me/collections/chat` | 필요 | AI 컬렉션 도우미. 답변·제안 조회만 수행하고 확인 후 CRUD로 저장 |
 | POST | `/me/collections/themes/refresh` | 필요 | 관심 신호에 따라 캐시 재사용·AI 테마 갱신 |
 | GET | `/me/critiques` | 필요 | 내 감상 목록, `limit=12`·`before_id` |
 | GET / PUT | `/me/social` | 필요 | 공개 ID·팔로우 목록 공개 설정 |
@@ -51,10 +52,9 @@
 | `GET /me/chats` | `chats()` 존재. 현재 내 피드에 저장 대화 목록 탭 없음 |
 | `GET /me/activity?limit=20&offset=0` | 활동 어댑터 존재. 현재 전용 활동 탭 없음 |
 | `PUT /me/profile` | 생년월일·말투·완료 여부 모델/저장 메서드 존재. 현재 온보딩·프로필 수정 폼 없음 |
-| `POST /me/collections/chat` | `message`·optional `collection_id` 요청, 제안 적용 메서드 존재. 현재 컬렉션 채팅 입력 UI 없음 |
 | `POST /auth/login` | 이전 `AUTH_PROVIDER=api` 어댑터. 운영 Firebase 로그인에서 호출하지 않으며 현재 서버 지원 로그인으로 안내하지 않음 |
 
-MCP는 외부 클라이언트의 `/mcp/` 전송 계층입니다. Flutter가 별도 MCP 연결로 토큰을 우회 전달하지 않습니다. 컬렉션 제안이 있더라도 사용자의 저장 동작을 거쳐 일반 CRUD를 실행하는 정책을 유지합니다.
+MCP는 외부 클라이언트의 `/mcp/` 전송 계층입니다. Flutter가 별도 MCP 연결로 토큰을 우회 전달하지 않습니다. 작품 채팅·컬렉션 화면의 도우미는 `message`와 선택한 `collection_id`를 보내고 `answer`·`proposal`을 표시합니다. create는 이름·초기 작품, add는 대상 모음·작품을 미리 보여주며 최신 제안만 확인 저장합니다. 도우미 대화는 영구 저장하지 않습니다. 컬렉션 제안이 있더라도 사용자의 저장 동작을 거쳐 일반 CRUD를 실행하는 정책을 유지합니다.
 
 ## SSE·질문 계약
 

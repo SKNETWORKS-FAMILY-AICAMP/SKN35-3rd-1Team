@@ -10,8 +10,8 @@ build
 .firebase-web-config.json
 .dart-defines*.json
 verification
-src
 test
-public/fonts
 *.tsbuildinfo
 firebase-debug*.log
+
+docs

@@ -1,19 +1,18 @@
-node_modules/
-dist/
-*.tsbuildinfo
-.env
-.env.*
-.sites-runtime/
-.sites-checkout/
-
-# Flutter web
+# Flutter generated files
 .dart_tool/
 .flutter-plugins-dependencies
 build/
 coverage/
 *.iml
-.vercel
+
+# Local environment and deployment context
+.vercel/
+.env
+.env.*
 .firebase-web-config.json
 .dart-defines*.json
-firebase-debug.log
-firebase-debug.*.log
+firebase-debug*.log
+
+# Legacy generated folders must not be reintroduced
+node_modules/
+dist/

@@ -4,7 +4,7 @@
 
 - 운영 사이트: https://artlog-skn35-1team.vercel.app
 - 문서 갱신: **2026-10-15 · dev `6f0b40a` 코드 기준**, lsh 반영
-- 실행 앱: `lib/`의 Flutter. `src/`는 초기 React 목업이며 운영 빌드에서 제외됩니다.
+- 실행 앱: `lib/`의 Flutter 단일 앱입니다. 초기 React·Vite 소스와 npm 의존성·목업 export는 제거했습니다.
 - 서비스 이름은 Docentalk입니다. 호환성을 위해 내부 패키지 `artlog_web`, `ARTLOG_DEMO`, Firebase·Vercel 프로젝트 이름은 유지합니다.
 
 ## 빠른 실행
@@ -48,7 +48,7 @@ flutter run -d chrome --dart-define-from-file=.dart-defines.local.json
 | 자동 모음 `/collection/auto/{key}` | 최근·반복·작가·월별 및 AI 테마 상세, 내 컬렉션으로 저장 |
 | 설정 | 헤더의 사이드 패널: 계정, 내 피드 이동, 팔로우 목록 공개 설정, 하단 로그아웃 |
 
-`/mypage`는 `/library`, `/mypage?tab=collections`는 `/library?tab=collections`, `/settings`는 `/library`로 이동하는 호환 주소입니다. 현재 내 피드의 탭은 `posts`, `collections`, `artists`, `calendar`입니다. 저장 대화·활동·컬렉션 채팅 API 어댑터와 프로필 모델은 남아 있으나 별도 활동 탭·대화 목록 탭·회원정보 온보딩 폼은 현재 화면에 노출되지 않습니다.
+`/mypage`는 `/library`, `/mypage?tab=collections`는 `/library?tab=collections`, `/settings`는 `/library`로 이동하는 호환 주소입니다. 현재 내 피드의 탭은 `posts`, `collections`, `artists`, `calendar`입니다. 저장 대화·활동 API 어댑터와 프로필 모델은 남아 있으나 별도 활동 탭·대화 목록 탭·회원정보 온보딩 폼은 현재 화면에 노출되지 않습니다.
 
 ## 도슨트 채팅
 
@@ -70,6 +70,19 @@ flutter run -d chrome --dart-define-from-file=.dart-defines.local.json
 - 좋아요·열람 작품 3점 이상을 바탕으로 AI 테마를 준비합니다. 목표는 2~4개·각 3~8점이며 실제 개수는 검증된 서버 응답에 따릅니다.
 - AI 테마 캐시는 시간이 지났다는 이유만으로 재생성하지 않습니다. 좋아요 변경·새 작품 3점 이상 열람 등 신호가 바뀌면 최소 30분 간격으로 갱신합니다. 일반 컬렉션은 사용자가 저장을 선택할 때 생성됩니다.
 
+## 채팅에서 컬렉션 만들기
+
+작품 도슨트 헤더의 **컬렉션 요청**과 내 컬렉션의 **AI와 컬렉션 만들기** 버튼이 같은 도우미를 엽니다. 기존 계정을 이용해 새 모음을 만들거나 열람 기록을 모으고, 선택한 모음에 작품을 담도록 요청할 수 있습니다.
+
+1. “최근 본 작품으로 컬렉션 만들어줘”, “고요한 풍경 컬렉션 만들어줘”처럼 요청합니다.
+2. 기존 모음에 담을 때는 드롭다운으로 대상 모음을 선택하고 정확한 작품명을 적습니다. 작품 상세에서 현재 작품을 담는 예시도 제공합니다.
+3. `POST /me/collections/chat`는 답변과 읽기 전용 제안을 반환합니다. 모음 제목·작품 목록·대상을 확인합니다.
+4. **확인하고 저장**을 눌러야 생성 또는 작품 추가 API가 실행됩니다. 저장 후 별도 컬렉션 페이지를 열 수 있습니다.
+
+새 요청·취소는 이전 제안을 무효화하고 중복 전송·저장을 막습니다. 계정 변경 시 창을 닫고 늦은 응답을 버립니다. 도우미 요청은 각각 독립적이며 대화는 창을 닫으면 사라집니다. 데모에서는 실제 AI를 호출하지 않습니다.
+
+기존 도슨트의 반복 질문 후 제안도 유지합니다. 새 컬렉션을 선택하면 최초 작품 ID를 생성 본문에 함께 보내 한 요청으로 저장합니다. Flutter는 REST를 사용하며 외부 MCP `/mcp/` 호출과 구분합니다. 새 도우미 UI는 이번 lsh 변경으로, 아래 기록된 이전 Vercel 운영 배포에는 아직 포함되지 않습니다.
+
 ## 인증과 데이터 경계
 
 Firebase 이메일·비밀번호 가입/로그인, Google 팝업 로그인, 비밀번호 재설정을 사용합니다. SDK가 세션을 복원하고 요청마다 ID 토큰을 Bearer 헤더에 넣습니다. 401이면 토큰을 강제 갱신해 한 번만 재시도하며 계정이 바뀐 요청은 새 계정으로 재전송하지 않습니다.
@@ -88,12 +101,33 @@ Firebase 이메일·비밀번호 가입/로그인, Google 팝업 로그인, 비�
 
 ```bash
 flutter analyze
+flutter test
 flutter build web --release --dart-define-from-file=.dart-defines.local.json
 ```
 
-결과는 `build/web/`이며 폴더 전체를 정적 서버에서 제공합니다. 현재 Git에 `frontend/test/`와 배포 스크립트 테스트 파일이 없으므로 과거 문서의 테스트 통과 개수는 당시 실행 기록입니다. 해당 파일을 복원하지 않고 `flutter test` 또는 `node --test scripts/*.test.mjs`를 최신 전체 검증 명령으로 안내하지 않습니다.
+이번 검증은 Flutter 분석 이슈 없음·회귀 10개 통과·미리보기와 API/Firebase release 빌드 성공입니다. 결과는 `build/web/`이며 폴더 전체를 정적 서버에서 제공합니다. 이번 변경에서 `test/`에 컬렉션 상태·저장 확인·계정 변경·320/1280px UI·도슨트 제안·자산 이동 회귀 테스트를 추가했습니다. 과거 81/133/153개 통과 기록은 당시 결과이며 이번 새 테스트와 합산하지 않습니다. 배포 스크립트 테스트 파일은 별도로 없습니다.
 
 다른 출처의 API는 백엔드에서 운영 웹 도메인, `Authorization`, POST/PUT/DELETE의 CORS를 허용해야 합니다. HTTPS 웹에는 HTTPS API를 연결합니다. 하위 경로 배포는 `--base-href`와 `/images/artworks/` 절대 경로를 함께 검토합니다.
+
+## 폴더 구조
+
+```text
+frontend/
+├── lib/              앱·모델·상태
+│   ├── api/          REST·SSE·토큰·오류
+│   ├── auth/         Firebase 인증
+│   ├── conversations/ 도슨트·컬렉션 대화 상태
+│   ├── pages/        화면·라우팅 대상
+│   └── ui/           공통 디자인·채팅·캘린더·설정
+├── assets/           카탈로그·artworks·fonts·branding
+├── web/              시작 파일·파비콘·박물관 이미지
+├── scripts/          Flutter Vercel 설치·빌드·공개 설정 생성
+├── test/             컬렉션·채팅·계정·반응형·자산 회귀
+├── docs/             API·ERD·배포·인수인계
+└── verification/     과거 검증·화면 기록
+```
+
+[소스 역할](lib/README.md) · [자산 관리](assets/README.md). `package.json` 없이도 `.mjs` 빌드 설정 스크립트는 Vercel의 Node로 실행됩니다. Flutter 개발 실행에는 Node가 필요하지 않습니다.
 
 ## 주요 파일과 문서
 
@@ -102,9 +136,9 @@ flutter build web --release --dart-define-from-file=.dart-defines.local.json
 | `lib/main.dart`, `lib/config.dart` | 시작·라우팅·빌드 설정 |
 | `lib/pages/`, `lib/ui/` | 화면·공통 UI·로그인·설정 패널 |
 | `lib/state.dart`, `lib/state_mypage.dart`, `lib/state_social.dart` | 상태·요청 재사용·계정 변경·개인 기록 |
-| `lib/api/artlog_api.dart`, `lib/docent_conversation.dart` | API·토큰·SSE·대화 상태 |
+| `lib/api/artlog_api.dart`, `lib/conversations/` | API·토큰·SSE·대화 상태 |
 | `lib/models.dart`, `lib/diary.dart`, `lib/mypage.dart`, `lib/social.dart` | 응답 모델 |
-| `assets/`, `public/artworks/`, `web/` | 번들 데이터·폰트·브랜딩·정적 파일 |
+| `assets/`, `assets/artworks/`, `web/` | 번들 데이터·폰트·브랜딩·정적 파일 |
 | `scripts/vercel-install.sh`, `scripts/vercel-build.sh` | 고정 Flutter SDK 준비·Vercel 빌드 |
 | [엔드포인트](docs/endpoints.md) | 현재 프론트 호출 계약과 화면 노출 구분 |
 | [ERD 대응](docs/erd-mapping.md) | 22개 모델 테이블·마이그레이션·사용자 분리 |
