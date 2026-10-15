@@ -14,11 +14,13 @@ museum-rag-react-fastapi-tidb/
 │   ├── alembic/             DB 마이그레이션
 │   ├── app/
 │   │   ├── api/routes/      엔드포인트 (요청 검증, 응답 반환)
-│   │   ├── services/        서비스 로직 (좋아요, 내 서재, 추천, 챗봇 흐름)
+│   │   ├── docent/          도슨트 채팅 답변 흐름 (분류, 범위 판정, 생성, 출처 검증, SSE)
+│   │   ├── services/        도메인 서비스 (좋아요, 내 서재, 추천, 마이페이지, 컬렉션)
 │   │   ├── repositories/    TiDB 조회·저장, 벡터 거리 SQL
 │   │   ├── models/          SQLAlchemy 모델 (서비스 테이블 22개)
 │   │   ├── schemas/         Pydantic 요청·응답 스키마
-│   │   ├── rag/             청킹, 검색, 프롬프트, 답변 생성, 출처
+│   │   ├── rag/             청킹, 질문 분류, 검색, 프롬프트
+│   │   ├── mcp/             외부 MCP 컬렉션 도구 서버 (/mcp)
 │   │   ├── clients/         임베딩·LLM API 호출
 │   │   ├── core/            설정, 인증, 예외, 공통 의존성
 │   │   └── db/              엔진, 세션
@@ -54,14 +56,14 @@ Flutter 화면 → frontend/lib/api → FastAPI routes → services → reposito
 | --- | --- | --- |
 | 1. 작가별·사조별 작품 목록 | `routes/artworks.py`, `catalog_service`, `catalog_repository` | `pages/GalleryPage`, `components/artwork` |
 | 2. 작품 상세·이미지 | `routes/artworks.py`, `catalog_service` | `pages/ArtworkDetailPage` |
-| 3. 작품 도슨트 챗봇 | `routes/chat.py`, `chat_service`, `rag/` | `components/chat` |
+| 3. 작품 도슨트 챗봇 | `routes/chat.py`, `docent/`, `chat_service`, `rag/` | `components/chat` |
 | 4. 작품 좋아요 | `routes/likes.py`, `like_service`, `activity_repository` | `components/artwork/LikeButton` |
 | 5. 비슷한 작품·맞춤 작품 추천 | `routes/recommendations.py`, `recommendation_service`, `recommendation_repository` | `components/recommendation` |
 | 6. 작가 추천 | 5번과 같은 파일 | `components/recommendation` |
 | 7. 작가 팔로우 | `routes/follows.py`, `follow_service`, `activity_repository` | `components/artist/FollowButton` |
 | 8. 열람 기록 | `routes/library.py`, `library_service`, `activity_repository` | 작품 상세 진입 시 호출 |
 | 9. 내 서재 캘린더 | `routes/library.py`, `library_service` | `pages/LibraryPage`, `components/library` |
-| 10. 답변 근거·출처 표시 | `rag/citations.py`, `schemas/chat.py` | `components/chat/SourceList` |
+| 10. 답변 근거·출처 표시 | `docent/grounding.py`, `schemas/chat.py` | `components/chat/SourceList` |
 
 ## 팀이 먼저 고정할 약속 3가지
 

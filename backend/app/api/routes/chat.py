@@ -13,13 +13,11 @@ from starlette.concurrency import run_in_threadpool
 
 from app.core.auth import CurrentUser, OptionalUser
 from app.db.session import DbSession
+from app.docent import collection_suggestions
+from app.docent import service as docent_service
+from app.docent import stream as docent_stream
 from app.schemas.chat import ChatMessageOut, ChatRequest, ChatResponse, ChatSummary
-from app.services import (
-    chat_service,
-    collection_suggestions,
-    docent_service,
-    docent_stream,
-)
+from app.services import chat_service
 
 router = APIRouter(tags=["chat"])
 logger = logging.getLogger(__name__)

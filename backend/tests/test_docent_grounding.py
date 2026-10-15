@@ -5,14 +5,14 @@ from types import SimpleNamespace
 import pytest
 from langchain_core.documents import Document
 
-from app.schemas.chat import ChatRequest, ChatTurn
-from app.services.docent_grounding import (
+from app.docent.grounding import (
     NO_EVIDENCE_MESSAGE,
     context,
     instructions,
     retrieval_question,
     validate_response,
 )
+from app.schemas.chat import ChatRequest, ChatTurn
 
 
 def _doc(document_id: int = 4) -> Document:

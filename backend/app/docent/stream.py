@@ -14,17 +14,19 @@ from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
-from app.rag.classifier import Route, classify_artwork, refusal_message
-from app.rag.retriever import retrieve
-from app.schemas.chat import ChatRequest, ChatResponse
-from app.services import catalog_service, chat_service, docent_scope, docent_service
-from app.services.docent_grounding import (
+from app.docent import scope as docent_scope
+from app.docent import service as docent_service
+from app.docent.grounding import (
     NO_EVIDENCE_MESSAGE,
     context,
     direct_chat_response,
     retrieval_question,
     validate_response,
 )
+from app.rag.classifier import Route, classify_artwork, refusal_message
+from app.rag.retriever import retrieve
+from app.schemas.chat import ChatRequest, ChatResponse
+from app.services import catalog_service, chat_service
 
 EventName = Literal["token", "replace", "done"]
 ChatEvent = tuple[EventName, str | ChatResponse]

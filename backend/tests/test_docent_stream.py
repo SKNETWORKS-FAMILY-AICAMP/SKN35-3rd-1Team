@@ -5,9 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
+from app.docent import stream as docent_stream
 from app.rag.classifier import classify
 from app.schemas.chat import ChatRequest, ChatTurn
-from app.services import docent_stream
 
 
 @pytest.mark.parametrize("used_ids, refused", [([4], False), ([999], True), ([], True)])

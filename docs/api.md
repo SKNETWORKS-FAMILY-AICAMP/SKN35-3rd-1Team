@@ -253,7 +253,7 @@ CollectionChatRequest: `{message: string(1~500), collection_id: int?}`. 응답 `
 
 ## MCP 컬렉션 도구
 
-`/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`, `list_auto_collections`, `create_collection_from_views(basis, name?, artist?, month?, year?, limit?)`. 구현은 `backend/app/rag/collection_mcp.py`입니다. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
+`/mcp/`는 공식 Python SDK의 stateless Streamable HTTP입니다. 일반 REST `/api` 접두사가 붙지 않습니다. 매 요청에 유효한 Firebase ID 토큰을 Bearer 헤더로 보내야 하며 `Accept: application/json, text/event-stream`을 사용합니다. 도구: `list_collections`, `search_artworks(query)`, `create_collection(name)`, `add_artwork_to_collection(collection_id, artwork_id)`, `list_auto_collections`, `create_collection_from_views(basis, name?, artist?, month?, year?, limit?)`. 구현은 `backend/app/mcp/collection_server.py`입니다. 도구 인자에 user_id가 없으며 REST와 같은 소유권 검사·중복 방지 서비스를 사용합니다. 별도 OAuth 로그인·동적 클라이언트 등록은 제공하지 않습니다. 운영 Host 허용 목록은 `MCP_ALLOWED_HOSTS`, 브라우저 Origin은 `CORS_ORIGINS`에 설정합니다.
 
 ## 도슨트 개인 설정 반영 (프롬프트 v2026-10-14.3)
 

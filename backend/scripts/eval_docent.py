@@ -19,11 +19,11 @@ from pathlib import Path
 from sqlalchemy import select
 
 from app.core.config import get_settings
+from app.docent import service as docent_service
 from app.models import Artwork
 from app.rag.prompts import PROMPT_VERSION
 from app.rag.retriever import COMPARISON_K, OWN_K, TOP_K
 from app.schemas.chat import ChatRequest
-from app.services import docent_service
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT.parent

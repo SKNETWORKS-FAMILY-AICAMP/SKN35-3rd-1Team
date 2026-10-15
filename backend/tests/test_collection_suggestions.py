@@ -2,9 +2,9 @@
 
 from types import SimpleNamespace
 
+from app.docent import collection_suggestions as offers
 from app.models import ChatRole
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.services import collection_suggestions as offers
 
 
 class SavedConversation:

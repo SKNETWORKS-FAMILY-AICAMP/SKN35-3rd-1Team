@@ -12,16 +12,8 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.rag.classifier import Route, classify_artwork, refusal_message
-from app.rag.retriever import retrieve
-from app.schemas.chat import ChatResponse
-from app.services import (
-    catalog_service,
-    docent_scope,
-    mypage_service,
-    recommendation_service,
-)
-from app.services.docent_grounding import (
+from app.docent import scope as docent_scope
+from app.docent.grounding import (
     NO_EVIDENCE_MESSAGE,
     GroundedAnswer,
     context,
@@ -29,7 +21,15 @@ from app.services.docent_grounding import (
     retrieval_question,
     validate_response,
 )
-from app.services.docent_grounding import instructions as grounding_instructions
+from app.docent.grounding import instructions as grounding_instructions
+from app.rag.classifier import Route, classify_artwork, refusal_message
+from app.rag.retriever import retrieve
+from app.schemas.chat import ChatResponse
+from app.services import (
+    catalog_service,
+    mypage_service,
+    recommendation_service,
+)
 
 
 def instructions(db, user_id, explanation_style=None):

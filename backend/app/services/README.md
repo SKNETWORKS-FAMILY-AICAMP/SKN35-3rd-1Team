@@ -1,12 +1,10 @@
 # services
 
-API 기능의 흐름과 규칙을 구현합니다.
+도메인 기능(카탈로그·활동·다이어리·마이페이지·컬렉션·추천·소셜)의 흐름과 규칙을 구현합니다. 도슨트 답변 흐름은 `docent/`에 있습니다.
 
 | 파일 | 담당 |
 | --- | --- |
 | `catalog_service.py` | 사조·작가·작품 목록과 상세, 카드 변환 |
-| `docent_service.py` / `docent_stream.py` | JSON / SSE 도슨트 답변, 질문 분류·범위 검사·검색·답변 검증 |
-| `docent_grounding.py` / `docent_scope.py` | 출처·편집 근거·멀티턴·스타일 처리 / 질문의 미술 관련성 판정 |
 | `chat_service.py` | 로그인 대화 저장·조회·초기화·내 대화 목록 |
 | `like_service.py` / `follow_service.py` | 작품 좋아요 / 작가 팔로우 |
 | `library_service.py` | 열람 기록, 월별 캘린더와 일별 상세 |
@@ -17,9 +15,8 @@ API 기능의 흐름과 규칙을 구현합니다.
 | `auto_collections.py` | 최근·자주·작가·월별 감상 기록 묶음 |
 | `theme_collections.py` | 사용자별 AI 감성 테마 생성과 DB 캐시 |
 | `collection_assistant.py` | AI 취향 소개와 컬렉션 채팅 제안 |
-| `collection_suggestions.py` | 도슨트의 첫 관심 충족 답변에 컬렉션 담기 제안 |
 
-인증은 `core/auth.py`에서 처리합니다. 별도 가입·로그인 서비스는 없습니다. 컬렉션 채팅과 도슨트 제안은 제안만 반환하고, 확정 후 컬렉션 REST 호출로 저장합니다. MCP 도구는 같은 컬렉션 저장 서비스를 호출합니다.
+인증은 `core/auth.py`에서 처리합니다. 별도 가입·로그인 서비스는 없습니다. 컬렉션 채팅과 도슨트 제안은 제안만 반환하고, 확정 후 컬렉션 REST 호출로 저장합니다. MCP 도구(`mcp/collection_server.py`)는 같은 컬렉션 저장 서비스를 호출합니다.
 
 ## 추천 흐름
 

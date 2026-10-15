@@ -13,14 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.exceptions import register_exception_handlers
-from app.rag import collection_mcp
+from app.mcp import collection_server
 
 settings = get_settings()
 
 
 @asynccontextmanager
 async def lifespan(app):
-    server = collection_mcp.new_transport()
+    server = collection_server.new_transport()
     async with server.session_manager.run():
         yield
 
@@ -45,4 +45,4 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api")
 
-app.mount("/mcp", collection_mcp.mcp_app)
+app.mount("/mcp", collection_server.mcp_app)

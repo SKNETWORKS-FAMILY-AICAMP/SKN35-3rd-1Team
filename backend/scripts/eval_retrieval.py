@@ -19,10 +19,10 @@ from pathlib import Path
 
 from sqlalchemy import select
 
+from app.docent.grounding import retrieval_question
 from app.models import Artwork
 from app.rag.retriever import TOP_K, retrieve
 from app.schemas.chat import ChatRequest
-from app.services.docent_grounding import retrieval_question
 
 QUESTIONS = Path(__file__).resolve().parents[1] / "tests" / "questions" / "rag-eval.json"
 

@@ -6,9 +6,9 @@ import pytest
 from fastapi import HTTPException
 from langchain_core.documents import Document
 
+from app.docent import service as docent
 from app.rag.classifier import classify
 from app.schemas.chat import ChatRequest, ChatTurn
-from app.services import docent_service as docent
 
 
 @pytest.fixture

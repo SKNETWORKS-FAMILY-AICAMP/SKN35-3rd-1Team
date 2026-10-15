@@ -2,8 +2,8 @@
 
 from types import SimpleNamespace
 
+from app.docent import service as docent
 from app.schemas.chat import ChatRequest
-from app.services import docent_service as docent
 
 
 def _setup(monkeypatch, route_kind, similar=(), personal=()):

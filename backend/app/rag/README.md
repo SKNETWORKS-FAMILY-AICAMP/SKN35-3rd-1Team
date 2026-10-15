@@ -1,6 +1,6 @@
 # rag
 
-문서 검색과 답변 생성을 담당합니다. 좋아요 기반 추천은 RAG가 아니므로 여기 두지 않고 `services/`에 둡니다.
+문서 청킹·질문 분류·검색·프롬프트를 담당합니다. 이 재료를 엮어 답변을 만드는 흐름은 `docent/`에 있고, 좋아요 기반 추천은 RAG가 아니므로 `services/`에 둡니다. 이 폴더는 `services/`를 호출하지 않습니다.
 
 ## 들어갈 파일
 
@@ -8,8 +8,8 @@
 - `classifier.py`: 검색 전에 질문을 `rag` / `other_artist` / `refuse` / `recommend_similar` / `recommend_personal`로 분류 (규칙 기반 수퍼바이저, `/chat`에서는 `classify_artwork()`). 다른 수집 작가와의 비교 질문은 두 작가를 함께 다룬 비교 문서가 범위에 없으면 `refuse`(`no_comparison_source`)
 - `retriever.py`: 질문을 임베딩하고 선택한 작품 범위 안에서 가까운 청크를 찾음
 - `prompts.py`: 시스템 프롬프트와 거절 규칙
-- `collection_mcp.py`: 외부 MCP 클라이언트용 컬렉션 도구(`/mcp/`). 감상 기록으로 컬렉션을 만드는 도구 포함. REST와 같은 소유권 검사 서비스를 사용
-답변 생성은 `services/docent_service.py`·`docent_stream.py`, 출처 검증·멀티턴 검색어 구성은 `services/docent_grounding.py`에 있습니다. 별도 `chain.py`·`citations.py`는 없습니다.
+
+답변 생성은 `docent/service.py`·`docent/stream.py`, 출처 검증·멀티턴 검색어 구성은 `docent/grounding.py`에 있습니다. 별도 `chain.py`·`citations.py`는 없습니다. 외부 MCP 컬렉션 도구는 `mcp/collection_server.py`에 있습니다.
 
 ## 검색 결과 형식 (팀 약속)
 
@@ -48,5 +48,5 @@ needs_review=false인 문서만 범위·연표 고정 근거에 포함합니다.
 - **출처는 검색 결과에서만**: LLM이 만들어 낸 링크를 쓰지 않고, 검색된 청크의 `source_url`만 출처로 내보냅니다.
 - **SQL은 repository에**: `retriever`는 `repositories/document_repository.py`의 함수를 호출합니다. 벡터 검색은 Chroma(`clients/chroma_client.py`)가 합니다.
 - **임베딩은 clients로**: 질문 임베딩은 `clients/embedding_client.py`를 사용합니다. 문서와 같은 모델이어야 합니다.
-- **대화 맥락**: 로그인 여부와 관계없이 `history`(최대 12개)를 요청으로 받습니다. 로그인 대화는 `chat_sessions`·`chat_messages`에도 저장합니다. 지시어가 있는 후속 질문은 `docent_grounding.retrieval_question()`이 최근 사용자 질문을 더해 검색어를 구성합니다.
+- **대화 맥락**: 로그인 여부와 관계없이 `history`(최대 12개)를 요청으로 받습니다. 로그인 대화는 `chat_sessions`·`chat_messages`에도 저장합니다. 지시어가 있는 후속 질문은 `docent/grounding.py`의 `retrieval_question()`이 최근 사용자 질문을 더해 검색어를 구성합니다.
 - 프롬프트를 고칠 때는 버전과 바꾼 이유를 `docs/`에 남깁니다.
