@@ -7,15 +7,15 @@
 
 **자료에 근거한 AI 도슨트와 함께 작품을 이해하고, 감상과 취향을 쌓아가는 온라인 미술관**
 
-[서비스 바로가기](https://artlog-skn35-1team.vercel.app) · [개발 코드](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/tree/dev) · [기획·진행 계획](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/PLAN.md)
+[서비스 바로가기](https://artlog-skn35-1team.vercel.app) · [개발 코드](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/tree/dev) · [기획·진행 계획](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/PLAN.md)
 
 </div>
 
 ![Docentalk 발견하기 — 운영 사이트 캡처](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/fa19b03165ed6d7e7f4903f0db348c0df06fb55d/docs/readme-2026-10-15/screenshots/01-home.jpg)
 
 > SK Networks Family AI Camp 35기 · 3차 프로젝트 · 1팀<br />
-> 문서 기준: 2026.10.15 · 화면: 운영 사이트 직접 캡처 · 기능·데이터 모델: dev `af7cea8` 기준<br />
-> 기술 아키텍처는 최종 구성 확인 후 별도로 보완합니다.
+> 문서 기준: 2026.10.15 · 화면: 운영 사이트 직접 캡처 · 기능·데이터 모델: dev `6f0b40a` 기준 · 프론트 정리·컬렉션 도우미: lsh 추가 구현<br />
+> 화면 캡처는 운영 버전이며, 새 컬렉션 도우미 UI는 이번 lsh 구현에 포함됩니다. 기술·평가 수치는 아래 코드와 실행 기록을 기준으로 설명합니다.
 
 ## 목차
 
@@ -29,7 +29,9 @@
 8. [검증 결과와 개선 과제](#8-검증-결과와-개선-과제)
 9. [팀 소개](#9-팀-소개)
 10. [실행·문서 안내](#10-실행문서-안내)
-11. [기술 아키텍처](#11-기술-아키텍처)
+11. [기술 아키텍처와 기술 선택](#11-기술-아키텍처와-기술-선택)
+12. [AI 컬렉션·채팅·MCP](#12-ai-컬렉션채팅mcp)
+13. [프로젝트 폴더 구조](#13-프로젝트-폴더-구조)
 
 ## 1. 서비스 소개
 
@@ -89,10 +91,12 @@ Docentalk은 **작품을 중심으로 질문·근거·감상 기록을 한 흐�
 | 좋아요 | 좋아요한 작품 모음 | 작품의 하트와 기본 좋아요 컬렉션 연결 |
 | 나만의 컬렉션 | 직접 구성하는 작품 모음 | 생성·이름/소개 편집·삭제, 작품 담기·꺼내기, 별도 상세 페이지 |
 | AI 취향 컬렉션 | 관심에서 출발하는 테마 | 좋아요·열람 기록을 바탕으로 테마와 작품 모음 제안, 내 컬렉션으로 저장 |
+| AI 컬렉션 도우미 | 자연어로 생성·담기 | 최근/작가/월별 열람 모음 요청, 대상 컬렉션 선택, 제안 확인 후 저장 · 이번 lsh 구현 |
+| MCP | 외부 AI 도구 연동 | 인증된 6개 도구로 모음 조회·검색·생성·담기, REST와 소유권 서비스 공유 |
 | 로그인 | 이메일·Google | 로그인·회원가입 구분, Google로 계속하기, 비밀번호 재설정 |
 | 설정 | 계정·공개 범위 | 내 피드 이동, 팔로잉/팔로워 공개 전환, 로그아웃 |
 
-외부 도구 연동용으로 컬렉션 조회·작품 검색·컬렉션 생성·작품 담기·감상 기록 기반 모음 도구도 제공합니다. 구체적인 MCP 연결과 배포 구성은 최종 기술 아키텍처에서 정리할 예정입니다.
+외부 도구 연동용으로 컬렉션 조회·작품 검색·컬렉션 생성·작품 담기·감상 기록 기반 모음 도구도 제공합니다. 연결·도구·인증·검증 범위는 아래 [AI 컬렉션·채팅·MCP](#12-ai-컬렉션채팅mcp)에 정리했습니다.
 
 > **이용 범위:** 작품 탐색·공개 감상 읽기·도슨트 질문은 로그인 없이 시작할 수 있습니다. 개인 기록 저장과 좋아요·팔로우·컬렉션은 로그인한 계정에 연결됩니다. 직접 저장한 컬렉션은 계정당 최대 10개, 컬렉션당 최대 30점입니다.
 
@@ -280,36 +284,48 @@ flowchart LR
 
 **작품 이미지와 원문의 권리는 각 소장 기관·저작권자에게 있습니다.** 문서·이미지별 출처와 이용 조건을 따르며, 서비스의 출처 표시가 모든 자료의 자유로운 재사용을 의미하지는 않습니다.
 
-[데이터 수집 기준](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/data-collection.md) · [전처리 산출물](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/tree/af7cea883db7874b8cf12d7d832b567aa9580ed0/data/processed)
+[데이터 수집 기준](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/data-collection.md) · [전처리 산출물](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/tree/6f0b40a7be17d8f8704df364887b3d6b21d021a4/data/processed)
 
 ## 8. 검증 결과와 개선 과제
 
-### 최신 기록: 5차 로컬 평가
+### 최신 6차 배포 환경 평가 · 2026.10.15
 
-최신 결과서는 **2026.10.15 로컬 코드·실제 데이터 연결 환경에서 수행한 평가**입니다. 아래 수치는 운영 사이트에서 이번 화면 캡처와 함께 전체 재평가한 결과가 아닙니다.
+Railway 배포 채팅 API에 **45문항**(고정 회귀 30 + 프롬프트 정확도 9 + 보완 6)을 실행한 결과입니다. 문서 검색은 23문항, raw 청크 검색은 18문항으로 별도 평가했습니다. 아래 응답 시간은 API 응답 완료 기준이며 **SSE 최초 토큰 시간·브라우저 렌더링 시간·동시 부하 성능과는 다른 지표**입니다.
 
-| 지표 | 결과 |
-| --- | ---: |
-| 전체 문항 통과 | 43/45 · 95.6% |
-| 문서 Hit@5 | 23/23 · 100% |
-| 정상 질문의 답변·출처 포함·출처 정합 | 각 37/37 · 100% |
-| 거절 정확도 | 6/8 · 75.0% |
-| P95 응답 시간 | 7.285초 |
-| 명확한 환각 | 해당 평가에서 0건 |
+| 영역 | 지표 | 6차 결과 | 목표·판정 |
+| --- | --- | ---: | --- |
+| API | HTTP 성공 | 45/45 · 100% | 통과 |
+| 종합 | 문항 통과 | 43/45 · 95.6% | 90% 이상 · 통과 |
+| 검색 | 문서 Hit@5 | 23/23 · 100% | 90% 이상 · 통과 |
+| 답변·출처 | 정상 질문 응답·출처 포함·출처 정합·필드 완전성 | 각각 37/37 · 100% | 통과 |
+| 생성 | Faithfulness | 0.9865 | 0.90 이상 · 통과 |
+| 생성 | Answer Relevancy / Correctness | 각각 1.0000 | 각각 0.85 이상 · 통과 |
+| 안전성 | 범위 밖 질문 거절 | 3/3 · 100% | 통과 |
+| 안전성 | 거절 필요 질문에서 환각 없음 | 8/8 · 100% | 해당 문항에서 통과 |
+| 계약 | `refused` 상태값 정합성 | 6/8 · 75% | **개선 필요** |
+| 응답 시간 | P50 / P95 | 4.395초 / 5.858초 | P95 10초 이하 · 통과 |
+| 출처 링크 | 페이지 확인 | 37/38 · 97.4% | 95% 이상 · 통과, 1개 수동 확인 필요 |
+| raw 청크 | Hit@5 / Recall@5 | 83.3% / 0.7870 | Recall 목표 0.85 **미달** |
+| raw 청크 | MRR / nDCG@5 | 0.7778 / 0.7514 | 0.80 / 0.80 **미달** |
 
-평가에는 사실 확인, 세부 관찰·해석, 비교, 범위 밖 질문, 근거 부족, 멀티턴, 설명 스타일과 청크 경계 문항을 포함합니다. 두 문항은 본문에서 확인 불가를 설명했지만 `refused=false`를 반환해 기대 상태와 불일치했습니다.
+거절 문항 2건은 사실을 만들어 낸 것이 아니라 본문에서 확인 불가를 설명하면서 `refused=false`를 반환한 불일치입니다. 문서 검색과 raw 청크 지표는 서로 다른 평가입니다. 높은 문서 Hit@5가 모든 청크 검색 지표의 통과를 의미하지 않습니다. 생성 점수는 RAGAS 정의를 적용한 구조화 LLM Judge 결과로, 동일 모델 평가의 편향 가능성을 고려해 실제 답변·출처·기대 조건을 함께 확인했습니다.
 
-[5차 결과서와 질문별 판정](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/test-result.md)
+[6차 결과서](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/test-result.md) · [질문·답변·지표 원본](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/eval/rag-round6-deployment-2026-10-15.json)
 
-### 최종 보완할 항목
+### MCP 검증 범위
 
-- 거절 본문과 `refused` 상태값의 판정 일관성 개선
-- 최신 서버 배포 후 동일 질문셋으로 운영 환경 재평가
-- 개인 기능의 계정 간 분리와 저장·수정·삭제에 대한 운영 회귀 검증
-- 모바일·브라우저별 긴 텍스트, 이미지 로딩, 채팅·캘린더 화면 점검
-- 실제 배포·인증·검색·MCP 구성을 확인한 최종 기술 아키텍처 작성
+| 환경 | 확인 결과 | 확인하지 못한 항목 |
+| --- | --- | --- |
+| 5차 로컬 · `AUTH_MODE=dev` | initialize·도구 6개 조회·작품 검색·컬렉션 생성/추가·중복 처리·입력 검증·테스트 정리 | 실제 Firebase A/B 계정 격리 |
+| 6차 운영 · Firebase 인증 경계 | 무토큰/잘못된 토큰 401, `WWW-Authenticate: Bearer`, `no-store, private` | 유효 Firebase 토큰의 도구 조회·쓰기·두 계정 격리 |
 
-이번 README 작성에서는 운영 화면 탐색, 비로그인 도슨트 질문과 출처 확인, 기존 로그인 계정의 내 피드·캘린더·컬렉션·AI 테마 표시를 확인했습니다. 계정 생성·공개 글 게시·개인 기록 삭제로 전체 기능을 새로 검증한 결과는 아닙니다.
+[로컬 MCP 실행 기록](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/eval/mcp-round5-local-2026-10-15.json) · [운영 MCP 인증 경계 기록](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/eval/mcp-round6-deployment-2026-10-15.json)
+
+### 프론트 확인과 후속 작업
+
+이번 lsh 프론트 검증은 **Flutter 분석 이슈 없음, 새 회귀 테스트 10개 통과**입니다. 컬렉션 채팅의 **확인 전 저장 방지, 중복 저장 방지, 이전 제안 무효화, 오류 재시도, 계정 변경 시 늦은 응답 폐기**, 320/1280px UI, 도슨트 제안의 작품 포함 단일 생성 요청, 데모 이미지 보존 회귀 테스트를 포함합니다. 운영 캡처를 만들 때는 기존 로그인 계정의 내 피드·캘린더·AI 테마와 공개 도슨트 답변·출처를 확인했습니다. 테스트 서버 모의 응답과 운영에서 실제 개인 정보를 쓰는 검증은 구분합니다.
+
+남은 항목은 `refused` 상태값 보정, raw 청크 검색 개선, 출처 1개 수동 확인, 승인된 두 계정의 운영 저장·삭제·MCP 소유권 검증, 브라우저별 최초 토큰·긴 글·스크롤 성능 계측입니다. 제한된 질문셋에서의 환각 0건을 모든 질문에 대한 보장으로 설명하지 않습니다.
 
 ## 9. 팀 소개
 
@@ -325,14 +341,14 @@ flowchart LR
 
 ## 10. 실행·문서 안내
 
-서비스를 바로 사용하려면 [운영 사이트](https://artlog-skn35-1team.vercel.app)를 방문하세요. **현재 개발 코드는 `dev` 브랜치**를 기준으로 확인합니다.
+서비스를 바로 사용하려면 [운영 사이트](https://artlog-skn35-1team.vercel.app)를 방문하세요. **통합 개발 코드는 `dev`, 이번 프론트 정리·컬렉션 도우미 코드는 `lsh` 브랜치**를 기준으로 확인합니다.
 
 ### 프론트엔드 미리보기
 
 Flutter SDK가 설치된 환경에서 실행합니다. 기본 미리보기는 운영 데이터·AI 응답과 구분되는 데모 모드입니다.
 
 ```bash
-git clone --branch dev https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team.git
+git clone --branch lsh https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team.git
 cd SKN35-3rd-1Team/frontend
 flutter pub get
 flutter run -d chrome
@@ -342,17 +358,205 @@ flutter run -d chrome
 
 | 문서 | 내용 |
 | --- | --- |
-| [프론트엔드 안내](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/frontend/README.md) | 실행·환경 설정·배포 안내 |
-| [API 명세](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/api.md) | 화면과 서버 간 요청·응답 계약 |
-| [데이터 수집 기준](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/data-collection.md) | 원자료·메타데이터·출처 관리 |
-| [프롬프트 기록](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/prompts.md) | 설명 스타일·근거·거절 규칙 |
-| [품질 평가 결과](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/af7cea883db7874b8cf12d7d832b567aa9580ed0/docs/test-result.md) | 실행 환경·지표·실패 사례 |
+| [프론트엔드 안내](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/886ba642514131418157b2d048aeface2b60edad/frontend/README.md) | 실행·환경 설정·배포 안내 |
+| [API 명세](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/api.md) | 화면과 서버 간 요청·응답 계약 |
+| [데이터 수집 기준](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/data-collection.md) | 원자료·메타데이터·출처 관리 |
+| [프롬프트 기록](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/prompts.md) | 설명 스타일·근거·거절 규칙 |
+| [품질 평가 결과](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/docs/test-result.md) | 실행 환경·지표·실패 사례 |
 | [화면·도식 자료](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/tree/fa19b03165ed6d7e7f4903f0db348c0df06fb55d/docs/readme-2026-10-15) | 운영 캡처·와이어프레임·최신 모델 ERD |
 
-문서 링크와 이미지 자료는 작성 시점의 커밋으로 고정해 이후 브랜치 변경과 구분했습니다. main에는 이 README만 갱신하고, 화면·도식 파일은 별도 문서 자료 브랜치에 보관했습니다.
+평가·서버 코드 링크와 기존 화면·도식은 기준 커밋으로 고정했습니다. 프론트 실행 안내와 새 캡처는 이번 코드 커밋 `886ba64`을 가리킵니다. main에는 서비스 README를, 개발 코드는 작업 브랜치를 통해 관리합니다.
 
-## 11. 기술 아키텍처
+## 11. 기술 아키텍처와 기술 선택
 
-**최종 구성 확인 후 작성 예정입니다.**
+### 전체 구성
 
-실제 운영 배포, 인증, 검색·생성 경로, 데이터 저장·동기화 및 MCP 연결을 최종 점검한 뒤 아키텍처 다이어그램과 기술 선택 이유를 추가할 예정입니다.
+최신 dev의 FastAPI·인증·RAG·MCP 코드와 Flutter 배포 설정을 기준으로 그렸습니다. TiDB 모델·마이그레이션의 존재와 운영 DB의 적용 상태는 구분하며, 실제 인증 후 MCP 쓰기 검증 범위는 위 평가 표를 따릅니다.
+
+```mermaid
+flowchart TB
+    U[사용자 브라우저]
+    F[Flutter Web · Vercel]
+    FB[Firebase Authentication]
+    API[FastAPI · Railway · REST / SSE]
+    DB[(TiDB Cloud · 사용자 / 작품 / 감상 / 대화 / 컬렉션 / 벡터 원본)]
+    R[질문 분류 → 범위 제한 검색 → 근거 기반 생성 → 출처 검증]
+    CH[(Chroma Cloud · 청크 / 작품 벡터 검색)]
+    AI[OpenAI · gpt-4.1-mini / text-embedding-3-small]
+    COL[AI 취향 소개 / 테마 컬렉션 / 컬렉션 요청 해석]
+    EXT[외부 MCP 클라이언트]
+    MCP[인증된 FastMCP · Streamable HTTP /mcp/]
+    SVC[공유 컬렉션 서비스 · 소유권 / 중복 / 한도 검사]
+    INGEST[수집·검수 → 전처리 → 청킹·임베딩 → 동기화]
+    U --> F
+    F -->|이메일 / Google| FB
+    FB -->|ID 토큰| F
+    F -->|Bearer · /api| API
+    API -->|Firebase Admin 검증| FB
+    API --> DB
+    API --> R
+    R -->|승인 문서 범위| DB
+    R --> CH
+    R --> AI
+    API --> COL
+    COL --> AI
+    COL --> DB
+    EXT -->|Bearer| MCP
+    MCP -->|Firebase Admin 검증| FB
+    MCP --> SVC
+    API --> SVC
+    SVC --> DB
+    INGEST --> DB
+    INGEST -->|기존 벡터 복사| CH
+```
+
+**브라우저는 TiDB·Chroma·OpenAI에 직접 연결하지 않습니다.** Firebase 공개 웹 설정만 프론트에 주입하고 DB 비밀번호·모델 키·Admin 서비스 계정은 서버에 둡니다. MCP 클라이언트는 같은 FastAPI 안의 인증된 별도 전송 경로로 접근합니다.
+
+### 기술 구성과 선택 이유
+
+| 계층 | 기술 | 적용 이유·역할 |
+| --- | --- | --- |
+| 프론트 | Flutter Web 3.47.2 / Dart 3.13.2 | 작품·채팅·피드·캘린더를 일관된 반응형 UI로 구현. React 목업 제거 |
+| 화면·상태 | GoRouter, ChangeNotifier, SharedPreferences | 해시 라우팅, 작품/계정별 상태·요청 재사용, 데모 기록 저장 |
+| 인증 | Firebase Auth / Firebase Admin | 이메일·Google 로그인과 서버 ID 토큰 검증·UID 사용자 매핑 |
+| API | FastAPI, Pydantic | 요청·응답 검증, REST·SSE, 권한·오류 계약 |
+| DB | TiDB Cloud, SQLAlchemy, Alembic | 카탈로그·개인 기록·원문/청크/벡터 원본, 관계 제약·마이그레이션 |
+| 검색 | Chroma, LangChain Chroma | 승인된 작품/작가 범위 안의 cosine 벡터 검색 |
+| 임베딩 | OpenAI `text-embedding-3-small` / 1536차원 | 문서 청크·작품·질문을 공통 벡터 공간으로 연결 |
+| 생성 | LangChain OpenAI, `gpt-4.1-mini` 기본 모델 | 근거 기반 답변·구조화 출력·설명 난이도·AI 컬렉션 |
+| 외부 도구 | 공식 MCP Python SDK / FastMCP | 컬렉션 검색·생성·추가를 인증된 도구로 노출 |
+| 배포 | Vercel / Railway / Docker | Flutter 정적 결과물과 Python API를 분리 운영 |
+| 품질 | pytest, Flutter test, Ruff, 구조화 LLM Judge | 계약·회귀·검색·답변·거절·근거·지연 평가 |
+
+SDK 버전은 프론트 설치 스크립트, 서버 라이브러리 범위는 `pyproject.toml`·실제 고정 버전은 `uv.lock`이 기준입니다. 모델 이름은 서버 환경변수로 변경할 수 있습니다.
+
+### RAG 답변의 흐름
+
+1. 질문 분류에서 작품 관련 질문·범위 밖 질문·서비스 기능 요청을 나눕니다. 프론트는 글자 수와 전송 상태만 검사하며 실제 질문을 의미에 따라 먼저 거절하지 않습니다.
+2. TiDB에서 선택한 작품·작가에 연결된 **승인 문서**로 검색 범위를 좁힙니다.
+3. 질문 임베딩으로 Chroma를 검색합니다. 일반 Top-K 외에 작품 자체 해설·비교 문서의 자리를 보장하고, 연표·오류 정정 근거를 추가합니다.
+4. 근거와 최근 대화, 설명 난이도로 답변을 생성합니다. 자료의 사실과 감상 해석을 구분하고 부족한 근거를 만들어 채우지 않도록 지시합니다.
+5. 문서 ID·출처·보정 규칙을 검증한 최종 답변을 반환합니다. 로그인 사용자의 질문·답변·출처를 작품별로 저장합니다.
+
+TiDB는 문서 청크·임베딩의 원본, Chroma는 검색용 사본입니다. 동기화 시 저장된 벡터를 복사하므로 동일 벡터 복원을 위해 임베딩 API를 다시 호출할 필요가 없습니다.
+
+### 응답 지연과 화면 처리
+
+Flutter는 POST SSE의 `token`·`replace`로 텍스트를 먼저 표시하고 `done`에서 최종 답변·출처·제안을 확정합니다. 글자별 인위적인 대기를 없애고 받은 텍스트 단위로 갱신합니다. history는 최근 12개로 제한하고 전송 중 중복 요청을 막습니다.
+
+서버는 동기 검색·DB 작업을 thread pool에서 순서대로 실행해 비동기 스트림의 이벤트 루프를 막지 않도록 합니다. SSE 경로 미지원에만 JSON으로 전환하며 중간 실패를 자동 재전송하지 않아 중복 생성·저장을 줄입니다. 이 설계는 체감 대기를 줄이는 방법이며 모델 생성 속도·동시 처리량에 대한 실측 보장은 아닙니다.
+
+## 12. AI 컬렉션·채팅·MCP
+
+### 세 가지 컬렉션 경험
+
+| 방식 | 출발점 | 결과와 저장 |
+| --- | --- | --- |
+| 좋아요·기록 자동 모음 | 좋아요·최근/반복 열람·작가·월 | 서버가 기록을 집계. 좋아요 모음은 즉시 구성, 저장 자동 모음은 사용자 선택 |
+| AI 취향 테마 | 좋아요·열람한 서로 다른 작품 3점 이상 | 실제 작품 설명의 분위기로 2~4개 목표·각 3~8점 모음. 확인 후 내 컬렉션으로 저장 |
+| 채팅 요청·제안 | 자연어 요청 또는 같은 작품의 실질 질문 3회 이후 | 컬렉션 생성·작품 추가를 제안하고 사용자 확인 시 CRUD로 저장 |
+
+AI 테마는 작가·사조별 기계적인 묶음 대신 **빛·시간·장면·정서가 이어지는 작은 전시**를 제안합니다. 실제 후보 작품 ID만 사용하고 서버가 관심 작품 포함·작가 다양성·중복·최소 작품 수를 검사합니다. 검증을 통과한 결과가 적으면 목표 개수보다 적을 수 있습니다.
+
+캐시는 사용자별로 보관합니다. 좋아요 변경·새 작품 3점 이상 열람·생성 버전 변경 등 의미 있는 변화가 있을 때 갱신하며, 재시도 포함 최소 30분 간격을 적용합니다. 시간이 지났다는 이유만으로 매번 AI를 호출하지 않습니다. 사용자가 직접 저장한 모음은 최대 10개·각 30점이며 캐시와 구분합니다.
+
+AI 취향 소개는 **공개 감상과 좋아요 작품**에서 한 줄 소개를 생성합니다. 비공개 감상·토큰·이메일로 성격이나 신상을 추론하도록 보내지 않습니다. 테마는 작품과 좋아요·열람 신호를 사용합니다.
+
+### 채팅으로 컬렉션 만들기·작품 담기
+
+작품 채팅의 **컬렉션 요청** 버튼 또는 내 컬렉션의 **AI와 컬렉션 만들기**에서 도우미를 엽니다. 이번 lsh 구현에 포함되며 기존 운영 캡처의 자동 제안과 구분합니다.
+
+- “최근 본 작품으로 컬렉션 만들어줘” → 서버의 실제 열람 기록으로 작품을 고른 새 모음 제안
+- “고요한 풍경 컬렉션 만들어줘” → 해당 이름의 빈 컬렉션 생성 제안
+- 컬렉션을 선택하고 “씨름을 담아줘” → 작품 검색·대상 소유권 확인 후 추가 제안
+- “10월에 본 그림 모아줘” → 해당 월의 본 작품으로 모음 제안
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant F as Flutter 컬렉션 도우미
+    participant A as POST /api/me/collections/chat
+    participant L as 구조화 의도 해석
+    participant D as 소유권·작품·기록 조회
+    U->>F: 자연어 요청 / 대상 컬렉션 선택
+    F->>A: message · optional collection_id · Bearer
+    A->>L: create / add / from_views / help
+    L-->>A: 구조화 의도
+    A->>D: 실제 작품·본인 모음 확인
+    A-->>F: answer + proposal (저장 없음)
+    F-->>U: 제목·작품·대상과 확인 버튼
+    U->>F: 확인하고 저장
+    F->>D: 인증된 컬렉션 생성 또는 작품 추가 API
+    D-->>F: 저장 결과
+    F-->>U: 저장한 컬렉션 열기
+```
+
+모델이 문자열만으로 DB를 바꾸지 않습니다. 프론트는 최신 제안만 적용하고 중복 클릭을 막으며 계정 변경 후 이전 응답·제안을 버립니다. 새 요청을 보내거나 취소하면 이전 제안은 종료됩니다. 도우미 요청은 각각 독립적이며 창의 대화는 영구 대화 기록으로 저장하지 않습니다.
+
+기존 작품 도슨트는 같은 작품에 **실질 질문 3회 이상·현재 답변이 거절 아님·아직 컬렉션에 없는 작품**일 때 저장을 제안합니다. 단순 말투 수정·무관한 대화는 관심 횟수에서 제외하고 대화당 한 번만 제안합니다. 기존 모음에 담기 또는 새 모음 만들기를 선택하며, 새 모음은 작품 ID와 함께 한 생성 요청으로 저장합니다.
+
+### 컬렉션 채팅 화면
+
+**작품 도슨트의 저장 제안 — 사용자 제공 운영 화면.** 제안만으로 저장되지 않고 기존 모음 또는 새 모음을 선택합니다.
+
+![작품 채팅에서 컬렉션 담기 제안](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/886ba642514131418157b2d048aeface2b60edad/frontend/verification/docent-collection-offer-2026-10-15.png)
+
+**새 컬렉션 도우미 — 이번 lsh의 로컬 release 미리보기.** 아래는 진입 화면이며 실제 AI 생성 결과를 꾸며 넣지 않았습니다. 제안·확인 저장 흐름은 모의 API 회귀 테스트로 검증했습니다.
+
+![AI 컬렉션 도우미 로컬 UI](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/886ba642514131418157b2d048aeface2b60edad/frontend/verification/collection-assistant-2026-10-15.png)
+
+### MCP: 외부 AI에서도 같은 컬렉션 기능
+
+**MCP(Model Context Protocol)**는 외부 AI 클라이언트가 정해진 도구 스키마로 서비스를 사용할 수 있게 하는 연결 규약입니다. Docentalk은 **Streamable HTTP `/mcp/`**로 다음 6개 도구를 제공합니다.
+
+| 도구 | 기능 | 변경 여부 |
+| --- | --- | --- |
+| `list_collections` | 현재 인증 사용자의 모음·작품 수·미리보기 | 읽기 |
+| `search_artworks` | 제목·작가 검색, 최대 8개 | 읽기 |
+| `create_collection` | 명시적으로 요청한 이름의 비공개 모음 생성 | 쓰기 |
+| `add_artwork_to_collection` | 본인 모음에 작품 추가, 중복 추가 멱등 처리 | 쓰기 |
+| `list_auto_collections` | 최근·반복·작가·월별 열람 기반 모음 조회 | 읽기 |
+| `create_collection_from_views` | 실제 열람 기록을 채운 비공개 모음 생성 | 쓰기 |
+
+MCP는 Firebase Bearer 토큰에서 사용자를 결정하며 `user_id`를 도구 입력으로 받지 않습니다. REST와 같은 소유권·중복·10개/30점 한도 서비스를 사용합니다. 인증 실패는 401, 개인 응답은 `private, no-store`입니다. 현재 도구에는 모음 삭제나 AI 테마 재생성 도구가 없습니다.
+
+**Flutter 내 채팅은 REST로 제안·확인하고, 외부 MCP 클라이언트는 MCP 도구를 호출합니다.** 같은 서비스를 공유하지만 브라우저 채팅이 직접 MCP를 거치는 것으로 설명하지 않습니다. 외부 클라이언트의 쓰기 도구는 명시적인 사용자 요청/승인 정책 아래 실행해야 하며, 도구의 설명·힌트 자체가 서버의 추가 확인창을 대신하지 않습니다.
+
+[도구·인증 코드](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/backend/app/rag/collection_mcp.py) · [AI 테마 코드](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/backend/app/services/theme_collections.py) · [컬렉션 의도 해석](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-1Team/blob/6f0b40a7be17d8f8704df364887b3d6b21d021a4/backend/app/services/collection_assistant.py)
+
+## 13. 프로젝트 폴더 구조
+
+```text
+SKN35-3rd-1Team/
+├── frontend/                   Flutter Web 단일 앱
+│   ├── lib/
+│   │   ├── main.dart           시작·GoRouter
+│   │   ├── api/                REST·SSE·오류·토큰
+│   │   ├── auth/               Firebase SDK 어댑터
+│   │   ├── conversations/      도슨트·컬렉션 대화 상태
+│   │   ├── pages/              탐색·상세·피드·컬렉션 화면
+│   │   ├── ui/                 공통 UI·채팅·캘린더·도우미
+│   │   └── state*.dart         공유 상태·계정·개인 기록
+│   ├── assets/                 데모 카탈로그·작품·현재 폰트·로고
+│   ├── web/                    로더·파비콘·박물관 정적 이미지
+│   ├── scripts/                Flutter Vercel 설치·빌드
+│   ├── test/                   이번 컬렉션 회귀·반응형·자산 검증
+│   ├── docs/                   API·ERD·배포·인수인계
+│   └── verification/           날짜별 과거 검증 기록
+├── backend/
+│   ├── app/api/                FastAPI 라우팅·요청/응답
+│   ├── app/services/           도슨트·감상·컬렉션·AI 테마
+│   ├── app/rag/                분류·청킹·검색·MCP 전송
+│   ├── app/repositories/       TiDB 조회·저장
+│   ├── app/models/             SQLAlchemy 서비스 모델 22개
+│   ├── app/clients/            임베딩·Chroma 연결
+│   ├── app/core/               설정·Firebase 검증·공통 처리
+│   ├── alembic/                DB migration, head 20261014_0011
+│   └── tests/                  서버 단위·계약·회귀 검증
+├── data/                       원자료·전처리 산출물
+├── docs/                       설계·API·프롬프트·평가
+├── infra/                      Docker·배포
+└── pyproject.toml / uv.lock     Python 의존성
+```
+
+React·Vite 소스와 npm 패키지·TypeScript 설정·HTML 단일 목업 export는 제거했습니다. Node는 Vercel의 공개 빌드 설정 생성 스크립트에만 사용하며 React 런타임 의존성이 아닙니다. 사용하지 않는 목업 폰트도 제거하고 현재 Chiron Sung HK와 라이선스를 유지합니다.
