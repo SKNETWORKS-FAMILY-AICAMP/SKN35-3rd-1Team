@@ -1,0 +1,77 @@
+{
+  "run_at": "2026-10-15T01:13:00+09:00",
+  "environment": "local",
+  "base_url": "http://127.0.0.1:8010",
+  "auth_mode": "dev",
+  "summary": {
+    "protocol_and_auth": "pass",
+    "tool_discovery": "pass",
+    "read_tools": "pass",
+    "write_tools": "pass",
+    "validation": "pass",
+    "cleanup": "pass",
+    "firebase_account_isolation": "not_tested"
+  },
+  "protocol": {
+    "unauthorized_status": 401,
+    "authenticated_status": 200,
+    "protocol_version": "2025-11-25",
+    "server_name": "Docentalk collections",
+    "cache_control": "no-store, private"
+  },
+  "tools": [
+    "list_collections",
+    "search_artworks",
+    "create_collection",
+    "add_artwork_to_collection",
+    "list_auto_collections",
+    "create_collection_from_views"
+  ],
+  "checks": [
+    {
+      "case": "tool schemas do not accept user_id",
+      "result": "pass"
+    },
+    {
+      "case": "search artworks for 고흐",
+      "result": "pass",
+      "returned": 8
+    },
+    {
+      "case": "empty search query validation",
+      "result": "pass",
+      "message": "검색어는 1~80자입니다."
+    },
+    {
+      "case": "create collection",
+      "result": "pass"
+    },
+    {
+      "case": "add artwork 223 twice",
+      "result": "pass",
+      "artwork_count_after_second_call": 1
+    },
+    {
+      "case": "list automatic collections",
+      "result": "pass",
+      "returned": 6
+    },
+    {
+      "case": "create collection from recent views",
+      "result": "pass",
+      "requested_limit": 3,
+      "artwork_count": 3
+    },
+    {
+      "case": "delete temporary collections",
+      "result": "pass",
+      "http_status": 204,
+      "verified_absent": true
+    }
+  ],
+  "limitations": [
+    "AUTH_MODE=dev maps every bearer token to the same development user, so two-account isolation requires a Firebase-authenticated deployment test.",
+    "The current MCP server reads collection and artwork/view-history data; it does not expose a tool that reads chat transcripts.",
+    "Only local behavior is covered. Repeat against the deployed /mcp/ endpoint after redeployment."
+  ]
+}
