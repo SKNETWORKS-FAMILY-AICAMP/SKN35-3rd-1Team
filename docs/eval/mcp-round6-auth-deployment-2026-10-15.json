@@ -1,0 +1,82 @@
+{
+  "run_at": "2026-10-15",
+  "environment": "deployment",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "client": "In-page fetch from https://artlog-skn35-1team.vercel.app using each account's Firebase ID token (token never printed or stored)",
+  "accounts": {
+    "A": "uid xvwUmf…",
+    "B": "uid AXhXbi…"
+  },
+  "summary": {
+    "unauthenticated_access_control": "pass",
+    "invalid_token_access_control": "pass",
+    "security_headers": "pass",
+    "authenticated_protocol_and_tools": "pass (after MCP_ALLOWED_HOSTS fix)",
+    "write_tools_and_duplicate_prevention": "pass",
+    "firebase_account_isolation_rest": "pass",
+    "firebase_account_isolation_mcp": "pass",
+    "cleanup": "pass"
+  },
+  "issue_found": {
+    "symptom": "Authenticated initialize returned HTTP 421 'Invalid Host header'",
+    "cause": "Railway MCP_ALLOWED_HOSTS used the localhost-only default, so the MCP SDK rejected the deployment Host header. The earlier round-6 check only saw 401 because authentication runs before the host check.",
+    "fix": "MCP_ALLOWED_HOSTS=skn35-3rd-1team-production.up.railway.app,localhost,localhost:*,127.0.0.1,127.0.0.1:*",
+    "status": "fixed on Railway and re-verified (initialize 200)"
+  },
+  "protocol": {
+    "authenticated_status": 200,
+    "protocol_version": "2025-11-25",
+    "server_name": "Docentalk collections",
+    "cache_control": "private, no-store",
+    "no_token_status": 401,
+    "invalid_token_status": 401
+  },
+  "tools": [
+    "list_collections",
+    "search_artworks",
+    "create_collection",
+    "add_artwork_to_collection",
+    "list_auto_collections",
+    "create_collection_from_views"
+  ],
+  "checks": [
+    {"account": "B", "case": "tool schemas do not accept user_id", "result": "pass"},
+    {"account": "B", "case": "search_artworks 고흐", "result": "pass", "returned": 8},
+    {"account": "B", "case": "search_artworks empty query", "result": "pass", "message": "검색어는 1~80자입니다."},
+    {"account": "B", "case": "create_collection", "result": "pass", "collection_id": 120002},
+    {"account": "B", "case": "add same artwork twice", "result": "pass", "artwork_count_after_second_call": 1},
+    {"account": "B", "case": "list_auto_collections with no view history", "result": "pass", "returned": 0},
+    {"account": "B", "case": "create_collection_from_views with no view history", "result": "pass", "message": "해당하는 감상 기록이 없습니다."},
+    {"account": "A", "case": "list_auto_collections", "result": "pass", "returned": 6, "keys": ["recent", "frequent", "artist-9", "artist-11", "artist-10", "month-2026-10"]},
+    {"account": "A", "case": "create_collection_from_views recent limit 3", "result": "pass", "collection_id": 120003, "artwork_count": 3},
+    {"account": "A", "case": "create_collection_from_views artist without name", "result": "pass", "message": "어느 작가인지 정확한 이름을 알려주세요."}
+  ],
+  "isolation": {
+    "setup": "Account A created collection 120001 '[MCP6 test A] 격리검증' with 1 artwork via REST",
+    "rest_as_B": {
+      "list_contains_A_collection": false,
+      "GET items": 404,
+      "PUT add item": 404,
+      "PUT rename": 404,
+      "DELETE item": 404,
+      "DELETE collection": 404
+    },
+    "mcp_as_B": {
+      "list_collections_contains_A_collection": false,
+      "add_artwork_to_collection on A's collection": "tool error 404: 컬렉션을 찾을 수 없어요."
+    },
+    "A_after_B_attempts": {"name_unchanged": true, "artwork_count": 1},
+    "result": "pass"
+  },
+  "cleanup": {
+    "B_deleted": [{"id": 120002, "status": 204}],
+    "B_remaining": [],
+    "A_deleted": [{"id": 120001, "status": 204}, {"id": 120003, "status": 204}],
+    "A_remaining": [60002],
+    "A_matches_pre_test_state": true
+  },
+  "limitations": [
+    "Tests were sent from the deployed frontend origin in a browser, not from a desktop MCP client such as Claude Desktop.",
+    "Account B had no view history, so view-based tools were verified with account A."
+  ]
+}
