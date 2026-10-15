@@ -1,0 +1,39 @@
+# 비밀값
+.env
+.env.*
+!.env.example
+*.pem
+.secrets/
+**/*firebase-adminsdk*.json
+
+# 로컬 Chroma 폴더 (CHROMA_PATH). 원본은 TiDB, sync_chroma 로 다시 만듦
+data/chroma/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# 편집기·OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 로컬 실험 산출물
+*.log
+.ipynb_checkpoints/
+docs/eval-runs/
+
+# 전처리 실행 중 임시 파일과 실패 기록 (성공 결과와 _SUCCESS.json 은 커밋)
+data/processed/.staging/
+data/processed/_FAILED.json
+data/processed/*.tmp

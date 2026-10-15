@@ -1,0 +1,43 @@
+{
+  "_comment": "수집 원문을 바꾸지 않고 RAG가 함께 읽어야 할 최신 사실, 불확실성, 원문 절단 주의를 덧붙인다. basis_doc_keys와 basis_external_sources는 보정 근거이며 최종 documents.jsonl에도 보존된다.",
+  "documents": {
+    "jeong-seon/bio": {
+      "basis_doc_keys": [
+        "jeong-seon/bio",
+        "jeong-seon/inwangjesaekdo",
+        "jeong-seon/inwangjesaekdo-aks"
+      ],
+      "content": "원문의 ‘삼성미술관 소장 인왕제색도’는 작성 당시의 소장처 표기다. 《인왕제색도》는 2021년 이건희 유족의 기증으로 현재 국립중앙박물관이 소장한다. 현재 소장처를 묻는 질문에는 국립중앙박물관으로 답한다."
+    },
+    "jeong-seon/inwangjesaekdo": {
+      "basis_doc_keys": [
+        "jeong-seon/inwangjesaekdo"
+      ],
+      "content": "그림에 나타난 집의 주인과 제작 동기는 확정된 사실이 아니다. 이병연의 집과 병환을 연결하는 설명 등은 학자들의 견해로 소개하고, 단정적인 사실처럼 답하지 않는다."
+    },
+    "jeong-seon/yuksangmyodo": {
+      "basis_doc_keys": [
+        "jeong-seon/yuksangmyodo"
+      ],
+      "basis_external_sources": [
+        {
+          "source_name": "국사편찬위원회 우리역사넷",
+          "source_url": "https://contents.history.go.kr/mobile/kc/view.do?code=kc_age_30&levelId=kc_r300763"
+        }
+      ],
+      "content": "원문의 ‘1725년(영조 6년)’에서 왕력은 오류다. 1725년은 영조 1년이며, 영조의 생모 숙빈 최씨의 신주를 모신 사당은 그해 처음 숙빈묘로 세워진 뒤 1744년 육상묘로 이름이 바뀌었다."
+    },
+    "kim-hong-do/artwork-world-aks": {
+      "basis_doc_keys": [
+        "kim-hong-do/artwork-world-aks"
+      ],
+      "content": "《단원 풍속도첩》 각 폭의 필법 차이를 두고 김홍도의 단기간 제작, 일부 모작·위작, 후대 화보 제작용 모본이라는 여러 해석이 제기되어 있다. 어느 하나가 확정된 결론인 것처럼 답하지 말고 ‘해석이 제기되었다’고 구분한다."
+    },
+    "kim-hong-do/chuseongbudo-inscription": {
+      "basis_doc_keys": [
+        "kim-hong-do/chuseongbudo-inscription"
+      ],
+      "content": "수집 원문의 묵서 번역은 마지막이 ‘사람은 동물이’에서 문장 중간에 끊긴다. 누락된 뒤 문장을 추정해 완성하지 말고, 인용하거나 요약할 때는 완결된 앞부분까지만 사용한다."
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "run_at": "2026-10-14T12:20:49.9624586+09:00",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "summary": {
+    "checks": 19,
+    "passed": 1,
+    "failed": 18
+  },
+  "cleanup": {
+    "diary_deleted": false,
+    "collection_deleted": false,
+    "firebase_accounts_deleted": true,
+    "application_user_rows_remain": false
+  },
+  "rows": [
+    {
+      "name": "인증 없이 프로필 접근 차단",
+      "actual_status": 401,
+      "pass": true,
+      "note": "401 기대",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "A 설정 서버 저장",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "A 설정 재조회 유지",
+      "actual_status": 401,
+      "pass": false,
+      "note": "PUT 후 GET",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "B 설정과 A 설정 분리",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "설정 enum·중복 우선순위 검증",
+      "actual_status": 401,
+      "pass": false,
+      "note": "422 기대",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "A 비공개 감상 저장",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "비공개 감상 B 계정 분리",
+      "actual_status": 401,
+      "pass": false,
+      "note": "B 결과 null 기대",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "비공개 감상 공개 피드 미노출",
+      "actual_status": 200,
+      "pass": false,
+      "note": "선행 비공개 감상 저장이 401이라 계정 분리 검증으로 인정할 수 없음",
+      "response": {
+        "leaked": false
+      }
+    },
+    {
+      "name": "컬렉션 생성",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "컬렉션 수정",
+      "actual_status": 405,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Method Not Allowed"
+      }
+    },
+    {
+      "name": "컬렉션 작품 담기",
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "다른 계정 컬렉션 접근 차단",
+      "actual_status": 404,
+      "pass": false,
+      "note": "선행 컬렉션 생성이 401이라 소유권 검증으로 인정할 수 없음",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "AI 취향 소개 생성",
+      "actual_status": 401,
+      "pass": false,
+      "note": "컬렉션 작품 1개를 근거로 생성",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "컬렉션 AI 채팅 제안",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "로그인이 필요합니다."
+      }
+    },
+    {
+      "name": "AI 채팅 확인 전 DB 미변경",
+      "actual_status": 200,
+      "pass": false,
+      "note": "컬렉션 AI 채팅이 401이라 미변경 검증으로 인정할 수 없음",
+      "response": {
+        "before": 1,
+        "after": 1
+      }
+    },
+    {
+      "name": "도슨트 말투·설명 순서 응답 차이",
+      "actual_status": 500,
+      "pass": false,
+      "note": "professional/기법 우선 vs easy/작가 생애 우선",
+      "response": {
+        "professional": null,
+        "easy": null
+      }
+    },
+    {
+      "name": "컬렉션 작품 꺼내기",
+      "actual_status": 404,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "name": "컬렉션 삭제",
+      "actual_status": 405,
+      "pass": false,
+      "note": "",
+      "response": {
+        "detail": "Method Not Allowed"
+      }
+    },
+    {
+      "name": "삭제 후 목록 미노출",
+      "actual_status": 401,
+      "pass": false,
+      "note": "",
+      "response": {
+        "found": 1
+      }
+    }
+  ]
+}

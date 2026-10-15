@@ -1,0 +1,325 @@
+typedef Json = Map<String, dynamic>;
+
+String text(Object? value, [String fallback = '']) =>
+    value?.toString() ?? fallback;
+Json object(Object? value) =>
+    value is Map ? Map<String, dynamic>.from(value) : {};
+List<dynamic> items(Object? value) {
+  if (value is List) return value;
+  final map = object(value);
+  final nested = map['items'] ?? map['data'];
+  if (nested is List) return nested;
+  throw const FormatException('목록 응답은 배열 또는 items/data 배열이어야 합니다.');
+}
+
+class Movement {
+  const Movement({required this.id, required this.name});
+  final String id, name;
+  factory Movement.fromJson(Json j) =>
+      Movement(id: text(j['id']), name: text(j['name']));
+}
+
+class Artist {
+  const Artist({
+    required this.id,
+    required this.slug,
+    required this.name,
+    this.english = '',
+    this.years = '',
+    this.movementId = '',
+    this.movement = '',
+    this.summary = '',
+    this.portrait = '',
+    this.reason = '',
+  });
+  final String id,
+      slug,
+      name,
+      english,
+      years,
+      movementId,
+      movement,
+      summary,
+      portrait,
+      reason;
+  factory Artist.fromJson(Json j) => Artist(
+    id: text(j['id']),
+    slug: text(j['slug']),
+    name: text(j['name']),
+    english: text(j['name_en']),
+    years: text(
+      j['years'],
+      '${j['birth_year'] ?? '?'}–${j['death_year'] ?? '?'}',
+    ),
+    movementId: text(j['movement_id']),
+    movement: text(j['movement_name'], text(object(j['movement'])['name'])),
+    summary: text(j['summary']),
+    portrait: text(j['portrait_url']),
+    reason: text(j['reason']),
+  );
+}
+
+class Artwork {
+  const Artwork({
+    required this.id,
+    required this.slug,
+    required this.title,
+    required this.artistId,
+    this.titleEn = '',
+    this.artistName = '',
+    this.artistEnglish = '',
+    this.year = '',
+    this.movementId = '',
+    this.movement = '',
+    this.image = '',
+    this.description = '',
+    this.medium = '',
+    this.dimensions = '',
+    this.collection = '',
+    this.sourceUrl = '',
+    this.imageLicense = '',
+    this.asset = false,
+    this.reason = '',
+    this.isFeatured = false,
+    this.viewCount = 0,
+    this.imageAspectRatio,
+  });
+  final String id,
+      slug,
+      title,
+      titleEn,
+      artistId,
+      artistName,
+      artistEnglish,
+      year,
+      movementId,
+      movement,
+      image,
+      description,
+      medium,
+      dimensions,
+      collection,
+      sourceUrl,
+      imageLicense,
+      reason;
+  final bool asset, isFeatured;
+  final int viewCount;
+  final double? imageAspectRatio;
+  factory Artwork.fromJson(Json j) {
+    final artist = object(j['artist']);
+    return Artwork(
+      id: text(j['id']),
+      slug: text(j['slug']),
+      title: text(j['title']),
+      titleEn: text(j['title_en']),
+      artistId: text(j['artist_id'], text(artist['id'])),
+      artistName: text(j['artist_name'], text(artist['name'])),
+      artistEnglish: text(j['artist_name_en'], text(artist['name_en'])),
+      year: text(j['year_label'], text(j['year_start'])),
+      movementId: text(j['movement_id']),
+      movement: text(j['movement_name'], text(object(j['movement'])['name'])),
+      image: text(j['image_url']),
+      description: text(j['description']),
+      medium: text(j['medium']),
+      dimensions: text(j['dimensions']),
+      collection: text(j['collection']),
+      sourceUrl: text(j['image_source_url']),
+      imageLicense: text(j['image_license']),
+      asset: j['is_asset'] == true,
+      reason: text(j['reason']),
+      isFeatured: j['is_featured'] == true,
+      viewCount: (j['view_count'] as num?)?.toInt() ?? 0,
+      imageAspectRatio: (j['image_aspect_ratio'] as num?)?.toDouble(),
+    );
+  }
+}
+
+class CalendarDay {
+  const CalendarDay({
+    required this.date,
+    required this.artworkCount,
+    required this.totalViews,
+    this.artwork,
+  });
+  final String date;
+  final int artworkCount, totalViews;
+  // Most recently viewed artwork that day, shown in the calendar cell.
+  final Artwork? artwork;
+  factory CalendarDay.fromJson(Json j) => CalendarDay(
+    date: text(j['date']),
+    artworkCount: (j['artwork_count'] as num?)?.toInt() ?? 0,
+    totalViews: (j['total_views'] as num?)?.toInt() ?? 0,
+    artwork: j['artwork'] is Map
+        ? Artwork.fromJson(object(j['artwork']))
+        : null,
+  );
+}
+
+class BasisSource {
+  const BasisSource({required this.name, required this.url});
+  final String name, url;
+  factory BasisSource.fromJson(Json j) =>
+      BasisSource(name: text(j['source_name']), url: text(j['source_url']));
+}
+
+class Source {
+  const Source({
+    required this.id,
+    required this.title,
+    required this.name,
+    required this.url,
+    required this.type,
+    this.license = '',
+    this.basisSources = const [],
+  });
+  final String id, title, name, url, type, license;
+  final List<BasisSource> basisSources;
+  String get typeLabel => switch (type) {
+    'artist_bio' => '작가 이야기',
+    'artwork_commentary' => '작품 해설',
+    'artist_comparison' => '작가 비교',
+    _ => '근거 자료',
+  };
+  factory Source.fromJson(Json j) => Source(
+    id: text(j['document_id']),
+    title: text(j['title']),
+    name: text(j['source_name']),
+    url: text(j['source_url']),
+    type: text(j['doc_type']),
+    license: text(j['license']),
+    basisSources: j['basis_sources'] is List
+        ? (j['basis_sources'] as List)
+              .map((s) => BasisSource.fromJson(object(s)))
+              .where((s) => s.name.isNotEmpty || s.url.isNotEmpty)
+              .toList()
+        : const [],
+  );
+}
+
+/// The docent's offer to collect the artwork after repeated questions.
+/// Nothing is saved until the member picks an option.
+class CollectionSuggestion {
+  const CollectionSuggestion({
+    required this.kind,
+    required this.message,
+    required this.artworkId,
+    this.collections = const [],
+    this.name,
+    this.artworkIds = const [],
+    this.artworks = const [],
+  });
+  // add_artwork | create_from_views
+  final String kind, message, artworkId;
+  // add_artwork: (id, name) of the member's collections.
+  final List<(String, String)> collections;
+  // create_from_views: the new collection and the viewed artworks it would hold.
+  final String? name;
+  final List<String> artworkIds;
+  final List<Artwork> artworks;
+  bool get createsCollection => kind == 'create_from_views';
+  factory CollectionSuggestion.fromJson(Json j) {
+    final proposal = j['proposal'] == null ? null : object(j['proposal']);
+    return CollectionSuggestion(
+      kind: text(j['kind']),
+      message: text(j['message']),
+      artworkId: text(j['artwork_id']),
+      collections: [
+        for (final c in items(j['collections'] ?? []))
+          (text(object(c)['id']), text(object(c)['name'])),
+      ],
+      name: proposal?['name'] as String?,
+      artworkIds: items(proposal?['artwork_ids'] ?? []).map(text).toList(),
+      artworks: items(
+        j['artworks'] ?? [],
+      ).map((a) => Artwork.fromJson(object(a))).toList(),
+    );
+  }
+}
+
+class ChatTurn {
+  const ChatTurn(
+    this.role,
+    this.content, {
+    this.sources = const [],
+    this.refused = false,
+    this.suggestion,
+  });
+  final String role, content;
+  final List<Source> sources;
+  final bool refused;
+  // Shown under the latest answer only; never restored from saved history.
+  final CollectionSuggestion? suggestion;
+  factory ChatTurn.fromJson(Json j) {
+    final role = text(j['role']);
+    if ((role != 'user' && role != 'assistant') ||
+        j['content'] is! String ||
+        (j['content'] as String).isEmpty) {
+      throw const FormatException('저장된 대화 형식을 확인해 주세요.');
+    }
+    return ChatTurn(
+      role,
+      j['content'] as String,
+      refused: j['refused'] == true,
+      sources: items(
+        j['sources'],
+      ).map((s) => Source.fromJson(object(s))).toList(),
+    );
+  }
+  Json toHistory() => {
+    'role': role,
+    'content': String.fromCharCodes(content.runes.take(4000)),
+  };
+}
+
+class ChatSummary {
+  const ChatSummary({
+    required this.artwork,
+    required this.lastMessage,
+    required this.updatedAt,
+  });
+  final Artwork artwork;
+  final String lastMessage;
+  final DateTime updatedAt;
+  factory ChatSummary.fromJson(Json j) => ChatSummary(
+    artwork: Artwork.fromJson(object(j['artwork'])),
+    lastMessage: text(j['last_message']),
+    updatedAt: DateTime.parse(text(j['updated_at'])),
+  );
+  String get dateLabel {
+    final seoul = updatedAt.toUtc().add(const Duration(hours: 9));
+    return '${dateKey(seoul)} ${seoul.hour.toString().padLeft(2, '0')}:${seoul.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+class ChatReply {
+  const ChatReply(this.answer, this.refused, this.sources, [this.suggestion]);
+  final String answer;
+  final bool refused;
+  final List<Source> sources;
+  final CollectionSuggestion? suggestion;
+  factory ChatReply.fromJson(Json j) {
+    if (j['answer'] is! String ||
+        j['refused'] is! bool ||
+        j['sources'] is! List) {
+      throw const FormatException(
+        '도슨트 응답의 answer/refused/sources 형식을 확인해 주세요.',
+      );
+    }
+    return ChatReply(
+      j['answer'],
+      j['refused'],
+      (j['sources'] as List).map((s) => Source.fromJson(object(s))).toList(),
+      j['suggestion'] == null
+          ? null
+          : CollectionSuggestion.fromJson(object(j['suggestion'])),
+    );
+  }
+}
+
+String seoulDate([DateTime? now]) {
+  final day = (now ?? DateTime.now()).toUtc().add(const Duration(hours: 9));
+  return '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+}
+
+String dateKey(DateTime date) =>
+    '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "movements.jsonl": {
+      "sha256": "753dee0ba504fe9fb2ca99fdb706cfb2bd432bd86541fda594d6bcbec8d6b930",
+      "rows": 6
+    },
+    "artists.jsonl": {
+      "sha256": "d01c0be07f4ce702080137efb8f625e86c82cd8a15d93b68d894817e9b043cb4",
+      "rows": 10
+    },
+    "artworks.jsonl": {
+      "sha256": "c49353cd597a46810496a72c023c920e6e05e361c48bcf70635f38e26d853da0",
+      "rows": 277
+    },
+    "documents.jsonl": {
+      "sha256": "2263a17a82e81f51378756bb78a849f682ebd3e8d6cd9fa750c49b8fa63aca18",
+      "rows": 427
+    },
+    "artist_aliases.jsonl": {
+      "sha256": "e092bfee01bbfcd7e410e2fcaae5e2f4c93d01ce8a070b6838f26f1f7ab5aa37",
+      "rows": 10
+    }
+  },
+  "needs_review_documents": 0
+}

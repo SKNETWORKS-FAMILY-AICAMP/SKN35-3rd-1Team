@@ -1,0 +1,574 @@
+{
+  "_comment": "원본에 없는 값을 사람이 채우는 곳. 전처리 스크립트가 모든 원본 형식에 덮어쓴다. data/processed/ 는 손으로 고치지 말고 여기를 고친다. 값은 원문 첫 문단, 위키데이터(CC0), 메트 오픈 액세스 API(퍼블릭 도메인 확인)에서 확인한 것만 넣었다. 작가 초상은 위키데이터 P18(위키미디어 공용 퍼블릭 도메인 파일), 고흐·고갱 이미지는 담당자가 원본에 채워서 매핑에서 뺐다.",
+  "excluded_artworks": [
+    "small-town-iii",
+    "still-life-with-books",
+    "red-sketchbook-klimt"
+  ],
+  "movements": [
+    {
+      "slug": "baroque",
+      "name": "바로크",
+      "name_en": "Baroque",
+      "description": null
+    },
+    {
+      "slug": "impressionism",
+      "name": "인상주의",
+      "name_en": "Impressionism",
+      "description": null
+    },
+    {
+      "slug": "post-impressionism",
+      "name": "후기 인상주의",
+      "name_en": "Post-Impressionism",
+      "description": null
+    },
+    {
+      "slug": "joseon-late-painting",
+      "name": "조선 후기 회화",
+      "name_en": "Late Joseon Painting",
+      "description": "조선 후기에 전개된 회화로, 진경산수화·풍속화·도석인물화 등 한국의 자연과 생활상을 다룬 여러 흐름을 포함한다."
+    },
+    {
+      "slug": "expressionism",
+      "name": "표현주의",
+      "name_en": "Expressionism",
+      "description": null
+    },
+    {
+      "slug": "vienna-secession",
+      "name": "빈 분리파",
+      "name_en": "Vienna Secession",
+      "description": null
+    }
+  ],
+  "artists": {
+    "claude-monet": {
+      "name": "클로드 모네",
+      "name_en": "Claude Monet",
+      "movement_slug": "impressionism",
+      "birth_year": 1840,
+      "death_year": 1926,
+      "nationality": "프랑스",
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_1899_Nadar_crop.jpg",
+      "summary": "노르망디 해안에서 빛과 날씨의 변화를 익힌 모네는 야외에서 빠르게 색을 놓으며 순간의 시각 경험을 화면에 붙잡았다. 건초더미·루앙 대성당·수련처럼 같은 대상을 거듭 그린 연작에서는 사물 자체보다 시간대와 계절에 따라 달라지는 빛, 대기, 색의 관계가 중심이 된다. 가까이에서는 짧은 붓질과 분리된 색이 보이지만 거리를 두면 하나의 장면으로 합쳐지며, 말년의 수련 그림에서는 수평선마저 사라져 관람자가 물과 반사광 속에 잠기는 듯한 공간이 만들어진다."
+    },
+    "paul-cezanne": {
+      "name": "폴 세잔",
+      "name_en": "Paul Cézanne",
+      "movement_slug": "post-impressionism",
+      "birth_year": 1839,
+      "death_year": 1906,
+      "nationality": "프랑스",
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul-Cezanne.jpg",
+      "summary": "엑상프로방스를 중심으로 작업한 세잔은 인상주의의 밝은 색을 받아들이면서도 순간의 인상보다 화면 안에서 형태가 어떻게 단단히 서는지에 관심을 두었다. 사과·인물·생트빅투아르산을 반복해 그리며 색면과 짧은 붓질로 부피를 쌓았고, 한 그림 안에 조금씩 다른 시점을 겹쳐 탁자와 풍경이 미묘하게 기울고 흔들리게 했다. 그의 작품은 대상을 정확히 복제한 그림이라기보다 보는 행위가 진행되는 과정을 보여주며, 이 구조적 실험은 이후 입체주의와 20세기 회화에 중요한 출발점이 되었다."
+    },
+    "rembrandt": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg",
+      "summary": "레이던에서 출발해 암스테르담에서 초상화와 역사화로 명성을 얻은 렘브란트는 빛을 단순한 효과가 아니라 인물의 표정과 사건의 긴장을 드러내는 장치로 사용했다. 성서와 신화 장면에서도 영웅적 몸짓보다 망설임·연민·두려움 같은 인간의 순간을 붙잡았고, 평생 이어진 자화상에는 젊은 성공부터 재정적 곤란을 겪은 노년까지 변화한 얼굴과 화법이 남아 있다. 유화뿐 아니라 에칭에서도 명암과 선의 밀도를 실험했으며, 말년의 두껍고 거친 붓질은 매끈한 재현보다 인물의 존재감을 앞세운다."
+    },
+    "caravaggio": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bild-Ottavio_Leoni%2C_Caravaggio.jpg",
+      "summary": "롬바르디아에서 성장해 로마에서 이름을 알린 카라바조는 성인과 신화 속 인물을 이상화하지 않고 거리에서 만날 법한 몸과 표정으로 그렸다. 어두운 공간을 가르는 강한 빛은 단순한 명암 효과가 아니라 누가 무엇을 보고, 사건이 어느 순간 뒤집히는지를 지시하는 무대 조명처럼 작동한다. 인물을 화면 가까이 끌어당긴 구도와 상처·주름·더러움까지 감추지 않는 관찰은 종교 장면을 현재 벌어지는 현실처럼 만들었고, 이러한 극적 자연주의는 유럽 각지의 카라바조 추종 화가들에게 빠르게 퍼졌다."
+    },
+    "vincent-van-gogh": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Self-portrait_-_Vincent_van_Gogh.jpg",
+      "summary": "반 고흐는 1880년 무렵 본격적으로 화가의 길을 택한 뒤 네덜란드의 어두운 농민 그림에서 파리의 밝은 색채를 거쳐 아를·생레미·오베르의 강렬한 화면으로 빠르게 변모했다. 굽이치거나 짧게 끊기는 붓질과 보색 대비는 감정을 즉흥적으로 쏟아낸 흔적이라기보다 자연의 리듬과 화면의 질서를 치밀하게 조직한 결과다. 자화상·해바라기·밤 풍경을 볼 때 비극적인 생애만으로 해석하기보다, 동생 테오와 주고받은 편지에 남은 색채 연구와 일본 판화에 대한 관심, 같은 소재를 반복하며 구도를 바꾼 실험을 함께 살펴볼 필요가 있다."
+    },
+    "paul-gauguin": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Gauguin_1891.png",
+      "summary": "증권 중개인으로 일하다 화가의 길을 택한 고갱은 인상주의의 자연 관찰에서 벗어나 강한 윤곽선과 넓고 평평한 색면, 현실과 기억이 섞인 상징적 장면을 발전시켰다. 브르타뉴와 프랑스령 폴리네시아에서 제작한 그림은 보이는 풍경을 그대로 기록하기보다 종교·신화·꿈의 이미지를 재구성하며, 색도 자연색보다 화면의 정서와 의미를 위해 선택된다. 다만 타히티와 마르키즈의 인물들을 ‘원시적 낙원’으로 연출한 시선은 프랑스 식민 지배와 작가 자신의 권력 관계 안에서 만들어졌으므로, 형식적 혁신과 식민주의적 왜곡을 함께 살펴봐야 한다."
+    },
+    "jeong-seon": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-Taking_a_reast_after_reading_books-1.jpg",
+      "summary": "정선은 금강산과 한양 일대의 실제 경관을 오래 관찰하고 여행하며, 중국 화보의 이상적 산수와 다른 조선의 산세를 화면의 언어로 바꾸었다. 진경산수는 눈앞의 풍경을 사진처럼 옮긴 것이 아니라 여러 시점과 이동 경험을 한 화면에 조직한 그림으로, 금강산의 날카로운 암봉에는 수직으로 내리긋는 선을, 흙산과 숲에는 먹을 겹쳐 쌓는 방식처럼 장소마다 다른 필법을 사용했다. 「금강전도」의 장대한 조망과 「인왕제색도」의 비 온 뒤 짙은 먹처럼 작품마다 거리·날씨·기억을 압축하는 방식을 비교하면 정선이 실제 경관을 어떻게 재구성했는지 볼 수 있다."
+    },
+    "kim-hong-do": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kim_Hongdo.jpg",
+      "summary": "도화서 화원 김홍도는 정조 시대의 궁중 행사와 왕명으로 제작한 기록화·초상화부터 산수화·도석인물화·풍속화까지 폭넓은 장르를 다뤘다. 풍속화에서는 씨름판의 원형 구도, 서당 아이들의 엇갈린 시선처럼 인물의 자세와 표정을 간결한 선으로 포착하고, 빈 공간까지 이용해 장면의 움직임과 관계를 읽게 한다. 서민 생활을 사실적으로 기록한 화가라는 설명만으로는 부족하며, 절제된 먹선과 과감한 생략, 익살스러운 관찰을 주제에 따라 달리 운용한 전문 화원의 구성력을 함께 봐야 한다."
+    },
+    "gustav-klimt": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_portrait_by_Moritz_N%C3%A4hr.jpeg",
+      "summary": "구스타프 클림트(1862~1918)는 역사주의 장식화에서 출발해 1897년 빈 분리파의 창립과 초대 회장을 맡으며 오스트리아 근대미술을 이끈 화가입니다. 초상화와 알레고리에서는 사실적으로 그린 얼굴과 몸에 금빛과 평면적인 무늬를 결합했고, 아터제의 호수와 숲을 그린 풍경에서는 작은 색점과 촘촘한 구도를 실험했습니다. 《키스》의 황금빛뿐 아니라 초기의 인체 연구와 후기의 풍경을 함께 보면, 인물과 자연을 새롭게 조직한 폭넓은 화풍의 변화를 만날 수 있습니다."
+    },
+    "egon-schiele": {
+      "portrait_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_photo.jpg",
+      "summary": "에곤 실레(1890~1918)는 빈 미술학교에서 공부한 뒤 1909년 신미술가 그룹을 결성하며 독자적인 길을 연 오스트리아 화가입니다. 자화상과 인물화에서는 꺾인 자세와 날카로운 윤곽선, 비어 있는 배경으로 몸의 취약함과 심리적 긴장을 드러냈고, 도시와 나무를 그린 풍경에서도 비슷한 감정을 탐구했습니다. 클림트의 영향을 받으며 출발했지만 장식보다 인물의 존재와 불안, 삶과 죽음에 대한 질문에 집중한 표현으로 빈 근대미술에 뚜렷한 흔적을 남겼습니다."
+    }
+  },
+  "artworks": {
+    "the-abduction-of-europa": {
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg/1280px-Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg",
+      "image_license": "Public domain"
+    },
+    "the-conspiracy-of-claudius-civilis": {
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg/1280px-The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg",
+      "image_license": "Public domain"
+    },
+    "impression-sunrise": {
+      "title": "인상, 해돋이",
+      "title_en": "Impression, Sunrise",
+      "year_label": "1872",
+      "year_start": 1872,
+      "collection": "마르모탕 모네 미술관 (파리)",
+      "is_featured": true,
+      "medium": "캔버스에 유채",
+      "dimensions": "48 × 63 cm"
+    },
+    "water-lilies": {
+      "title": "수련 연작",
+      "title_en": "Water Lilies",
+      "year_label": "1890년대–1920년대",
+      "year_start": null,
+      "collection": "오랑주리 미술관 외",
+      "is_featured": true,
+      "medium": "유채 (연작 약 250점)"
+    },
+    "rouen-cathedral": {
+      "title": "루앙 대성당 연작",
+      "title_en": "Rouen Cathedral",
+      "year_label": "1892–1894",
+      "year_start": 1892,
+      "collection": "오르세 미술관 외",
+      "is_featured": false,
+      "medium": "캔버스에 유채 (연작)"
+    },
+    "haystacks": {
+      "title": "건초더미 연작",
+      "title_en": "Haystacks",
+      "year_label": "1890–1891",
+      "year_start": 1890,
+      "collection": "오르세 미술관, 시카고 미술관 외",
+      "is_featured": false,
+      "medium": "캔버스에 유채 (연작 25점)"
+    },
+    "woman-with-parasol": {
+      "title": "양산을 든 여인",
+      "title_en": "Woman with a Parasol – Madame Monet and Her Son",
+      "year_label": "1875",
+      "year_start": 1875,
+      "medium": "캔버스에 유채",
+      "collection": "미국 국립미술관 (워싱턴 D.C.)",
+      "is_featured": false,
+      "description": "모네가 1875년 아르장퇴유에서 아내 카미유와 아들 장이 바람 부는 여름날 산책하는 순간을 그린 그림이다.",
+      "dimensions": "100 × 82 cm"
+    },
+    "mont-sainte-victoire": {
+      "title": "생트빅투아르산 연작",
+      "title_en": "Mont Sainte-Victoire",
+      "year_label": "1880년대 중반–1906",
+      "year_start": null,
+      "collection": "오르세 미술관 외",
+      "is_featured": true,
+      "medium": "유채·수채 (연작 약 80점)"
+    },
+    "the-card-players": {
+      "title": "카드놀이하는 사람들 연작",
+      "title_en": "The Card Players",
+      "year_label": "1890년대 초",
+      "year_start": null,
+      "collection": "오르세 미술관, 메트로폴리탄 미술관 외",
+      "is_featured": false,
+      "medium": "유채 (연작 5점)"
+    },
+    "apples-oranges": {
+      "title": "사과와 오렌지가 있는 정물",
+      "title_en": "Still Life with Apples and Oranges",
+      "year_label": "c. 1899",
+      "year_start": 1899,
+      "collection": "오르세 미술관 (파리)",
+      "is_featured": true,
+      "description": "세잔이 1899년 무렵 그린 정물화로, 몇 달 앞서 같은 물건들로 그린 정물에서 이어진 작품이다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "74 × 93 cm"
+    },
+    "the-basket-of-apples": {
+      "title": "사과 바구니",
+      "title_en": "The Basket of Apples",
+      "year_label": "c. 1893",
+      "year_start": 1893,
+      "collection": "시카고 미술관",
+      "is_featured": false,
+      "description": "세잔이 1893년 무렵 그린 정물화로, 사물을 사실대로 그리지 않고 여러 시점이 한 화면에 보이도록 비틀어 그렸다. 이 방식은 야수파와 입체파에 영향을 주었다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "65 × 80 cm"
+    },
+    "the-large-bathers": {
+      "title": "대수욕도",
+      "title_en": "The Bathers",
+      "year_label": "1906년 첫 전시",
+      "year_start": null,
+      "collection": "필라델피아 미술관",
+      "is_featured": false,
+      "description": "세잔의 목욕하는 사람들 연작 가운데 가장 큰 그림으로, 1906년에 처음 전시되었다.",
+      "medium": "캔버스에 유채",
+      "dimensions": "210.5 × 250.8 cm"
+    },
+    "judith-beheading-holofernes": {
+      "description": "카라바조가 1599–1602년 무렵 그린 그림으로, 과부 유디트가 술에 취해 쓰러진 아시리아 장군 홀로페르네스의 목을 베는 성경 이야기를 그렸다."
+    },
+    "the-incredulity-of-saint-thomas": {
+      "description": "부활한 예수의 옆구리 상처에 손가락을 넣어 확인하는 성 토마스를 그린 그림으로, 1601–1602년 무렵 수집가 빈첸초 주스티니아니를 위해 그렸다."
+    },
+    "self-portrait-1659": {
+      "description": "렘브란트가 파산 직후인 1659년에 그린 자화상으로, 창작의 성공과 개인적·경제적 좌절이 겹친 삶의 긴장이 담긴 절제된 자기 묘사로 평가된다."
+    },
+    "cheongpunggye-gansong": {
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-Cheongpunggye.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Jeong_Seon-Cheongpunggye.jpg",
+      "image_license": "Public domain",
+      "title_en": "Cheongpunggye Valley",
+      "description": "정선이 1739년 64세 때 후원자 김창흡·김창집 등 장동 김씨 집안이 대대로 살던 인왕산 청풍계를 그린 진경산수화로, 그의 진경산수화풍이 완성된 모습을 보여준다."
+    },
+    "cheongpunggye-jigak": {
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/정선_필_청풍계지각.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:정선_필_청풍계지각.jpg",
+      "image_license": "CC BY-SA 4.0",
+      "year_label": "18세기",
+      "title_en": "Cheongpung Jigak Pavilion in Cheongpunggye Valley"
+    },
+    "pungak-naesan-chongramdo": {
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-PungakNaesanChongramDo.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Jeong_Seon-PungakNaesanChongramDo.jpg",
+      "image_license": "Public domain",
+      "year_label": "1745년 무렵 (화풍 추정)",
+      "year_start": 1745,
+      "title_en": "Panoramic View of Inner Geumgangsan Mountain in Autumn",
+      "description": "정선이 가을철 내금강의 전경을 적색·녹색·황색·백색으로 채색해 한 화면에 담은 진경산수화로, 정선의 금강전도 가운데 가을을 그린 유일한 작품이다."
+    },
+    "yuksangmyodo": {
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/육상묘도.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:육상묘도.jpg",
+      "image_license": "Public domain",
+      "title_en": "Painting of Yuksangmyo Shrine",
+      "description": "정선이 1739년 영조의 생모 숙빈 최씨의 신주를 모신 서울 궁정동의 육상묘와 그 뒤의 백악산을 그린 기록화로, 보물로 지정되어 있다."
+    },
+    "gunseondo": {
+      "title_en": "Folding Screen of Daoist Immortals",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Korea-National.Treasure-139-Gunseondobyeong-Joseon-Leeum.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Korea-National.Treasure-139-Gunseondobyeong-Joseon-Leeum.jpg",
+      "image_license": "Public domain",
+      "description": "김홍도가 31세 때인 1776년 서왕모의 생일잔치에 초대받아 물을 건너는 신선들을 그린 도석인물화로, 원래 8폭 연결 병풍이었으나 지금은 3개의 족자로 나뉘어 있다."
+    },
+    "maehaepahaengdo-ewha": {
+      "year_label": "18세기",
+      "dimensions": "71.5 × 37.4 cm",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/김홍도_필_매해파행도.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:김홍도_필_매해파행도.jpg",
+      "image_license": "CC BY-SA 4.0",
+      "title_en": "Women Peddlers of Salted Seafood",
+      "description": "김홍도가 바닷가 여인들의 생활을 그린 풍속화로, 붉은 해가 떠오르는 바다를 배경으로 젓갈 항아리와 광주리를 머리에 인 여인들을 그렸다. 매해파행은 젓갈 파는 할미라는 뜻이다."
+    },
+    "baekcheongyo": {
+      "title_en": "\"Baekcheongyo Bridge\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "36.1 × 37.6 cm",
+      "medium": "비단에 채색"
+    },
+    "bodeokgul": {
+      "title_en": "\"Bodeokgul Cave\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "36.3 × 35.9 cm",
+      "medium": "비단에 채색"
+    },
+    "buljeongdae": {
+      "title_en": "\"Buljeongdae Cliffs\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "37.2 × 34.3 cm",
+      "medium": "비단에 채색"
+    },
+    "byeotajak": {
+      "title_en": "\"Rice Threshing\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "chongseokjeong": {
+      "title_en": "\"Chongseokjeong Pavilion\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "37.8 × 37.3 cm",
+      "medium": "비단에 채색"
+    },
+    "daejanggan": {
+      "title_en": "\"A Blacksmith's Workshop\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "27.9 × 24.0 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "dambaesseolgi": {
+      "title_en": "\"Shredding Tobacco Leaves\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "danballyeong-manggeumgangsan": {
+      "title_en": "\"Geumgangsan Mountain Seen from Danballyeong Pass\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "36.1 × 37.6 cm",
+      "medium": "비단에 채색"
+    },
+    "geumgang-naesan-chongdo": {
+      "title_en": "\"Geumgangsan Mountain\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "35.9 × 37.0 cm",
+      "medium": "비단에 채색"
+    },
+    "geurimgamsang": {
+      "title_en": "\"Appreciating a Painting\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.1 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "gilssam": {
+      "title_en": "\"Weaving\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "giwaigi": {
+      "title_en": "\"Roof Tiling\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 24.0 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "gogijabi": {
+      "title_en": "\"Fishing\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.8 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "gonunori": {
+      "title_en": "\"A Gonu Game\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "gyujanggakdo": {
+      "title_en": "Painting of Gyujanggak Pavilion",
+      "dimensions": "143.2 × 115.5 cm",
+      "medium": "비단에 채색"
+    },
+    "haeinsa": {
+      "title_en": "Painting of Haeinsa Temple",
+      "dimensions": "23.6 × 67.6 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "haesanjeong": {
+      "title_en": "\"Haesanjeong Pavilion\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "26.8 × 37.3 cm",
+      "medium": "비단에 채색"
+    },
+    "hwalssogi": {
+      "title_en": "\"Shooting an Arrow\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.7 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "jangansa": {
+      "title_en": "\"Jangansa Temple\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "35.6 × 36.0 cm",
+      "medium": "비단에 채색"
+    },
+    "jangteogil": {
+      "title_en": "\"On the Way to a Market\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 49.4 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "jarijjagi": {
+      "title_en": "\"Weaving a Mat\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "jeomsim": {
+      "title_en": "\"Lunch Time\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "jeongmunipseoldo": {
+      "title_en": "Painting of Scholars Standing in Snow to Wait for Master Cheng",
+      "dimensions": "18.7 × 14.9 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "jeongyangsa-deoksu-1191": {
+      "title_en": "Painting of Jeongyangsa Temple",
+      "dimensions": "22.7 × 61.5 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "jeongyangsa-deoksu-2292": {
+      "title_en": "Painting of Jeongyangsa Temple (Fan Painting)",
+      "medium": "종이",
+      "year_label": "18세기",
+      "title": "정양사 (부채 그림)",
+      "image_url": "https://www.museum.go.kr/files/zin/curator_15_1.jpg",
+      "image_source_url": "https://www.museum.go.kr/MUSEUM/contents/M0501000000.do?relicRecommendId=16845&schM=view",
+      "image_license": "공공누리 제3유형 (출처표시+변경금지)"
+    },
+    "jumak": {
+      "title_en": "\"A Tavern\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "munamgwan-ilchul": {
+      "title_en": "\"Sunrise at Munam\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "35.9 × 37.6 cm",
+      "medium": "비단에 채색"
+    },
+    "nadeuri": {
+      "title_en": "\"Going out for a Picnic\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.1 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "naeyeonsan-samyongchu": {
+      "title_en": "Painting of Samyongchu Falls of Naeyeonsan Mountain",
+      "dimensions": "38.5 × 27.9 cm",
+      "medium": "비단"
+    },
+    "naksansa": {
+      "title_en": "Painting of Naksansa Temple",
+      "dimensions": "23.0 × 63.0 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "narutbae": {
+      "title_en": "\"Two Boats\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "nongari": {
+      "title_en": "\"Plowing a Rice Field\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "27.8 × 23.8 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "ongcheon": {
+      "title_en": "\"Ongcheon\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "26.6 × 37.4 cm",
+      "medium": "비단에 채색"
+    },
+    "pagyoseolhudo": {
+      "title_en": "Painting of a Man Crossing Pagyo Bridge in Snow",
+      "dimensions": "53.0 × 35.9 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "pigeumjeong": {
+      "title_en": "\"Pigeumjeong Pavilion\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "35.7 × 33.6 cm",
+      "medium": "비단에 채색"
+    },
+    "ppallaeteo": {
+      "title_en": "\"A Wash Place\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "pyeonjabakgi": {
+      "title_en": "\"Shoeing a Horse\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "saseonjeong": {
+      "title_en": "\"Saseonjeong Pavilion\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "36.0 × 37.0 cm",
+      "medium": "비단에 채색"
+    },
+    "seo-jik-su-portrait": {
+      "title_en": "Portrait of Seo Jik-su",
+      "dimensions": "148.8 × 72.4 cm",
+      "description": "1796년 62세의 서직수를 그린 전신입상으로, 이명기가 얼굴을, 김홍도가 몸체를 그린 합작이다. 동파관을 쓰고 두루마기 차림으로 서 있는 선비의 모습을 담았으며 보물로 지정되어 있다."
+    },
+    "seodang": {
+      "title_en": "\"A Village School\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "26.9 × 22.2 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "seojeongbowoldo": {
+      "title_en": "Painting of Moonlit Night on a Spring Day",
+      "dimensions": "21.0 × 27.7 cm",
+      "medium": "비단",
+      "year_label": "18세기"
+    },
+    "seoninyajeok": {
+      "title_en": "Painting of an Immortal Playing the Flute Late at Night",
+      "dimensions": "31.5 × 56.0 cm",
+      "medium": "종이"
+    },
+    "siju": {
+      "title_en": "\"Alms Gathering\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.0 × 24.0 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "sijungdae": {
+      "title_en": "\"Sijungdae\" from the Album of Paintings of Geumgangsan Mountain",
+      "dimensions": "36.5 × 26.4 cm",
+      "medium": "비단에 채색"
+    },
+    "sinhaenggil": {
+      "title_en": "\"On the Way to the Wedding\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.1 × 24.0 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "ssireum": {
+      "title_en": "\"Korean Traditional Wrestling\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "26.9 × 22.2 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "suseonggujido": {
+      "title_en": "Painting of the Presumed Site of the Buddhist Prayer Hall for Royal Ladies",
+      "dimensions": "52.9 × 87.2 cm",
+      "medium": "종이",
+      "year_label": "18세기"
+    },
+    "umulga": {
+      "title_en": "\"A Well\" from the Album of Genre Paintings by Kim Hong-do",
+      "dimensions": "28.1 × 23.9 cm",
+      "medium": "종이에 수묵담채",
+      "year_label": "18세기"
+    },
+    "segeomjeongdo": {
+      "medium": "종이",
+      "year_label": "18세기",
+      "dimensions": "23.0 × 62.4 cm",
+      "title_en": "Painting of Segeomjeong Pavilion"
+    },
+    "chuseongbudo": {
+      "medium": "종이",
+      "title_en": "Painting of the Ode on Autumn Sounds",
+      "description": "김홍도가 1805년 송나라 문인 구양수의 「추성부」를 소재로 그린 산수화로, 화면 왼쪽에 「추성부」 전문을 김홍도가 직접 써 넣었다. 보물로 지정되어 있다."
+    },
+    "yeosan-chodangdo": {
+      "year_label": "18세기",
+      "title_en": "Thatched Cottage on Mount Lu",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/정선_필_여산초당도.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:정선_필_여산초당도.jpg",
+      "image_license": "Public domain",
+      "description": "정선이 중국의 명산 여산에 초당을 짓고 은거한 인물의 고사를 그린 관념산수화로, 적묵법과 수직준 같은 진경산수화 기법을 관념산수에 응용했다."
+    },
+    "inwangjesaekdo": {
+      "medium": "종이에 수묵",
+      "dimensions": "79.2 × 138.2 cm",
+      "description": "정선이 76세 때인 1751년 비 온 뒤의 인왕산 경치를 그린 수묵 진경산수화로, 바위산을 화면 가득 배치하고 그 아래 안개와 수목을 그려 넣었다. 국보로 지정되어 있다."
+    },
+    "geumgang-jeondo": {
+      "dimensions": "130.8 × 94.5 cm"
+    },
+    "samgongbulhwando": {
+      "title_en": "Not Trading Rural Life for the Three High Offices",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/김홍도_필_삼공불환도.jpg",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:김홍도_필_삼공불환도.jpg",
+      "image_license": "공공누리 제1유형 (출처표시)",
+      "description": "김홍도가 1801년 순조의 병환이 나은 것을 기념해 그린 고사인물화로, 삼정승 벼슬과도 바꾸지 않을 전원생활을 노래한 후한 중장통의 「낙지론」을 그림으로 옮겼다."
+    }
+  }
+}

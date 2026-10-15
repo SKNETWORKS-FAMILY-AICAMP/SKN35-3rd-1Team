@@ -1,0 +1,203 @@
+erDiagram
+    users ||--o{ social_accounts : "user_id"
+    users ||--o| user_preferences : "user_id"
+    art_movements ||--o{ artists : "movement_id"
+    artists ||--o{ artworks : "artist_id"
+    art_movements ||--o{ artworks : "movement_id"
+    artworks ||--o| artwork_embeddings : "artwork_id"
+    artworks ||--o{ diary_entries : "artwork_id"
+    users ||--o{ diary_entries : "user_id"
+    users ||--o{ collections : "user_id"
+    artworks ||--o{ collection_items : "artwork_id"
+    collections ||--o{ collection_items : "collection_id"
+    artworks ||--o{ artwork_likes : "artwork_id"
+    users ||--o{ artwork_likes : "user_id"
+    artists ||--o{ artist_follows : "artist_id"
+    users ||--o{ artist_follows : "user_id"
+    artworks ||--o{ artwork_views : "artwork_id"
+    users ||--o{ artwork_views : "user_id"
+    artworks ||--o{ chat_sessions : "artwork_id"
+    users ||--o{ chat_sessions : "user_id"
+    chat_sessions ||--o{ chat_messages : "session_id"
+    artworks ||--o{ documents : "artwork_id"
+    artists ||--o{ document_artists : "artist_id"
+    documents ||--o{ document_artists : "document_id"
+    artworks ||--o{ document_artworks : "artwork_id"
+    documents ||--o{ document_artworks : "document_id"
+    documents ||--o{ document_basis_documents : "basis_document_id"
+    documents ||--o{ document_basis_documents : "document_id"
+    documents ||--o{ document_chunks : "document_id"
+
+    users {
+        bigint id PK
+        varchar firebase_uid UK
+        varchar email UK
+        varchar nickname
+        datetime created_at
+        datetime updated_at
+    }
+    social_accounts {
+        bigint id PK
+        bigint user_id FK
+        varchar provider
+        varchar provider_user_id
+        datetime created_at
+    }
+    user_preferences {
+        bigint user_id PK,FK
+        date birth_date
+        json explanation_priorities
+        varchar conversation_style
+        tinyint onboarding_completed
+        text taste_summary
+        varchar taste_fingerprint
+        datetime taste_generated_at
+        smallint birth_year
+        varchar gender
+        varchar tone
+        varchar explanation_level
+        datetime updated_at
+    }
+    art_movements {
+        bigint id PK
+        varchar slug UK
+        varchar name
+        varchar name_en
+        text description
+        datetime created_at
+    }
+    artists {
+        bigint id PK
+        varchar slug UK
+        varchar name
+        varchar name_en
+        bigint movement_id FK
+        smallint birth_year
+        smallint death_year
+        varchar nationality
+        text summary
+        varchar portrait_url
+        datetime created_at
+        datetime updated_at
+    }
+    artworks {
+        bigint id PK
+        varchar slug UK
+        bigint artist_id FK
+        bigint movement_id FK
+        varchar title
+        varchar title_en
+        varchar year_label
+        smallint year_start
+        varchar medium
+        varchar dimensions
+        varchar collection
+        text description
+        varchar image_url
+        varchar image_source_url
+        varchar image_license
+        tinyint is_featured
+        datetime created_at
+        datetime updated_at
+    }
+    artwork_embeddings {
+        bigint artwork_id PK,FK
+        vector embedding
+        varchar embedding_model
+        datetime updated_at
+    }
+    diary_entries {
+        bigint id PK
+        bigint user_id FK
+        date entry_date
+        bigint artwork_id FK
+        text content
+        tinyint is_public
+        datetime created_at
+        datetime updated_at
+    }
+    collections {
+        bigint id PK
+        bigint user_id FK
+        varchar name
+        text description
+        datetime created_at
+        datetime updated_at
+    }
+    collection_items {
+        bigint collection_id PK,FK
+        bigint artwork_id PK,FK
+        datetime created_at
+    }
+    artwork_likes {
+        bigint user_id PK,FK
+        bigint artwork_id PK,FK
+        datetime created_at
+    }
+    artist_follows {
+        bigint user_id PK,FK
+        bigint artist_id PK,FK
+        datetime created_at
+    }
+    artwork_views {
+        bigint user_id PK,FK
+        date viewed_on PK
+        bigint artwork_id PK,FK
+        int view_count
+        datetime first_viewed_at
+        datetime last_viewed_at
+    }
+    chat_sessions {
+        bigint id PK
+        bigint user_id FK
+        bigint artwork_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    chat_messages {
+        bigint id PK
+        bigint session_id FK
+        enum role
+        text content
+        tinyint refused
+        json sources
+        datetime created_at
+    }
+    documents {
+        bigint id PK
+        varchar doc_key UK
+        enum doc_type
+        bigint artwork_id FK
+        varchar title
+        mediumtext content
+        varchar source_url
+        varchar source_name
+        varchar license
+        varchar lang
+        varchar topic
+        tinyint needs_review
+        json basis_external_sources
+        datetime created_at
+        datetime updated_at
+    }
+    document_artists {
+        bigint document_id PK,FK
+        bigint artist_id PK,FK
+    }
+    document_artworks {
+        bigint document_id PK,FK
+        bigint artwork_id PK,FK
+    }
+    document_basis_documents {
+        bigint document_id PK,FK
+        bigint basis_document_id PK,FK
+    }
+    document_chunks {
+        bigint id PK
+        bigint document_id FK
+        int chunk_index
+        text content
+        vector embedding
+        varchar embedding_model
+        datetime created_at
+    }

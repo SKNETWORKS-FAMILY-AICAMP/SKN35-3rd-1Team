@@ -1,0 +1,312 @@
+{
+  "run_at": "2026-10-14T12:22:20.3448717+09:00",
+  "summary": {
+    "unique_sources": 33,
+    "url_present": 33,
+    "license_present": 33,
+    "reachable": 27,
+    "blocked_or_failed": 6,
+    "browser_followup_reachable": 4,
+    "combined_reachable": 31,
+    "manual_check_required": 2
+  },
+  "checks": [
+    {
+      "document_id": 362,
+      "title": "키아로스쿠로",
+      "url": "https://ko.wikipedia.org/wiki/%ED%82%A4%EC%95%84%EB%A1%9C%EC%8A%A4%EC%BF%A0%EB%A1%9C",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 364,
+      "title": "빈센트 반 고흐와 폴 고갱: 아를 공동생활과 표현 방식의 차이",
+      "url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    },
+    {
+      "document_id": 365,
+      "title": "테네브리즘",
+      "url": "https://ko.wikipedia.org/wiki/%ED%85%8C%EB%84%A4%EB%B8%8C%EB%A6%AC%EC%A6%98",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 384,
+      "title": "성 마태오를 부르심 해설",
+      "url": "https://ko.wikipedia.org/wiki/%EC%84%B1_%EB%A7%88%ED%83%9C%EC%98%A4%EB%A5%BC_%EB%B6%80%EB%A5%B4%EC%8B%AC",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 419,
+      "title": "인상, 해돋이 해설",
+      "url": "https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%83%81,_%ED%95%B4%EB%8F%8B%EC%9D%B4",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 435,
+      "title": "클로드 모네의 작품 세계와 기법",
+      "url": "https://www.metmuseum.org/toah/hd/cmon/ho_56.135.1.htm",
+      "license_present": true,
+      "status": 429,
+      "ok": false,
+      "error": null
+    },
+    {
+      "document_id": 447,
+      "title": "클로드 모네 연표: 1872–1874 『인상, 해돋이』와 첫 독립 전시",
+      "url": "https://ko.wikipedia.org/wiki/%ED%81%B4%EB%A1%9C%EB%93%9C_%EB%AA%A8%EB%84%A4",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 550,
+      "title": "폴 세잔의 영향",
+      "url": "https://www.metmuseum.org/essays/paul-cezanne-1839-1906",
+      "license_present": true,
+      "status": 429,
+      "ok": false,
+      "error": null
+    },
+    {
+      "document_id": 568,
+      "title": "사과 바구니가 있는 정물 해설 (영문 번역)",
+      "url": "https://en.wikipedia.org/wiki/The_Basket_of_Apples",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 597,
+      "title": "폴 고갱 《죽음의 영혼이 지켜본다》 해설",
+      "url": "https://buffaloakg.org/artworks/19651-mana%C3%B2-tupapa%C3%BA-spirit-dead-watching",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 609,
+      "title": "폴 고갱 《언제 결혼하니?》 해설",
+      "url": "https://www.phillipscollection.org/event/2015-12-09-painting-tahitis-women-paris",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 610,
+      "title": "폴 고갱 《우리는 어디서 왔는가? 우리는 무엇인가? 우리는 어디로 가는가?》 해설",
+      "url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "license_present": true,
+      "status": 202,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 626,
+      "title": "폴 고갱 연표: 1897–1898 삶의 세 질문을 대작에 담다",
+      "url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "license_present": true,
+      "status": 202,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 634,
+      "title": "렘브란트 판 레인의 생애 (영문 번역)",
+      "url": "https://en.wikipedia.org/wiki/Rembrandt",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 659,
+      "title": "야경 해설",
+      "url": "https://ko.wikipedia.org/wiki/%EC%95%BC%EA%B2%BD_%28%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8%29",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 660,
+      "title": "야경 해설 (영문 번역)",
+      "url": "https://en.wikipedia.org/wiki/The_Night_Watch",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 683,
+      "title": "빈센트 반 고흐 《꽃 피는 아몬드나무》 해설",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 684,
+      "title": "빈센트 반 고흐 《밤의 카페 테라스》 해설",
+      "url": "https://www.krollermuller.nl/en/collection/vincent-van-gogh-terrace-of-a-caf-at-night-place-du-forum-km-108-565",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 692,
+      "title": "빈센트 반 고흐 《귀에 붕대를 감은 자화상》 해설",
+      "url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-175",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 694,
+      "title": "빈센트 반 고흐 《해바라기》(1887) 해설",
+      "url": "https://www.metmuseum.org/art/collection/search/436524",
+      "license_present": true,
+      "status": 429,
+      "ok": false,
+      "error": null
+    },
+    {
+      "document_id": 696,
+      "title": "빈센트 반 고흐 《침실》 해설",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 703,
+      "title": "빈센트 반 고흐 《별이 빛나는 밤》 해설",
+      "url": "https://www.moma.org/collection/works/79802",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    },
+    {
+      "document_id": 707,
+      "title": "빈센트 반 고흐 《까마귀가 나는 밀밭》 해설",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 712,
+      "title": "빈센트 반 고흐 연표: 1886–1888 파리에서 색이 밝아지다",
+      "url": "https://www.vangoghmuseum.nl/en/art-and-stories/art/vincent-van-gogh",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 713,
+      "title": "빈센트 반 고흐 연표: 1888 아를의 노란 집과 해바라기",
+      "url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 718,
+      "title": "아를의 노란 집과 귀 사건",
+      "url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 719,
+      "title": "오베르에서의 마지막 두 달과 죽음",
+      "url": "https://www.vangoghmuseum.nl/en/visit/whats-on/exhibitions/overview-past-exhibitions/van-gogh-in-auvers-sur-oise",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 721,
+      "title": "생레미 요양원과 그림을 통한 회복",
+      "url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 30089,
+      "title": "발리 노이칠의 초상 해설",
+      "url": "https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 30092,
+      "title": "꽈리 열매가 있는 자화상 해설",
+      "url": "https://onlinecollection.leopoldmuseum.org/en/object/528-self-portrait-with-chinese-lantern-plant/",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 30109,
+      "title": "구스타프 클림트의 생애",
+      "url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 30132,
+      "title": "클림트의 금속 재료와 평면적 화법",
+      "url": "https://www.belvedere.at/en/stories/why-did-gustav-klimt-use-gold",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "document_id": 30133,
+      "title": "키스 해설",
+      "url": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    }
+  ]
+}

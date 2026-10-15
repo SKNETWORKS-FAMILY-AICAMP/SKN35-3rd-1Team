@@ -1,0 +1,224 @@
+{
+  "artist_slug": "paul-gauguin",
+  "collected_at": "2026-10-12",
+  "sources": [
+    {
+      "record": "artist_bio",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/sites/default/files/migrate_images/content/dam/ngaweb/education/learning-resources/teaching-packets/pdfs/picturing_france.pdf",
+      "usage": "사실 확인 및 생애 요약 작성, p.118",
+      "rights": "PDF 원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    },
+    {
+      "record": "ia-orana-maria",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/438821",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "tahitian-landscape",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436451",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "the-siesta",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436449",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "three-tahitian-women",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/438000",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "still-life-with-teapot-and-fruit",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/437999",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "two-tahitian-women",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436446",
+      "usage": "소장품 메타데이터, 작품 사실과 비판적 맥락 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "where-do-we-come-from",
+      "source_name": "Museum of Fine Arts, Boston",
+      "source_url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "usage": "작품 메타데이터, 작가가 설명한 읽기 방향과 해석 범위 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "vision-after-the-sermon",
+      "source_name": "National Galleries of Scotland",
+      "source_url": "https://www.nationalgalleries.org/art-and-artists/4940",
+      "usage": "작품 메타데이터와 현실·환상 구성, 종합주의 해설 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-yellow-christ",
+      "source_name": "Buffalo AKG Art Museum",
+      "source_url": "https://buffaloakg.org/artworks/19464-le-christ-jaune-yellow-christ",
+      "usage": "작품 메타데이터, 목조 십자가 출처와 색의 의미 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "spirit-of-the-dead-watching",
+      "source_name": "Buffalo AKG Art Museum",
+      "source_url": "https://buffaloakg.org/artworks/19651-mana%C3%B2-tupapa%C3%BA-spirit-dead-watching",
+      "usage": "작품 메타데이터, 고갱이 설명한 투파파우와 인광, 모델 및 식민주의적 권력관계 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "nevermore",
+      "source_name": "The Courtauld Gallery",
+      "source_url": "https://gallerycollections.courtauld.ac.uk/object-p-1932-sc-163",
+      "usage": "작품 메타데이터, 까마귀와 배경 인물이 만드는 불안 및 현대의 비판적 해설 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "when-will-you-marry",
+      "source_name": "The Phillips Collection / Art Institute of Chicago",
+      "source_url": "https://www.phillipscollection.org/event/2015-12-09-painting-tahitis-women-paris",
+      "usage": "작품의 제작·전시 맥락과 타히티 여성 재현의 식민주의적 맥락 확인; 메타데이터는 Art Institute of Chicago 학술 카탈로그로 교차 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "arearea",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/arearea-291",
+      "usage": "작품 메타데이터, 전경의 관찰 모티프와 배경의 가상 의례, 전시 이력 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "gauguin-bio-stockbroker-artist",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "usage": "증권 중개 경력, 금융 위기와 전업 과정 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-family-separation",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/exhibitions/past/the-credit-suisse-exhibition-gauguin-portraits/gauguin-s-journey",
+      "usage": "결혼, 코펜하겐 이주와 가족 별거 과정 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-pont-aven-brittany",
+      "source_name": "National Galleries of Scotland",
+      "source_url": "https://www.nationalgalleries.org/art-and-artists/4940",
+      "usage": "퐁타벤 시기와 종합주의 발전 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-two-tahiti-stays",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/femmes-de-tahiti-290",
+      "usage": "첫 타히티 체류의 동기와 작품 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "gauguin-bio-marquesas-final-years",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/artists/paul-gauguin",
+      "usage": "두 번째 타히티 체류, 마르키즈 이주와 사망 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "self-portrait-with-halo-and-snake",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/46625-self-portrait",
+      "usage": "작품 메타데이터와 후광·뱀·사과의 복합 자기 이미지 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "self-portrait-les-miserables",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품 메타데이터와 고흐·베르나르 사이 초상 교환 맥락 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "vincent-van-gogh-painting-sunflowers",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품 메타데이터와 아를 공동생활·상상해 구성한 제작 장면 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "la-belle-angele",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/la-belle-angele-286",
+      "usage": "작품 메타데이터, 모델·원형 구도·페루계 도자기 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "fatata-te-miti",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/46624-fatata-te-miti-sea",
+      "usage": "작품 메타데이터와 두 인물·해변의 화면 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "mahana-no-atua",
+      "source_name": "Art Institute of Chicago",
+      "source_url": "https://publications.artic.edu/gauguin/reader/gauguinart/section/140370",
+      "usage": "작품 메타데이터, 프랑스 제작과 혼합된 신화·색면 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-seed-of-the-areoi",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/collection/works/83387",
+      "usage": "작품 메타데이터와 인물·망고·배경 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "a-farm-in-brittany",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436448",
+      "usage": "작품 메타데이터와 브르타뉴 풍경 구성 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "words-of-the-devil",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/53130-parau-na-te-varua-ino-words-devil",
+      "usage": "작품 메타데이터와 여성·뒤 인물·도마뱀의 모호한 서사 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "tehamana-has-many-parents",
+      "source_name": "Art Institute of Chicago",
+      "source_url": "https://publications.artic.edu/gauguin/reader/gauguinart/section/140288",
+      "usage": "작품 메타데이터, 모델·복장·배경 기호와 식민주의 맥락 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-bathers-gauguin",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/39758-bathers",
+      "usage": "작품 메타데이터와 물가 인물군의 화면 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "breton-girls-dancing-pont-aven",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artworks/61369-breton-girls-dancing-pont-aven",
+      "usage": "작품 메타데이터와 브르타뉴 복장·춤·평면적 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    }
+  ],
+  "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
+}

@@ -1,0 +1,195 @@
+{
+  "run_at": "2026-10-14T10:40:13.6692739+09:00",
+  "summary": {
+    "document_keys": 23,
+    "license_present": 23,
+    "reachable": 19,
+    "unreachable": 4
+  },
+  "checks": [
+    {
+      "doc_key": "_comparisons/chiaroscuro",
+      "url": "https://ko.wikipedia.org/wiki/%ED%82%A4%EC%95%84%EB%A1%9C%EC%8A%A4%EC%BF%A0%EB%A1%9C",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "_comparisons/chiaroscuro.en",
+      "url": "https://en.wikipedia.org/wiki/Chiaroscuro",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "_comparisons/comparison-van-gogh-and-gauguin-arles",
+      "url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    },
+    {
+      "doc_key": "_comparisons/tenebrism",
+      "url": "https://ko.wikipedia.org/wiki/%ED%85%8C%EB%84%A4%EB%B8%8C%EB%A6%AC%EC%A6%98",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "_comparisons/tenebrism.en",
+      "url": "https://en.wikipedia.org/wiki/Tenebrism",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "caravaggio/the-calling-of-saint-matthew",
+      "url": "https://ko.wikipedia.org/wiki/%EC%84%B1_%EB%A7%88%ED%83%9C%EC%98%A4%EB%A5%BC_%EB%B6%80%EB%A5%B4%EC%8B%AC",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "claude-monet/impression-sunrise",
+      "url": "https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%83%81,_%ED%95%B4%EB%8F%8B%EC%9D%B4",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "egon-schiele/portrait-of-wally",
+      "url": "https://onlinecollection.leopoldmuseum.org/en/object/527-portrait-of-wally-neuzil/",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "gustav-klimt/the-kiss",
+      "url": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    },
+    {
+      "doc_key": "paul-cezanne/apples-oranges",
+      "url": "https://en.wikipedia.org/wiki/Still_Life_with_Apples_and_Oranges",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "paul-cezanne/the-basket-of-apples",
+      "url": "https://en.wikipedia.org/wiki/The_Basket_of_Apples",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "paul-gauguin/commentary-spirit-of-the-dead-watching",
+      "url": "https://buffaloakg.org/artworks/19651-mana%C3%B2-tupapa%C3%BA-spirit-dead-watching",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "paul-gauguin/commentary-when-will-you-marry",
+      "url": "https://www.phillipscollection.org/event/2015-12-09-painting-tahitis-women-paris",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "paul-gauguin/commentary-where-do-we-come-from",
+      "url": "https://collections.mfa.org/objects/32558/where-do-we-come-from-what-are-we-where-are-we-going",
+      "license_present": true,
+      "status": 202,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "rembrandt/the-night-watch",
+      "url": "https://ko.wikipedia.org/wiki/%EC%95%BC%EA%B2%BD_%28%EB%A0%98%EB%B8%8C%EB%9E%80%ED%8A%B8%29",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "rembrandt/the-night-watch.en",
+      "url": "https://en.wikipedia.org/wiki/The_Night_Watch",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-almond-blossom",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-cafe-terrace-at-night",
+      "url": "https://www.krollermuller.nl/en/collection/vincent-van-gogh-terrace-of-a-caf-at-night-place-du-forum-km-108-565",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-self-portrait-with-bandaged-ear",
+      "url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-175",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-sunflowers-1887",
+      "url": "https://www.metmuseum.org/art/collection/search/436524",
+      "license_present": true,
+      "status": 429,
+      "ok": false,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-the-bedroom",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-the-starry-night",
+      "url": "https://www.moma.org/collection/works/79802",
+      "license_present": true,
+      "status": 403,
+      "ok": false,
+      "error": null
+    },
+    {
+      "doc_key": "vincent-van-gogh/commentary-wheatfield-with-crows",
+      "url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962",
+      "license_present": true,
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

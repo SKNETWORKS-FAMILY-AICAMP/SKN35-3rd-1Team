@@ -1,0 +1,1194 @@
+{
+  "upper-austrian-farmhouse.md": {
+    "doc_type": "artwork_commentary",
+    "title": "상오스트리아의 농가 해설",
+    "artist_slugs": null,
+    "artwork_slug": "upper-austrian-farmhouse",
+    "source_url": "https://sammlung.belvedere.at/objects/380/oberosterreichisches-bauernhaus",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "upper-austrian-farmhouse",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "상오스트리아의 농가",
+      "title_en": "Upper Austrian Farmhouse",
+      "year_label": "1911",
+      "year_start": 1911,
+      "medium": "Oil on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg",
+    "image_license": "Public domain"
+  },
+  "allegory-of-sacred-music.md": {
+    "doc_type": "artwork_commentary",
+    "title": "종교 음악의 알레고리 해설",
+    "artist_slugs": null,
+    "artwork_slug": "allegory-of-sacred-music",
+    "source_url": "https://sammlung.belvedere.at/objects/471/allegorie-der-kirchlichen-musik-entwurf",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "allegory-of-sacred-music",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "종교 음악의 알레고리",
+      "title_en": "Allegory of Sacred Music (Female Organ Player)",
+      "year_label": "1884",
+      "year_start": 1884,
+      "medium": "Oil on canvas",
+      "dimensions": "38,5 × 50 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Orgelspielerin.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/4742/mannlicher-akt"
+    ],
+    "related_artwork_slugs": [
+      "male-nude-klimt"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Orgelspielerin.jpg",
+    "image_license": "Public domain"
+  },
+  "portrait-of-fritza-riedler.md": {
+    "doc_type": "artwork_commentary",
+    "title": "프리차 리들러의 초상 해설",
+    "artist_slugs": null,
+    "artwork_slug": "portrait-of-fritza-riedler",
+    "source_url": "https://sammlung.belvedere.at/objects/2177/fritza-riedler",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "portrait-of-fritza-riedler",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "프리차 리들러의 초상",
+      "title_en": "Fritza Riedler",
+      "year_label": "1906",
+      "year_start": 1906,
+      "medium": "Oil on canvas",
+      "dimensions": "153 × 133 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": "https://www.wikidata.org/wiki/Q28001663",
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_052.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_052.jpg",
+    "image_license": "Public domain"
+  },
+  "cottage-garden-with-sunflowers.md": {
+    "doc_type": "artwork_commentary",
+    "title": "해바라기가 있는 시골 정원 해설",
+    "artist_slugs": null,
+    "artwork_slug": "cottage-garden-with-sunflowers",
+    "source_url": "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "cottage-garden-with-sunflowers",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "해바라기가 있는 시골 정원",
+      "title_en": "Cottage Garden with Sunflowers",
+      "year_label": "1906",
+      "year_start": 1906,
+      "medium": "Oil on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/21865/sonnenblume"
+    ],
+    "related_artwork_slugs": [
+      "sunflower-klimt"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg",
+    "image_license": "Public domain"
+  },
+  "lady-in-white-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "흰옷을 입은 여인 해설",
+    "artist_slugs": null,
+    "artwork_slug": "lady-in-white-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/3080/dame-in-wei",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "lady-in-white-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "흰옷을 입은 여인",
+      "title_en": "Woman in White",
+      "year_label": "1917/1918",
+      "year_start": 1917,
+      "medium": "Oil on canvas (unfinished)",
+      "dimensions": "70 x 70 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-amalie-zuckerkandl"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
+  },
+  "schloss-kammer-at-attersee-iii.md": {
+    "doc_type": "artwork_commentary",
+    "title": "아터제의 카머 성 III 해설",
+    "artist_slugs": null,
+    "artwork_slug": "schloss-kammer-at-attersee-iii",
+    "source_url": "https://sammlung.belvedere.at/objects/3112/schloss-kammer-am-attersee-iii",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "schloss-kammer-at-attersee-iii",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "아터제의 카머 성 III",
+      "title_en": "Schloss Kammer on Lake Attersee III",
+      "year_label": "c. 1911/1912",
+      "year_start": 1911,
+      "medium": "Oil on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_065.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/8691/allee-zum-schloss-kammer"
+    ],
+    "related_artwork_slugs": [
+      "avenue-to-schloss-kammer"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_065.jpg",
+    "image_license": "Public domain"
+  },
+  "adam-and-eve-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "아담과 이브 해설",
+    "artist_slugs": null,
+    "artwork_slug": "adam-and-eve-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/3196/adam-und-eva",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "adam-and-eve-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "아담과 이브",
+      "title_en": "Adam and Eve",
+      "year_label": "1916 - 1918",
+      "year_start": 1916,
+      "medium": "Oil on canvas (unfinished)",
+      "dimensions": "173 × 60 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_001.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-amalie-zuckerkandl"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_001.jpg",
+    "image_license": "Public domain"
+  },
+  "portrait-of-sonja-knips.md": {
+    "doc_type": "artwork_commentary",
+    "title": "소냐 크닙스의 초상 해설",
+    "artist_slugs": null,
+    "artwork_slug": "portrait-of-sonja-knips",
+    "source_url": "https://sammlung.belvedere.at/objects/3197/sonja-knips",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "portrait-of-sonja-knips",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "소냐 크닙스의 초상",
+      "title_en": "Sonja Knips",
+      "year_label": "1897/1898",
+      "year_start": 1897,
+      "medium": "Oil on canvas",
+      "dimensions": "141,5 × 141,5 × 3 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Bildnis_Sonja_Knips.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2177/fritza-riedler"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-fritza-riedler"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bildnis_Sonja_Knips.jpeg",
+    "image_license": "Public domain"
+  },
+  "judith-i.md": {
+    "doc_type": "artwork_commentary",
+    "title": "유디트 I 해설",
+    "artist_slugs": null,
+    "artwork_slug": "judith-i",
+    "source_url": "https://sammlung.belvedere.at/objects/3492/judith",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Judith_1_(cropped).jpg",
+    "image_license": "Public domain",
+    "needs_review": true,
+    "artwork": {
+      "slug": "judith-i",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "유디트 I",
+      "title_en": "Judith",
+      "year_label": "1901",
+      "year_start": 1901,
+      "medium": "Oil and gold leaf on canvas",
+      "dimensions": "84 × 42 cm",
+      "collection": "벨베데레 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Judith_1_(cropped).jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q2324643",
+      "is_featured": true
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar"
+    ],
+    "related_artwork_slugs": [
+      "the-kiss"
+    ]
+  },
+  "water-serpents-i.md": {
+    "doc_type": "artwork_commentary",
+    "title": "물뱀 I 해설",
+    "artist_slugs": null,
+    "artwork_slug": "water-serpents-i",
+    "source_url": "https://sammlung.belvedere.at/objects/3828/freundinnen-wasserschlangen-i",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "water-serpents-i",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "물뱀 I",
+      "title_en": "Girlfriends (Water Serpents I)",
+      "year_label": "1904 (minor amendments in 1907)",
+      "year_start": 1904,
+      "medium": "Watercolour, gouache, pencil, gold, silver, platinum and brass on parchment",
+      "dimensions": "50 × 20 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": "https://www.wikidata.org/wiki/Q2551417",
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg",
+    "image_license": "Public domain"
+  },
+  "flowering-poppies.md": {
+    "doc_type": "artwork_commentary",
+    "title": "꽃핀 양귀비 해설",
+    "artist_slugs": null,
+    "artwork_slug": "flowering-poppies",
+    "source_url": "https://sammlung.belvedere.at/objects/3917/bluhender-mohn",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "flowering-poppies",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "꽃핀 양귀비",
+      "title_en": "Flowering Poppies",
+      "year_label": "1907",
+      "year_start": 1907,
+      "medium": "Oil on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_043.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_043.jpg",
+    "image_license": "Public domain"
+  },
+  "dusk-lady-at-fireplace.md": {
+    "doc_type": "artwork_commentary",
+    "title": "황혼: 벽난로 옆의 여인 해설",
+    "artist_slugs": null,
+    "artwork_slug": "dusk-lady-at-fireplace",
+    "source_url": "https://sammlung.belvedere.at/objects/4185/dammerung-dame-am-kamin",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "dusk-lady-at-fireplace",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "황혼: 벽난로 옆의 여인",
+      "title_en": "Dusk (Lady at the Fireplace)",
+      "year_label": "1897/1898",
+      "year_start": 1897,
+      "medium": "Oil on canvas",
+      "dimensions": "41 × 66 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Dame_am_Kamin_-_5434_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Dame_am_Kamin_-_5434_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
+  },
+  "portrait-of-johanna-staude.md": {
+    "doc_type": "artwork_commentary",
+    "title": "요한나 슈타우데의 초상 해설",
+    "artist_slugs": null,
+    "artwork_slug": "portrait-of-johanna-staude",
+    "source_url": "https://sammlung.belvedere.at/objects/4302/johanna-staude",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "portrait-of-johanna-staude",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "요한나 슈타우데의 초상",
+      "title_en": "Johanna Staude",
+      "year_label": "1917/1918",
+      "year_start": 1917,
+      "medium": "Oil on canvas",
+      "dimensions": "70 × 50 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": "https://www.wikidata.org/wiki/Q111906665",
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2177/fritza-riedler"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-fritza-riedler"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
+  },
+  "beethoven-frieze.md": {
+    "doc_type": "artwork_commentary",
+    "title": "베토벤 프리즈 해설",
+    "artist_slugs": null,
+    "artwork_slug": "beethoven-frieze",
+    "source_url": "https://sammlung.belvedere.at/objects/4737/beethovenfries",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "beethoven-frieze",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "베토벤 프리즈",
+      "title_en": "Beethoven Frieze",
+      "year_label": "1901-1902",
+      "year_start": 1901,
+      "medium": "Kaseinfarben, Stuckauflagen, Zeichenstift, Applikationen aus verschiedenen Materialien (Glas, Perlmutt etc.), Goldauflagen auf Mörtel",
+      "dimensions": "215 x 3414 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": "https://www.wikidata.org/wiki/Q684689",
+      "is_featured": true,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/471/allegorie-der-kirchlichen-musik-entwurf"
+    ],
+    "related_artwork_slugs": [
+      "allegory-of-sacred-music"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg",
+    "image_license": "Public domain"
+  },
+  "male-nude-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "남성 누드 습작 해설",
+    "artist_slugs": null,
+    "artwork_slug": "male-nude-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/4742/mannlicher-akt",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "male-nude-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "남성 누드 습작",
+      "title_en": "Male Nude",
+      "year_label": "1883",
+      "year_start": 1883,
+      "medium": "Oil on canvas",
+      "dimensions": "68 × 54,8 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/4737/beethovenfries"
+    ],
+    "related_artwork_slugs": [
+      "beethoven-frieze"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
+  },
+  "josef-lewinsky-as-carlos.md": {
+    "doc_type": "artwork_commentary",
+    "title": "카를로스를 연기하는 요제프 레빈스키 해설",
+    "artist_slugs": null,
+    "artwork_slug": "josef-lewinsky-as-carlos",
+    "source_url": "https://sammlung.belvedere.at/objects/6234/josef-lewinsky-als-carlos-in-clavigo",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "josef-lewinsky-as-carlos",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "카를로스를 연기하는 요제프 레빈스키",
+      "title_en": "Josef Lewinsky as Carlos in Clavigo",
+      "year_label": "1895",
+      "year_start": 1895,
+      "medium": "Oil on canvas",
+      "dimensions": "60 × 44 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3197/sonja-knips"
+    ],
+    "related_artwork_slugs": [
+      "portrait-of-sonja-knips"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg",
+    "image_license": "Public domain"
+  },
+  "the-kiss.md": {
+    "doc_type": "artwork_commentary",
+    "title": "키스 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-kiss",
+    "source_url": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+    "image_license": "Public domain",
+    "needs_review": true,
+    "artwork": {
+      "slug": "the-kiss",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "키스",
+      "title_en": "The Kiss (Lovers)",
+      "year_label": "c. 1907–1909",
+      "year_start": 1907,
+      "medium": "Figures: gold leaf, silver leaf, platinum leaf, resin oil colors on primed canvas (zinc paint). – Background: Composition gold (brass), glazed, flakes of metal leaf",
+      "dimensions": "180 × 180 cm",
+      "collection": "벨베데레 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q698487",
+      "is_featured": true
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ]
+  },
+  "portrait-of-amalie-zuckerkandl.md": {
+    "doc_type": "artwork_commentary",
+    "title": "아말리에 추커칸들의 초상 해설",
+    "artist_slugs": null,
+    "artwork_slug": "portrait-of-amalie-zuckerkandl",
+    "source_url": "https://sammlung.belvedere.at/objects/7488/amalie-zuckerkandl",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "portrait-of-amalie-zuckerkandl",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "아말리에 추커칸들의 초상",
+      "title_en": "Amalie Zuckerkandl",
+      "year_label": "1913/14 (possibly also still in 1917) (unfinished)",
+      "year_start": 1913,
+      "medium": "Oil on canvas",
+      "dimensions": "128 × 128 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_070.JPG"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3080/dame-in-wei"
+    ],
+    "related_artwork_slugs": [
+      "lady-in-white-klimt"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_070.JPG",
+    "image_license": "Public domain"
+  },
+  "avenue-to-schloss-kammer.md": {
+    "doc_type": "artwork_commentary",
+    "title": "카머 성으로 가는 길 해설",
+    "artist_slugs": null,
+    "artwork_slug": "avenue-to-schloss-kammer",
+    "source_url": "https://sammlung.belvedere.at/objects/8691/allee-zum-schloss-kammer",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "avenue-to-schloss-kammer",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "카머 성으로 가는 길",
+      "title_en": "Avenue to Schloss Kammer",
+      "year_label": "1912",
+      "year_start": 1912,
+      "medium": "Oil on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Allee_vor_Schloss_Kammer.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3112/schloss-kammer-am-attersee-iii"
+    ],
+    "related_artwork_slugs": [
+      "schloss-kammer-at-attersee-iii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Allee_vor_Schloss_Kammer.jpeg",
+    "image_license": "Public domain"
+  },
+  "old-man-on-deathbed.md": {
+    "doc_type": "artwork_commentary",
+    "title": "임종한 노인 해설",
+    "artist_slugs": null,
+    "artwork_slug": "old-man-on-deathbed",
+    "source_url": "https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "old-man-on-deathbed",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "임종한 노인",
+      "title_en": "Old Man on his Death-Bed",
+      "year_label": "1900",
+      "year_start": 1900,
+      "medium": "Oil on millboard",
+      "dimensions": "30,4 × 44,8 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/629-death-and-life/"
+    ],
+    "related_artwork_slugs": [
+      "death-and-life"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg",
+    "image_license": "Public domain"
+  },
+  "red-sketchbook-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "붉은 스케치북 해설",
+    "artist_slugs": null,
+    "artwork_slug": "red-sketchbook-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/9997/rotes-skizzenbuch",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "artwork": {
+      "slug": "red-sketchbook-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "붉은 스케치북",
+      "title_en": "Red Sketchbook",
+      "year_label": "1898",
+      "year_start": 1898,
+      "medium": "Booklet bound in red leather, drawings and notes in pencil and a black and white photo",
+      "dimensions": "Skizzenbuch: 14,3 × 9,2 × 1,4 cm",
+      "collection": "벨베데레 미술관",
+      "image_source_url": null,
+      "wikidata": null,
+      "is_featured": false
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3492/judith"
+    ],
+    "related_artwork_slugs": [
+      "judith-i"
+    ]
+  },
+  "sunflower-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "해바라기 해설",
+    "artist_slugs": null,
+    "artwork_slug": "sunflower-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/21865/sonnenblume",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "sunflower-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "해바라기",
+      "title_en": "Sunflower",
+      "year_label": "1907-1908",
+      "year_start": 1907,
+      "medium": "Oil and gold leaf on canvas",
+      "dimensions": "110 × 110 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Sunflower_-_Gustav_Klimt.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/2483/bauerngarten-mit-sonnenblumen"
+    ],
+    "related_artwork_slugs": [
+      "cottage-garden-with-sunflowers"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower_-_Gustav_Klimt.jpg",
+    "image_license": "Public domain"
+  },
+  "mother-with-two-children-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "두 아이와 어머니 해설",
+    "artist_slugs": null,
+    "artwork_slug": "mother-with-two-children-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/27315/mutter-mit-zwei-kindern-familie",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "mother-with-two-children-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "두 아이와 어머니",
+      "title_en": "Mother with Two Children (Family)",
+      "year_label": "1909/1910",
+      "year_start": 1909,
+      "medium": "Oil on canvas",
+      "dimensions": "90 x 90 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/531-mother-with-two-children-ii/"
+    ],
+    "related_artwork_slugs": [
+      "mother-with-two-children-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+    "image_license": "Public domain"
+  },
+  "after-the-rain-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "비가 온 뒤 해설",
+    "artist_slugs": null,
+    "artwork_slug": "after-the-rain-klimt",
+    "source_url": "https://sammlung.belvedere.at/objects/6087/nach-dem-regen",
+    "source_name": "벨베데레 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "after-the-rain-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "비가 온 뒤",
+      "title_en": "After the Rain",
+      "year_label": "1898",
+      "year_start": 1898,
+      "medium": "Oil on canvas",
+      "dimensions": "80 × 40 cm",
+      "collection": "벨베데레 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_033.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/"
+    ],
+    "related_artwork_slugs": [
+      "orchard-in-the-evening"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_033.jpg",
+    "image_license": "Public domain"
+  },
+  "death-and-life.md": {
+    "doc_type": "artwork_commentary",
+    "title": "죽음과 삶 해설",
+    "artist_slugs": null,
+    "artwork_slug": "death-and-life",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/629-death-and-life/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg",
+    "image_license": "Public domain",
+    "needs_review": true,
+    "artwork": {
+      "slug": "death-and-life",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "죽음과 삶",
+      "title_en": "Death and Life",
+      "year_label": "1910/11, reworked in 1912/13 and 1915/16",
+      "year_start": 1910,
+      "medium": "Oil on canvas",
+      "dimensions": "180.8×200.6 cm",
+      "collection": "레오폴트 미술관",
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg",
+      "wikidata": "https://www.wikidata.org/wiki/Q17001535",
+      "is_featured": true
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/9957/alter-mann-auf-dem-totenbett"
+    ],
+    "related_artwork_slugs": [
+      "old-man-on-deathbed"
+    ]
+  },
+  "a-morning-by-the-pond.md": {
+    "doc_type": "artwork_commentary",
+    "title": "연못가의 아침 해설",
+    "artist_slugs": null,
+    "artwork_slug": "a-morning-by-the-pond",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/2148-a-morning-by-the-pond/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "a-morning-by-the-pond",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "연못가의 아침",
+      "title_en": "A Morning by the Pond",
+      "year_label": "1899",
+      "year_start": 1899,
+      "medium": "Oil on canvas",
+      "dimensions": "75.2×75.2×2.2 cm",
+      "collection": "레오폴트 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/"
+    ],
+    "related_artwork_slugs": [
+      "on-lake-attersee"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg",
+    "image_license": "Public domain"
+  },
+  "the-large-poplar-ii.md": {
+    "doc_type": "artwork_commentary",
+    "title": "큰 포플러 II: 몰려오는 폭풍 해설",
+    "artist_slugs": null,
+    "artwork_slug": "the-large-poplar-ii",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/2149-the-large-poplar-ii-gathering-storm/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "the-large-poplar-ii",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "큰 포플러 II: 몰려오는 폭풍",
+      "title_en": "The Large Poplar II (Gathering Storm)",
+      "year_label": "1902/03",
+      "year_start": 1902,
+      "medium": "Oil on canvas",
+      "dimensions": "100.8×100.8 cm",
+      "collection": "레오폴트 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_022.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/"
+    ],
+    "related_artwork_slugs": [
+      "on-lake-attersee"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_022.jpg",
+    "image_license": "Public domain"
+  },
+  "on-lake-attersee.md": {
+    "doc_type": "artwork_commentary",
+    "title": "아터제 호수 위에서 해설",
+    "artist_slugs": null,
+    "artwork_slug": "on-lake-attersee",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/4328-on-lake-attersee/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "on-lake-attersee",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "아터제 호수 위에서",
+      "title_en": "On Lake Attersee",
+      "year_label": "1900",
+      "year_start": 1900,
+      "medium": "Oil on canvas",
+      "dimensions": "80.2×80.2×2.1 cm",
+      "collection": "레오폴트 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://onlinecollection.leopoldmuseum.org/en/object/2149-the-large-poplar-ii-gathering-storm/"
+    ],
+    "related_artwork_slugs": [
+      "the-large-poplar-ii"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg",
+    "image_license": "Public domain"
+  },
+  "forest-floor-klimt.md": {
+    "doc_type": "artwork_commentary",
+    "title": "숲의 바닥 해설",
+    "artist_slugs": null,
+    "artwork_slug": "forest-floor-klimt",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/31087-forest-floor/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "forest-floor-klimt",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "숲의 바닥",
+      "title_en": "Forest Floor",
+      "year_label": "1881/82",
+      "year_start": 1881,
+      "medium": "Oil on canvas",
+      "dimensions": "10×8 cm",
+      "collection": "레오폴트 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Klimt_-_Waldboden%2C_1881-82%2C_Natter_2012_10.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/3917/bluhender-mohn"
+    ],
+    "related_artwork_slugs": [
+      "flowering-poppies"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Waldboden%2C_1881-82%2C_Natter_2012_10.jpg",
+    "image_license": "Public domain"
+  },
+  "orchard-in-the-evening.md": {
+    "doc_type": "artwork_commentary",
+    "title": "저녁의 과수원 해설",
+    "artist_slugs": null,
+    "artwork_slug": "orchard-in-the-evening",
+    "source_url": "https://onlinecollection.leopoldmuseum.org/en/object/33818-orchard-in-the-evening/",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 해설. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "needs_review": true,
+    "artwork": {
+      "slug": "orchard-in-the-evening",
+      "artist_slug": "gustav-klimt",
+      "movement_slug": "vienna-secession",
+      "title": "저녁의 과수원",
+      "title_en": "Orchard in the Evening",
+      "year_label": "1898",
+      "year_start": 1898,
+      "medium": "Oil on canvas",
+      "dimensions": "69×55.6 cm",
+      "collection": "레오폴트 미술관",
+      "wikidata": null,
+      "is_featured": false,
+      "image_source_url": "https://commons.wikimedia.org/wiki/File:Orchard_in_the_Evening_Klimt.jpg"
+    },
+    "display_full_description": true,
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/",
+    "related_source_urls": [
+      "https://sammlung.belvedere.at/objects/6087/nach-dem-regen"
+    ],
+    "related_artwork_slugs": [
+      "after-the-rain-klimt"
+    ],
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Orchard_in_the_Evening_Klimt.jpg",
+    "image_license": "Public domain"
+  },
+  "bio.md": {
+    "doc_type": "artist_bio",
+    "title": "구스타프 클림트의 생애",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+    "source_name": "레오폴트 미술관",
+    "license": "팀이 직접 작성한 한국어 소개. 박물관 원문·이미지 복제 및 재배포 권한을 뜻하지 않음; 앱 게시 전 팀의 사실·권리 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "생애 전체",
+    "artist": {
+      "slug": "gustav-klimt",
+      "name": "구스타프 클림트",
+      "name_en": "Gustav Klimt",
+      "movement_slug": "vienna-secession",
+      "birth_year": 1862,
+      "death_year": 1918,
+      "nationality": "오스트리아",
+      "wikidata": "https://www.wikidata.org/wiki/Q34661"
+    },
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "technique.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트의 금속 재료와 평면적 화법",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.belvedere.at/en/stories/why-did-gustav-klimt-use-gold",
+    "source_name": "벨베데레 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "기법",
+    "usage_terms_url": "https://www.belvedere.at/en/legal-notice"
+  },
+  "landscape.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트의 아터제 풍경과 자연관",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "작품 세계",
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  },
+  "context.md": {
+    "doc_type": "artist_bio",
+    "title": "클림트와 빈 분리파의 시대적 의미",
+    "artist_slugs": [
+      "gustav-klimt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://www.leopoldmuseum.org/en/collection/gustav-klimt",
+    "source_name": "레오폴트 미술관",
+    "license": "팀 직접 작성 설명. 기관 원문·이미지의 복제 또는 재배포 허가를 뜻하지 않음; 게시 전 팀 검수 필요.",
+    "collected_at": "2026-10-13",
+    "lang": "ko",
+    "image_url": null,
+    "image_license": null,
+    "needs_review": true,
+    "topic": "영향",
+    "usage_terms_url": "https://onlinecollection.leopoldmuseum.org/en/legal-notice/"
+  }
+}

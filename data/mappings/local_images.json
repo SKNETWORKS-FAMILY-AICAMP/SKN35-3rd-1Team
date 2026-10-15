@@ -1,0 +1,255 @@
+{
+  "_note": "scripts/build_local_images.py 가 만든다. 원천 이미지 주소(source)가 그대로일 때만 전처리가 프론트 정적 사본(thumb)으로 바꾼다.",
+  "long_side": 1280,
+  "generated": "2026-10-14",
+  "artworks": {
+    "baekcheongyo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-008-0001.jpg",
+      "thumb": "/images/artworks/baekcheongyo.jpg"
+    },
+    "bodeokgul": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-012-0001.jpg",
+      "thumb": "/images/artworks/bodeokgul.jpg"
+    },
+    "buljeongdae": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-002-0001.jpg",
+      "thumb": "/images/artworks/buljeongdae.jpg"
+    },
+    "byeotajak": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-14-01.jpg",
+      "thumb": "/images/artworks/byeotajak.jpg"
+    },
+    "chongseokjeong": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-009-0001.jpg",
+      "thumb": "/images/artworks/chongseokjeong.jpg"
+    },
+    "chuseongbudo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/lkh000/2023/0106134730833/lkh000016-000-80000.jpg",
+      "thumb": "/images/artworks/chuseongbudo.jpg"
+    },
+    "daejanggan": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-04-01.jpg",
+      "thumb": "/images/artworks/daejanggan.jpg"
+    },
+    "dambaesseolgi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-12-01.jpg",
+      "thumb": "/images/artworks/dambaesseolgi.jpg"
+    },
+    "danballyeong-manggeumgangsan": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-013-0001.jpg",
+      "thumb": "/images/artworks/danballyeong-manggeumgangsan.jpg"
+    },
+    "geumgang-naesan-chongdo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-011-0001.jpg",
+      "thumb": "/images/artworks/geumgang-naesan-chongdo.jpg"
+    },
+    "geurimgamsang": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-15-01.jpg",
+      "thumb": "/images/artworks/geurimgamsang.jpg"
+    },
+    "gilssam": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-16-01.jpg",
+      "thumb": "/images/artworks/gilssam.jpg"
+    },
+    "giwaigi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161551255/bon006504-03-01.jpg",
+      "thumb": "/images/artworks/giwaigi.jpg"
+    },
+    "gogijabi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-18-01.jpg",
+      "thumb": "/images/artworks/gogijabi.jpg"
+    },
+    "gonunori": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-09-01.jpg",
+      "thumb": "/images/artworks/gonunori.jpg"
+    },
+    "gyujanggakdo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/kun000/2019/0926164316378/kun000228-000-80000.jpg",
+      "thumb": "/images/artworks/gyujanggakdo.jpg"
+    },
+    "haeinsa": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk02/duk02370-37.jpg",
+      "thumb": "/images/artworks/haeinsa.jpg"
+    },
+    "haesanjeong": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-007-0001.jpg",
+      "thumb": "/images/artworks/haesanjeong.jpg"
+    },
+    "hwalssogi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161519678/bon006504-02-01.jpg",
+      "thumb": "/images/artworks/hwalssogi.jpg"
+    },
+    "ia-orana-maria": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1025.jpg",
+      "thumb": "/images/artworks/ia-orana-maria.jpg"
+    },
+    "inwangjesaekdo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/lkh000/2023/0106142242505/lkh000001-000-80001.jpg",
+      "thumb": "/images/artworks/inwangjesaekdo.jpg"
+    },
+    "irises-1890": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DP346474.jpg",
+      "thumb": "/images/artworks/irises-1890.jpg"
+    },
+    "jangansa": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-005-0001.jpg",
+      "thumb": "/images/artworks/jangansa.jpg"
+    },
+    "jangteogil": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-21-01.jpg",
+      "thumb": "/images/artworks/jangteogil.jpg"
+    },
+    "jarijjagi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-13-01.jpg",
+      "thumb": "/images/artworks/jarijjagi.jpg"
+    },
+    "jeomsim": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-20-01.jpg",
+      "thumb": "/images/artworks/jeomsim.jpg"
+    },
+    "jeongmunipseoldo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don003/2017/0510144810123/don003310-00-00.jpg",
+      "thumb": "/images/artworks/jeongmunipseoldo.jpg"
+    },
+    "jeongyangsa-deoksu-1191": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk001/2017/0511100021142/duk001191-01-00.jpg",
+      "thumb": "/images/artworks/jeongyangsa-deoksu-1191.jpg"
+    },
+    "jumak": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-08-01.jpg",
+      "thumb": "/images/artworks/jumak.jpg"
+    },
+    "la-berceuse": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DP-19279-001.jpg",
+      "thumb": "/images/artworks/la-berceuse.jpg"
+    },
+    "munamgwan-ilchul": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-004-0001.jpg",
+      "thumb": "/images/artworks/munamgwan-ilchul.jpg"
+    },
+    "nadeuri": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-05-01.jpg",
+      "thumb": "/images/artworks/nadeuri.jpg"
+    },
+    "naeyeonsan-samyongchu": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don000/2020/0114150601192/don002271-000-80000.jpg",
+      "thumb": "/images/artworks/naeyeonsan-samyongchu.jpg"
+    },
+    "naksansa": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk002/2017/0511143434163/duk002370-36-00.jpg",
+      "thumb": "/images/artworks/naksansa.jpg"
+    },
+    "narutbae": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-07-01.jpg",
+      "thumb": "/images/artworks/narutbae.jpg"
+    },
+    "nongari": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161228096/bon006504-01-01.jpg",
+      "thumb": "/images/artworks/nongari.jpg"
+    },
+    "oleanders": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1494.jpg",
+      "thumb": "/images/artworks/oleanders.jpg"
+    },
+    "ongcheon": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2018/0327153245154/duk000903-01-0001.jpg",
+      "thumb": "/images/artworks/ongcheon.jpg"
+    },
+    "pagyoseolhudo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don003/2017/0510144810123/don003314-00-00.jpg",
+      "thumb": "/images/artworks/pagyoseolhudo.jpg"
+    },
+    "pigeumjeong": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-010-0001.jpg",
+      "thumb": "/images/artworks/pigeumjeong.jpg"
+    },
+    "ppallaeteo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-10-01.jpg",
+      "thumb": "/images/artworks/ppallaeteo.jpg"
+    },
+    "pyeonjabakgi": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-17-01.jpg",
+      "thumb": "/images/artworks/pyeonjabakgi.jpg"
+    },
+    "saseonjeong": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-003-0001.jpg",
+      "thumb": "/images/artworks/saseonjeong.jpg"
+    },
+    "segeomjeongdo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk001/2017/0511100021142/duk001191-02-00.jpg",
+      "thumb": "/images/artworks/segeomjeongdo.jpg"
+    },
+    "self-portrait-with-a-straw-hat": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1502_cropped2.jpg",
+      "thumb": "/images/artworks/self-portrait-with-a-straw-hat.jpg"
+    },
+    "seo-jik-su-portrait": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk005/2017/0512090608004/duk005688-00-01.jpg",
+      "thumb": "/images/artworks/seo-jik-su-portrait.jpg"
+    },
+    "seodang": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-23-01.jpg",
+      "thumb": "/images/artworks/seodang.jpg"
+    },
+    "seojeongbowoldo": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don000/2020/0114150554827/don002269-000-80000.jpg",
+      "thumb": "/images/artworks/seojeongbowoldo.jpg"
+    },
+    "seoninyajeok": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don003/2017/0510144810123/don003317-00-00.jpg",
+      "thumb": "/images/artworks/seoninyajeok.jpg"
+    },
+    "siju": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-06-01.jpg",
+      "thumb": "/images/artworks/siju.jpg"
+    },
+    "sijungdae": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/duk000/2016/1123173124470/duk000903-006-0001.jpg",
+      "thumb": "/images/artworks/sijungdae.jpg"
+    },
+    "sinhaenggil": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-19-01.jpg",
+      "thumb": "/images/artworks/sinhaenggil.jpg"
+    },
+    "ssireum": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-22-01.jpg",
+      "thumb": "/images/artworks/ssireum.jpg"
+    },
+    "still-life-with-teapot-and-fruit": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1027.jpg",
+      "thumb": "/images/artworks/still-life-with-teapot-and-fruit.jpg"
+    },
+    "sunflowers-1887": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DP-41223-001.jpg",
+      "thumb": "/images/artworks/sunflowers-1887.jpg"
+    },
+    "suseonggujido": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/don000/2019/0925160215496/don003311-000-90000.jpg",
+      "thumb": "/images/artworks/suseonggujido.jpg"
+    },
+    "tahitian-landscape": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-043.jpg",
+      "thumb": "/images/artworks/tahitian-landscape.jpg"
+    },
+    "the-siesta": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1952.jpg",
+      "thumb": "/images/artworks/the-siesta.jpg"
+    },
+    "three-tahitian-women": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1954.jpg",
+      "thumb": "/images/artworks/three-tahitian-women.jpg"
+    },
+    "two-tahitian-women": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DT1342.jpg",
+      "thumb": "/images/artworks/two-tahitian-women.jpg"
+    },
+    "umulga": {
+      "source": "https://www.museum.go.kr/relic_image/PS01001001/bon006/2016/1213161649247/bon006504-11-01.jpg",
+      "thumb": "/images/artworks/umulga.jpg"
+    },
+    "wheat-field-with-cypresses": {
+      "source": "https://images.metmuseum.org/CRDImages/ep/original/DP-42549-001.jpg",
+      "thumb": "/images/artworks/wheat-field-with-cypresses.jpg"
+    }
+  }
+}

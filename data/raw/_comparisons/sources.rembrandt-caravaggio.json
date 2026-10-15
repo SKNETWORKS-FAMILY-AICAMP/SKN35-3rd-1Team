@@ -1,0 +1,86 @@
+{
+  "tenebrism.md": {
+    "doc_type": "artist_comparison",
+    "title": "테네브리즘",
+    "artist_slugs": [
+      "caravaggio",
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%85%8C%EB%84%A4%EB%B8%8C%EB%A6%AC%EC%A6%98",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+    "image_license": "Public domain (성 마태오를 부르심, 1599–1600)",
+    "needs_review": false,
+    "topic": "기법"
+  },
+  "tenebrism.en.md": {
+    "doc_type": "artist_comparison",
+    "title": "테네브리즘 (영문)",
+    "artist_slugs": [
+      "caravaggio",
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Tenebrism",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+    "image_license": "Public domain (성 마태오를 부르심, 1599–1600)",
+    "needs_review": false,
+    "topic": "기법",
+    "translation": {
+      "file": "tenebrism.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "25f3ac8aaa5e81d0484c85c528a234ed93bed584de2ca287266cda692e72775c"
+    }
+  },
+  "chiaroscuro.md": {
+    "doc_type": "artist_comparison",
+    "title": "키아로스쿠로",
+    "artist_slugs": [
+      "caravaggio",
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://ko.wikipedia.org/wiki/%ED%82%A4%EC%95%84%EB%A1%9C%EC%8A%A4%EC%BF%A0%EB%A1%9C",
+    "source_name": "위키백과",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "ko",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+    "image_license": "Public domain (야경, 1642)",
+    "needs_review": false,
+    "topic": "기법"
+  },
+  "chiaroscuro.en.md": {
+    "doc_type": "artist_comparison",
+    "title": "키아로스쿠로 (영문)",
+    "artist_slugs": [
+      "caravaggio",
+      "rembrandt"
+    ],
+    "artwork_slug": null,
+    "source_url": "https://en.wikipedia.org/wiki/Chiaroscuro",
+    "source_name": "Wikipedia (영문)",
+    "license": "CC BY-SA 4.0",
+    "collected_at": "2026-10-11",
+    "lang": "en",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+    "image_license": "Public domain (야경, 1642)",
+    "needs_review": false,
+    "topic": "기법",
+    "translation": {
+      "file": "chiaroscuro.en.ko.md",
+      "model": "gpt-5.4-mini",
+      "translated_on": "2026-10-11",
+      "source_sha256": "71d0d817ea48090634c1599158ecd162212f56ca413f5e35c269d7de27900feb"
+    }
+  }
+}

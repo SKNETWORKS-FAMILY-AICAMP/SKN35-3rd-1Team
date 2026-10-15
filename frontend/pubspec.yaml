@@ -1,0 +1,39 @@
+name: artlog_web
+description: 작품을 발견하고 감상을 기록하는 Docentalk Flutter 웹.
+publish_to: none
+version: 1.0.0+1
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  go_router: ^16.3.0
+  http: ^1.5.0
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.2
+  cupertino_icons: ^1.0.8
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/branding/
+    - assets/catalog.json
+    - assets/fonts/
+    - public/artworks/
+  fonts:
+    - family: ChironSungHK
+      fonts:
+        - asset: assets/fonts/ChironSungHK-Web.ttf
+        - asset: assets/fonts/ChironSungHK-Web.ttf
+          weight: 500
+        - asset: assets/fonts/ChironSungHK-Web.ttf
+          weight: 600
+        - asset: assets/fonts/ChironSungHK-Web.ttf
+          weight: 700

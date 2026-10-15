@@ -1,0 +1,22 @@
+{
+  "supported": {
+    "answer": "고흐는 《별이 빛나는 밤》을 1889년에 그렸습니다.",
+    "refused": false,
+    "sources": [
+      {
+        "document_id": 1,
+        "title": "빈센트 반 고흐 《별이 빛나는 밤》 해설",
+        "doc_type": "artwork_commentary",
+        "source_name": "Museum of Modern Art",
+        "source_url": "https://www.moma.org/collection/works/79802",
+        "license": null,
+        "basis_sources": []
+      }
+    ]
+  },
+  "refused": {
+    "answer": "현재 선택한 작품과 제공된 자료만으로는 답할 수 없습니다.",
+    "refused": true,
+    "sources": []
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "description": "3차 평가 보강 6문항. 동일 질문의 easy/standard/deep 차이와 실제 인접 청크 경계 검색을 검증한다.",
+  "cases": [
+    {
+      "id": "style-easy-001",
+      "category": "style",
+      "artwork_slug": "the-night-watch",
+      "question": "야경은 왜 평범한 단체 초상화와 다르게 느껴져?",
+      "history": [],
+      "explanation_style": "easy",
+      "expected": {
+        "refused": false,
+        "required_keywords": ["빛", "움직"],
+        "target_doc_keys": ["rembrandt/the-night-watch", "rembrandt/the-night-watch.en"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["전문용어를 최소화하거나 바로 풀어서 설명한다", "짧고 쉬운 문장으로 핵심을 설명한다"]
+      }
+    },
+    {
+      "id": "style-standard-001",
+      "category": "style",
+      "artwork_slug": "the-night-watch",
+      "question": "야경은 왜 평범한 단체 초상화와 다르게 느껴져?",
+      "history": [],
+      "explanation_style": "standard",
+      "expected": {
+        "refused": false,
+        "required_keywords": ["빛", "움직"],
+        "target_doc_keys": ["rembrandt/the-night-watch", "rembrandt/the-night-watch.en"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["핵심 답과 필요한 미술 용어를 균형 있게 설명한다", "easy보다 구체적이고 deep보다 과도하게 전문적이지 않다"]
+      }
+    },
+    {
+      "id": "style-deep-001",
+      "category": "style",
+      "artwork_slug": "the-night-watch",
+      "question": "야경은 왜 평범한 단체 초상화와 다르게 느껴져?",
+      "history": [],
+      "explanation_style": "deep",
+      "expected": {
+        "refused": false,
+        "required_keywords": ["빛", "움직"],
+        "target_doc_keys": ["rembrandt/the-night-watch", "rembrandt/the-night-watch.en"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["구도·명암·인물 배치 등 근거가 있는 형식 요소를 세밀하게 설명한다", "전문용어를 정확히 사용하고 뜻을 짧게 풀어 준다"]
+      }
+    },
+    {
+      "id": "boundary-001",
+      "category": "chunk_boundary",
+      "artwork_slug": "impression-sunrise",
+      "question": "세부 묘사가 정밀하지 않은데도 하늘과 물이 섞인 안개 분위기는 어떻게 만들어졌어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": ["경계", "색"],
+        "target_doc_keys": ["claude-monet/impression-sunrise"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["정밀하지 않은 묘사와 층을 이룬 색조를 설명한다", "하늘과 물의 흐린 경계 및 청회색·주황색 효과를 연결한다"]
+      }
+    },
+    {
+      "id": "boundary-002",
+      "category": "chunk_boundary",
+      "artwork_slug": "the-night-watch",
+      "question": "이 그림이 민병대 단체 초상을 극적인 장면으로 바꾼 방식과 앞에 선 두 지휘관을 함께 설명해줘.",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": ["빛", "프란스 바닝 코크", "빌럼 판 루이텐뷔르흐"],
+        "target_doc_keys": ["rembrandt/the-night-watch.en"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["빛과 그림자로 단체 초상에 움직임과 극적 효과를 준 점을 설명한다", "두 지휘관의 이름과 화면상 특징을 근거 안에서 구별한다"]
+      }
+    },
+    {
+      "id": "boundary-003",
+      "category": "chunk_boundary",
+      "artwork_slug": "the-night-watch",
+      "question": "렘브란트의 명암 사용은 1620년대 초기 촛불 작품과 성숙기 작품에서 어떻게 달라졌어?",
+      "history": [],
+      "expected": {
+        "refused": false,
+        "required_keywords": ["촛불", "명암", "성숙"],
+        "target_doc_keys": ["_comparisons/chiaroscuro", "_comparisons/chiaroscuro.en"],
+        "source_required": true,
+        "forbidden_claims": [],
+        "pass_conditions": ["초기 작품의 단일 촛불 광원 사용을 설명한다", "성숙기에는 날카로운 명암 대비 의존이 줄었다고 비교한다"]
+      }
+    }
+  ]
+}

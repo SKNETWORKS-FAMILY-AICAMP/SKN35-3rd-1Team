@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "cases": [
+    {"id": "like-001", "feature": "like", "scenario": "같은 작품에 PUT을 두 번 호출", "expected": "성공 응답은 같고 DB에는 한 행만 남는다"},
+    {"id": "like-002", "feature": "like", "scenario": "좋아요하지 않은 작품에 DELETE를 두 번 호출", "expected": "두 호출 모두 안전하며 최종 상태는 좋아요 아님이다"},
+    {"id": "like-003", "feature": "like", "scenario": "두 사용자의 좋아요 목록 조회", "expected": "각 사용자는 자신의 좋아요만 최신순으로 본다"},
+    {"id": "follow-001", "feature": "follow", "scenario": "같은 작가에 PUT을 두 번 호출", "expected": "성공 응답은 같고 DB에는 한 행만 남는다"},
+    {"id": "follow-002", "feature": "follow", "scenario": "팔로우하지 않은 작가에 DELETE를 두 번 호출", "expected": "두 호출 모두 안전하며 최종 상태는 팔로우 아님이다"},
+    {"id": "view-001", "feature": "view", "scenario": "같은 날 같은 작품을 세 번 열람", "expected": "행은 하나이고 view_count는 3이며 last_viewed_at만 갱신된다"},
+    {"id": "view-002", "feature": "view", "scenario": "같은 날 서로 다른 작품 두 개를 열람", "expected": "calendar의 artwork_count는 2이고 total_views는 전체 열람 횟수다"},
+    {"id": "view-003", "feature": "view", "scenario": "UTC 날짜는 전날이지만 한국 시간은 다음 날인 시각에 열람", "expected": "viewed_on은 Asia/Seoul 기준 날짜다"},
+    {"id": "view-004", "feature": "view", "scenario": "월의 마지막 날과 다음 달 첫날에 각각 열람", "expected": "각 기록은 해당 월 조회에만 포함된다"},
+    {"id": "view-005", "feature": "view", "scenario": "하루 상세 목록 조회", "expected": "작품별 view_count를 포함하고 last_viewed_at 내림차순이다"},
+    {"id": "auth-001", "feature": "authorization", "scenario": "다른 사용자 ID를 URL이나 본문으로 위조", "expected": "사용자 ID는 토큰에서만 가져오며 타인의 활동은 노출되지 않는다"}
+  ]
+}

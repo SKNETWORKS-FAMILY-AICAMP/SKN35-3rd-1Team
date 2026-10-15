@@ -1,0 +1,224 @@
+{
+  "artist_slug": "vincent-van-gogh",
+  "collected_at": "2026-10-12",
+  "sources": [
+    {
+      "record": "artist_bio",
+      "source_name": "National Gallery of Art",
+      "source_url": "https://www.nga.gov/artists/1349-vincent-van-gogh",
+      "usage": "사실 확인 및 생애 요약 작성",
+      "rights": "웹페이지 원문과 이미지는 복제하지 않음; 기관 정책 확인 필요"
+    },
+    {
+      "record": "sunflowers-1887",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436524",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "self-portrait-with-a-straw-hat",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436532",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "oleanders",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436530",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "la-berceuse",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/437984",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "wheat-field-with-cypresses",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436535",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "irises-1890",
+      "source_name": "The Metropolitan Museum of Art",
+      "source_url": "https://www.metmuseum.org/art/collection/search/436528",
+      "usage": "소장품 메타데이터 및 작품 사실 확인",
+      "rights": "The Met Open Access CC0는 OA 표시 이미지와 공개 소장품 기본 데이터에만 적용된다. 페이지 해설문은 CC0로 간주하지 않고 복제하지 않았으며 사실 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0 및 이미지 권리는 서로 별도이다."
+    },
+    {
+      "record": "self-portrait-with-bandaged-ear",
+      "source_name": "The Courtauld Gallery",
+      "source_url": "https://gallerycollections.courtauld.ac.uk/object-p-1948-sc-175",
+      "usage": "작품 메타데이터, 귀 사건 뒤 제작 맥락과 화면 요소 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-starry-night",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/collection/works/79802",
+      "usage": "작품 메타데이터와 관찰·상상 요소 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "sunflowers-arles",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+      "usage": "작품 메타데이터, 연작의 제작 목적과 화면 해설 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-potato-eaters",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0005V1962",
+      "usage": "작품 메타데이터와 네덜란드 시기 제작 맥락 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-bedroom",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0047V1962",
+      "usage": "작품 메타데이터, 아를 침실의 구성, 색채와 휴식이라는 제작 의도 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "cafe-terrace-at-night",
+      "source_name": "Kröller-Müller Museum",
+      "source_url": "https://www.krollermuller.nl/en/collection/vincent-van-gogh-terrace-of-a-caf-at-night-place-du-forum-km-108-565",
+      "usage": "작품 메타데이터, 야간 현장 제작, 가스등과 밤하늘의 색 대비 및 별자리 연구 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "almond-blossom",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0176V1962",
+      "usage": "작품 메타데이터, 조카의 탄생을 위한 제작 목적과 일본 판화 영향 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "wheatfield-with-crows",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0149V1962",
+      "usage": "작품 메타데이터, 오베르 밀밭 연작과 마지막 작품 통설의 한계 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "van-gogh-bio-theo-letters",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-goghs-letters",
+      "usage": "테오와의 편지·경제 지원·작품 전달 관계 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-arles-ear",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "usage": "노란 집, 고갱과의 공동생활, 귀 사건 및 병원 기록 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-saint-remy",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/vincents-life-1853-1890/south-of-france",
+      "usage": "생레미 입원과 작업 지속 사실 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-auvers-death",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/visit/whats-on/exhibitions/overview-past-exhibitions/van-gogh-in-auvers-sur-oise",
+      "usage": "오베르 체류 기간, 제작 활동과 죽음의 맥락 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "van-gogh-bio-early-netherlands",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/art-and-stories/stories/all-stories/van-gogh-keeps-the-faith",
+      "usage": "화가의 길을 택한 과정과 초기 네덜란드 시기 확인",
+      "rights": "사실과 메타데이터만 참고해 새 한국어 문장으로 작성; 웹페이지 원문은 복제하지 않음. 작품 이미지는 별도 Wikimedia Commons 파일 페이지의 권리표시를 따름"
+    },
+    {
+      "record": "the-yellow-house",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0032V1962",
+      "usage": "작품 메타데이터, 노란 집의 위치와 남부 작업실 구상 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-night-cafe",
+      "source_name": "Yale University Art Gallery",
+      "source_url": "https://artgallery.yale.edu/collections/objects/12507",
+      "usage": "작품 메타데이터, 카페 내부 구성과 색채 맥락 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-sower-1888",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품명·연도와 씨 뿌리는 사람 연작의 제작 맥락 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "self-portrait-with-grey-felt-hat",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0016V1962?v=1",
+      "usage": "작품 메타데이터, 보색과 짧은 붓질 및 안료 퇴색 연구 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-langlois-bridge",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection?Type=painting",
+      "usage": "작품명·연도와 아를 도개교 연작 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-red-vineyard",
+      "source_name": "Pushkin State Museum of Fine Arts",
+      "source_url": "https://pushkinmuseum.art/museum/buildings/gallery/21244_map_gallery_24_eng.pdf",
+      "usage": "소장처·작품명·연도와 전시 위치 확인; 판매 기록은 공개 작품 기록으로 교차 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "gaugins-chair",
+      "source_name": "Van Gogh Museum",
+      "source_url": "https://www.vangoghmuseum.nl/en/collection/s0048V1962?v=1",
+      "usage": "작품 메타데이터와 책·촛불·야간 색채, 짝 작품 관계 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "van-goghs-chair",
+      "source_name": "The National Gallery, London",
+      "source_url": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-van-gogh-s-chair",
+      "usage": "작품 메타데이터와 파이프·양파 상자·짝 작품의 대비 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "olive-trees-1889",
+      "source_name": "The Museum of Modern Art",
+      "source_url": "https://www.moma.org/artists/2206-vincent-van-gogh",
+      "usage": "작품명·연도·소장처와 생레미 올리브나무 연작 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "the-church-at-auvers",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/leglise-dauvers-sur-oise-vue-du-chevet-755",
+      "usage": "작품 메타데이터와 오베르 시기 화면 구성 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    },
+    {
+      "record": "portrait-of-dr-gachet",
+      "source_name": "Musée d'Orsay",
+      "source_url": "https://www.musee-orsay.fr/en/artworks/le-docteur-paul-gachet-751",
+      "usage": "작품 메타데이터, 두 번째 유화 버전과 자세·디기탈리스 도상 확인",
+      "rights": "기관 페이지의 설명문은 복제·번역하지 않고 사실·메타데이터 확인에만 참고했다. 새 한국어 해설문의 CC BY 4.0은 기관 원문이나 이미지에 적용되지 않으며, 이미지 조건은 dataset.json의 image_source_url·image_license를 따른다."
+    }
+  ],
+  "open_access_policy": "https://www.metmuseum.org/policies/image-resources"
+}

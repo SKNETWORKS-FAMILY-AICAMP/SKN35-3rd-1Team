@@ -1,0 +1,889 @@
+{
+  "_note": "scripts/build_image_thumbnails.py 가 만든다. 원천 이미지 주소(source)가 그대로일 때만 전처리가 Commons API 썸네일(thumb)로 바꾼다.",
+  "width": 1280,
+  "generated": "2026-10-14",
+  "artworks": {
+    "a-farm-in-brittany": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/A_Farm_in_Brittany_%28ca._1894%29_by_Paul_Gauguin._Original_from_The_MET_Museum._Digitally_enhanced_by_rawpixel._%2850622982028%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/A_Farm_in_Brittany_%28ca._1894%29_by_Paul_Gauguin._Original_from_The_MET_Museum._Digitally_enhanced_by_rawpixel._%2850622982028%29.jpg/1280px-A_Farm_in_Brittany_%28ca._1894%29_by_Paul_Gauguin._Original_from_The_MET_Museum._Digitally_enhanced_by_rawpixel._%2850622982028%29.jpg"
+    },
+    "a-modern-olympia": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Cezanne%2C_A_Modern_Olympia%2C_c._1873-1874.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Paul_Cezanne%2C_A_Modern_Olympia%2C_c._1873-1874.jpg/1280px-Paul_Cezanne%2C_A_Modern_Olympia%2C_c._1873-1874.jpg"
+    },
+    "a-morning-by-the-pond": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg/1280px-Gustav_Klimt_-_Tranquil_Pond_%28Egelsee_near_Golling%2C_Salzburg%29_-_Google_Art_Project.jpg"
+    },
+    "a-woman-bathing-in-a-stream": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_060.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Rembrandt_Harmensz._van_Rijn_060.jpg/1280px-Rembrandt_Harmensz._van_Rijn_060.jpg"
+    },
+    "adam-and-eve-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_001.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Gustav_Klimt_001.jpg/500px-Gustav_Klimt_001.jpg"
+    },
+    "after-the-rain-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_033.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Gustav_Klimt_033.jpg/960px-Gustav_Klimt_033.jpg"
+    },
+    "allegory-of-sacred-music": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Orgelspielerin.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Klimt_-_Orgelspielerin.jpg/1280px-Klimt_-_Orgelspielerin.jpg"
+    },
+    "almond-blossom": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Amandelbloesem_-_s0176V1962_-_Van_Gogh_Museum.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Amandelbloesem_-_s0176V1962_-_Van_Gogh_Museum.jpg/1280px-Amandelbloesem_-_s0176V1962_-_Van_Gogh_Museum.jpg"
+    },
+    "amor-vincit-omnia": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Cupid_as_Victor_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Caravaggio_-_Cupid_as_Victor_-_Google_Art_Project.jpg/1280px-Caravaggio_-_Cupid_as_Victor_-_Google_Art_Project.jpg"
+    },
+    "apples-oranges": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Nature_morte_aux_pommes_et_aux_oranges%2C_par_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Nature_morte_aux_pommes_et_aux_oranges%2C_par_Paul_C%C3%A9zanne.jpg/1280px-Nature_morte_aux_pommes_et_aux_oranges%2C_par_Paul_C%C3%A9zanne.jpg"
+    },
+    "arearea": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Arearea%2C_by_Paul_Gauguin.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Arearea%2C_by_Paul_Gauguin.jpg/1280px-Arearea%2C_by_Paul_Gauguin.jpg"
+    },
+    "aristotle-with-a-bust-of-homer": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_Aristotle_with_a_Bust_of_Homer_-_WGA19232.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Rembrandt_-_Aristotle_with_a_Bust_of_Homer_-_WGA19232.jpg/1280px-Rembrandt_-_Aristotle_with_a_Bust_of_Homer_-_WGA19232.jpg"
+    },
+    "autumn-tree-in-stirred-air": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Autumn_Tree_in_Stirred_Air_%28Winter_Tree%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Egon_Schiele_-_Autumn_Tree_in_Stirred_Air_%28Winter_Tree%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Autumn_Tree_in_Stirred_Air_%28Winter_Tree%29_-_Google_Art_Project.jpg"
+    },
+    "avenue-to-schloss-kammer": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Allee_vor_Schloss_Kammer.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Klimt_-_Allee_vor_Schloss_Kammer.jpeg/1280px-Klimt_-_Allee_vor_Schloss_Kammer.jpeg"
+    },
+    "bacchus": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Baco%2C_por_Caravaggio.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Baco%2C_por_Caravaggio.jpg/1280px-Baco%2C_por_Caravaggio.jpg"
+    },
+    "basket-of-fruit": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Natura_morta_con_frutta_%28collezione_dell%E2%80%99Ambrosiana%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Caravaggio_-_Natura_morta_con_frutta_%28collezione_dell%E2%80%99Ambrosiana%29.jpg/1280px-Caravaggio_-_Natura_morta_con_frutta_%28collezione_dell%E2%80%99Ambrosiana%29.jpg"
+    },
+    "bathsheba-at-her-bath": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Bethsab%C3%A9e_au_bain_tenant_la_lettre_du_roi_David_-_Rembrandt_-_Mus%C3%A9e_du_Louvre_Peintures_MI_957.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Bethsab%C3%A9e_au_bain_tenant_la_lettre_du_roi_David_-_Rembrandt_-_Mus%C3%A9e_du_Louvre_Peintures_MI_957.jpg/1280px-Bethsab%C3%A9e_au_bain_tenant_la_lettre_du_roi_David_-_Rembrandt_-_Mus%C3%A9e_du_Louvre_Peintures_MI_957.jpg"
+    },
+    "beethoven-frieze": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg/1280px-Gustav-Klimt-The-Beethoven-Frieze-The-Hostile-Powers.-Far-Wall.jpg"
+    },
+    "belshazzars-feast": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt-Belsazar.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Rembrandt-Belsazar.jpg/1280px-Rembrandt-Belsazar.jpg"
+    },
+    "blind-mother-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Die_blinde_Mutter.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Egon_Schiele_-_Die_blinde_Mutter.jpg/1280px-Egon_Schiele_-_Die_blinde_Mutter.jpg"
+    },
+    "boulevard-des-capucines": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Boulevard_des_Capucines_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Claude_Monet_-_Boulevard_des_Capucines_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Boulevard_des_Capucines_-_Google_Art_Project.jpg"
+    },
+    "boy-bitten-by-a-lizard": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Boy_Bitten_by_a_Lizard.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Caravaggio_-_Boy_Bitten_by_a_Lizard.jpg/1280px-Caravaggio_-_Boy_Bitten_by_a_Lizard.jpg"
+    },
+    "boy-with-a-basket-of-fruit": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Boy_with_a_Basket_of_Fruit-Caravaggio_%281593%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Boy_with_a_Basket_of_Fruit-Caravaggio_%281593%29.jpg/1280px-Boy_with_a_Basket_of_Fruit-Caravaggio_%281593%29.jpg"
+    },
+    "breton-girls-dancing-pont-aven": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin%2C_Breton_Girls_Dancing%2C_Pont-Aven%2C_1888%2C_NGA_61369.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Paul_Gauguin%2C_Breton_Girls_Dancing%2C_Pont-Aven%2C_1888%2C_NGA_61369.jpg/1280px-Paul_Gauguin%2C_Breton_Girls_Dancing%2C_Pont-Aven%2C_1888%2C_NGA_61369.jpg"
+    },
+    "cafe-terrace-at-night": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Van_Gogh_-_Terrace_of_a_Caf%C3%A9_at_Night_%28Place_du_Forum%29_1888.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Van_Gogh_-_Terrace_of_a_Caf%C3%A9_at_Night_%28Place_du_Forum%29_1888.jpg/1280px-Van_Gogh_-_Terrace_of_a_Caf%C3%A9_at_Night_%28Place_du_Forum%29_1888.jpg"
+    },
+    "calvary-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Schiele_-_Kalvarienberg_%28Calvary%29_%281912%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Schiele_-_Kalvarienberg_%28Calvary%29_%281912%29.jpg/1280px-Schiele_-_Kalvarienberg_%28Calvary%29_%281912%29.jpg"
+    },
+    "camille": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Camille.JPG",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Claude_Monet_-_Camille.JPG/1280px-Claude_Monet_-_Camille.JPG"
+    },
+    "caress-cardinal-and-nun": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Cardinal_and_Nun_%28Caress%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Egon_Schiele_-_Cardinal_and_Nun_%28Caress%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Cardinal_and_Nun_%28Caress%29_-_Google_Art_Project.jpg"
+    },
+    "cheongpunggye-gansong": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-Cheongpunggye.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Jeong_Seon-Cheongpunggye.jpg/330px-Jeong_Seon-Cheongpunggye.jpg"
+    },
+    "cheongpunggye-jigak": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/정선_필_청풍계지각.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/%EC%A0%95%EC%84%A0_%ED%95%84_%EC%B2%AD%ED%92%8D%EA%B3%84%EC%A7%80%EA%B0%81.jpg/1280px-%EC%A0%95%EC%84%A0_%ED%95%84_%EC%B2%AD%ED%92%8D%EA%B3%84%EC%A7%80%EA%B0%81.jpg"
+    },
+    "cliffs-at-etretat": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_The_Cliff_of_Aval%2C_Etr%C3%A9tat_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Claude_Monet_-_The_Cliff_of_Aval%2C_Etr%C3%A9tat_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_The_Cliff_of_Aval%2C_Etr%C3%A9tat_-_Google_Art_Project.jpg"
+    },
+    "cottage-garden-with-sunflowers": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg/1280px-Klimt_-_Bauerngarten_mit_Sonnenblumen_-_ca1907.jpeg"
+    },
+    "crescent-of-houses-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Crescent_of_Houses_II_%28Island_Town%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Egon_Schiele_-_Crescent_of_Houses_II_%28Island_Town%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Crescent_of_Houses_II_%28Island_Town%29_-_Google_Art_Project.jpg"
+    },
+    "crucifixion-of-saint-peter": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Crucifixion_of_Saint_Peter-Caravaggio_%28c.1600%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Crucifixion_of_Saint_Peter-Caravaggio_%28c.1600%29.jpg/1280px-Crucifixion_of_Saint_Peter-Caravaggio_%28c.1600%29.jpg"
+    },
+    "danae": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_026.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Rembrandt_Harmensz._van_Rijn_026.jpg/1280px-Rembrandt_Harmensz._van_Rijn_026.jpg"
+    },
+    "david-with-the-head-of-goliath": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/David_with_the_Head_of_Goliath-Caravaggio_%281610%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/David_with_the_Head_of_Goliath-Caravaggio_%281610%29.jpg/1280px-David_with_the_Head_of_Goliath-Caravaggio_%281610%29.jpg"
+    },
+    "dead-city-iii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Dead_City_III_(City_on_the_Blue_River_III)_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Egon_Schiele_-_Dead_City_III_%28City_on_the_Blue_River_III%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Dead_City_III_%28City_on_the_Blue_River_III%29_-_Google_Art_Project.jpg"
+    },
+    "dead-mother-i": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Dead_Mother_I_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Egon_Schiele_-_Dead_Mother_I_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Dead_Mother_I_-_Google_Art_Project.jpg"
+    },
+    "death-and-life": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg/1280px-Gustav_Klimt_-_Death_and_Life_-_Google_Art_Project.jpg"
+    },
+    "death-and-the-maiden-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Der_Tod_und_das_M%C3%A4dchen.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Egon_Schiele_-_Der_Tod_und_das_M%C3%A4dchen.jpg/1280px-Egon_Schiele_-_Der_Tod_und_das_M%C3%A4dchen.jpg"
+    },
+    "death-of-the-virgin": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Death_of_the_Virgin-Caravaggio_%281606%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Death_of_the_Virgin-Caravaggio_%281606%29.jpg/1280px-Death_of_the_Virgin-Caravaggio_%281606%29.jpg"
+    },
+    "dusk-lady-at-fireplace": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Dame_am_Kamin_-_5434_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Gustav_Klimt_-_Dame_am_Kamin_-_5434_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Gustav_Klimt_-_Dame_am_Kamin_-_5434_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "fatata-te-miti": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin%2C_Fatata_te_Miti_%28By_the_Sea%29%2C_1892%2C_NGA_46624.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Paul_Gauguin%2C_Fatata_te_Miti_%28By_the_Sea%29%2C_1892%2C_NGA_46624.jpg/1280px-Paul_Gauguin%2C_Fatata_te_Miti_%28By_the_Sea%29%2C_1892%2C_NGA_46624.jpg"
+    },
+    "flowering-poppies": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_043.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Gustav_Klimt_043.jpg/1280px-Gustav_Klimt_043.jpg"
+    },
+    "forest-floor-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Waldboden%2C_1881-82%2C_Natter_2012_10.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Klimt_-_Waldboden%2C_1881-82%2C_Natter_2012_10.jpg/960px-Klimt_-_Waldboden%2C_1881-82%2C_Natter_2012_10.jpg"
+    },
+    "garden-at-sainte-adresse": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Jardin_%C3%A0_Sainte-Adresse.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Claude_Monet_-_Jardin_%C3%A0_Sainte-Adresse.jpg/1280px-Claude_Monet_-_Jardin_%C3%A0_Sainte-Adresse.jpg"
+    },
+    "gare-saint-lazare": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/La_Gare_Saint-Lazare_-_Claude_Monet.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/La_Gare_Saint-Lazare_-_Claude_Monet.jpg/1280px-La_Gare_Saint-Lazare_-_Claude_Monet.jpg"
+    },
+    "gaugins-chair": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_De_stoel_van_Gauguin_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Vincent_van_Gogh_-_De_stoel_van_Gauguin_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_De_stoel_van_Gauguin_-_Google_Art_Project.jpg"
+    },
+    "geumgang-jeondo": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Geumgangjeondo.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Geumgangjeondo.jpg/1280px-Geumgangjeondo.jpg"
+    },
+    "gunseondo": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Korea-National.Treasure-139-Gunseondobyeong-Joseon-Leeum.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Korea-National.Treasure-139-Gunseondobyeong-Joseon-Leeum.jpg/500px-Korea-National.Treasure-139-Gunseondobyeong-Joseon-Leeum.jpg"
+    },
+    "haystacks": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/6/68/Claude_Monet_-_Stacks_of_Wheat_%28End_of_Summer%29_-_1985.1103_-_Art_Institute_of_Chicago.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Claude_Monet_-_Stacks_of_Wheat_%28End_of_Summer%29_-_1985.1103_-_Art_Institute_of_Chicago.jpg/1280px-Claude_Monet_-_Stacks_of_Wheat_%28End_of_Summer%29_-_1985.1103_-_Art_Institute_of_Chicago.jpg"
+    },
+    "house-in-provence": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Maison_devant_la_Sainte-Victoire_pr%C3%A8s_de_Gardanne%2C_par_Paul_C%C3%A9zanne%2C_Indianapolis_Museum_of_Art.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Maison_devant_la_Sainte-Victoire_pr%C3%A8s_de_Gardanne%2C_par_Paul_C%C3%A9zanne%2C_Indianapolis_Museum_of_Art.jpg/1280px-Maison_devant_la_Sainte-Victoire_pr%C3%A8s_de_Gardanne%2C_par_Paul_C%C3%A9zanne%2C_Indianapolis_Museum_of_Art.jpg"
+    },
+    "house-wall-on-the-river": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_House_Wall_on_the_River_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Egon_Schiele_-_House_Wall_on_the_River_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_House_Wall_on_the_River_-_Google_Art_Project.jpg"
+    },
+    "house-with-shingle-roof": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/House_with_Shingles_Egon_Schiele_1915.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/House_with_Shingles_Egon_Schiele_1915.jpeg/500px-House_with_Shingles_Egon_Schiele_1915.jpeg"
+    },
+    "houses-by-the-sea": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Die_H%C3%A4user_am_Meer_%281914%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Egon_Schiele_-_Die_H%C3%A4user_am_Meer_%281914%29.jpg/1280px-Egon_Schiele_-_Die_H%C3%A4user_am_Meer_%281914%29.jpg"
+    },
+    "impression-sunrise": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/5/59/Monet_-_Impression%2C_Sunrise.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/1280px-Monet_-_Impression%2C_Sunrise.jpg"
+    },
+    "interior-after-dinner": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Int%C3%A9rieur%2C_Apr%C3%A8s_d%C3%AEner.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Claude_Monet_-_Int%C3%A9rieur%2C_Apr%C3%A8s_d%C3%AEner.jpg/1280px-Claude_Monet_-_Int%C3%A9rieur%2C_Apr%C3%A8s_d%C3%AEner.jpg"
+    },
+    "josef-lewinsky-as-carlos": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg/1280px-Klimt_-_Der_Hofschauspieler_josef_Lewinsky_als_Carlos_in_%E2%80%9EClavigo%E2%80%9C.jpeg"
+    },
+    "judas-repentant": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Judas_returning_the_thirty_pieces_of_silver%2C_by_Rembrandt.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Judas_returning_the_thirty_pieces_of_silver%2C_by_Rembrandt.jpg/1280px-Judas_returning_the_thirty_pieces_of_silver%2C_by_Rembrandt.jpg"
+    },
+    "judith-beheading-holofernes": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Judith_Beheading_Holofernes_-_Caravaggio.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Judith_Beheading_Holofernes_-_Caravaggio.jpg/1280px-Judith_Beheading_Holofernes_-_Caravaggio.jpg"
+    },
+    "judith-i": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Judith_1_(cropped).jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Judith_1_%28cropped%29.jpg/1280px-Judith_1_%28cropped%29.jpg"
+    },
+    "krumau-on-the-vltava": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg/1280px-Krumau_on_the_Moldova_%28Small_town_IV%29_Egon_Schiele_1914.jpg"
+    },
+    "l-estaque-melting-snow": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/La_Neige_fondue_%C3%A0_l%27Estaque%2C_par_Paul_C%C3%A9zanne%2C_FWN_53.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/La_Neige_fondue_%C3%A0_l%27Estaque%2C_par_Paul_C%C3%A9zanne%2C_FWN_53.jpg/1280px-La_Neige_fondue_%C3%A0_l%27Estaque%2C_par_Paul_C%C3%A9zanne%2C_FWN_53.jpg"
+    },
+    "la-belle-angele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_La_Belle_Ang%C3%A8le_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Paul_Gauguin_-_La_Belle_Ang%C3%A8le_-_Google_Art_Project.jpg/1280px-Paul_Gauguin_-_La_Belle_Ang%C3%A8le_-_Google_Art_Project.jpg"
+    },
+    "la-grenouillere": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_La_Grenouill%C3%A9re.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Claude_Monet_La_Grenouill%C3%A9re.jpg/1280px-Claude_Monet_La_Grenouill%C3%A9re.jpg"
+    },
+    "la-japonaise": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet-Madame_Monet_en_costume_japonais.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Claude_Monet-Madame_Monet_en_costume_japonais.jpg/1280px-Claude_Monet-Madame_Monet_en_costume_japonais.jpg"
+    },
+    "lady-in-white-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Gustav_Klimt_-_Dame_in_Wei%C3%9F_-_4286_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "landscape-with-ravens": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Landscape_with_Ravens_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Egon_Schiele_-_Landscape_with_Ravens_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Landscape_with_Ravens_-_Google_Art_Project.jpg"
+    },
+    "le-dejeuner-sur-l-herbe": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_dejeunersurlherbe.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Monet_dejeunersurlherbe.jpg/500px-Monet_dejeunersurlherbe.jpg"
+    },
+    "lucretia": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_van_Rijn_-_Lucretia_-_Google_Art_Project_%28nAHoI2KdSaLshA%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Rembrandt_van_Rijn_-_Lucretia_-_Google_Art_Project_%28nAHoI2KdSaLshA%29.jpg/1280px-Rembrandt_van_Rijn_-_Lucretia_-_Google_Art_Project_%28nAHoI2KdSaLshA%29.jpg"
+    },
+    "lyricist-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_The_Lyricist_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Egon_Schiele_-_The_Lyricist_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_The_Lyricist_-_Google_Art_Project.jpg"
+    },
+    "maehaepahaengdo-ewha": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/김홍도_필_매해파행도.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/%EA%B9%80%ED%99%8D%EB%8F%84_%ED%95%84_%EB%A7%A4%ED%95%B4%ED%8C%8C%ED%96%89%EB%8F%84.jpg/330px-%EA%B9%80%ED%99%8D%EB%8F%84_%ED%95%84_%EB%A7%A4%ED%95%B4%ED%8C%8C%ED%96%89%EB%8F%84.jpg"
+    },
+    "mahana-no-atua": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_gauguin%2C_giorno_del_dio_%28mahana_no_atua%29%2C_1894%2C_01.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Paul_gauguin%2C_giorno_del_dio_%28mahana_no_atua%29%2C_1894%2C_01.jpg/1280px-Paul_gauguin%2C_giorno_del_dio_%28mahana_no_atua%29%2C_1894%2C_01.jpg"
+    },
+    "male-nude-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Gustav_Klimt_-_M%C3%A4nnlicher_Akt_-_5992_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "medusa": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Medusa_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Caravaggio_-_Medusa_-_Google_Art_Project.jpg/1280px-Caravaggio_-_Medusa_-_Google_Art_Project.jpg"
+    },
+    "mont-sainte-victoire": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/0/00/Paul_C%C3%A9zanne_-_Montagne_Saint-victoire_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Paul_C%C3%A9zanne_-_Montagne_Saint-victoire_-_Google_Art_Project.jpg/1280px-Paul_C%C3%A9zanne_-_Montagne_Saint-victoire_-_Google_Art_Project.jpg"
+    },
+    "mont-sainte-victoire-and-the-viaduct": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_%28Metropolitan_Museum_of_Art%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_%28Metropolitan_Museum_of_Art%29.jpg/1280px-Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_%28Metropolitan_Museum_of_Art%29.jpg"
+    },
+    "mont-sainte-victoire-seen-from-bellevue": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_%28La_Montagne_Sainte-Victoire%29_-_BF13_-_Barnes_Foundation.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_%28La_Montagne_Sainte-Victoire%29_-_BF13_-_Barnes_Foundation.jpg/1280px-Paul_C%C3%A9zanne_-_Mont_Sainte-Victoire_%28La_Montagne_Sainte-Victoire%29_-_BF13_-_Barnes_Foundation.jpg"
+    },
+    "mont-sainte-victoire-with-large-pine": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Mont_Sainte-Victoire_with_Large_Pine%2C_by_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Mont_Sainte-Victoire_with_Large_Pine%2C_by_Paul_C%C3%A9zanne.jpg/1280px-Mont_Sainte-Victoire_with_Large_Pine%2C_by_Paul_C%C3%A9zanne.jpg"
+    },
+    "mother-and-child-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Schiele_-_Mutter_und_Kind_%28Mother_and_Child%29_%281912%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Schiele_-_Mutter_und_Kind_%28Mother_and_Child%29_%281912%29.jpg/1280px-Schiele_-_Mutter_und_Kind_%28Mother_and_Child%29_%281912%29.jpg"
+    },
+    "mother-with-two-children-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Mother_with_two_children_II_Egon_Schiele_1915.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Mother_with_two_children_II_Egon_Schiele_1915.jpg/1280px-Mother_with_two_children_II_Egon_Schiele_1915.jpg"
+    },
+    "mother-with-two-children-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Gustav_Klimt_-_Mutter_mit_zwei_Kindern_%28Familie%29_-_10501_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "mourning-woman": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Mourning_Woman_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Egon_Schiele_-_Mourning_Woman_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Mourning_Woman_-_Google_Art_Project.jpg"
+    },
+    "nevermore": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_091.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Paul_Gauguin_091.jpg/1280px-Paul_Gauguin_091.jpg"
+    },
+    "old-man-on-deathbed": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg/1280px-Klimt_-_Alter_Mann_auf_dem_Totenbett.jpeg"
+    },
+    "olive-trees-1889": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/WLA_moma_Vincent_van_Gogh_The_Olive_Trees_1889.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/WLA_moma_Vincent_van_Gogh_The_Olive_Trees_1889.jpg/960px-WLA_moma_Vincent_van_Gogh_The_Olive_Trees_1889.jpg"
+    },
+    "on-lake-attersee": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg/1280px-Gustav_Klimt_-_Insel_im_Attersee_%28c._1901-02%29.jpg"
+    },
+    "orchard-in-the-evening": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Orchard_in_the_Evening_Klimt.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Orchard_in_the_Evening_Klimt.jpg/960px-Orchard_in_the_Evening_Klimt.jpg"
+    },
+    "philosopher-in-meditation": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Philosopher_in_Meditation_%28cleaned%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Rembrandt_-_The_Philosopher_in_Meditation_%28cleaned%29.jpg/960px-Rembrandt_-_The_Philosopher_in_Meditation_%28cleaned%29.jpg"
+    },
+    "pipe-smoker-leaning-on-a-table": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Cezanne_-_Pfeife_rauchender_Mann.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Cezanne_-_Pfeife_rauchender_Mann.jpg/1280px-Cezanne_-_Pfeife_rauchender_Mann.jpg"
+    },
+    "pont-de-maincy": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Pont_de_Maincy%2C_par_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Pont_de_Maincy%2C_par_Paul_C%C3%A9zanne.jpg/1280px-Pont_de_Maincy%2C_par_Paul_C%C3%A9zanne.jpg"
+    },
+    "poplars": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Les_Peupliers.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Claude_Monet_-_Les_Peupliers.jpg/1280px-Claude_Monet_-_Les_Peupliers.jpg"
+    },
+    "poppy-field-near-argenteuil": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Poppy_Field_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Claude_Monet_-_Poppy_Field_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Poppy_Field_-_Google_Art_Project.jpg"
+    },
+    "portrait-of-amalie-zuckerkandl": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_070.JPG",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Gustav_Klimt_070.JPG/330px-Gustav_Klimt_070.JPG"
+    },
+    "portrait-of-ambroise-vollard": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait_d%27Ambroise_Vollard%2C_par_Paul_C%C3%A9zanne%2C_FWN_531.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Portrait_d%27Ambroise_Vollard%2C_par_Paul_C%C3%A9zanne%2C_FWN_531.jpg/1280px-Portrait_d%27Ambroise_Vollard%2C_par_Paul_C%C3%A9zanne%2C_FWN_531.jpg"
+    },
+    "portrait-of-dr-gachet": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_Dr_Paul_Gachet_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Vincent_van_Gogh_-_Dr_Paul_Gachet_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Dr_Paul_Gachet_-_Google_Art_Project.jpg"
+    },
+    "portrait-of-fritza-riedler": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_052.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Gustav_Klimt_052.jpg/1280px-Gustav_Klimt_052.jpg"
+    },
+    "portrait-of-jan-six": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_097.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Rembrandt_Harmensz._van_Rijn_097.jpg/1280px-Rembrandt_Harmensz._van_Rijn_097.jpg"
+    },
+    "portrait-of-johanna-staude": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Gustav_Klimt_-_Johanna_Staude_-_5551_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "portrait-of-nicolaes-ruts": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_Portrait_of_Nicolaes_Ruts.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Rembrandt_-_Portrait_of_Nicolaes_Ruts.jpg/1280px-Rembrandt_-_Portrait_of_Nicolaes_Ruts.jpg"
+    },
+    "portrait-of-pere-paul": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Der_Koch_%28Le_P%C3%A8re_Paul%29_-_540_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Claude_Monet_-_Der_Koch_%28Le_P%C3%A8re_Paul%29_-_540_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Claude_Monet_-_Der_Koch_%28Le_P%C3%A8re_Paul%29_-_540_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "portrait-of-sonja-knips": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Bildnis_Sonja_Knips.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Klimt_-_Bildnis_Sonja_Knips.jpeg/1280px-Klimt_-_Bildnis_Sonja_Knips.jpeg"
+    },
+    "portrait-of-wally": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Portrait_of_Wally_Neuzil_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Egon_Schiele_-_Portrait_of_Wally_Neuzil_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Portrait_of_Wally_Neuzil_-_Google_Art_Project.jpg"
+    },
+    "pungak-naesan-chongramdo": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-PungakNaesanChongramDo.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Jeong_Seon-PungakNaesanChongramDo.jpg/500px-Jeong_Seon-PungakNaesanChongramDo.jpg"
+    },
+    "pyramid-of-skulls": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_C%C3%A9zanne%2C_Pyramid_of_Skulls%2C_c._1901.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Paul_C%C3%A9zanne%2C_Pyramid_of_Skulls%2C_c._1901.jpg/960px-Paul_C%C3%A9zanne%2C_Pyramid_of_Skulls%2C_c._1901.jpg"
+    },
+    "reclining-woman-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Reclining_Woman_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Egon_Schiele_-_Reclining_Woman_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Reclining_Woman_-_Google_Art_Project.jpg"
+    },
+    "regatta-at-argenteuil": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Regattas_at_Argenteuil_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Claude_Monet_-_Regattas_at_Argenteuil_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Regattas_at_Argenteuil_-_Google_Art_Project.jpg"
+    },
+    "regatta-at-sainte-adresse": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet%2C_1867%2C_Regatta_at_Sainte-Adresse%2C_Metropolitan_Museum_of_Art.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Claude_Monet%2C_1867%2C_Regatta_at_Sainte-Adresse%2C_Metropolitan_Museum_of_Art.jpg/1280px-Claude_Monet%2C_1867%2C_Regatta_at_Sainte-Adresse%2C_Metropolitan_Museum_of_Art.jpg"
+    },
+    "rideau-cruchon-et-compotier": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/C%C3%A9zanne_-_Rideau%2C_Cruchon_et_Compotier_%28Curtain%2C_Pitcher%2C_and_a_Fruit_Bowl%29_1893-94_FWN_854.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/C%C3%A9zanne_-_Rideau%2C_Cruchon_et_Compotier_%28Curtain%2C_Pitcher%2C_and_a_Fruit_Bowl%29_1893-94_FWN_854.jpg/1280px-C%C3%A9zanne_-_Rideau%2C_Cruchon_et_Compotier_%28Curtain%2C_Pitcher%2C_and_a_Fruit_Bowl%29_1893-94_FWN_854.jpg"
+    },
+    "rouen-cathedral": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/3/30/RouenCathedral_Monet_1894.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/RouenCathedral_Monet_1894.jpg/500px-RouenCathedral_Monet_1894.jpg"
+    },
+    "saint-jerome-writing": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Saint_Jerome_in_his_study_-_Oratory_of_St_John_the_Baptist%2C_St_John%E2%80%99s_Co-Cathedral%2C_Valletta.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Caravaggio_-_Saint_Jerome_in_his_study_-_Oratory_of_St_John_the_Baptist%2C_St_John%E2%80%99s_Co-Cathedral%2C_Valletta.jpg/1280px-Caravaggio_-_Saint_Jerome_in_his_study_-_Oratory_of_St_John_the_Baptist%2C_St_John%E2%80%99s_Co-Cathedral%2C_Valletta.jpg"
+    },
+    "samgongbulhwando": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/김홍도_필_삼공불환도.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/%EA%B9%80%ED%99%8D%EB%8F%84_%ED%95%84_%EC%82%BC%EA%B3%B5%EB%B6%88%ED%99%98%EB%8F%84.jpg/960px-%EA%B9%80%ED%99%8D%EB%8F%84_%ED%95%84_%EC%82%BC%EA%B3%B5%EB%B6%88%ED%99%98%EB%8F%84.jpg"
+    },
+    "saskia-as-flora": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Harmensz_van_Rijn_Rembrandt_-_%D0%A4%D0%BB%D0%BE%D1%80%D0%B0_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Harmensz_van_Rijn_Rembrandt_-_%D0%A4%D0%BB%D0%BE%D1%80%D0%B0_-_Google_Art_Project.jpg/1280px-Harmensz_van_Rijn_Rembrandt_-_%D0%A4%D0%BB%D0%BE%D1%80%D0%B0_-_Google_Art_Project.jpg"
+    },
+    "schloss-kammer-at-attersee-iii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_065.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Gustav_Klimt_065.jpg/1280px-Gustav_Klimt_065.jpg"
+    },
+    "seated-male-nude-self-portrait": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Seated_Male_Nude_%28Self-Portrait%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Egon_Schiele_-_Seated_Male_Nude_%28Self-Portrait%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Seated_Male_Nude_%28Self-Portrait%29_-_Google_Art_Project.jpg"
+    },
+    "self-portrait-at-the-age-of-63": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_135.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Rembrandt_Harmensz._van_Rijn_135.jpg/1280px-Rembrandt_Harmensz._van_Rijn_135.jpg"
+    },
+    "self-portrait-les-miserables": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_Self-portrait_with_portrait_of_Bernard%2C_%27Les_Mis%C3%A9rables%27_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Paul_Gauguin_-_Self-portrait_with_portrait_of_Bernard%2C_%27Les_Mis%C3%A9rables%27_-_Google_Art_Project.jpg/1280px-Paul_Gauguin_-_Self-portrait_with_portrait_of_Bernard%2C_%27Les_Mis%C3%A9rables%27_-_Google_Art_Project.jpg"
+    },
+    "self-portrait-with-bandaged-ear": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/VanGogh-self-portrait-with_bandaged_ear.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/VanGogh-self-portrait-with_bandaged_ear.jpg/500px-VanGogh-self-portrait-with_bandaged_ear.jpg"
+    },
+    "self-portrait-with-chinese-lantern-plant": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Self-Portrait_with_Physalis_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Egon_Schiele_-_Self-Portrait_with_Physalis_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Self-Portrait_with_Physalis_-_Google_Art_Project.jpg"
+    },
+    "self-portrait-with-grey-felt-hat": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Self-portrait_with_Felt_Hat_by_Vincent_van_Gogh.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Self-portrait_with_Felt_Hat_by_Vincent_van_Gogh.jpg/1280px-Self-portrait_with_Felt_Hat_by_Vincent_van_Gogh.jpg"
+    },
+    "self-portrait-with-halo-and-snake": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_Self-Portrait_with_Halo_and_Snake.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Paul_Gauguin_-_Self-Portrait_with_Halo_and_Snake.jpg/1280px-Paul_Gauguin_-_Self-Portrait_with_Halo_and_Snake.jpg"
+    },
+    "self-portrait-with-lowered-head": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Selbstportr%C3%A4t_mit_gesenktem_Kopf%2C_1912.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Egon_Schiele_-_Selbstportr%C3%A4t_mit_gesenktem_Kopf%2C_1912.jpg/1280px-Egon_Schiele_-_Selbstportr%C3%A4t_mit_gesenktem_Kopf%2C_1912.jpg"
+    },
+    "self-portrait-with-two-circles": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Self-portrait_%28Kenwood%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Rembrandt_Self-portrait_%28Kenwood%29.jpg/1280px-Rembrandt_Self-portrait_%28Kenwood%29.jpg"
+    },
+    "self-seers-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Self-Seer_II_%28Death_and_Man%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Egon_Schiele_-_Self-Seer_II_%28Death_and_Man%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Self-Seer_II_%28Death_and_Man%29_-_Google_Art_Project.jpg"
+    },
+    "setting-sun-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Setting_Sun_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Egon_Schiele_-_Setting_Sun_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Setting_Sun_-_Google_Art_Project.jpg"
+    },
+    "snow-at-argenteuil": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_Snow_at_Argenteuil_1875.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Monet_Snow_at_Argenteuil_1875.jpg/1280px-Monet_Snow_at_Argenteuil_1875.jpg"
+    },
+    "spirit-of-the-dead-watching": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin-_Manao_tupapau_%28The_Spirit_of_the_Dead_Keep_Watch%29.JPG",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Paul_Gauguin-_Manao_tupapau_%28The_Spirit_of_the_Dead_Keep_Watch%29.JPG/1280px-Paul_Gauguin-_Manao_tupapau_%28The_Spirit_of_the_Dead_Keep_Watch%29.JPG"
+    },
+    "springtime": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Springtime_-_Walters_3711.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Claude_Monet_-_Springtime_-_Walters_3711.jpg/1280px-Claude_Monet_-_Springtime_-_Walters_3711.jpg"
+    },
+    "stein-on-the-danube-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg/1280px-Egon_Schiele%2C_Stein_on_the_Danube_II%2C_1913%3B_Leopold_Museum%2C_Vienna.jpg"
+    },
+    "still-life-with-bread-and-eggs": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Le_pain_et_les_%C5%93ufs%2C_par_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Le_pain_et_les_%C5%93ufs%2C_par_Paul_C%C3%A9zanne.jpg/1280px-Le_pain_et_les_%C5%93ufs%2C_par_Paul_C%C3%A9zanne.jpg"
+    },
+    "still-life-with-peaches-and-pears": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/%22Nature_morte%22_de_Paul_C%C3%A9zanne_%28Fondation_Louis_Vuitton%2C_Paris%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/%22Nature_morte%22_de_Paul_C%C3%A9zanne_%28Fondation_Louis_Vuitton%2C_Paris%29.jpg/1280px-%22Nature_morte%22_de_Paul_C%C3%A9zanne_%28Fondation_Louis_Vuitton%2C_Paris%29.jpg"
+    },
+    "still-life-with-teapot": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Amgueddfa_Cymru_-_Bywyd_Llonydd_%C3%A2_Thebot_-_Still_life_with_teapot_-_2368.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Amgueddfa_Cymru_-_Bywyd_Llonydd_%C3%A2_Thebot_-_Still_life_with_teapot_-_2368.jpeg/1280px-Amgueddfa_Cymru_-_Bywyd_Llonydd_%C3%A2_Thebot_-_Still_life_with_teapot_-_2368.jpeg"
+    },
+    "sunflower-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower_-_Gustav_Klimt.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Sunflower_-_Gustav_Klimt.jpg/1280px-Sunflower_-_Gustav_Klimt.jpg"
+    },
+    "sunflowers-arles": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/SunflowersbyvanGogh2.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/SunflowersbyvanGogh2.jpg/500px-SunflowersbyvanGogh2.jpg"
+    },
+    "supper-at-emmaus": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Supper_at_Emmaus_-_National_Gallery_London.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Caravaggio_-_Supper_at_Emmaus_-_National_Gallery_London.jpeg/1280px-Caravaggio_-_Supper_at_Emmaus_-_National_Gallery_London.jpeg"
+    },
+    "syndics-of-the-drapers-guild": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_De_Staalmeesters-_het_college_van_staalmeesters_%28waardijns%29_van_het_Amsterdamse_lakenbereidersgilde_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Rembrandt_-_De_Staalmeesters-_het_college_van_staalmeesters_%28waardijns%29_van_het_Amsterdamse_lakenbereidersgilde_-_Google_Art_Project.jpg/1280px-Rembrandt_-_De_Staalmeesters-_het_college_van_staalmeesters_%28waardijns%29_van_het_Amsterdamse_lakenbereidersgilde_-_Google_Art_Project.jpg"
+    },
+    "tehamana-has-many-parents": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/1980.613_-_Merahi_metua_no_Tehamana_%28Tehamana_Has_Many_Parents_or_The_Ancestors_of_Tehamana%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/1980.613_-_Merahi_metua_no_Tehamana_%28Tehamana_Has_Many_Parents_or_The_Ancestors_of_Tehamana%29.jpg/1280px-1980.613_-_Merahi_metua_no_Tehamana_%28Tehamana_Has_Many_Parents_or_The_Ancestors_of_Tehamana%29.jpg"
+    },
+    "the-abduction-of-europa": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg/1280px-Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg/1280px-Rembrandt_-_The_Abduction_of_Europa_-_Google_Art_Project.jpg"
+    },
+    "the-anatomy-lesson-of-dr-tulp": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg/1280px-Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg"
+    },
+    "the-artist-in-his-studio": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_The_Artist_in_his_studio.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Rembrandt_The_Artist_in_his_studio.jpg/1280px-Rembrandt_The_Artist_in_his_studio.jpg"
+    },
+    "the-artists-garden-at-giverny": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_-_Monets_Garten_in_Giverny.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Monet_-_Monets_Garten_in_Giverny.jpg/960px-Monet_-_Monets_Garten_in_Giverny.jpg"
+    },
+    "the-banks-of-the-marne": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Le_Pont_sur_la_Marne_%C3%A0_Cr%C3%A9teil%2C_par_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Le_Pont_sur_la_Marne_%C3%A0_Cr%C3%A9teil%2C_par_Paul_C%C3%A9zanne.jpg/1280px-Le_Pont_sur_la_Marne_%C3%A0_Cr%C3%A9teil%2C_par_Paul_C%C3%A9zanne.jpg"
+    },
+    "the-basket-of-apples": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/3/38/Paul_C%C3%A9zanne_-_The_Basket_of_Apples_-_1926.252_-_Art_Institute_of_Chicago.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Paul_C%C3%A9zanne_-_The_Basket_of_Apples_-_1926.252_-_Art_Institute_of_Chicago.jpg/1280px-Paul_C%C3%A9zanne_-_The_Basket_of_Apples_-_1926.252_-_Art_Institute_of_Chicago.jpg"
+    },
+    "the-bathers-gauguin": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Bathers_%281897%29_by_Paul_Gauguin._Original_from_The_National_Gallery_of_Art._Digitally_enhanced_by_rawpixel._%2850623697671%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/The_Bathers_%281897%29_by_Paul_Gauguin._Original_from_The_National_Gallery_of_Art._Digitally_enhanced_by_rawpixel._%2850623697671%29.jpg/1280px-The_Bathers_%281897%29_by_Paul_Gauguin._Original_from_The_National_Gallery_of_Art._Digitally_enhanced_by_rawpixel._%2850623697671%29.jpg"
+    },
+    "the-bedroom": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/De_slaapkamer_-_s0047V1962_-_Van_Gogh_Museum.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/De_slaapkamer_-_s0047V1962_-_Van_Gogh_Museum.jpg/1280px-De_slaapkamer_-_s0047V1962_-_Van_Gogh_Museum.jpg"
+    },
+    "the-beheading-of-saint-john-the-baptist": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/La_decapitaci%C3%B3n_de_San_Juan_Bautista%2C_por_Caravaggio.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/La_decapitaci%C3%B3n_de_San_Juan_Bautista%2C_por_Caravaggio.jpg/1280px-La_decapitaci%C3%B3n_de_San_Juan_Bautista%2C_por_Caravaggio.jpg"
+    },
+    "the-blinding-of-samson": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_-_The_Blinding_of_Samson_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Rembrandt_Harmensz._van_Rijn_-_The_Blinding_of_Samson_-_Google_Art_Project.jpg/1280px-Rembrandt_Harmensz._van_Rijn_-_The_Blinding_of_Samson_-_Google_Art_Project.jpg"
+    },
+    "the-bridge-at-argenteuil": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Le_Pont_d%27Argenteuil_-_Claude_Monet.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Le_Pont_d%27Argenteuil_-_Claude_Monet.jpg/1280px-Le_Pont_d%27Argenteuil_-_Claude_Monet.jpg"
+    },
+    "the-calling-of-saint-matthew": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg/1280px-Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg"
+    },
+    "the-card-players": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/6/69/Les_Joueurs_de_cartes%2C_par_Paul_C%C3%A9zanne.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Les_Joueurs_de_cartes%2C_par_Paul_C%C3%A9zanne.jpg/1280px-Les_Joueurs_de_cartes%2C_par_Paul_C%C3%A9zanne.jpg"
+    },
+    "the-cardsharps": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_The_Cardsharps_%281596-97%29_Kimbell_Art_Museum.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Caravaggio_-_The_Cardsharps_%281596-97%29_Kimbell_Art_Museum.jpg/1280px-Caravaggio_-_The_Cardsharps_%281596-97%29_Kimbell_Art_Museum.jpg"
+    },
+    "the-church-at-auvers": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_The_Church_in_Auvers-sur-Oise%2C_View_from_the_Chevet_-_Google_Art_Project.jpg"
+    },
+    "the-cliff-walk-at-pourville": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_Cliff_Walk_at_Pourville_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Claude_Monet_-_Cliff_Walk_at_Pourville_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Cliff_Walk_at_Pourville_-_Google_Art_Project.jpg"
+    },
+    "the-conspiracy-of-claudius-civilis": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg/1280px-The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg/1280px-The_Conspiracy_of_the_Batavians_under_Claudius_Civilis_%28Rembrandt_Harmensz._van_Rijn%29_-_Nationalmuseum_-_17581.jpg"
+    },
+    "the-conversion-of-saint-paul": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Conversion_on_the_Way_to_Damascus-Caravaggio_%28c.1600-1%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Conversion_on_the_Way_to_Damascus-Caravaggio_%28c.1600-1%29.jpg/1280px-Conversion_on_the_Way_to_Damascus-Caravaggio_%28c.1600-1%29.jpg"
+    },
+    "the-denial-of-saint-peter": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Denial_of_Saint_Peter-Caravaggio_%281610%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/The_Denial_of_Saint_Peter-Caravaggio_%281610%29.jpg/1280px-The_Denial_of_Saint_Peter-Caravaggio_%281610%29.jpg"
+    },
+    "the-entombment-of-christ": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Entombment_of_Christ-Caravaggio_%28c.1602-3%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/The_Entombment_of_Christ-Caravaggio_%28c.1602-3%29.jpg/1280px-The_Entombment_of_Christ-Caravaggio_%28c.1602-3%29.jpg"
+    },
+    "the-eternal-feminine": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_C%C3%A9zanne_-_The_Eternal_Feminine_%28L%27%C3%89ternel_F%C3%A9minin%29_-_87.PA.79_-_J._Paul_Getty_Museum.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Paul_C%C3%A9zanne_-_The_Eternal_Feminine_%28L%27%C3%89ternel_F%C3%A9minin%29_-_87.PA.79_-_J._Paul_Getty_Museum.jpg/1280px-Paul_C%C3%A9zanne_-_The_Eternal_Feminine_%28L%27%C3%89ternel_F%C3%A9minin%29_-_87.PA.79_-_J._Paul_Getty_Museum.jpg"
+    },
+    "the-family-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg/1280px-Egon_Schiele_-_Kauerndes_Menschenpaar_%28Die_Familie%29_-_4277_-_%C3%96sterreichische_Galerie_Belvedere.jpg"
+    },
+    "the-fortune-teller": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Fortune_Teller-Caravaggio_%28Louvre%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/The_Fortune_Teller-Caravaggio_%28Louvre%29.jpg/1280px-The_Fortune_Teller-Caravaggio_%28Louvre%29.jpg"
+    },
+    "the-hanged-mans-house": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/La_Maison_du_pendu%2C_Auvers-sur-Oise%2C_par_Paul_C%C3%A9zanne%2C_FWN_81.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/La_Maison_du_pendu%2C_Auvers-sur-Oise%2C_par_Paul_C%C3%A9zanne%2C_FWN_81.jpg/1280px-La_Maison_du_pendu%2C_Auvers-sur-Oise%2C_par_Paul_C%C3%A9zanne%2C_FWN_81.jpg"
+    },
+    "the-hermits-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_The_Hermits_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/Egon_Schiele_-_The_Hermits_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_The_Hermits_-_Google_Art_Project.jpg"
+    },
+    "the-incredulity-of-saint-thomas": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_incredulity.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Caravaggio_incredulity.jpg/1280px-Caravaggio_incredulity.jpg"
+    },
+    "the-jewish-bride": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg/1280px-Rembrandt_Harmensz._van_Rijn_-_Portret_van_een_paar_als_oudtestamentische_figuren%2C_genaamd_%27Het_Joodse_bruidje%27_-_Google_Art_Project.jpg"
+    },
+    "the-kiss": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1280px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg"
+    },
+    "the-langlois-bridge": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_De_brug_van_Langlois_%281888%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Vincent_van_Gogh_-_De_brug_van_Langlois_%281888%29.jpg/1280px-Vincent_van_Gogh_-_De_brug_van_Langlois_%281888%29.jpg"
+    },
+    "the-large-bathers": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg/1280px-Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg"
+    },
+    "the-large-poplar-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_022.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Gustav_Klimt_022.jpg/1280px-Gustav_Klimt_022.jpg"
+    },
+    "the-lute-player": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Lute_Player-Caravaggio_%28Hermitage%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/The_Lute_Player-Caravaggio_%28Hermitage%29.jpg/1280px-The_Lute_Player-Caravaggio_%28Hermitage%29.jpg"
+    },
+    "the-magpie": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_-_The_Magpie_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Claude_Monet_-_The_Magpie_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_The_Magpie_-_Google_Art_Project.jpg"
+    },
+    "the-martyrdom-of-saint-matthew": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_%E2%80%94_The_Martyrdom_of_Saint_Matthew.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Caravaggio_%E2%80%94_The_Martyrdom_of_Saint_Matthew.jpg/1280px-Caravaggio_%E2%80%94_The_Martyrdom_of_Saint_Matthew.jpg"
+    },
+    "the-martyrdom-of-saint-ursula": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Martyrdom_of_Saint_Ursula-Caravaggio_%281610%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/The_Martyrdom_of_Saint_Ursula-Caravaggio_%281610%29.jpg/1280px-The_Martyrdom_of_Saint_Ursula-Caravaggio_%281610%29.jpg"
+    },
+    "the-musicians": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Musicians_MET_DP-687-001.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/The_Musicians_MET_DP-687-001.jpg/1280px-The_Musicians_MET_DP-687-001.jpg"
+    },
+    "the-negro-scipion": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_C%C3%A9zanne_-_Le_N%C3%A8gre_Scipion_-_MASP.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Paul_C%C3%A9zanne_-_Le_N%C3%A8gre_Scipion_-_MASP.jpg/1280px-Paul_C%C3%A9zanne_-_Le_N%C3%A8gre_Scipion_-_MASP.jpg"
+    },
+    "the-night-cafe": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Le_caf%C3%A9_de_nuit_%28The_Night_Caf%C3%A9%29_by_Vincent_van_Gogh.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Le_caf%C3%A9_de_nuit_%28The_Night_Caf%C3%A9%29_by_Vincent_van_Gogh.jpeg/1280px-Le_caf%C3%A9_de_nuit_%28The_Night_Caf%C3%A9%29_by_Vincent_van_Gogh.jpeg"
+    },
+    "the-night-watch": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg/1280px-La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg"
+    },
+    "the-polish-rider": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_De_Poolse_ruiter%2C_c.1655_%28Frick_Collection%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Rembrandt_-_De_Poolse_ruiter%2C_c.1655_%28Frick_Collection%29.jpg/1280px-Rembrandt_-_De_Poolse_ruiter%2C_c.1655_%28Frick_Collection%29.jpg"
+    },
+    "the-potato-eaters": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Potato_Eaters_-_Vincent_Van_Gogh.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/The_Potato_Eaters_-_Vincent_Van_Gogh.jpg/1280px-The_Potato_Eaters_-_Vincent_Van_Gogh.jpg"
+    },
+    "the-pyramides-at-port-coton": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Scogli_a_Belle-%C3%8Ele.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Scogli_a_Belle-%C3%8Ele.jpg/330px-Scogli_a_Belle-%C3%8Ele.jpg"
+    },
+    "the-raising-of-lazarus": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Harmensz._van_Rijn_-_The_Raising_of_Lazarus_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Rembrandt_Harmensz._van_Rijn_-_The_Raising_of_Lazarus_-_Google_Art_Project.jpg/1280px-Rembrandt_Harmensz._van_Rijn_-_The_Raising_of_Lazarus_-_Google_Art_Project.jpg"
+    },
+    "the-red-vineyard": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Red_vineyards.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Red_vineyards.jpg/1280px-Red_vineyards.jpg"
+    },
+    "the-seed-of-the-areoi": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/WLA_moma_The_Seed_of_the_Areoi_by_Paul_Gauguin_1.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/WLA_moma_The_Seed_of_the_Areoi_by_Paul_Gauguin_1.jpg/1280px-WLA_moma_The_Seed_of_the_Areoi_by_Paul_Gauguin_1.jpg"
+    },
+    "the-seven-works-of-mercy": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Seven_Works_of_Mercy-Caravaggio_%281607%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/The_Seven_Works_of_Mercy-Caravaggio_%281607%29.jpg/1280px-The_Seven_Works_of_Mercy-Caravaggio_%281607%29.jpg"
+    },
+    "the-shipbuilder-and-his-wife": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_-_The_Shipbuilder_and_his_Wife-_Jan_Rijcksen_%281560-2-1637%29_and_his_Wife%2C_Griet_Jans_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Rembrandt_-_The_Shipbuilder_and_his_Wife-_Jan_Rijcksen_%281560-2-1637%29_and_his_Wife%2C_Griet_Jans_-_Google_Art_Project.jpg/1280px-Rembrandt_-_The_Shipbuilder_and_his_Wife-_Jan_Rijcksen_%281560-2-1637%29_and_his_Wife%2C_Griet_Jans_-_Google_Art_Project.jpg"
+    },
+    "the-sower-1888": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_The_Sower_-_c._17-28_June_1888.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/af/Vincent_van_Gogh_-_The_Sower_-_c._17-28_June_1888.jpg/1280px-Vincent_van_Gogh_-_The_Sower_-_c._17-28_June_1888.jpg"
+    },
+    "the-starry-night": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+    },
+    "the-storm-on-the-sea-of-galilee": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_Christ_in_the_Storm_on_the_Lake_of_Galilee.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Rembrandt_Christ_in_the_Storm_on_the_Lake_of_Galilee.jpg/1280px-Rembrandt_Christ_in_the_Storm_on_the_Lake_of_Galilee.jpg"
+    },
+    "the-studio-boat": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_Le_bateau_atelier.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Claude_Monet_Le_bateau_atelier.jpg/500px-Claude_Monet_Le_bateau_atelier.jpg"
+    },
+    "the-taking-of-christ": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg/1280px-The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg"
+    },
+    "the-train-in-the-snow": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet%2C_1875%2C_Train_in_the_Snow%2C_oil_on_canvas%2C_59_%C3%97_78_cm%2C_Mus%C3%A9e_Marmottan_Monet.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Claude_Monet%2C_1875%2C_Train_in_the_Snow%2C_oil_on_canvas%2C_59_%C3%97_78_cm%2C_Mus%C3%A9e_Marmottan_Monet.jpg/1280px-Claude_Monet%2C_1875%2C_Train_in_the_Snow%2C_oil_on_canvas%2C_59_%C3%97_78_cm%2C_Mus%C3%A9e_Marmottan_Monet.jpg"
+    },
+    "the-yellow-christ": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_The_Yellow_Christ_%28Le_Christ_jaune%29_1889.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Paul_Gauguin_-_The_Yellow_Christ_%28Le_Christ_jaune%29_1889.jpg/1280px-Paul_Gauguin_-_The_Yellow_Christ_%28Le_Christ_jaune%29_1889.jpg"
+    },
+    "the-yellow-house": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_The_yellow_house_%28%27The_street%27%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Vincent_van_Gogh_-_The_yellow_house_%28%27The_street%27%29.jpg/1280px-Vincent_van_Gogh_-_The_yellow_house_%28%27The_street%27%29.jpg"
+    },
+    "three-bathers": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Trois_baigneuses%2C_par_Paul_C%C3%A9zanne%2C_Mus%C3%A9e_du_Petit_Palais.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Trois_baigneuses%2C_par_Paul_C%C3%A9zanne%2C_Mus%C3%A9e_du_Petit_Palais.jpg/1280px-Trois_baigneuses%2C_par_Paul_C%C3%A9zanne%2C_Mus%C3%A9e_du_Petit_Palais.jpg"
+    },
+    "transfiguration-the-blind-ii": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_-_Levitation_%28The_Blind_II%29_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Egon_Schiele_-_Levitation_%28The_Blind_II%29_-_Google_Art_Project.jpg/1280px-Egon_Schiele_-_Levitation_%28The_Blind_II%29_-_Google_Art_Project.jpg"
+    },
+    "upper-austrian-farmhouse": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg/1280px-Klimt_-_Ober%C3%B6sterreichisches_Bauernhaus.jpeg"
+    },
+    "van-goghs-chair": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Van_Gogh%27s_Chair.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Van_Gogh%27s_Chair.jpg/1280px-Van_Gogh%27s_Chair.jpg"
+    },
+    "view-from-rouelles": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Monet_Veduta_di_Rouelles.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Monet_Veduta_di_Rouelles.jpg/960px-Monet_Veduta_di_Rouelles.jpg"
+    },
+    "view-of-auvers-sur-oise": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/View_of_Auvers-sur-Oise_Paul_Cezanne.png",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/View_of_Auvers-sur-Oise_Paul_Cezanne.png/1280px-View_of_Auvers-sur-Oise_Paul_Cezanne.png"
+    },
+    "vincent-van-gogh-painting-sunflowers": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_Vincent_van_Gogh_painting_sunflowers_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Paul_Gauguin_-_Vincent_van_Gogh_painting_sunflowers_-_Google_Art_Project.jpg/1280px-Paul_Gauguin_-_Vincent_van_Gogh_painting_sunflowers_-_Google_Art_Project.jpg"
+    },
+    "vision-after-the-sermon": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin_-_Vision_of_the_Sermon_%28Jacob_Wrestling_with_the_Angel%29_-_NG_1643_-_National_Galleries_of_Scotland.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Paul_Gauguin_-_Vision_of_the_Sermon_%28Jacob_Wrestling_with_the_Angel%29_-_NG_1643_-_National_Galleries_of_Scotland.jpg/500px-Paul_Gauguin_-_Vision_of_the_Sermon_%28Jacob_Wrestling_with_the_Angel%29_-_NG_1643_-_National_Galleries_of_Scotland.jpg"
+    },
+    "water-lilies": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg/1280px-Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg"
+    },
+    "water-serpents-i": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg/1280px-Klimt_-_Wasserschlangen_I_%28Freundinnen%29.jpeg"
+    },
+    "wheatfield-with-crows": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg/1280px-Vincent_van_Gogh_-_Wheatfield_with_crows_-_Google_Art_Project.jpg"
+    },
+    "when-will-you-marry": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Paul_Gauguin%2C_Nafea_Faa_Ipoipo%3F_1892%2C_oil_on_canvas%2C_101_x_77_cm.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Paul_Gauguin%2C_Nafea_Faa_Ipoipo%3F_1892%2C_oil_on_canvas%2C_101_x_77_cm.jpg/1280px-Paul_Gauguin%2C_Nafea_Faa_Ipoipo%3F_1892%2C_oil_on_canvas%2C_101_x_77_cm.jpg"
+    },
+    "where-do-we-come-from": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg/1280px-Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg"
+    },
+    "woman-with-parasol": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg/1280px-Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg"
+    },
+    "women-in-the-garden": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_024.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Claude_Monet_024.jpg/1280px-Claude_Monet_024.jpg"
+    },
+    "words-of-the-devil": {
+      "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Words_of_the_Devil.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Words_of_the_Devil.jpg/500px-Words_of_the_Devil.jpg"
+    },
+    "yeosan-chodangdo": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/정선_필_여산초당도.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/%EC%A0%95%EC%84%A0_%ED%95%84_%EC%97%AC%EC%82%B0%EC%B4%88%EB%8B%B9%EB%8F%84.jpg/500px-%EC%A0%95%EC%84%A0_%ED%95%84_%EC%97%AC%EC%82%B0%EC%B4%88%EB%8B%B9%EB%8F%84.jpg"
+    },
+    "young-sick-bacchus": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio_-_Autoritratto_in_veste_di_Bacco_%28Bacchino_malato%29%2C_1595_circa%2C_534.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Caravaggio_-_Autoritratto_in_veste_di_Bacco_%28Bacchino_malato%29%2C_1595_circa%2C_534.jpg/1280px-Caravaggio_-_Autoritratto_in_veste_di_Bacco_%28Bacchino_malato%29%2C_1595_circa%2C_534.jpg"
+    },
+    "yuksangmyodo": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/육상묘도.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/%EC%9C%A1%EC%83%81%EB%AC%98%EB%8F%84.jpg/500px-%EC%9C%A1%EC%83%81%EB%AC%98%EB%8F%84.jpg"
+    }
+  },
+  "artists": {
+    "caravaggio": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Bild-Ottavio_Leoni%2C_Caravaggio.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Bild-Ottavio_Leoni%2C_Caravaggio.jpg/960px-Bild-Ottavio_Leoni%2C_Caravaggio.jpg"
+    },
+    "claude-monet": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude_Monet_1899_Nadar_crop.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Claude_Monet_1899_Nadar_crop.jpg/1280px-Claude_Monet_1899_Nadar_crop.jpg"
+    },
+    "egon-schiele": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Egon_Schiele_photo.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Egon_Schiele_photo.jpg/960px-Egon_Schiele_photo.jpg"
+    },
+    "gustav-klimt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav_Klimt_portrait_by_Moritz_N%C3%A4hr.jpeg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Gustav_Klimt_portrait_by_Moritz_N%C3%A4hr.jpeg/250px-Gustav_Klimt_portrait_by_Moritz_N%C3%A4hr.jpeg"
+    },
+    "jeong-seon": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeong_Seon-Taking_a_reast_after_reading_books-1.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Jeong_Seon-Taking_a_reast_after_reading_books-1.jpg/1280px-Jeong_Seon-Taking_a_reast_after_reading_books-1.jpg"
+    },
+    "kim-hong-do": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Kim_Hongdo.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Kim_Hongdo.jpg/500px-Kim_Hongdo.jpg"
+    },
+    "paul-gauguin": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Gauguin_1891.png",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Paul_Gauguin_1891.png/1280px-Paul_Gauguin_1891.png"
+    },
+    "rembrandt": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg/1280px-Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg"
+    },
+    "vincent-van-gogh": {
+      "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Self-portrait_-_Vincent_van_Gogh.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Self-portrait_-_Vincent_van_Gogh.jpg/1280px-Self-portrait_-_Vincent_van_Gogh.jpg"
+    }
+  }
+}
