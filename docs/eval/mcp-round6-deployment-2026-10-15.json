@@ -1,0 +1,33 @@
+{
+  "run_at": "2026-10-15T10:24:15+09:00",
+  "environment": "deployment",
+  "base_url": "https://skn35-3rd-1team-production.up.railway.app",
+  "summary": {
+    "unauthenticated_access_control": "pass",
+    "invalid_token_access_control": "pass",
+    "security_headers": "pass",
+    "authenticated_protocol_and_tools": "not_tested",
+    "firebase_account_isolation": "not_tested"
+  },
+  "checks": [
+    {
+      "case": "initialize without bearer token",
+      "http_status": 401,
+      "www_authenticate": "Bearer",
+      "cache_control": "no-store, private",
+      "result": "pass"
+    },
+    {
+      "case": "initialize with invalid bearer token",
+      "http_status": 401,
+      "www_authenticate": "Bearer",
+      "cache_control": "no-store, private",
+      "result": "pass"
+    }
+  ],
+  "limitations": [
+    "The deployed MCP endpoint uses Firebase authentication. No valid Firebase ID token was present in the local environment or an existing browser session.",
+    "Tool discovery, artwork search, collection create/add/delete, duplicate prevention, and two-account isolation require a real Firebase ID token and were not executed against deployment.",
+    "No bearer token or secret value was printed or stored."
+  ]
+}
