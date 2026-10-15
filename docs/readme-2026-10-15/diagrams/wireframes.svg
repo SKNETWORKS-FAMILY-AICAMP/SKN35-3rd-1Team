@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1340" viewBox="0 0 1440 1340">
+<style>text{font-family:Arial,"Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif;fill:#252823}.title{font-size:25px;font-weight:700}.label{font-size:16px}.small{font-size:13px;fill:#686f66}.white{fill:#fff}</style>
+<rect width="1440" height="1340" fill="#f8f7f4"/>
+<text x="40" y="52" class="title">Docentalk · 화면 구성 와이어프레임</text>
+<text x="40" y="82" class="small">현재 구현의 정보 배치와 사용자 흐름을 단순화한 구조도 · 2026.10.15</text>
+<text x="40" y="129" class="title">01  발견하기</text>
+<rect x="40" y="145" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="40" y="145" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="58" y="171" class="white">Docentalk</text>
+<text x="350" y="171" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<rect x="56" y="199" width="618" height="163" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="70" y="227" class="label">오늘의 그림 · 작품 이미지 3점 전환</text>
+<rect x="316" y="295" width="342" height="51" rx="7" fill="#252823" stroke="#d3d6cf"/>
+<text x="330" y="326" class="white">작품 제목 · 작가     [작품 감상하기]</text>
+<rect x="56" y="377" width="618" height="40" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="70" y="405" class="label">로그인 시 맞춤 추천 / 작가 이야기</text>
+<rect x="56" y="428" width="146" height="35" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="70" y="456" class="label">작품 카드</text>
+<rect x="213" y="428" width="146" height="35" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="227" y="456" class="label">작품 카드</text>
+<rect x="370" y="428" width="146" height="35" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="384" y="456" class="label">작품 카드</text>
+<rect x="527" y="428" width="146" height="35" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="541" y="456" class="label">작품 카드</text>
+<text x="750" y="129" class="title">02  작품·작가 탐색</text>
+<rect x="750" y="145" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="750" y="145" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="768" y="171" class="white">Docentalk</text>
+<text x="1060" y="171" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<text x="768" y="221" class="title">작품 리스트</text>
+<rect x="768" y="237" width="614" height="35" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="265" class="label">제목·작가 검색</text>
+<text x="768" y="296" class="label">그림 리스트 / 작가 리스트     ·     사조 필터</text>
+<rect x="768" y="314" width="145" height="102" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="342" class="label">이미지</text>
+<text x="772" y="438" class="small">제목 · 작가  ♡</text>
+<rect x="923" y="314" width="145" height="102" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="937" y="342" class="label">이미지</text>
+<text x="927" y="438" class="small">제목 · 작가  ♡</text>
+<rect x="1078" y="314" width="145" height="102" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1092" y="342" class="label">이미지</text>
+<text x="1082" y="438" class="small">제목 · 작가  ♡</text>
+<rect x="1233" y="314" width="145" height="102" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1247" y="342" class="label">이미지</text>
+<text x="1237" y="438" class="small">제목 · 작가  ♡</text>
+<text x="768" y="465" class="small">더보기로 추가 탐색</text>
+<text x="40" y="554" class="title">03  작품 상세·AI 도슨트</text>
+<rect x="40" y="570" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="40" y="570" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="58" y="596" class="white">Docentalk</text>
+<text x="350" y="596" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<rect x="58" y="628" width="298" height="156" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="72" y="656" class="label">원본 비율 작품 이미지 / 확대</text>
+<text x="58" y="809" class="label">작품 제목 · 작가 · 연도   ♡</text>
+<text x="58" y="835" class="small">감상 노트 / 작품 정보·출처</text>
+<rect x="58" y="850" width="298" height="37" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="72" y="878" class="label">감상 작성 · 공개/비공개 · 게시</text>
+<rect x="374" y="628" width="298" height="45" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="388" y="656" class="label">AI 도슨트 · Easy / Standard / Deep</text>
+<rect x="374" y="685" width="298" height="125" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="388" y="713" class="label">질문 → 답변 → 출처 확인</text>
+<rect x="374" y="822" width="298" height="65" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="388" y="850" class="label">예시 질문 / 질문 입력 / 보내기</text>
+<text x="750" y="554" class="title">04  감상 피드·공개 프로필</text>
+<rect x="750" y="570" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="750" y="570" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="768" y="596" class="white">Docentalk</text>
+<text x="1060" y="596" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<text x="768" y="648" class="title">감상 피드</text>
+<text x="768" y="673" class="small">다른 감상가의 시선 / 작성자 프로필·팔로우</text>
+<rect x="768" y="691" width="197" height="30" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="719" class="label">작성자 / 팔로우</text>
+<rect x="768" y="728" width="197" height="98" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="756" class="label">작품 이미지</text>
+<rect x="768" y="834" width="197" height="52" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="862" class="label">감상 요약 / 감상 읽기</text>
+<rect x="975" y="691" width="197" height="30" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="989" y="719" class="label">작성자 / 팔로우</text>
+<rect x="975" y="728" width="197" height="98" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="989" y="756" class="label">작품 이미지</text>
+<rect x="975" y="834" width="197" height="52" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="989" y="862" class="label">감상 요약 / 감상 읽기</text>
+<rect x="1182" y="691" width="197" height="30" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1196" y="719" class="label">작성자 / 팔로우</text>
+<rect x="1182" y="728" width="197" height="98" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1196" y="756" class="label">작품 이미지</text>
+<rect x="1182" y="834" width="197" height="52" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1196" y="862" class="label">감상 요약 / 감상 읽기</text>
+<text x="40" y="979" class="title">05  내 피드·감상 캘린더</text>
+<rect x="40" y="995" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="40" y="995" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="58" y="1021" class="white">Docentalk</text>
+<text x="350" y="1021" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<text x="58" y="1068" class="label">프로필 · 취향 소개 · 팔로잉/팔로워</text>
+<text x="58" y="1096" class="small">공개 감상 / 내 컬렉션 / 관심 작가 / 감상 캘린더</text>
+<rect x="58" y="1114" width="395" height="196" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="72" y="1141" class="label">월 이동 · 오늘</text>
+<rect x="71" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="123" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="175" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="227" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="279" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="331" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="383" y="1152" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="71" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="123" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="175" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="227" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="279" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="331" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="383" y="1180" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="71" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="123" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="175" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="227" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="279" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="331" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="383" y="1208" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="71" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="123" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="175" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="227" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="279" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="331" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="383" y="1236" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="71" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="123" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="175" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="227" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="279" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="331" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="383" y="1264" width="45" height="23" rx="7" fill="white" stroke="#d3d6cf"/>
+<rect x="470" y="1114" width="202" height="196" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="484" y="1142" class="label">선택한 날짜의 작품</text>
+<text x="750" y="979" class="title">06  컬렉션·설정</text>
+<rect x="750" y="995" width="650" height="335" rx="7" fill="#fff" stroke="#d3d6cf"/>
+<rect x="750" y="995" width="650" height="40" rx="0" fill="#111" stroke="#111"/>
+<text x="768" y="1021" class="white">Docentalk</text>
+<text x="1060" y="1021" class="white">발견하기 · 작품 리스트 · 감상 피드 · 내 피드</text>
+<rect x="768" y="1054" width="390" height="45" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="1082" class="label">직접 만든 컬렉션 / 자동 모음 / AI 취향 테마</text>
+<rect x="768" y="1112" width="123" height="95" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="1140" class="label">작품 모음</text>
+<rect x="901" y="1112" width="123" height="95" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="915" y="1140" class="label">작품 모음</text>
+<rect x="1034" y="1112" width="123" height="95" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1048" y="1140" class="label">작품 모음</text>
+<rect x="768" y="1219" width="390" height="91" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="782" y="1247" class="label">새 페이지 상세 · 정렬된 작품 · 편집·저장</text>
+<rect x="1176" y="1054" width="206" height="256" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1190" y="1083" class="label">계정 설정</text>
+<text x="1190" y="1119" class="small">내 피드 바로가기</text>
+<text x="1190" y="1148" class="small">팔로우 목록 공개</text>
+<text x="1190" y="1177" class="small">계정 안내</text>
+<rect x="1189" y="1266" width="180" height="32" rx="7" fill="#eef0eb" stroke="#d3d6cf"/>
+<text x="1203" y="1294" class="label">로그아웃</text>
+</svg>

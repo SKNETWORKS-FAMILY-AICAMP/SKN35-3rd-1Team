@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-15",
+  "screenshots": [
+    {
+      "file": "screenshots/01-home.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "24e8fd943c92cfb289453964d06831922e40363896e0d6476f4918507540929d"
+    },
+    {
+      "file": "screenshots/02-artworks.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "561fcf4a7213a96f1b8edf1a92e94cfadb0dd1d4d385cace72c7c1d1f0ea47f1"
+    },
+    {
+      "file": "screenshots/03-artists.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "23f06b4a71fcb7577be8022e06903fb54f3f398a1579225b24d1c3838d2a973e"
+    },
+    {
+      "file": "screenshots/04-artist-detail.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "5c19ca13ce30d639800937e3243f715f830fd990805fb158094d60f1c168eb0d"
+    },
+    {
+      "file": "screenshots/05-artwork-detail.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "91d749012ca1d2163ca70e3532e603a71580f8c293d45834d05d8365a382d8a0"
+    },
+    {
+      "file": "screenshots/06-docent-chat.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "0e1746b82d016ea4c2e13b8f4fea9a0a009f72d67f6ae0d37a108cdf2600f572"
+    },
+    {
+      "file": "screenshots/07-sources.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "fd6c684f557c23586f6400653ad61382a436c9ee0e3f158ee58042c6c2c6a196"
+    },
+    {
+      "file": "screenshots/08-community.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "3e39d414c55da3726754c1228773bcf228ed6c7e0a7723e3b775d5ccf3143b11"
+    },
+    {
+      "file": "screenshots/09-library-entry.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "5f05f2d21cca0a634236587b177057a94854fa789df1cb369bd4a2209c5ee73c"
+    },
+    {
+      "file": "screenshots/10-login.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "d46eb07970efa121c802f883398b48aa3976051318d2e85e224a7687c11464f2"
+    },
+    {
+      "file": "screenshots/11-mobile-home.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "a71bde4b5fcb242d790b135a52d9338d6f18e5a4a081e7f3c7764ff5c5849a76"
+    },
+    {
+      "file": "screenshots/12-mobile-artworks.jpg",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": false,
+      "capture": "in-app browser viewport",
+      "sha256": "ff33555c60471f89203590c0593ad0b631ec6a9dc936ab009bb444da03d0afa4"
+    },
+    {
+      "file": "screenshots/13-my-feed.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "6109995f643ade39cef1eddb14a0b74d5838976ab83cb7b311a8a72a44ff780f"
+    },
+    {
+      "file": "screenshots/14-calendar.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "d806e2336503a09f2d2cb6981be10a27dfe52bb6af70be76b8197910e172e6ce"
+    },
+    {
+      "file": "screenshots/15-collections.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "a6241a2dd3256ab64e5d3ab5fe09758ffc6924bc434f4b0f3989ea0e7a217e6e"
+    },
+    {
+      "file": "screenshots/16-liked-collection.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "a0af29d853fc06211309b83919e414746b3aa995d4b96545a7ab045e07c94f8c"
+    },
+    {
+      "file": "screenshots/17-create-collection.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "f962fcbedf7c018b6b9641e2e45e073f21c2f0370d5aff0948a5f9a092f2a5ce"
+    },
+    {
+      "file": "screenshots/18-followed-artists.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "b228a846f60c26228ee8bffc2e8ca02aaa0c13aa5cf848308760114edde78ccb"
+    },
+    {
+      "file": "screenshots/19-ai-theme-detail.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "fc0ce68ff34256ea94c8c0a5aa071a6bf88cc39e224add8434874fabbaad0605"
+    },
+    {
+      "file": "screenshots/20-privacy-settings.png",
+      "date": "2026-10-15",
+      "source": "https://artlog-skn35-1team.vercel.app",
+      "environment": "production",
+      "authenticated": true,
+      "capture": "native Safari webpage crop",
+      "sha256": "34ed3f6030af526f34133ae7c44f71f7caa63cc4cd27c756d5af2554d069e2fd"
+    }
+  ],
+  "exclusions": "Raw browser captures, unrelated tabs, account email, passwords and tokens are not included.",
+  "schema_basis": "dev af7cea883db7874b8cf12d7d832b567aa9580ed0 models; production DB revision not checked"
+}

@@ -1,0 +1,31 @@
+{
+  "source": "af7cea883db7874b8cf12d7d832b567aa9580ed0",
+  "schema_revision": "20261014_0011",
+  "service_tables": 22,
+  "tables": [
+    "art_movements",
+    "artist_follows",
+    "artists",
+    "artwork_embeddings",
+    "artwork_likes",
+    "artwork_views",
+    "artworks",
+    "chat_messages",
+    "chat_sessions",
+    "collection_items",
+    "collections",
+    "diary_entries",
+    "document_artists",
+    "document_artworks",
+    "document_basis_documents",
+    "document_chunks",
+    "documents",
+    "social_accounts",
+    "theme_collection_cache",
+    "user_follows",
+    "user_preferences",
+    "users"
+  ],
+  "date": "2026-10-15",
+  "basis": "SQLAlchemy models; not an inspection of the production database"
+}
